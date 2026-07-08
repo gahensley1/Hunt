@@ -1557,6 +1557,17 @@ async function runHomeTour(){
     let dead=false;
     const kill=()=>{ dead=true; sign.classList.remove("show"); g.classList.remove("on"); };
     window.addEventListener("pointerdown",kill,{once:true});
+    // hang the sign over the subtitle + tagline block (not screen centre)
+    try{
+      const tg=document.querySelector("#s-home .tagline");
+      if(tg&&tg.getBoundingClientRect){
+        const r=tg.getBoundingClientRect();
+        const sw=Math.min(window.innerWidth*0.84,330), sh=sw*180/320;
+        const top=Math.max(8, r.top + r.height/2 - sh/2 - 14);
+        sign.style.alignItems="flex-start";
+        sign.style.paddingTop=top+"px";
+      }
+    }catch(e){}
     sign.classList.add("show");
     await _twait(3700); if(dead) return;
     if(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
