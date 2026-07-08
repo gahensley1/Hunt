@@ -131,6 +131,7 @@
   .btn:disabled{opacity:.45;cursor:default}
   .btn-primary{background:linear-gradient(180deg,var(--green),var(--green-dk));color:var(--paper);box-shadow:var(--shadow);border-color:rgba(0,0,0,.2)}
   .btn-brass{background:linear-gradient(180deg,var(--brass-lt),var(--brass));color:#2b2013;box-shadow:var(--shadow);border-color:rgba(0,0,0,.15)}
+  .btn-return{background:linear-gradient(180deg,#A03D2A,var(--oxblood));color:var(--paper);box-shadow:var(--shadow);border-color:rgba(0,0,0,.22)}
   .btn-ghost{background:transparent;color:var(--ink);border:1.5px solid var(--tweed)}
   .btn-ox{background:linear-gradient(180deg,#a2402f,var(--oxblood));color:#fbeee9;box-shadow:var(--shadow)}
   .btn .em{font-size:19px}
@@ -485,7 +486,7 @@
     <div class="body" id="verify-body" style="padding-top:12px"></div>
     <div class="footbar">
       <div class="row2">
-        <button class="btn btn-ghost" onclick="exportCard()">Save Side-by-Side</button>
+        <button class="btn btn-return" onclick="returnToHunterAsk()">Return to Hunter</button>
         <button class="btn btn-primary" onclick="confirmResults()">Close the Case</button>
       </div>
     </div>
@@ -1440,28 +1441,39 @@ function updateVerifyCount(){
   const yes=Object.values(State.verify.marks).filter(v=>v===1).length;
   document.getElementById("v-count").textContent=`${yes} / ${total} confirmed`;
 }
+function verifyUnmarked(hunt){ return hunt.tiles.filter(t=>State.verify.marks[t.id]!==1&&State.verify.marks[t.id]!==0).length; }
+async function returnToHunterAsk(){
+  if(!State.verify){ toast("Open a hunter's submission first."); return; }
+  const {code,hid,hunt}=State.verify;
+  const noteEl=document.getElementById("v-note");
+  const note=noteEl?noteEl.value.trim():"";
+  const un=verifyUnmarked(hunt);
+  if(un){ toast(un+" find"+(un===1?"":"s")+" still unmarked \u2014 tap \u2713 or \u2717 on each before deciding."); return; }
+  const rejects=hunt.tiles.filter(t=>State.verify.marks[t.id]===0);
+  if(!rejects.length){ toast("Every find is \u2713 \u2014 nothing to return. Use Close the Case."); return; }
+  const who=(State.verify.sub&&State.verify.sub.name)||"the hunter";
+  if(!confirm(rejects.length+" find"+(rejects.length===1?"":"s")+" rejected.\n\nReturn this case to "+who+"? They'll lose their finishing place until the rejected photos are retaken and resubmitted.")) return;
+  await Store.set("res:"+code+":"+hid, JSON.stringify({marks:State.verify.marks, note, closedAt:Date.now(), returned:true}), true);
+  const sraw=await Store.get("sub:"+code+":"+hid,true);
+  if(sraw){ try{
+    const s=JSON.parse(sraw);
+    s.status="returned"; s.finishedAt=null;                       // rank revoked
+    s.found=hunt.tiles.length-rejects.length;                     // approved count
+    await Store.set("sub:"+code+":"+hid, JSON.stringify(s), true);
+  }catch(e){} }
+  markFins(code, seenFins(code).filter(x=>x!==hid));              // their next finish re-announces
+  toast("Case returned to "+who+" \u2014 "+rejects.length+" to retake.", 3400);
+  openRoster(code);
+}
 async function confirmResults(){
   if(!State.verify){ toast("Open a hunter's submission first."); return; }
   const {code,hid,hunt}=State.verify;
   const noteEl=document.getElementById("v-note");
   const note=noteEl?noteEl.value.trim():"";
+  const un=verifyUnmarked(hunt);
+  if(un){ toast(un+" find"+(un===1?"":"s")+" still unmarked \u2014 tap \u2713 or \u2717 on each before closing."); return; }
   const rejects=hunt.tiles.filter(t=>State.verify.marks[t.id]===0);
-  if(rejects.length){
-    const who=(State.verify.sub&&State.verify.sub.name)||"the hunter";
-    if(!confirm(rejects.length+" find"+(rejects.length===1?"":"s")+" rejected.\n\nReturn this case to "+who+"? They'll lose their finishing place until the rejected photos are retaken and resubmitted.")) return;
-    await Store.set("res:"+code+":"+hid, JSON.stringify({marks:State.verify.marks, note, closedAt:Date.now(), returned:true}), true);
-    const sraw=await Store.get("sub:"+code+":"+hid,true);
-    if(sraw){ try{
-      const s=JSON.parse(sraw);
-      s.status="returned"; s.finishedAt=null;                       // rank revoked
-      s.found=hunt.tiles.length-rejects.length;                     // approved count
-      await Store.set("sub:"+code+":"+hid, JSON.stringify(s), true);
-    }catch(e){} }
-    markFins(code, seenFins(code).filter(x=>x!==hid));              // their next finish re-announces
-    toast("Case returned to "+who+" \u2014 "+rejects.length+" to retake.", 3400);
-    openRoster(code);
-    return;
-  }
+  if(rejects.length){ toast("You've marked "+rejects.length+" \u2717 \u2014 use Return to Hunter, or flip "+(rejects.length===1?"it":"them")+" back to \u2713."); return; }
   await Store.set("res:"+code+":"+hid, JSON.stringify({marks:State.verify.marks, note, closedAt:Date.now()}), true);
   const sraw=await Store.get("sub:"+code+":"+hid,true);
   if(sraw){ try{ const s=JSON.parse(sraw); s.status="reviewed"; await Store.set("sub:"+code+":"+hid, JSON.stringify(s), true);}catch(e){} }
