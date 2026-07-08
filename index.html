@@ -253,6 +253,7 @@
   .pill.wait{background:rgba(122,92,62,.15);color:var(--tweed-dk)}
   .pill.ready{background:rgba(46,71,57,.15);color:var(--green)}
   .pill.rank{background:rgba(138,51,36,.14);color:var(--oxblood);font-weight:700;border:1px solid rgba(138,51,36,.30)}
+  .pill.returned{background:rgba(138,51,36,.10);color:var(--oxblood);border:1px dashed rgba(138,51,36,.45)}
   .pill.rank1{background:linear-gradient(180deg,#E4C079,#B8863B);color:#2a1c08;border:1px solid #8a6425;box-shadow:0 1px 2px rgba(10,7,4,.3)}
   .done-rank{font-family:var(--serif);font-weight:900;font-size:21px;color:var(--oxblood);margin:0 0 10px;letter-spacing:.4px}
 
@@ -711,12 +712,12 @@ async function shareCaseCode(code){
 /* ---------- per-hunter submissions ---------- */
 async function saveHunterSub(status){
   const hunt=State.hunt; if(!hunt||!State.hid) return;
-  // Never downgrade: a rejoin ("playing") must not erase submitted/reviewed
+  // Never downgrade: a rejoin ("playing") must not erase submitted/reviewed/returned
   let finishedAt=null;
   try{
     const prevRaw=await Store.get("sub:"+hunt.code+":"+State.hid,true);
     if(prevRaw){ const p=JSON.parse(prevRaw);
-      if(status==="playing" && (p.status==="submitted"||p.status==="reviewed")) status=p.status;
+      if(status==="playing" && (p.status==="submitted"||p.status==="reviewed"||p.status==="returned")) status=p.status;
       if(p.finishedAt) finishedAt=p.finishedAt; }
   }catch(e){}
   const finds=hunt.tiles.map(t=>({tileId:t.id, src:State.founds[t.id]||null}));
@@ -1047,10 +1048,30 @@ async function joinCase(){
   // resume any prior progress
   const prev=await Store.get("sub:"+code+":"+hid, true);
   if(prev){ try{ (JSON.parse(prev).finds||[]).forEach(f=>{ if(f.src) State.founds[f.tileId]=f.src; }); }catch(e){} }
-  await saveHunterSub("playing");
+  const wasReturned=await checkMyReturn();
+  await saveHunterSub(wasReturned?"returned":"playing");
   document.getElementById("hunt-title").firstChild.textContent=State.hunt.title||"On the Hunt";
   document.getElementById("hunt-caseno").textContent="CASE No. "+code;
   renderHunt(); go("s-hunt");
+  if(wasReturned) toast("\uD83E\uDDD0 Returned by the setter \u2014 "+State.returnedCount+" find"+(State.returnedCount===1?" didn't":"s didn't")+" pass muster. Retake and resubmit.", 5200);
+}
+/* Detect a setter return: clear only the rejected finds, keep the approved. */
+async function checkMyReturn(){
+  const hunt=State.hunt; if(!hunt||!State.hid) return false;
+  if(State._retSeen===hunt.code) return false;
+  try{
+    const rraw=await Store.get("res:"+hunt.code+":"+State.hid,true); if(!rraw) return false;
+    const r=JSON.parse(rraw); if(!r.returned) return false;
+    const sraw=await Store.get("sub:"+hunt.code+":"+State.hid,true);
+    const s=sraw?JSON.parse(sraw):null;
+    if(!s||s.status!=="returned") return false;
+    const rej=Object.keys(r.marks||{}).filter(k=>r.marks[k]===0);
+    if(!rej.length) return false;
+    rej.forEach(id=>{ delete State.founds[id]; });
+    State.returnedCount=rej.length;
+    State._retSeen=hunt.code;
+    return true;
+  }catch(e){ return false; }
 }
 function renderHunt(){
   const grid=document.getElementById("hunt-grid"); grid.innerHTML="";
@@ -1094,6 +1115,12 @@ function huntSnap(t){
   document.getElementById("in-camera").click();
 }
 async function finishHunt(){
+  // resubmission after a return: retire the old verdict so review starts fresh
+  try{
+    const rr=await Store.get("res:"+State.hunt.code+":"+State.hid,true);
+    if(rr && JSON.parse(rr).returned){ await Store.del("res:"+State.hunt.code+":"+State.hid,true); }
+  }catch(e){}
+  State._retSeen=null;
   const mySub=await saveHunterSub("submitted");
   document.getElementById("done-caseno").textContent="CASE No. "+State.hunt.code;
   // Announce this hunter's finishing place (1st, 2nd, 3rd…)
@@ -1197,6 +1224,7 @@ async function renderRoster(){
     const rk=ranks[s.hid];
     const finAt = s.finishedAt ? new Date(s.finishedAt).toLocaleTimeString([], {hour:"numeric",minute:"2-digit"}) : null;
     const st = rk ? {t:ordinal(rk).toUpperCase(),c:"rank"+(rk===1?" rank1":"")}
+             : s.status==="returned" ? {t:"RETURNED",c:"returned"}
              : reviewed ? {t:"REVIEWED",c:"ready"} : s.status==="submitted" ? {t:"SUBMITTED",c:"ready"} : {t:"PLAYING",c:"wait"};
     const meta = `${s.found} / ${s.total} found`
       + (rk? ` · finished ${finAt}` : "")
@@ -1295,7 +1323,9 @@ let _finTimer=null;
 function startFinishWatch(){
   if(_finTimer) return;
   checkFinishes(false);                       // baseline silently: don't blast old finishes
-  _finTimer=setInterval(()=>{ if(!document.hidden) checkFinishes(true); }, 20000);
+  _finTimer=setInterval(async()=>{ if(document.hidden) return; checkFinishes(true);
+    try{ if(document.getElementById("s-hunt").classList.contains("active") && await checkMyReturn()){ renderHunt(); toast("\uD83E\uDDD0 Returned by the setter \u2014 "+State.returnedCount+" find"+(State.returnedCount===1?" didn\u2019t":"s didn\u2019t")+" pass muster. Retake and resubmit.", 5200); } }catch(e){}
+  }, 20000);
   document.addEventListener("visibilitychange",()=>{ if(!document.hidden) checkFinishes(true); });
 }
 async function openVerify(code, hid){
@@ -1353,6 +1383,23 @@ async function confirmResults(){
   const {code,hid,hunt}=State.verify;
   const noteEl=document.getElementById("v-note");
   const note=noteEl?noteEl.value.trim():"";
+  const rejects=hunt.tiles.filter(t=>State.verify.marks[t.id]===0);
+  if(rejects.length){
+    const who=(State.verify.sub&&State.verify.sub.name)||"the hunter";
+    if(!confirm(rejects.length+" find"+(rejects.length===1?"":"s")+" rejected.\n\nReturn this case to "+who+"? They'll lose their finishing place until the rejected photos are retaken and resubmitted.")) return;
+    await Store.set("res:"+code+":"+hid, JSON.stringify({marks:State.verify.marks, note, closedAt:Date.now(), returned:true}), true);
+    const sraw=await Store.get("sub:"+code+":"+hid,true);
+    if(sraw){ try{
+      const s=JSON.parse(sraw);
+      s.status="returned"; s.finishedAt=null;                       // rank revoked
+      s.found=hunt.tiles.length-rejects.length;                     // approved count
+      await Store.set("sub:"+code+":"+hid, JSON.stringify(s), true);
+    }catch(e){} }
+    markFins(code, seenFins(code).filter(x=>x!==hid));              // their next finish re-announces
+    toast("Case returned to "+who+" \u2014 "+rejects.length+" to retake.", 3400);
+    openRoster(code);
+    return;
+  }
   await Store.set("res:"+code+":"+hid, JSON.stringify({marks:State.verify.marks, note, closedAt:Date.now()}), true);
   const sraw=await Store.get("sub:"+code+":"+hid,true);
   if(sraw){ try{ const s=JSON.parse(sraw); s.status="reviewed"; await Store.set("sub:"+code+":"+hid, JSON.stringify(s), true);}catch(e){} }
