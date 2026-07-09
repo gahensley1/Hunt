@@ -346,7 +346,7 @@
   .stamp-done .stamp-img{width:248px;height:auto;display:block;margin:10px auto 18px;transform:rotate(-30deg);animation:stampDown .5s cubic-bezier(.2,1.4,.4,1) both;filter:drop-shadow(0 1px 2px rgba(10,7,4,.25));mix-blend-mode:multiply}
   @keyframes stampDown{0%{transform:rotate(-48deg) scale(2.2);opacity:0}55%{transform:rotate(-28deg) scale(.95);opacity:1}75%{transform:rotate(-31deg) scale(1.04)}100%{transform:rotate(-30deg) scale(1)}}
 
-  .toast{position:fixed;left:50%;bottom:calc(90px + var(--safe-b));transform:translateX(-50%);z-index:60;
+  .toast{position:fixed;left:50%;bottom:calc(90px + var(--safe-b));transform:translateX(-50%);z-index:620;
     background:var(--ink);color:var(--paper);padding:11px 18px;border-radius:30px;font-size:13.5px;box-shadow:var(--shadow);
     opacity:0;pointer-events:none;transition:opacity .25s ease, transform .25s ease;max-width:88%}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(-4px)}
@@ -396,7 +396,7 @@
   <section id="s-build" class="screen">
     <div class="topbar">
       <button class="iconbtn" onclick="confirmLeaveBuild()">‹</button>
-      <input id="build-title-input" class="title-in" type="text" placeholder="(Name your Hunt)" oninput="onBuildTitleInput(this.value)" autocomplete="off" spellcheck="false" enterkeyhint="done" onkeydown="if(event.key==='Enter')this.blur()">
+      <input id="build-title-input" class="title-in" type="text" placeholder="(Name your Hunt)" oninput="onBuildTitleInput(this.value)" autocomplete="off" autocorrect="off" autocapitalize="words" spellcheck="false" name="shco-casetitle" enterkeyhint="done" onkeydown="if(event.key==='Enter')this.blur()">
       <div id="title-nudge" class="nudge" aria-hidden="true">
         <span class="nudge-ripple"></span>
         <svg viewBox="0 0 48 48" width="44" height="44">
@@ -618,7 +618,7 @@
   <div class="modal">
     <h3 id="name-head">Your detective name</h3>
     <p class="clue-text" id="name-sub" style="font-style:normal;margin:0 4px 12px;font-size:14px"></p>
-    <input id="name-input" class="field" maxlength="24" placeholder="e.g. Detective Sam" onkeydown="if(event.key==='Enter')confirmName()">
+    <input id="name-input" class="field" maxlength="24" placeholder="e.g. Detective Sam" autocomplete="off" autocorrect="off" autocapitalize="words" spellcheck="false" name="shco-alias" onkeydown="if(event.key==='Enter')confirmName()">
     <div class="row2">
       <button class="btn btn-ghost" onclick="cancelName()">Cancel</button>
       <button class="btn btn-primary" id="name-save" onclick="confirmName()">Save</button>
@@ -1073,7 +1073,19 @@ function nudgeStop(nid,iid){
   const inp=document.getElementById(iid); if(inp) inp.classList.remove("beckon");
   clearTimeout(_nudgeT[nid]);
 }
-function nudgeTitle(){ runNudge("title-nudge","build-title-input"); }
+let _titleNudgeAt=0;
+function nudgeTitle(){ _titleNudgeAt=Date.now(); runNudge("title-nudge","build-title-input"); }
+/* a forgetful Builder gets the glass again every half-minute until the case is named */
+setInterval(()=>{
+  try{
+    const sb=document.getElementById("s-build");
+    if(!sb||!sb.classList.contains("active")||document.hidden) return;
+    const inp=document.getElementById("build-title-input");
+    if(!inp||inp.value.trim()||document.activeElement===inp) return;
+    if(Date.now()-_titleNudgeAt<28000) return;
+    nudgeTitle();
+  }catch(e){}
+}, 5000);
 function onBuildTitleInput(v){
   if(State.build){ const n=v.trim(); State.build.title = n || "Untitled Case"; }
   nudgeStop("title-nudge","build-title-input");
@@ -1242,9 +1254,10 @@ async function finishBuild(){
   // A case deserves a name — nudge before minting the number
   const t=(State.build.title||"").trim();
   if(!t || t==="Untitled Case"){
-    toast("Name your hunt first — the title line at the top.", 3000);
+    toast("A case deserves a name first \u2014 the glass will show you where.", 3200);
     const inp=document.getElementById("build-title-input");
-    if(inp){ try{inp.scrollIntoView({behavior:"smooth",block:"center"});}catch(e){} inp.focus(); }
+    if(inp){ try{inp.scrollIntoView({behavior:"smooth",block:"center"});}catch(e){} }
+    nudgeTitle();
     return;
   }
   const code=await genCode();
@@ -1481,7 +1494,13 @@ function coinTapped(code){
   const score=(c.kind==="prize")?(c.total+"/"+c.total+" confirmed"):((c.conf!=null?c.conf+" confirmed of ":"")+c.found+"/"+c.total);
   toast((c.kind==="prize"?"\u2605 PRIZE \u2014 ":"\uD83E\uDE99 ")+(c.title||"Case")+" \u2014 "+score+" \u00b7 "+fmtDate(new Date(c.at)), 3600);
 }
-function coinSort(a,b){ return (a.kind==="prize"?0:1)-(b.kind==="prize"?0:1) || b.at-a.at; }
+/* the mint registry — special strikes for special hunts slot in here */
+const COIN_KINDS={
+  prize:{img:()=>COIN_T, label:"\u2605 PRIZE", badge:"tb-prize", order:0},
+  plain:{img:()=>COIN_P, label:"SOLVED",       badge:"tb-plain", order:1}
+};
+function coinKind(c){ return COIN_KINDS[c.kind]||{img:()=>COIN_P,label:String(c.kind||"SOLVED").toUpperCase(),badge:"tb-plain",order:9}; }
+function coinSort(a,b){ return coinKind(a).order-coinKind(b).order || b.at-a.at; }
 function renderShelf(body){
   const coins=myCoins(); if(!coins.length) return;
   const shelf=document.createElement("div"); shelf.className="shelf";
@@ -1490,10 +1509,13 @@ function renderShelf(body){
   hd.onclick=openTrophyCase;
   shelf.appendChild(hd);
   const row=document.createElement("div"); row.className="shelf-row";
-  coins.slice().sort(coinSort).forEach(c=>{
+  const groups={};
+  coins.forEach(c=>{ const k=COIN_KINDS[c.kind]?c.kind:"plain"; (groups[k]=groups[k]||[]).push(c); });
+  Object.keys(groups).sort((a,b)=>coinKind({kind:a}).order-coinKind({kind:b}).order).forEach(k=>{
+    const kk=coinKind({kind:k});
     const b=document.createElement("button"); b.className="coinT";
-    b.innerHTML='<img src="'+(c.kind==="prize"?COIN_T:COIN_P)+'" alt=""><span class="cno">No. '+c.code+'</span>';
-    b.onclick=()=>coinTapped(c.code);
+    b.innerHTML='<img src="'+kk.img()+'" alt=""><span class="cno">'+kk.label+' \u00d7 '+groups[k].length+'</span>';
+    b.onclick=openTrophyCase;
     row.appendChild(b);
   });
   shelf.appendChild(row); body.appendChild(shelf);
@@ -1503,13 +1525,13 @@ function openTrophyCase(){
   list.innerHTML="";
   const coins=myCoins().slice().sort(coinSort);
   coins.forEach(c=>{
-    const prize=c.kind==="prize";
+    const kk=coinKind(c), prize=c.kind==="prize";
     const row=document.createElement("div"); row.className="tov-row";
     const score=prize?(c.total+"/"+c.total+" confirmed"):((c.conf!=null?c.conf+" conf. \u00b7 ":"")+c.found+"/"+c.total);
-    row.innerHTML='<img src="'+(prize?COIN_T:COIN_P)+'" alt="">'
+    row.innerHTML='<img src="'+kk.img()+'" alt="">'
       +'<div class="tov-info"><div class="tov-title">'+escapeHtml(c.title||"Untitled Case")+'</div>'
       +'<div class="tov-meta">No. '+c.code+' \u00b7 '+score+' \u00b7 '+fmtDate(new Date(c.at))+'</div>'
-      +'<span class="tov-badge '+(prize?"tb-prize":"tb-plain")+'">'+(prize?"\u2605 PRIZE":"SOLVED")+'</span></div>';
+      +'<span class="tov-badge '+kk.badge+'">'+kk.label+'</span></div>';
     list.appendChild(row);
   });
   document.getElementById("trophy-ov").classList.remove("hidden");
