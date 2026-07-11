@@ -335,17 +335,19 @@
   .tov-badge{font-family:var(--type);font-size:9px;letter-spacing:1.5px;padding:2px 8px;border:1.5px solid;border-radius:3px}
   .tb-prize{color:#7A551F;border-color:var(--brass-dk);background:rgba(216,175,99,.3)}
   .tb-plain{color:var(--ink-soft);border-color:rgba(90,78,60,.5)}
-  #cred-ov{position:fixed;inset:0;background:rgba(18,14,8,.66);z-index:520;display:flex;align-items:center;justify-content:center;padding:18px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  #cred-ov{position:fixed;inset:0;background:rgba(18,14,8,.66);z-index:520;display:flex;align-items:flex-start;justify-content:center;padding:18px;overflow-y:auto;-webkit-overflow-scrolling:touch}
   #cred-ov.hidden{display:none}
-  .cred-card{background:var(--paper);border:2px solid var(--brass-dk);outline:1px solid rgba(184,134,59,.45);outline-offset:3px;border-radius:10px;max-width:400px;width:100%;padding:18px 14px 16px;text-align:center;box-shadow:0 12px 40px rgba(10,8,4,.5)}
-  .cred-h{font-family:var(--serif);font-size:24px;margin:4px 0 2px;color:var(--ink)}
-  .cred-name{font-family:var(--serif);font-style:italic;font-size:18px;color:var(--ink);margin:0 0 12px}
-  .cipher-row{display:flex;gap:3px;justify-content:center;margin:2px 0 12px}
-  .cc{width:19px;height:32px;border:1.5px solid rgba(122,85,31,.55);border-radius:4px;background:rgba(255,252,244,.65);font-family:var(--type);font-size:15px;display:flex;align-items:center;justify-content:center;color:var(--ink-soft)}
-  .cc.dash{border:none;background:none;width:9px;color:var(--ink-soft)}
+  .cred-card{background:var(--paper);border:2px solid var(--brass-dk);outline:1px solid rgba(184,134,59,.45);outline-offset:3px;border-radius:10px;max-width:400px;width:100%;padding:12px 12px 10px;text-align:center;box-shadow:0 12px 40px rgba(10,8,4,.5)}
+  .cred-h{font-family:var(--serif);font-size:18px;margin:2px 0 1px;color:var(--ink)}
+  .cred-name{font-family:var(--serif);font-style:italic;font-size:14px;color:var(--ink);margin:0 0 6px}
+  .cipher-row{display:flex;gap:3px;justify-content:center;margin:2px 0 6px}
+  .cc{width:15px;height:25px;border:1.5px solid rgba(122,85,31,.55);border-radius:4px;background:rgba(255,252,244,.65);font-family:var(--type);font-size:12px;display:flex;align-items:center;justify-content:center;color:var(--ink-soft)}
+  .cc.dash{border:none;background:none;width:7px;color:var(--ink-soft)}
   .cc.lock{border-color:var(--brass-dk);background:rgba(216,175,99,.32);color:var(--ink);box-shadow:0 0 7px rgba(216,175,99,.55);transition:all .15s ease}
   .cred-note{font-family:var(--type);font-size:10.5px;letter-spacing:.4px;line-height:1.65;color:var(--ink-soft);margin:0 2px 14px}
-  .watchbox{margin:14px 12px 0;padding:12px 12px 10px;background:rgba(255,252,244,.5);border:1.5px solid rgba(184,134,59,.5);border-radius:10px;text-align:center}
+  #cred-ov .cred-note{font-size:9px;line-height:1.4;margin:0 2px 6px}
+  #build-grid{padding-bottom:14px}
+  .watchbox{margin:14px 12px calc(110px + var(--safe-b));padding:12px 12px 10px;background:rgba(255,252,244,.5);border:1.5px solid rgba(184,134,59,.5);border-radius:10px;text-align:center}
   .watchbox .eyebrow{display:block;margin-bottom:8px}
   .watch-row{display:flex;gap:10px;justify-content:center;align-items:flex-start}
   .wcol{flex:1;max-width:170px;display:flex;flex-direction:column;gap:7px}
@@ -370,7 +372,7 @@
   .cred-badge{background:none;border:0;padding:0;display:block;margin:10px auto 0;width:188px;height:188px;cursor:pointer;-webkit-tap-highlight-color:transparent}
   .cred-badge svg{width:100%;height:100%;display:block;pointer-events:none;filter:drop-shadow(0 4px 3px rgba(10,7,4,.6)) drop-shadow(0 10px 14px rgba(10,7,4,.35))}
   .cred-badge text{font-family:var(--type);font-size:19.4px;letter-spacing:1.5px;fill:#4A3A22}
-  #record-ov{position:fixed;inset:0;background:rgba(20,13,7,.75);z-index:520;display:flex;align-items:center;justify-content:center;padding:16px}
+  #record-ov{position:fixed;inset:0;background:rgba(20,13,7,.88);z-index:520;display:flex;align-items:center;justify-content:center;padding:16px}
   #record-ov.hidden{display:none}
   #record-ov .tov-card{position:relative;border:1px solid rgba(94,70,48,.5);border-radius:3px;background:radial-gradient(130% 60% at 12% 4%,rgba(150,110,60,.13),transparent 58%),radial-gradient(90% 46% at 92% 90%,rgba(120,80,40,.12),transparent 60%),radial-gradient(50% 34% at 74% 46%,rgba(150,120,70,.08),transparent 55%),var(--parch) left top/300px 300px repeat,linear-gradient(178deg,#EFE7D3,#E4D6BC);background-color:#EDE4D3;box-shadow:0 16px 46px rgba(10,7,3,.6),inset 0 0 60px rgba(94,60,28,.16),inset 0 0 0 1px rgba(216,175,99,.18)}
   #record-ov .tov-card::before,#record-ov .tov-card::after{content:"";position:absolute;z-index:-1;background:#E6D8BE;border:1px solid rgba(94,70,48,.4);box-shadow:0 6px 18px rgba(10,7,3,.42)}
@@ -498,6 +500,7 @@
   .cgeo-row{display:flex;gap:6px;margin-top:6px}
   .cgeo-row .cur-in{flex:1;margin:0}
   .cgeo-row .btn-ghost{flex:1;text-align:center}
+  #record-ov .btn-ghost{font-size:18px;font-weight:700;padding:14px 20px}
   .cold-place{font-family:var(--type);font-size:11px;letter-spacing:.6px;color:#7A551F;margin:2px 0}
   .coldrow .cn,.coldrow .meta,.cold-place,.cold-brief,#colddetail-card h3{overflow-wrap:anywhere}
   .cold-meta{margin-top:4px}
@@ -505,13 +508,29 @@
   .rank-stamp{display:inline-block;font-family:var(--type);font-size:16.5px;font-weight:700;letter-spacing:1.3px;color:var(--ink);border:3px solid var(--ink);border-radius:0;padding:4.5px 15px;transform:rotate(-3deg);opacity:.88;text-align:center;white-space:nowrap}
   .rank-stamp.home{display:block;width:max-content;max-width:100%;box-sizing:border-box;white-space:normal;word-break:break-word;margin:21.51px auto 0;pointer-events:none;transform:none;position:relative;font-size:30.94px;padding:8.44px 26.83px 8.44px 28.13px;border-width:5.63px}
   .rank-stamp.home::before{content:"RANK";position:absolute;top:-30px;left:0;right:0;text-align:center;font-family:var(--type);font-size:24px;line-height:1;letter-spacing:2px;color:var(--ink);opacity:.7}
-  #cred-rank{display:block;width:auto;max-width:100%;box-sizing:border-box;margin:10px auto 16px;font-size:24.3px;padding:7px 22px;border-width:3px;transform:none;white-space:normal;word-break:break-word}
+  #cred-rank{display:block;width:auto;max-width:100%;box-sizing:border-box;margin:5px auto 6px;font-size:16px;padding:4px 12px;border-width:2px;transform:none;white-space:normal;word-break:break-word}
   .cred-card{position:relative}
   .classified-tag{position:absolute;top:9px;right:9px;font-family:var(--type);font-size:8px;font-weight:700;letter-spacing:1.1px;color:var(--oxblood);border:1.3px solid rgba(138,51,36,.7);border-radius:3px;padding:2px 6px;transform:rotate(4deg);opacity:.88;background:rgba(244,237,220,.85);white-space:nowrap}
-  .badge-medallion-wrap{width:148px;height:148px;margin:4px auto 2px}
+  #cred-ov .btn{padding:11px 16px;font-size:14.5px}
+  @media (max-width:349px){
+    #cred-ov{padding:12px}
+    #cred-ov .cred-card{padding:10px 10px 8px}
+    #cred-ov .badge-medallion-wrap{width:76px;height:76px;margin:0 auto}
+    #cred-ov .cred-h{font-size:16px;margin:1px 0}
+    #cred-ov .cred-name{font-size:13px;margin:0 0 4px}
+    #cred-ov .cipher-row{margin:2px 0 4px}
+    #cred-ov .cc{height:22px}
+    #cred-ov #cred-rank{font-size:14px;padding:3px 10px;margin:4px auto 5px;border-width:1.6px}
+    #cred-ov .rank-ladder{margin:3px 2px 5px;padding:3px 2px}
+    #cred-ov .ladder-climb{margin:0 0 3px}
+    #cred-ov .ladder-list li{padding:1px 6px}
+    #cred-ov .cred-note{font-size:8.5px;margin:0 2px 4px}
+    #cred-ov .btn{padding:9px 14px;font-size:13.5px}
+  }
+  .badge-medallion-wrap{width:98px;height:98px;margin:0 auto 0}
   .badge-medallion-wrap svg{width:100%;height:100%;display:block;filter:drop-shadow(0 3px 5px rgba(10,7,4,.5))}
-  .badge-no-label{font-family:var(--type);font-size:9.5px;letter-spacing:2.2px;color:var(--ink-soft);margin:10px 0 2px}
-  .rank-ladder{margin:6px 2px 14px;text-align:left;border-top:1px solid rgba(184,134,59,.4);border-bottom:1px solid rgba(184,134,59,.4);padding:10px 2px}
+  .badge-no-label{font-family:var(--type);font-size:8.5px;letter-spacing:2.2px;color:var(--ink-soft);margin:4px 0 1px}
+  .rank-ladder{margin:4px 2px 6px;text-align:left;border-top:1px solid rgba(184,134,59,.4);border-bottom:1px solid rgba(184,134,59,.4);padding:5px 2px}
   .ladder-eyebrow{font-family:var(--type);font-size:10px;letter-spacing:1.6px;color:var(--ink-soft);text-align:center;margin:0 0 6px}
   .ladder-climb{font-family:var(--serif);font-style:italic;font-size:13px;color:var(--ink);text-align:center;margin:0 0 10px;line-height:1.4}
   .ladder-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:5px}
@@ -523,6 +542,12 @@
   .ladder-list li.cur{background:rgba(216,175,99,.3);border:1px solid rgba(184,134,59,.6)}
   .ladder-list li.cur b::before{content:"\2605  ";color:var(--oxblood)}
   .ladder-list li.next{opacity:.68}
+  #cred-ov .ladder-eyebrow{margin:0 0 3px}
+  #cred-ov .ladder-climb{font-size:11.5px;margin:0 0 5px;line-height:1.25}
+  #cred-ov .ladder-list{gap:2px}
+  #cred-ov .ladder-list li{padding:2px 6px;font-size:9px}
+  #cred-ov .ladder-list li b{font-size:11px}
+  #cred-ov .ladder-list li span{font-size:9px}
   .currow{background:rgba(255,252,244,.55);border:1.5px solid rgba(184,134,59,.5);border-radius:10px;padding:11px 12px;margin-bottom:10px;text-align:left}
   .cur-in{width:100%;margin-top:7px;padding:8px 9px;border:1px solid rgba(122,85,31,.45);border-radius:7px;background:rgba(255,252,244,.8);font-family:var(--type);font-size:16px;color:var(--ink)}
   .cur-btns{display:flex;gap:8px;margin-top:9px}
@@ -537,10 +562,10 @@
 
   .stamp-done{text-align:center;padding:8px}
   .stamp-done .stamp-img{width:248px;height:auto;display:block;margin:10px auto 18px;transform:rotate(-30deg);animation:stampDown .5s cubic-bezier(.2,1.4,.4,1) both;filter:drop-shadow(0 1px 2px rgba(10,7,4,.25));mix-blend-mode:multiply}
-  .done-photowrap{position:relative;width:208px;margin:6px auto 8px}
+  .done-photowrap{position:relative;width:208px;margin:6px auto 8px 4px}
   .done-photowrap .rec-photo{margin:0}
-  .done-photowrap .stamp-img.done-stamp{position:absolute;top:-22px;right:-38px;width:150px;margin:0;z-index:2}
-  @media (max-width:349px){ .done-photowrap{width:160px} .done-photowrap .stamp-img.done-stamp{width:118px;top:-16px;right:-28px} }
+  .done-photowrap .stamp-img.done-stamp{position:absolute;top:-55px;right:-95px;width:375px;margin:0;z-index:2}
+  @media (max-width:349px){ .done-photowrap{width:160px;margin-left:3px} .done-photowrap .stamp-img.done-stamp{width:295px;top:-40px;right:-70px} }
   @keyframes stampDown{0%{transform:rotate(-48deg) scale(2.2);opacity:0}55%{transform:rotate(-28deg) scale(.95);opacity:1}75%{transform:rotate(-31deg) scale(1.04)}100%{transform:rotate(-30deg) scale(1)}}
 
   .toast{position:fixed;left:50%;bottom:calc(90px + var(--safe-b));transform:translateX(-50%);z-index:620;
@@ -864,7 +889,7 @@
     <div class="rank-ladder" id="rank-ladder"></div>
     <p class="cred-note">This name is yours for good, and this badge number is the only key to your record — name, license &amp; coins. Anyone holding it can claim them. Guard it like a case file.</p>
     <button class="btn btn-primary" onclick="copyCred()">Take a Carbon Copy</button>
-    <button class="btn-ghost" onclick="credFiled()" style="margin-top:8px">Filed — I have it safe</button>
+    <button class="btn-ghost" onclick="credFiled()" style="margin-top:6px">Filed — I have it safe</button>
   </div>
 </div>
 
