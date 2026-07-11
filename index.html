@@ -335,7 +335,7 @@
   .tov-badge{font-family:var(--type);font-size:9px;letter-spacing:1.5px;padding:2px 8px;border:1.5px solid;border-radius:3px}
   .tb-prize{color:#7A551F;border-color:var(--brass-dk);background:rgba(216,175,99,.3)}
   .tb-plain{color:var(--ink-soft);border-color:rgba(90,78,60,.5)}
-  #cred-ov{position:fixed;inset:0;background:rgba(18,14,8,.66);z-index:520;display:flex;align-items:flex-start;justify-content:center;padding:18px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  #cred-ov{position:fixed;inset:0;background:rgba(18,14,8,.66);z-index:520;display:flex;align-items:center;justify-content:center;padding:18px}
   #cred-ov.hidden{display:none}
   .cred-card{background:var(--paper);border:2px solid var(--brass-dk);outline:1px solid rgba(184,134,59,.45);outline-offset:3px;border-radius:10px;max-width:400px;width:100%;padding:12px 12px 10px;text-align:center;box-shadow:0 12px 40px rgba(10,8,4,.5)}
   .cred-h{font-family:var(--serif);font-size:18px;margin:2px 0 1px;color:var(--ink)}
@@ -512,6 +512,7 @@
   .cred-card{position:relative}
   .classified-tag{position:absolute;top:9px;right:9px;font-family:var(--type);font-size:8px;font-weight:700;letter-spacing:1.1px;color:var(--oxblood);border:1.3px solid rgba(138,51,36,.7);border-radius:3px;padding:2px 6px;transform:rotate(4deg);opacity:.88;background:rgba(244,237,220,.85);white-space:nowrap}
   #cred-ov .btn{padding:11px 16px;font-size:14.5px}
+  #cred-ov .btn-ghost{font-size:14px;font-weight:700;padding:10px 13px}
   @media (max-width:349px){
     #cred-ov{padding:12px}
     #cred-ov .cred-card{padding:10px 10px 8px}
@@ -561,12 +562,12 @@
   .join-coin{width:96px;height:auto;display:block;margin:0 auto;filter:drop-shadow(0 0 3px rgba(10,7,4,.55)) drop-shadow(0 4px 7px rgba(10,7,4,.5))}
 
   .stamp-done{text-align:center;padding:8px}
-  .stamp-done .stamp-img{width:248px;height:auto;display:block;margin:10px auto 18px;transform:rotate(-30deg);animation:stampDown .5s cubic-bezier(.2,1.4,.4,1) both;filter:drop-shadow(0 1px 2px rgba(10,7,4,.25));mix-blend-mode:multiply}
+  .stamp-done .stamp-img{width:248px;height:auto;display:block;margin:10px auto 18px;transform:rotate(30deg);animation:stampDown .5s cubic-bezier(.2,1.4,.4,1) both;filter:drop-shadow(0 1px 2px rgba(10,7,4,.25));mix-blend-mode:multiply}
   .done-photowrap{position:relative;width:208px;margin:6px auto 8px 4px}
   .done-photowrap .rec-photo{margin:0}
-  .done-photowrap .stamp-img.done-stamp{position:absolute;top:-55px;right:-95px;width:375px;margin:0;z-index:2}
-  @media (max-width:349px){ .done-photowrap{width:160px;margin-left:3px} .done-photowrap .stamp-img.done-stamp{width:295px;top:-40px;right:-70px} }
-  @keyframes stampDown{0%{transform:rotate(-48deg) scale(2.2);opacity:0}55%{transform:rotate(-28deg) scale(.95);opacity:1}75%{transform:rotate(-31deg) scale(1.04)}100%{transform:rotate(-30deg) scale(1)}}
+  .done-photowrap .stamp-img.done-stamp{position:absolute;top:-55px;right:-140px;width:375px;margin:0;z-index:2}
+  @media (max-width:349px){ .done-photowrap{width:160px;margin-left:3px} .done-photowrap .stamp-img.done-stamp{width:295px;top:-40px;right:-105px} }
+  @keyframes stampDown{0%{transform:rotate(12deg) scale(2.2);opacity:0}55%{transform:rotate(32deg) scale(.95);opacity:1}75%{transform:rotate(29deg) scale(1.04)}100%{transform:rotate(30deg) scale(1)}}
 
   .toast{position:fixed;left:50%;bottom:calc(90px + var(--safe-b));transform:translateX(-50%);z-index:620;
     background:var(--ink);color:var(--paper);padding:11px 18px;border-radius:30px;font-size:13.5px;box-shadow:var(--shadow);
