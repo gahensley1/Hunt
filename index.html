@@ -335,7 +335,7 @@
   .tov-badge{font-family:var(--type);font-size:9px;letter-spacing:1.5px;padding:2px 8px;border:1.5px solid;border-radius:3px}
   .tb-prize{color:#7A551F;border-color:var(--brass-dk);background:rgba(216,175,99,.3)}
   .tb-plain{color:var(--ink-soft);border-color:rgba(90,78,60,.5)}
-  #cred-ov{position:fixed;inset:0;background:rgba(18,14,8,.66);z-index:520;display:flex;align-items:center;justify-content:center;padding:18px}
+  #cred-ov{position:fixed;inset:0;background:rgba(18,14,8,.66);z-index:520;display:flex;align-items:center;justify-content:center;padding:18px;overflow-y:auto;-webkit-overflow-scrolling:touch}
   #cred-ov.hidden{display:none}
   .cred-card{background:var(--paper);border:2px solid var(--brass-dk);outline:1px solid rgba(184,134,59,.45);outline-offset:3px;border-radius:10px;max-width:400px;width:100%;padding:18px 14px 16px;text-align:center;box-shadow:0 12px 40px rgba(10,8,4,.5)}
   .cred-h{font-family:var(--serif);font-size:24px;margin:4px 0 2px;color:var(--ink)}
@@ -503,7 +503,7 @@
   .rank-stamp{display:inline-block;font-family:var(--type);font-size:16.5px;font-weight:700;letter-spacing:1.3px;color:var(--ink);border:3px solid var(--ink);border-radius:0;padding:4.5px 15px;transform:rotate(-3deg);opacity:.88;text-align:center;white-space:nowrap}
   .rank-stamp.home{display:block;width:max-content;margin:21.51px auto 0;pointer-events:none;transform:none;position:relative;font-size:30.94px;padding:8.44px 26.83px 8.44px 28.13px;border-width:5.63px}
   .rank-stamp.home::before{content:"RANK";position:absolute;top:-30px;left:0;right:0;text-align:center;font-family:var(--type);font-size:24px;line-height:1;letter-spacing:2px;color:var(--ink);opacity:.7}
-  #cred-rank{display:block;width:max-content;margin:10px auto 16px;font-size:24.3px;padding:7px 22px;border-width:3px;transform:none}
+  #cred-rank{display:block;width:auto;max-width:100%;box-sizing:border-box;margin:10px auto 16px;font-size:24.3px;padding:7px 22px;border-width:3px;transform:none;white-space:normal;word-break:break-word}
   .cred-card{position:relative}
   .classified-tag{position:absolute;top:9px;right:9px;font-family:var(--type);font-size:8px;font-weight:700;letter-spacing:1.1px;color:var(--oxblood);border:1.3px solid rgba(138,51,36,.7);border-radius:3px;padding:2px 6px;transform:rotate(4deg);opacity:.88;background:rgba(244,237,220,.85);white-space:nowrap}
   .badge-medallion-wrap{width:148px;height:148px;margin:4px auto 2px}
