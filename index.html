@@ -460,6 +460,9 @@
   @keyframes penpath{0%{transform:translate(240px,-120px) rotate(26deg);opacity:0}14%{opacity:1}26%{transform:translate(0,0) rotate(0deg)}34%{transform:translate(0,0) rotate(0deg)}84%{transform:translate(var(--sweep),0) rotate(2deg);opacity:1}100%{transform:translate(calc(var(--sweep) + 70px),-110px) rotate(-18deg);opacity:0}}
   @keyframes penink{0%,34%{width:0}84%,100%{width:var(--sweep)}}
   .cold-hd h3{font-family:var(--serif);font-weight:900;font-size:26px;margin:2px 0 0;color:var(--title);letter-spacing:.3px}
+  .cold-hd .cold-brand{font-family:var(--serif);font-weight:900;font-size:26.25px;letter-spacing:.4px;color:var(--title);line-height:1.0}
+  .cold-hd .cold-brand .amp{font-style:italic;font-weight:700;font-size:1.15em;vertical-align:-.08em;margin:0 .02em}
+  .cold-hd .cold-brand small{display:block;font-family:var(--type);font-size:17.5px;letter-spacing:1.5px;color:var(--title);margin-top:3px;font-weight:400}
   .cold-tag{font-family:var(--serif);font-style:italic;font-size:13.5px;color:var(--ink-soft);margin:6px 4px 0;line-height:1.45}
   .cold-back{position:absolute;left:6px;top:calc(var(--safe-t) + 12px);background:none;border:none;font-family:var(--type);font-size:12px;letter-spacing:.5px;color:var(--ink);padding:8px;cursor:pointer}
   .cold-scroll{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
@@ -577,11 +580,12 @@
   .join-coin{width:96px;height:auto;display:block;margin:0 auto;filter:drop-shadow(0 0 3px rgba(10,7,4,.55)) drop-shadow(0 4px 7px rgba(10,7,4,.5))}
 
   .stamp-done{text-align:center;padding:8px}
+  #s-hunt-done .body{padding-top:68px}
   .stamp-done .stamp-img{width:248px;height:auto;display:block;margin:10px auto 18px;transform:rotate(30deg);animation:stampDown .5s cubic-bezier(.2,1.4,.4,1) both;filter:drop-shadow(0 1px 2px rgba(10,7,4,.25));mix-blend-mode:multiply}
   .done-photowrap{position:relative;width:208px;margin:6px auto 8px 4px}
   .done-photowrap .rec-photo{margin:0}
-  .done-photowrap .stamp-img.done-stamp{position:absolute;top:-45px;right:-192px;width:319px;margin:0;z-index:2;opacity:.6}
-  @media (max-width:349px){ .done-photowrap{width:160px;margin-left:3px} .done-photowrap .stamp-img.done-stamp{width:251px;top:-30px;right:-157px} }
+  .done-photowrap .stamp-img.done-stamp{position:absolute;top:-95px;right:-192px;width:319px;margin:0;z-index:2;opacity:.6}
+  @media (max-width:349px){ .done-photowrap{width:160px;margin-left:3px} .done-photowrap .stamp-img.done-stamp{width:251px;top:-80px;right:-157px} }
   @keyframes stampDown{0%{transform:rotate(12deg) scale(2.2);opacity:0}55%{transform:rotate(32deg) scale(.95);opacity:1}75%{transform:rotate(29deg) scale(1.04)}100%{transform:rotate(30deg) scale(1)}}
 
   .toast{position:fixed;left:50%;bottom:calc(90px + var(--safe-b));transform:translateX(-50%);z-index:620;
@@ -1559,7 +1563,8 @@ async function startBuild(){
   markTourDone();
   if(!hasLicence()){ openLicence("build"); return; }
   let name=await getMyName();
-  if(!name){ name=await askName("Join the Ranks","Your name is for good \u2014 hunters & case files show it, and badge number issued under it. Your badge number is your way of retaining your tokens and moving up the ranks.",""); if(name===null) return; await setMyName(name); await ensureCred(); }
+  if(!name){ name=await askName("Join the Ranks","Your name is for good \u2014 hunters & case files show it, and badge number issued under it. Your badge number is your way of retaining your tokens and moving up the ranks.",""); if(name===null) return; await setMyName(name); }
+  await ensureCred();
   State.build={code:null,title:"Untitled Case",tiles:[],builder:name,timerMins:0};
   { const bti=document.getElementById("build-title-input"); if(bti) bti.value=""; }
   renderBuild(); paintWatch(); go("s-build");
@@ -3099,7 +3104,7 @@ refreshHomeBadge();
   <div class="cold-page">
     <div class="cold-hd">
       <button class="cold-back" onclick="closeColdCases()">&#8249; BACK</button>
-      <span class="eyebrow">SCAVENGER &amp; HUNT CO. &middot; THE ARCHIVE</span>
+      <div class="cold-brand">Scavenger <span class="amp">&amp;</span> Hunt Co.<small>THE ARCHIVE</small></div>
       <h3>Cold Case Files</h3>
       <p class="cold-tag">Curated investigations, kept on ice until a detective takes them up.</p>
     </div>
