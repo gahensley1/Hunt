@@ -787,6 +787,19 @@
     </div>
   </div>
 
+  <!-- ================= PURCHASE RECEIPT ================= -->
+  <div id="s-receipt" class="overlay center">
+    <div class="modal lic-modal">
+      <div class="lic-cert">
+        <div class="lic-eyebrow">SCAVENGER &amp; HUNT CO.</div>
+        <div class="lic-title">Receipt</div>
+        <p class="clue-text" id="receipt-line" style="font-style:normal;margin:10px 4px 4px"></p>
+        <p class="lic-small">No live charge in this preview — real billing arrives with the App&nbsp;Store/Play release.</p>
+      </div>
+      <button class="btn btn-primary" onclick="continueAfterReceipt()">Continue</button>
+    </div>
+  </div>
+
   <!-- ================= CASE FILES (builder hub) ================= -->
   <section id="s-cases" class="screen">
     <div class="topbar"><button class="iconbtn" onclick="go('s-home')">‹</button><h2>Case Files</h2></div>
@@ -1147,8 +1160,19 @@ function licenceGranted(){
   const after=State.afterLic; State.afterLic=null;
   if(after==="build") startBuild(); else go("s-home");
 }
-function purchaseLicence(){ try{localStorage.setItem("shco:lic","PREVIEW");}catch(e){} licenceGranted(); }
-function purchaseSingleCase(){ try{localStorage.setItem("shco:lic","SINGLE");}catch(e){} licenceGranted(); }
+function purchaseLicence(){ try{localStorage.setItem("shco:lic","PREVIEW");}catch(e){} purchaseGranted("The Inspector\u2019s Charter","$6.99 \u2014 unlimited builds"); }
+function purchaseSingleCase(){ try{localStorage.setItem("shco:lic","SINGLE");}catch(e){} purchaseGranted("Build One Case","$0.99 \u2014 one build"); }
+function purchaseGranted(tier,priceLine){
+  closeOverlay("s-licence");
+  pushProfile();
+  document.getElementById("receipt-line").innerHTML="You\u2019ve chosen <b>"+tier+"</b><br>"+priceLine+".";
+  openOverlay("s-receipt");
+}
+function continueAfterReceipt(){
+  closeOverlay("s-receipt");
+  const after=State.afterLic; State.afterLic=null;
+  if(after==="build") startBuild(); else go("s-home");
+}
 function redeemLicence(){
   const raw=document.getElementById("lic-key").value;
   if(!validLicence(raw)){ toast("That key doesn\u2019t check out \u2014 mind the dashes and try again."); return; }
@@ -1412,12 +1436,12 @@ function guestName(){
   closeOverlay("ov-name");
   const r=State._nameResolve; State._nameResolve=null; if(r) r(GUEST);
 }
-function askName(head, sub, prefill, allowGuest){
+function askName(head, sub, prefill, allowGuest, btnLabel){
   return new Promise(res=>{
     document.getElementById("name-head").textContent=head;
     document.getElementById("name-sub").textContent=sub||"";
     const g=document.getElementById("name-guest"); if(g) g.classList.toggle("hidden", !allowGuest);
-    const sv=document.getElementById("name-save"); if(sv) sv.textContent=allowGuest?"Join the Force":"Save";
+    const sv=document.getElementById("name-save"); if(sv) sv.textContent=btnLabel||(allowGuest?"Join the Force":"Save");
     const pr=document.getElementById("name-prc"); if(pr){ pr.classList.toggle("hidden", !!allowGuest);
       const zi=document.getElementById("name-zip"); if(zi) zi.value=(localStorage.getItem("sh_precinct")||"").replace(/\D/g,""); }
     const inp=document.getElementById("name-input"); inp.value=prefill||"";
@@ -1562,7 +1586,7 @@ async function startBuild(){
     markTourDone();
     if(!hasLicence()){ openLicence("build"); return; }
     let name=await getMyName();
-    if(!name){ name=await askName("Join the Ranks","Your name is for good \u2014 hunters & case files show it, and badge number issued under it. Your badge number is your way of retaining your tokens and moving up the ranks.",""); if(name===null) return; await setMyName(name); }
+    if(!name){ name=await askName("Join the Ranks","Your name is for good \u2014 hunters & case files show it, and badge number issued under it. Your badge number is your way of retaining your tokens and moving up the ranks.","",false,"Join the Ranks"); if(name===null) return; await setMyName(name); }
     await ensureCred();
     State.build={code:null,title:"Untitled Case",tiles:[],builder:name,timerMins:0};
     { const bti=document.getElementById("build-title-input"); if(bti) bti.value=""; }
