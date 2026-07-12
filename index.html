@@ -528,7 +528,6 @@
   .rank-stamp.home::before{content:"RANK";position:absolute;top:-30px;left:0;right:0;text-align:center;font-family:var(--type);font-size:24px;line-height:1;letter-spacing:2px;color:var(--ink);opacity:.7}
   #cred-rank{display:block;width:auto;max-width:100%;box-sizing:border-box;margin:5px auto 6px;font-size:16px;padding:4px 12px;border-width:2px;transform:none;white-space:normal;word-break:break-word}
   .cred-card{position:relative}
-  .classified-tag{position:absolute;top:9px;right:9px;font-family:var(--type);font-size:8px;font-weight:700;letter-spacing:1.1px;color:var(--oxblood);border:1.3px solid rgba(138,51,36,.7);border-radius:3px;padding:2px 6px;transform:rotate(4deg);opacity:.88;background:rgba(244,237,220,.85);white-space:nowrap}
   #cred-ov .btn{padding:11px 16px;font-size:14.5px}
   #cred-ov .btn-ghost{font-size:14px;font-weight:700;padding:10px 13px}
   @media (max-width:349px){
@@ -744,6 +743,7 @@
       <div class="prog-lbl"><span id="prog-count">0 / 0 found</span><span id="prog-watch" class="prog-watch hidden"></span><span id="prog-pct">0%</span></div>
       <div class="prog"><span id="prog-bar"></span></div>
     </div>
+    <p class="clue-text" style="margin-top:10px">Tap the image when you find the match, then follow the clue.</p>
     <div id="hunt-grid" class="grid"></div>
     <div class="footbar">
       <button id="finish-hunt" class="btn btn-ox" disabled onclick="finishHunt()">Finished — Send Proof to Builder</button>
@@ -908,7 +908,6 @@
 <!-- credentials ceremony: the cipher disk spins and settles -->
 <div id="cred-ov" class="hidden">
   <div class="cred-card">
-    <div class="classified-tag">PERSONAL FILE — EYES ONLY</div>
     <span class="eyebrow">SCAVENGER &amp; HUNT CO. · THE REGISTER</span>
     <p class="badge-no-label">BADGE No.</p>
     <div class="cipher-row" id="cred-cipher"></div>
@@ -1176,7 +1175,7 @@ async function mintCred(){
     const a=new Uint32Array(6); crypto.getRandomValues(a);
     let body=""; for(let i=0;i<6;i++) body+=LIC_ALPHA[a[i]%LIC_ALPHA.length];
     const code="DET"+body+licCheck(body);
-    let exists=null; try{ exists=await Store.get("profile:"+code,true); }catch(e){ return null; }
+    let exists=null; try{ exists=await Store.get("profile:"+code,true); }catch(e){ return code; } // offline/unreachable: accept locally, sync reconciles later
     if(!exists) return code;
   }
   return null;
@@ -1215,7 +1214,7 @@ async function ensureCred(){
   if(myCred()) return;
   const name=await getMyName(); if(!name) return;
   const code=await mintCred();
-  if(!code){ try{ localStorage.setItem("shco:credDue","1"); }catch(e){} return; }
+  if(!code){ try{ localStorage.setItem("shco:credDue","1"); }catch(e){} toast("The mint was unreachable \u2014 your badge number will be issued when the connection returns.", 4200); return; }
   try{ localStorage.setItem(CRED_KEY, code); localStorage.removeItem("shco:credDue"); }catch(e){}
   await pushProfile();
   showCredCeremony(name, code);
@@ -1350,7 +1349,6 @@ async function signRegister(){
   }
   closeRecord();
   await ensureCred();
-  if(!myCred()) toast("The mint was unreachable \u2014 your badge number will be issued when the connection returns.", 4200);
 }
 async function restoreByCipher(){
   var inp=prompt("DETECTIVE\u2019S CREDENTIALS\n\nPaste your DET badge number to restore your record on this device.");
