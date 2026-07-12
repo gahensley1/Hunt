@@ -797,7 +797,7 @@
         <p class="badge-no-label">BADGE No.</p>
         <div class="cipher-row" id="receipt-cipher"></div>
         <p class="lic-small">Please copy this — it's your way to retrieve your purchase on any device.</p>
-        <button class="btn-ghost" onclick="copyCred()" style="margin:2px 0 8px">Take a Carbon Copy</button>
+        <p class="cc-text" onclick="copyCred()" style="margin:2px 0 8px;cursor:pointer;text-decoration:underline;text-underline-offset:3px;color:var(--ink);font-family:var(--type);font-size:12px;letter-spacing:1px;text-align:center">Take a Carbon Copy</p>
         <p class="lic-small">No live charge in this preview — real billing arrives with the App&nbsp;Store/Play release.</p>
       </div>
       <button class="btn btn-primary" onclick="continueAfterReceipt()">Continue</button>
@@ -935,7 +935,7 @@
     <div class="rank-ladder" id="rank-ladder"></div>
     <p class="cred-note">This name is yours for good, and this badge number is the only key to your record — name, license &amp; coins. Anyone holding it can claim them. Guard it like a case file.</p>
     <button class="btn btn-primary" onclick="copyCred()">Take a Carbon Copy</button>
-    <button class="btn-ghost" onclick="credFiled()" style="margin-top:6px">Filed — I have it safe</button>
+    <button class="btn-ghost" onclick="credFiled()" style="margin-top:6px;background:#2e5c3f;color:#F1E7D0;border:1px solid #1d3d29;border-radius:6px;font-weight:700;letter-spacing:1px;padding:10px 13px">Filed — I have it safe</button>
   </div>
 </div>
 
@@ -1292,6 +1292,7 @@ function showCredCeremony(name, code){
     row.appendChild(c);
   }
   document.getElementById("cred-ov").classList.remove("hidden");
+  try{ window.scrollTo(0,0); document.getElementById("app").scrollTop=0; }catch(e){}
   const still=(typeof matchMedia==="function")&&matchMedia("(prefers-reduced-motion: reduce)").matches;
   if(still){ cells.forEach(c=>{ c.textContent=c._final; c.classList.add("lock"); }); return; }
   const spin=setInterval(()=>{ cells.forEach(c=>{ if(!c.classList.contains("lock")) c.textContent=LIC_ALPHA[(Math.random()*LIC_ALPHA.length)|0]; }); }, 46);
@@ -1387,7 +1388,7 @@ async function renderRecord(){
     '<span class="dos-splat s1"></span><span class="dos-splat s2"></span>';
   var actions=document.getElementById("rec-actions");
   if(actions){ actions.innerHTML = cred
-      ? '<button class="btn btn-primary" onclick="copyCred()" style="margin-top:6px">Take a Carbon Copy</button>'
+      ? '<p onclick="copyCred()" style="margin-top:6px;cursor:pointer;text-decoration:underline;text-underline-offset:3px;color:var(--ink);font-family:var(--type);font-size:13px;letter-spacing:1px;text-align:center">Take a Carbon Copy</p>'
       : '<button class="btn btn-primary" onclick="signRegister()" style="margin-top:6px">Join the Force \u2014 issue my credentials</button><button class="btn-ghost" onclick="restoreByCipher()" style="margin-top:8px">Restore with a badge number</button>'; }
 }
 async function openRecord(){
@@ -1402,9 +1403,11 @@ async function joinRanksFromDispatch(){
   if(!v){ toast("State your name to join the ranks."); return; }
   const z=(document.getElementById("dispatch-zip").value||"").trim();
   if(z && !/^\d{5}$/.test(z)){ toast("A five-digit zip, detective."); return; }
+  try{ document.getElementById("dispatch-name").blur(); document.getElementById("dispatch-zip").blur(); if(document.activeElement&&document.activeElement.blur) document.activeElement.blur(); }catch(e){}
   try{
     if(z) localStorage.setItem("sh_precinct",z); else localStorage.removeItem("sh_precinct");
     const sh=document.getElementById("scrollhint-ov"); if(sh) sh.classList.add("hidden");
+    await new Promise(r=>setTimeout(r,220));
     await setMyName(v);
     await ensureCred();
     const cred=document.getElementById("cred-ov");
