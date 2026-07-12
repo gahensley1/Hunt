@@ -453,6 +453,7 @@
   .cold-body{padding:10px 16px 14px}
   .cold-ft{padding:4px 16px calc(10px + var(--safe-b));border-top:1px solid rgba(184,134,59,.35);background:var(--paper-2)}
   .coldrail{position:fixed;left:0;right:0;bottom:0;z-index:60;width:100%;box-sizing:border-box;margin:0;padding:8px 16px calc(10px + var(--safe-b));text-align:center;background:var(--paper-2);border:none;border-top:1px solid rgba(184,134,59,.35);box-shadow:0 -6px 16px rgba(10,7,4,.25)}
+
   .coldrail .eyebrow{display:block;margin-bottom:4px}
   .cold-plq{display:block;width:100%;max-width:340px;margin:0 auto;filter:drop-shadow(0 2px 3px rgba(10,7,4,.7)) drop-shadow(0 7px 10px rgba(10,7,4,.38))}
   .cold-sub{display:block;margin-top:10px;font-family:var(--type);font-size:14px;font-weight:700;letter-spacing:.5px;color:var(--ink);line-height:1.55;text-align:center}
@@ -565,7 +566,7 @@
   .stamp-done .stamp-img{width:248px;height:auto;display:block;margin:10px auto 18px;transform:rotate(30deg);animation:stampDown .5s cubic-bezier(.2,1.4,.4,1) both;filter:drop-shadow(0 1px 2px rgba(10,7,4,.25));mix-blend-mode:multiply}
   .done-photowrap{position:relative;width:208px;margin:6px auto 8px 4px}
   .done-photowrap .rec-photo{margin:0}
-  .done-photowrap .stamp-img.done-stamp{position:absolute;top:-45px;right:-192px;width:319px;margin:0;z-index:2}
+  .done-photowrap .stamp-img.done-stamp{position:absolute;top:-45px;right:-192px;width:319px;margin:0;z-index:2;opacity:.6}
   @media (max-width:349px){ .done-photowrap{width:160px;margin-left:3px} .done-photowrap .stamp-img.done-stamp{width:251px;top:-30px;right:-157px} }
   @keyframes stampDown{0%{transform:rotate(12deg) scale(2.2);opacity:0}55%{transform:rotate(32deg) scale(.95);opacity:1}75%{transform:rotate(29deg) scale(1.04)}100%{transform:rotate(30deg) scale(1)}}
 
@@ -751,7 +752,7 @@
         <p class="lic-copy">One license — unlimited builds</p>
         <div class="lic-free">HUNTERS ALWAYS PLAY FREE</div>
       </div>
-      <button class="btn btn-primary" onclick="purchaseLicence()"><span class="em">🪙</span> Purchase the Inspector&rsquo;s Charter</button>
+      <button class="btn btn-primary" onclick="purchaseLicence()"><span class="em">🪙</span> Purchase The Inspector&rsquo;s Charter</button>
       <p class="lic-small">Payment processing arrives with the App&nbsp;Store release — in this preview, the button unlocks instantly.</p>
       <div class="lic-or">OR REDEEM A KEY</div>
       <input id="lic-key" class="lic-key" placeholder="SHCO-XXXX-XXXX" autocapitalize="characters" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter')redeemLicence()">
@@ -2749,7 +2750,7 @@ async function openVerify(code, hid){
   State.verify={code,hid,hunt,sub,findMap,marks:Object.assign({},res.marks||{}),note:res.note||""};
   body.innerHTML=`<div class="h-card" style="margin-bottom:12px">
       <label class="eyebrow" style="display:block;margin-bottom:6px">Note to file (optional)</label>
-      <textarea id="v-note" class="field" style="min-height:58px;margin:0" placeholder="Anything to remember about ${escapeHtml(sub.name||"this hunter")}\u2019s finds…">${escapeHtml(res.note||"")}</textarea>
+      <textarea id="v-note" class="field" style="min-height:58px;margin:0" placeholder="Send ${escapeHtml(sub.name||"this hunter")} a message like &quot;Jolly good show&quot; or &quot;Balderdash, try again&quot;">${escapeHtml(res.note||"")}</textarea>
     </div>`;
   hunt.tiles.forEach((t,i)=>{
     const target = tileHTML(t);
