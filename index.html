@@ -166,6 +166,7 @@
   }
   .btn:active{transform:translateY(1px) scale(.99)}
   .btn:disabled{opacity:.45;cursor:default}
+  .banner-green{display:block;width:100%;box-sizing:border-box;margin-top:8px;background:linear-gradient(180deg,var(--green),var(--green-dk));color:var(--paper);box-shadow:var(--shadow);border:1px solid rgba(0,0,0,.2);border-radius:10px;font-family:var(--type);font-weight:700;letter-spacing:1px;font-size:15px;padding:13px 14px;text-align:center;cursor:pointer}
   .btn-primary{background:linear-gradient(180deg,var(--green),var(--green-dk));color:var(--paper);box-shadow:var(--shadow);border-color:rgba(0,0,0,.2)}
   .btn-brass{background:linear-gradient(180deg,var(--brass-lt),var(--brass));color:#2b2013;box-shadow:var(--shadow);border-color:rgba(0,0,0,.15)}
   .btn-return{background:linear-gradient(180deg,#A03D2A,var(--oxblood));color:var(--paper);box-shadow:var(--shadow);border-color:rgba(0,0,0,.22)}
@@ -797,10 +798,10 @@
         <p class="badge-no-label">BADGE No.</p>
         <div class="cipher-row" id="receipt-cipher"></div>
         <p class="lic-small">Please copy this — it's your way to retrieve your purchase on any device.</p>
-        <p class="cc-text" onclick="copyCred()" style="margin:2px 0 8px;cursor:pointer;text-decoration:underline;text-underline-offset:3px;color:var(--ink);font-family:var(--type);font-size:12px;letter-spacing:1px;text-align:center">Take a Carbon Copy</p>
+        <button class="banner-green" onclick="copyCred()" style="margin:2px 0 8px">Take a Carbon Copy</button>
         <p class="lic-small">No live charge in this preview — real billing arrives with the App&nbsp;Store/Play release.</p>
       </div>
-      <button class="btn btn-primary" onclick="continueAfterReceipt()">Continue</button>
+      <button class="banner-green" onclick="continueAfterReceipt()">Continue</button>
     </div>
   </div>
 
@@ -934,8 +935,8 @@
     <div class="dos-top" id="cred-photorow"></div>
     <div class="rank-ladder" id="rank-ladder"></div>
     <p class="cred-note">This name is yours for good, and this badge number is the only key to your record — name, license &amp; coins. Anyone holding it can claim them. Guard it like a case file.</p>
-    <button class="btn btn-primary" onclick="copyCred()">Take a Carbon Copy</button>
-    <button class="btn-ghost" onclick="credFiled()" style="margin-top:6px;background:#2e5c3f;color:#F1E7D0;border:1px solid #1d3d29;border-radius:6px;font-weight:700;letter-spacing:1px;padding:10px 13px">Filed — I have it safe</button>
+    <button class="banner-green" onclick="copyCred()">Take a Carbon Copy</button>
+    <button class="banner-green" onclick="credFiled()">Filed — I have it safe</button>
   </div>
 </div>
 
@@ -943,7 +944,7 @@
   <div class="tov-card">
     <div class="rec-scroll" id="rec-body"></div>
     <div id="rec-actions"></div>
-    <button class="btn-ghost" onclick="closeRecord()" style="margin-top:8px">Close the File</button>
+    <button class="banner-green" onclick="closeRecord()">Close the File</button>
   </div>
 </div>
 
@@ -1265,6 +1266,23 @@ async function ensureCred(){
   await pushProfile();
   showCredCeremony(name, code);
 }
+let _scrollLockY=0;
+function lockBodyScroll(){
+  _scrollLockY=window.scrollY||window.pageYOffset||0;
+  document.body.style.position="fixed";
+  document.body.style.top=(-_scrollLockY)+"px";
+  document.body.style.left="0";
+  document.body.style.right="0";
+  document.body.style.width="100%";
+}
+function unlockBodyScroll(){
+  document.body.style.position="";
+  document.body.style.top="";
+  document.body.style.left="";
+  document.body.style.right="";
+  document.body.style.width="";
+  window.scrollTo(0,_scrollLockY);
+}
 /* the cipher disk: characters spin like a Wheatstone wheel and settle left to right */
 function showCredCeremony(name, code){
   const row=document.getElementById("cred-cipher"); if(!row) return;
@@ -1292,7 +1310,7 @@ function showCredCeremony(name, code){
     row.appendChild(c);
   }
   document.getElementById("cred-ov").classList.remove("hidden");
-  try{ window.scrollTo(0,0); document.getElementById("app").scrollTop=0; }catch(e){}
+  try{ lockBodyScroll(); }catch(e){}
   const still=(typeof matchMedia==="function")&&matchMedia("(prefers-reduced-motion: reduce)").matches;
   if(still){ cells.forEach(c=>{ c.textContent=c._final; c.classList.add("lock"); }); return; }
   const spin=setInterval(()=>{ cells.forEach(c=>{ if(!c.classList.contains("lock")) c.textContent=LIC_ALPHA[(Math.random()*LIC_ALPHA.length)|0]; }); }, 46);
@@ -1316,6 +1334,7 @@ async function copyCred(){
 }
 function credFiled(){
   document.getElementById("cred-ov").classList.add("hidden");
+  try{ unlockBodyScroll(); }catch(e){}
   if(State._pendingTourAfterCred){ State._pendingTourAfterCred=false; setTimeout(runHomeTour, 300); }
 }
 var COMMEND_LORE={
@@ -1388,7 +1407,7 @@ async function renderRecord(){
     '<span class="dos-splat s1"></span><span class="dos-splat s2"></span>';
   var actions=document.getElementById("rec-actions");
   if(actions){ actions.innerHTML = cred
-      ? '<p onclick="copyCred()" style="margin-top:6px;cursor:pointer;text-decoration:underline;text-underline-offset:3px;color:var(--ink);font-family:var(--type);font-size:13px;letter-spacing:1px;text-align:center">Take a Carbon Copy</p>'
+      ? '<button class="banner-green" onclick="copyCred()" style="margin-top:6px">Take a Carbon Copy</button>'
       : '<button class="btn btn-primary" onclick="signRegister()" style="margin-top:6px">Join the Force \u2014 issue my credentials</button><button class="btn-ghost" onclick="restoreByCipher()" style="margin-top:8px">Restore with a badge number</button>'; }
 }
 async function openRecord(){
