@@ -465,10 +465,10 @@
   .cold-hd .cold-brand .amp{font-style:italic;font-weight:700;font-size:1.15em;vertical-align:-.08em;margin:0 .02em}
   .cold-hd .cold-brand small{display:block;font-family:var(--type);font-size:17.5px;letter-spacing:1.5px;color:var(--title);margin-top:3px;font-weight:400}
   .cold-tag{font-family:var(--serif);font-style:italic;font-size:13.5px;color:var(--ink-soft);margin:6px 4px 0;line-height:1.45}
-  .cold-back{position:absolute;left:6px;top:calc(var(--safe-t) + 12px);background:none;border:none;font-family:var(--type);font-size:12px;letter-spacing:.5px;color:var(--ink);padding:8px;cursor:pointer}
+  .cold-back{position:absolute;left:6px;top:calc(var(--safe-t) + 14px);background:none;border:none;font-family:var(--type);font-size:12px;line-height:26.25px;letter-spacing:.5px;color:var(--ink);padding:0 8px;cursor:pointer}
   .cold-scroll{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
   .cold-body{padding:10px 16px 14px}
-  .cold-ft{padding:4px 16px calc(10px + var(--safe-b));border-top:1px solid rgba(184,134,59,.35);background:var(--paper-2)}
+  .cold-ft{padding:2px 16px calc(6px + var(--safe-b));border-top:1px solid rgba(184,134,59,.35);background:var(--paper-2)}
   .coldrail{position:fixed;left:0;right:0;bottom:0;z-index:60;width:100%;box-sizing:border-box;margin:0;padding:8px 16px calc(10px + var(--safe-b));text-align:center;background:var(--paper-2);border:none;border-top:1px solid rgba(184,134,59,.35);box-shadow:0 -6px 16px rgba(10,7,4,.25)}
 
   .coldrail .eyebrow{display:block;margin-bottom:4px}
@@ -570,7 +570,7 @@
   .currow{background:rgba(255,252,244,.55);border:1.5px solid rgba(184,134,59,.5);border-radius:10px;padding:11px 12px;margin-bottom:10px;text-align:left}
   .cur-in{width:100%;margin-top:7px;padding:8px 9px;border:1px solid rgba(122,85,31,.45);border-radius:7px;background:rgba(255,252,244,.8);font-family:var(--type);font-size:16px;color:var(--ink)}
   .cur-btns{display:flex;gap:8px;margin-top:9px}
-  .cur-door{display:block;margin:10px auto 0;background:none;border:none;font-family:var(--type);font-size:9.5px;letter-spacing:1px;color:var(--ink-soft);opacity:.55;text-decoration:underline dotted}
+  .cur-door{display:block;margin:5px auto 0;background:none;border:none;font-family:var(--type);font-size:8.5px;letter-spacing:1px;color:var(--ink-soft);opacity:.55;text-decoration:underline dotted}
   .pill.rank1{background:linear-gradient(180deg,#E4C079,#B8863B);color:#2a1c08;border:1px solid #8a6425;box-shadow:0 1px 2px rgba(10,7,4,.3)}
   .done-rank{font-family:var(--serif);font-weight:900;font-size:21px;color:var(--oxblood);margin:0 0 10px;letter-spacing:.4px}
 
@@ -926,7 +926,7 @@
 <!-- credentials ceremony: the cipher disk spins and settles -->
 <div id="cred-ov" class="hidden">
   <div class="cred-card">
-    <span class="eyebrow">SCAVENGER &amp; HUNT CO. · THE REGISTER</span>
+    <span class="eyebrow">SCAVENGER &amp; HUNT CO. · REGISTER</span>
     <p class="badge-no-label">BADGE No.</p>
     <div class="cipher-row" id="cred-cipher"></div>
     <h3 class="cred-h">Credentials Issued</h3>
@@ -1129,7 +1129,14 @@ function go(id){
 }
 function refreshHomeBadge(){
   try{ const b=document.getElementById("home-cred-badge"); if(b&&!b.innerHTML) b.innerHTML=credBadgeSVG(); }catch(e){}
-  try{ document.getElementById("home-rank-stamp").textContent=myCred()?myRankName():"UNDERCOVER"; }catch(e){}
+  try{
+    const el=document.getElementById("home-rank-stamp");
+    const rank=myRankName();
+    el.textContent=rank;
+    const base=30.94, len=rank.length;
+    const size = len<=12 ? base : Math.max(15, base - (len-12)*0.95);
+    el.style.fontSize=size+"px";
+  }catch(e){}
 }
 function toast(msg,ms,cls){
   const t=document.getElementById("toast"); t.textContent=msg; t.className="toast show"+(cls?" "+cls:"");
@@ -2113,8 +2120,8 @@ async function renderCurator(){
   const list=document.getElementById("curator-list"); list.innerHTML='<div class="empty">Fetching your cases\u2026</div>';
   let mine=[]; try{ mine=JSON.parse(await Store.get("mycases")||"[]"); }catch(e){}
   const idx=await coldIndex(); const pub={}; idx.forEach(e=>pub[e.code]=e);
-  list.innerHTML="";
-  if(!mine.length){ list.innerHTML='<div class="empty">Build a case first \u2014 then publish it here.</div>'; return; }
+  list.innerHTML='<button class="btn btn-brass" onclick="curatorCreateHunt()" style="margin-bottom:10px">+ Create a New Hunt</button>';
+  if(!mine.length){ list.innerHTML+='<div class="empty">Build a case above \u2014 then publish it here.</div>'; return; }
   for(const code of mine){
     let hh=null; try{ const r=await Store.get("hunt:"+code,true); hh=r?JSON.parse(r):null; }catch(e){}
     if(!hh) continue;
@@ -2132,6 +2139,11 @@ async function renderCurator(){
   }
 }
 function closeCurator(){ document.getElementById("curator-ov").classList.add("hidden"); }
+function curatorCreateHunt(){
+  State._curatorBuildFlow=true;
+  document.getElementById("curator-ov").classList.add("hidden");
+  startBuild();
+}
 function curGeo(code){
   const g={}, f=id=>{const el=document.getElementById(id+"-"+code); return el?el.value.trim():"";};
   const city=f("cgeo-city"), st=f("cgeo-state"), zip=f("cgeo-zip"), ctry=f("cgeo-ctry");
@@ -2201,6 +2213,7 @@ function confirmLeaveBuild(){
   if(State.build && State.build.tiles.length>0){
     if(!confirm("Leave without saving this case? Your board will be lost.")) return;
   }
+  if(State._curatorBuildFlow){ State._curatorBuildFlow=false; renderCurator(); return; }
   go("s-home");
 }
 function renderBuild(){
@@ -2375,6 +2388,12 @@ async function finishBuild(){
   // record in my cases
   let mine=[]; try{mine=JSON.parse(await Store.get("mycases")||"[]");}catch(e){}
   if(!mine.includes(code)){ mine.unshift(code); await Store.set("mycases",JSON.stringify(mine)); }
+  if(State._curatorBuildFlow){
+    State._curatorBuildFlow=false;
+    await renderCurator();
+    toast("Case filed \u2014 add its location below and publish.", 3600);
+    return;
+  }
   document.getElementById("share-code").textContent=code;
   go("s-share");
 }
