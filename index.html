@@ -935,7 +935,7 @@
     <div class="dos-top" id="cred-photorow"></div>
     <div class="rank-ladder" id="rank-ladder"></div>
     <p class="cred-note">This name is yours for good, and this badge number is the only key to your record — name, license &amp; coins. Anyone holding it can claim them. Guard it like a case file.</p>
-    <button class="banner-green" onclick="copyCred()">Take a Carbon Copy</button>
+    <p onclick="copyCred()" style="cursor:pointer;color:var(--ink);font-family:var(--type);font-size:15px;letter-spacing:.5px;text-align:center;margin:8px 0">Take a Carbon Copy</p>
     <button class="banner-green" onclick="credFiled()">Filed — I have it safe</button>
   </div>
 </div>
@@ -1261,7 +1261,7 @@ async function ensureCred(){
   if(myCred()) return;
   const name=await getMyName(); if(!name) return;
   const code=await mintCred();
-  if(!code){ try{ localStorage.setItem("shco:credDue","1"); }catch(e){} try{ unlockBodyScroll(); }catch(e){} toast("The mint was unreachable \u2014 your badge number will be issued when the connection returns.", 4200); return; }
+  if(!code){ try{ localStorage.setItem("shco:credDue","1"); }catch(e){} toast("The mint was unreachable \u2014 your badge number will be issued when the connection returns.", 4200); return; }
   try{ localStorage.setItem(CRED_KEY, code); localStorage.removeItem("shco:credDue"); }catch(e){}
   await pushProfile();
   showCredCeremony(name, code);
@@ -1338,7 +1338,6 @@ async function copyCred(){
 }
 function credFiled(){
   document.getElementById("cred-ov").classList.add("hidden");
-  try{ unlockBodyScroll(); }catch(e){}
   if(State._pendingTourAfterCred){ State._pendingTourAfterCred=false; setTimeout(runHomeTour, 300); }
 }
 var COMMEND_LORE={
@@ -1411,7 +1410,7 @@ async function renderRecord(){
     '<span class="dos-splat s1"></span><span class="dos-splat s2"></span>';
   var actions=document.getElementById("rec-actions");
   if(actions){ actions.innerHTML = cred
-      ? '<button class="banner-green" onclick="copyCred()" style="margin-top:6px">Take a Carbon Copy</button>'
+      ? '<p onclick="copyCred()" style="cursor:pointer;color:var(--ink);font-family:var(--type);font-size:15px;letter-spacing:.5px;text-align:center;margin-top:6px">Take a Carbon Copy</p>'
       : '<button class="btn btn-primary" onclick="signRegister()" style="margin-top:6px">Join the Force \u2014 issue my credentials</button><button class="btn-ghost" onclick="restoreByCipher()" style="margin-top:8px">Restore with a badge number</button>'; }
 }
 async function openRecord(){
@@ -3125,7 +3124,7 @@ async function runHomeTour(){
     const dn=document.getElementById("tour-down");
     if(dn){ dn.classList.add("show"); await _twait(3000); dn.classList.remove("show"); }
   }catch(e){}
-  finally{ _tourBusy=false; _tourLastEnd=Date.now(); }
+  finally{ _tourBusy=false; _tourLastEnd=Date.now(); try{ unlockBodyScroll(); }catch(e){} }
 }
 function markTourDone(){ try{ localStorage.setItem("shco:tour","1"); }catch(e){} }
 let _tt=[],_ttT=null;
