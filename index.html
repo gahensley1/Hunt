@@ -2144,9 +2144,9 @@ async function renderCurator(){
       +'<input class="cur-in" id="cblurb-'+code+'" maxlength="120" placeholder="One-line teaser \u2014 e.g. Solve it before your ranger tour ends" value="'+escapeHtml((p&&p.blurb)||hh.blurb||"")+'">'
       +'<div class="cdiff-row"><span class="cdiff-lbl">Difficulty</span>'+starpickHTML("cdiff-"+code,(p&&p.diff)||0)+'</div>'
       +'<div class="cgeo-row"><input class="cur-in" id="cgeo-city-'+code+'" maxlength="40" placeholder="City" value="'+escapeHtml((p&&p.city)||"")+'"><input class="cur-in" id="cgeo-state-'+code+'" maxlength="20" placeholder="State" value="'+escapeHtml((p&&p.state)||"")+'"></div>'
-      +'<div class="cgeo-row"><input class="cur-in" id="cgeo-zip-'+code+'" maxlength="10" placeholder="Zip" value="'+escapeHtml((p&&p.zip)||"")+'"><input class="cur-in" id="cgeo-ctry-'+code+'" maxlength="30" placeholder="Country" value="'+escapeHtml((p&&p.country)||"")+'"></div>'
+      +'<div class="cgeo-row"><input class="cur-in" id="cgeo-zip-'+code+'" maxlength="10" placeholder="Zip" oninput="curPubToggle(\''+code+'\')" value="'+escapeHtml((p&&p.zip)||"")+'"><input class="cur-in" id="cgeo-ctry-'+code+'" maxlength="30" placeholder="Country" value="'+escapeHtml((p&&p.country)||"")+'"></div>'
       +'<div class="cgeo-row"><button class="btn-ghost" id="cgeo-pin-'+code+'"'+(p&&p.lat!=null?' data-lat="'+p.lat+'" data-lon="'+p.lon+'"':'')+' onclick="curPick(\''+code+'\')">'+(p&&p.lat!=null?'\u2691 Pin placed \u2014 tap to move':'\u2690 Place on chart')+'</button></div>'
-      +'<div class="cur-btns"><button class="btn btn-brass" onclick="publishCold(\''+code+'\')">'+(p?"Update":"Publish")+'</button>'
+      +'<div class="cur-btns"><button class="btn btn-brass" id="cpub-'+code+'" onclick="publishCold(\''+code+'\')"'+(((p&&p.zip)||"")?"":" disabled")+'>'+(p?"Update":"Publish")+'</button>'
       +(p?'<button class="btn-ghost" onclick="retireCold(\''+code+'\')">Retire</button>':'')+'</div>';
     list.appendChild(row);
   }
@@ -2219,17 +2219,21 @@ function curGeo(code){
   if(p&&p.dataset.lat){ g.lat=+p.dataset.lat; g.lon=+p.dataset.lon; }
   return g;
 }
+function curPubToggle(code){ try{ var z=(document.getElementById("cgeo-zip-"+code)||{}).value||""; var b=document.getElementById("cpub-"+code); if(b) b.disabled=!z.trim(); }catch(e){} }
 async function publishCold(code){
   try{
     const raw=await Store.get("hunt:"+code,true); if(!raw){ toast("Case not reachable."); return; }
     const hh=JSON.parse(raw);
-    hh.cold=true; hh.parAuto=true;
+    const zipEl=document.getElementById("cgeo-zip-"+code);
+    if(!zipEl||!zipEl.value.trim()){ toast("A zip code is required to file a cold case."); return; }
     hh.place=document.getElementById("cplace-"+code).value.trim();
     hh.blurb=document.getElementById("cblurb-"+code).value.trim();
-    await Store.set("hunt:"+code, JSON.stringify(hh), true);
-    const idx=await coldIndex(); const i=idx.findIndex(e=>e.code===code);
     const entry={code, title:hh.title||"Untitled Case", place:hh.place, blurb:hh.blurb, diff:curDiff(code), ...curGeo(code)};
     if(entry.lat==null){ const a=gazAuto(entry); if(a){ entry.lat=+(+a[0]).toFixed(4); entry.lon=+(+a[1]).toFixed(4); } }
+    if(entry.lat==null){ toast("Couldn\u2019t place that zip on the map \u2014 double-check it."); return; }
+    hh.cold=true; hh.parAuto=true;
+    await Store.set("hunt:"+code, JSON.stringify(hh), true);
+    const idx=await coldIndex(); const i=idx.findIndex(e=>e.code===code);
     if(i>=0) idx[i]=entry; else idx.push(entry);
     await Store.set("cold:index", JSON.stringify(idx), true);
     toast("Filed in the Cold Case archive.");
@@ -2811,7 +2815,9 @@ async function openCaseFiles(){
     body.appendChild(emp); appendColdRail(body); return;
   }
   if(name){ const g=document.createElement("p"); g.className="eyebrow"; g.style.margin="0 2px 12px"; g.textContent="Detective "+name+" · your cases"; body.appendChild(g); }
+  let _coldCodes={}; try{ (await coldIndex()).forEach(e=>{ if(e&&e.code) _coldCodes[e.code]=1; }); }catch(e){}
   for(const code of mine){
+   if(_coldCodes[code]) continue;            // published cold cases live in the archive, not your files
    try{
     const raw=await Store.get("hunt:"+code,true);
     if(!raw){                                   // unreachable ≠ gone — never silently drop a case
