@@ -167,6 +167,8 @@
   .btn:active{transform:translateY(1px) scale(.99)}
   .btn:disabled{opacity:.45;cursor:default}
   .banner-green{display:block;width:100%;box-sizing:border-box;margin-top:8px;background:linear-gradient(180deg,var(--green),var(--green-dk));color:var(--paper);box-shadow:var(--shadow);border:1px solid rgba(0,0,0,.2);border-radius:10px;font-family:var(--type);font-weight:700;letter-spacing:1px;font-size:15px;padding:13px 14px;text-align:center;cursor:pointer}
+  @keyframes ccPulse{0%,100%{box-shadow:0 0 0 0 rgba(216,175,99,0)}50%{box-shadow:0 0 0 7px rgba(216,175,99,.55)}}
+  .cc-pulse{border-radius:6px;animation:ccPulse .5s ease-in-out 4}
   .btn-primary{background:linear-gradient(180deg,var(--green),var(--green-dk));color:var(--paper);box-shadow:var(--shadow);border-color:rgba(0,0,0,.2)}
   .btn-brass{background:linear-gradient(180deg,var(--brass-lt),var(--brass));color:#2b2013;box-shadow:var(--shadow);border-color:rgba(0,0,0,.15)}
   .btn-return{background:linear-gradient(180deg,#A03D2A,var(--oxblood));color:var(--paper);box-shadow:var(--shadow);border-color:rgba(0,0,0,.22)}
@@ -359,7 +361,7 @@
   .cc.dash{border:none;background:none;width:7px;color:var(--ink-soft)}
   .cc.lock{border-color:var(--brass-dk);background:rgba(216,175,99,.32);color:var(--ink);box-shadow:0 0 7px rgba(216,175,99,.55);transition:all .15s ease}
   .cred-note{font-family:var(--type);font-size:10.5px;letter-spacing:.4px;line-height:1.65;color:var(--ink-soft);margin:0 2px 14px}
-  #cred-ov .cred-note{font-size:9px;line-height:1.4;margin:0 2px 6px}
+  #cred-ov .cred-note{font-size:11.5px;line-height:1.42;margin:0 2px 6px}
   #build-grid{padding-bottom:14px}
   .watchbox{margin:14px 12px calc(110px + var(--safe-b));padding:12px 12px 10px;background:rgba(255,252,244,.5);border:1.5px solid rgba(184,134,59,.5);border-radius:10px;text-align:center}
   .watchbox .eyebrow{display:block;margin-bottom:8px}
@@ -543,7 +545,7 @@
     #cred-ov .rank-ladder{margin:3px 2px 5px;padding:3px 2px}
     #cred-ov .ladder-climb{margin:0 0 3px}
     #cred-ov .ladder-list li{padding:1px 6px}
-    #cred-ov .cred-note{font-size:8.5px;margin:0 2px 4px}
+    #cred-ov .cred-note{font-size:10.5px;margin:0 2px 4px}
     #cred-ov .btn{padding:9px 14px;font-size:13.5px}
   }
   .badge-medallion-wrap{width:98px;height:98px;margin:0 auto 0}
@@ -798,7 +800,7 @@
         <p class="badge-no-label">BADGE No.</p>
         <div class="cipher-row" id="receipt-cipher"></div>
         <p class="lic-small">Please copy this — it's your way to retrieve your purchase on any device.</p>
-        <button class="banner-green" onclick="copyCred()" style="margin:2px 0 8px">Take a Carbon Copy</button>
+        <button class="banner-green cc-pulse" onclick="copyCred()" style="margin:2px 0 8px">Take a Carbon Copy</button>
         <p class="lic-small">No live charge in this preview — real billing arrives with the App&nbsp;Store/Play release.</p>
       </div>
       <button class="banner-green" onclick="continueAfterReceipt()">Continue</button>
@@ -934,8 +936,8 @@
     <div class="rank-stamp" id="cred-rank"></div>
     <div class="dos-top" id="cred-photorow"></div>
     <div class="rank-ladder" id="rank-ladder"></div>
-    <p class="cred-note">This name is yours for good, and this badge number is the only key to your record — name, license &amp; coins. Anyone holding it can claim them. Guard it like a case file.</p>
-    <p onclick="copyCred()" style="cursor:pointer;color:var(--ink);font-family:var(--type);font-size:15px;letter-spacing:.5px;text-align:center;margin:8px 0">Take a Carbon Copy</p>
+    <p class="cred-note">This name and badge no. is your only username &amp; password. Credentials can be viewed anytime by tapping the badge on the home page.</p>
+    <p class="cc-pulse" onclick="copyCred()" style="cursor:pointer;color:var(--ink);font-family:var(--type);font-size:15px;letter-spacing:.5px;text-align:center;margin:8px 0">Take a Carbon Copy</p>
     <button class="banner-green" onclick="credFiled()">Filed — I have it safe</button>
   </div>
 </div>
@@ -1417,7 +1419,7 @@ async function renderRecord(){
     '<span class="dos-splat s1"></span><span class="dos-splat s2"></span>';
   var actions=document.getElementById("rec-actions");
   if(actions){ actions.innerHTML = cred
-      ? '<p onclick="copyCred()" style="cursor:pointer;color:var(--ink);font-family:var(--type);font-size:15px;letter-spacing:.5px;text-align:center;margin-top:6px">Take a Carbon Copy</p>'
+      ? '<p class="cc-pulse" onclick="copyCred()" style="cursor:pointer;color:var(--ink);font-family:var(--type);font-size:15px;letter-spacing:.5px;text-align:center;margin-top:6px">Take a Carbon Copy</p>'
       : '<button class="btn btn-primary" onclick="signRegister()" style="margin-top:6px">Join the Force \u2014 issue my credentials</button><button class="btn-ghost" onclick="restoreByCipher()" style="margin-top:8px">Restore with a badge number</button>'; }
 }
 async function openRecord(){
