@@ -169,6 +169,7 @@
   .banner-green{display:block;width:100%;box-sizing:border-box;margin-top:8px;background:linear-gradient(180deg,var(--green),var(--green-dk));color:var(--paper);box-shadow:var(--shadow);border:1px solid rgba(0,0,0,.2);border-radius:10px;font-family:var(--type);font-weight:700;letter-spacing:1px;font-size:15px;padding:13px 14px;text-align:center;cursor:pointer}
   @keyframes ccPulse{0%,100%{box-shadow:0 0 0 0 rgba(216,175,99,0)}50%{box-shadow:0 0 0 7px rgba(216,175,99,.55)}}
   .cc-pulse{border-radius:6px;animation:ccPulse .5s ease-in-out 4}
+  .cc-pulse-cipher{border-radius:6px;animation:ccPulse .5s ease-in-out 5;animation-delay:2.4s}
   .btn-primary{background:linear-gradient(180deg,var(--green),var(--green-dk));color:var(--paper);box-shadow:var(--shadow);border-color:rgba(0,0,0,.2)}
   .btn-brass{background:linear-gradient(180deg,var(--brass-lt),var(--brass));color:#2b2013;box-shadow:var(--shadow);border-color:rgba(0,0,0,.15)}
   .btn-return{background:linear-gradient(180deg,#A03D2A,var(--oxblood));color:var(--paper);box-shadow:var(--shadow);border-color:rgba(0,0,0,.22)}
@@ -383,7 +384,7 @@
   #cold-ov{position:fixed;inset:0;background:var(--paper);z-index:500;display:flex;flex-direction:column}
   #cold-ov.hidden{display:none}
   .cold-page{display:flex;flex-direction:column;height:100%;width:100%;max-width:520px;margin:0 auto;min-height:0}
-  .cold-hd{position:relative;padding:calc(var(--safe-t) + 14px) 52px 12px;text-align:center;border-bottom:2px solid rgba(184,134,59,.6);background:var(--paper-2)}
+  .cold-hd{position:relative;padding:calc(var(--safe-t) + 30px) 16px 12px;text-align:center;border-bottom:2px solid rgba(184,134,59,.6);background:var(--paper-2)}
   .btn-ghost.btn-big{font-size:15px;font-weight:700}
   .cred-badge{background:none;border:0;padding:0;display:block;margin:10px auto 0;width:188px;height:188px;cursor:pointer;-webkit-tap-highlight-color:transparent}
   .cred-badge svg{width:100%;height:100%;display:block;pointer-events:none;filter:drop-shadow(0 4px 3px rgba(10,7,4,.6)) drop-shadow(0 10px 14px rgba(10,7,4,.35))}
@@ -467,7 +468,7 @@
   .cold-hd .cold-brand .amp{font-style:italic;font-weight:700;font-size:1.15em;vertical-align:-.08em;margin:0 .02em}
   .cold-hd .cold-brand small{display:block;font-family:var(--type);font-size:17.5px;letter-spacing:1.5px;color:var(--title);margin-top:3px;font-weight:400}
   .cold-tag{font-family:var(--serif);font-style:italic;font-size:13.5px;color:var(--ink-soft);margin:6px 4px 0;line-height:1.45}
-  .cold-back{position:absolute;left:6px;top:calc(var(--safe-t) + 14px);background:none;border:none;font-family:var(--type);font-size:12px;line-height:26.25px;letter-spacing:.5px;color:var(--ink);padding:0 8px;cursor:pointer}
+  .cold-back{position:absolute;left:6px;top:calc(var(--safe-t) + 6px);background:none;border:none;font-family:var(--type);font-size:12px;line-height:1;letter-spacing:.5px;color:var(--ink);padding:4px 8px;cursor:pointer}
   .cold-scroll{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
   .cold-body{padding:10px 16px 14px}
   .cold-ft{padding:2px 16px calc(6px + var(--safe-b));border-top:1px solid rgba(184,134,59,.35);background:var(--paper-2)}
@@ -476,12 +477,12 @@
   .coldrail .eyebrow{display:block;margin-bottom:4px}
   .cold-plq{display:block;width:100%;max-width:340px;margin:0 auto;filter:drop-shadow(0 2px 3px rgba(10,7,4,.7)) drop-shadow(0 7px 10px rgba(10,7,4,.38))}
   .cold-sub{display:block;margin-top:10px;font-family:var(--type);font-size:14px;font-weight:700;letter-spacing:.5px;color:var(--ink);line-height:1.55;text-align:center}
-  .coldrow{position:relative;display:block;width:100%;text-align:left;background:linear-gradient(180deg,#F1E2BD,#E8D5A8);border:1.5px solid rgba(122,85,31,.55);border-radius:2px 10px 10px 10px;padding:14px 13px 11px;margin:24px 0 0;box-shadow:0 2px 5px rgba(10,7,4,.2);cursor:pointer}
-  .coldrow::before{content:"";position:absolute;left:-1.5px;top:-13px;width:118px;height:14px;background:linear-gradient(180deg,#F3E5C2,#EDDBB2);border:1.5px solid rgba(122,85,31,.55);border-bottom:none;border-radius:6px 8px 0 0}
-  .coldrow .caseno{position:absolute;left:9px;top:-11px;font-family:var(--type);font-size:9px;font-weight:700;letter-spacing:1.4px;color:#6d5122}
-  .coldrow .coldstamp{position:absolute;right:9px;top:10px;font-family:var(--type);font-size:8.5px;font-weight:700;letter-spacing:1.6px;color:var(--oxblood);border:1.5px solid rgba(138,51,36,.8);border-radius:3px;padding:2px 6px;transform:rotate(5deg);opacity:.85}
-  .coldrow .cn{font-family:var(--serif);font-weight:700;font-size:17px;color:var(--ink);padding-right:86px}
-  .cold-openline{margin-top:8px;font-family:var(--type);font-size:10px;letter-spacing:1.2px;color:var(--tweed-dk)}
+  .coldrow{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#fff8ec;border:1px solid var(--line);border-radius:14px;padding:13px;margin-bottom:10px;cursor:pointer}
+  .coldrow .cn-wrap{flex:1;min-width:0}
+  .coldrow .caseno{display:block;font-family:var(--type);font-size:9px;font-weight:700;letter-spacing:1.4px;color:var(--tweed-dk);margin-bottom:2px}
+  .coldrow .coldstamp{flex:none;font-family:var(--type);font-size:10px;font-weight:700;letter-spacing:1px;color:var(--paper);background:var(--oxblood);border:none;border-radius:20px;padding:5px 9px;white-space:nowrap}
+  .coldrow .cn{font-family:var(--serif);font-weight:700;font-size:17px;color:var(--ink)}
+  .cold-openline{display:none}
   .cold-file{background:rgba(255,252,244,.55);border:1.5px solid rgba(184,134,59,.5);border-radius:10px;padding:13px 13px 11px;margin:6px 0 14px;text-align:left}
   .cold-brief{font-family:var(--serif);font-style:italic;font-size:15px;line-height:1.55;color:var(--ink);margin:8px 0}
   .curpass-note{font-family:var(--serif);font-style:italic;text-align:center;font-size:14.5px;color:var(--ink-soft);margin:2px 8px 12px;line-height:1.5}
@@ -937,7 +938,7 @@
     <div class="dos-top" id="cred-photorow"></div>
     <div class="rank-ladder" id="rank-ladder"></div>
     <p class="cred-note">This name and badge no. is your only username &amp; password. Credentials can be viewed anytime by tapping the badge on the home page.</p>
-    <p class="cc-pulse" onclick="copyCred()" style="cursor:pointer;color:var(--ink);font-family:var(--type);font-size:15px;letter-spacing:.5px;text-align:center;margin:8px 0">Take a Carbon Copy</p>
+    <p class="cc-pulse-cipher" onclick="copyCred()" style="cursor:pointer;color:var(--ink);font-family:var(--type);font-size:15px;letter-spacing:.5px;text-align:center;margin:8px 0">Take a Carbon Copy</p>
     <button class="banner-green" onclick="credFiled()">Filed — I have it safe</button>
   </div>
 </div>
@@ -1668,7 +1669,7 @@ function objBg(i){return TINTS[i%TINTS.length];}
 async function startBuild(){
   try{
     markTourDone();
-    if(!hasLicence()){ openLicence("build"); return; }
+    if(!hasLicence() && !State._curatorBuildFlow){ openLicence("build"); return; }
     let name=await getMyName();
     if(!name){ showScrollHint(); return; }
     await ensureCred();
@@ -2064,13 +2065,12 @@ async function openColdCases(){
   if(!idx.length){ list.innerHTML='<div class="empty"><img decoding="async" class="em-coin" src="'+COIN_CLD+'" alt="">The archive is being assembled.<br>Curated cases from Scavenger &amp; Hunt Co. will appear here.</div>'; return; }
   for(const e of idx){
     const row=document.createElement("button"); row.className="coldrow";
-    row.innerHTML='<span class="caseno">CASE No. '+escapeHtml(String(e.code))+'</span>'
-      +'<span class="coldstamp">COLD CASE</span>'
+    row.innerHTML='<div class="cn-wrap"><span class="caseno">CASE No. '+escapeHtml(String(e.code))+'</span>'
       +'<div class="cn">'+escapeHtml(e.title||("Case No. "+e.code))+'</div>'
       +(e.place?'<div class="cold-place">'+escapeHtml(e.place)+'</div>':'')
       +(e.blurb?'<div class="meta">'+escapeHtml(e.blurb)+'</div>':'')
-      +'<div class="meta cold-meta" id="coldmeta-'+e.code+'">Consulting the ledger\u2026</div>'
-      +'<div class="cold-openline">OPEN THE FILE \u203A</div>';
+      +'<div class="meta cold-meta" id="coldmeta-'+e.code+'">Consulting the ledger\u2026</div></div>'
+      +'<span class="coldstamp">COLD CASE</span>';
     row.onclick=()=>openColdDetail(e.code);
     list.appendChild(row);
     (async()=>{ try{
@@ -2131,7 +2131,7 @@ async function renderCurator(){
     const row=document.createElement("div"); row.className="currow";
     row.innerHTML='<div class="cn">'+escapeHtml(hh.title||"Untitled")+' \u00b7 No. '+code+(p?' <span class="pill ready">IN ARCHIVE</span>':'')+'</div>'
       +'<input class="cur-in" id="cplace-'+code+'" maxlength="60" placeholder="Location \u2014 e.g. Baker Street, London" value="'+escapeHtml((p&&p.place)||hh.place||"")+'">'
-      +'<input class="cur-in" id="cblurb-'+code+'" maxlength="120" placeholder="One-line teaser for hunters" value="'+escapeHtml((p&&p.blurb)||hh.blurb||"")+'">'
+      +'<input class="cur-in" id="cblurb-'+code+'" maxlength="120" placeholder="One-line teaser \u2014 e.g. Solve it before your ranger tour ends" value="'+escapeHtml((p&&p.blurb)||hh.blurb||"")+'">'
       +'<div class="cgeo-row"><input class="cur-in" id="cgeo-city-'+code+'" maxlength="40" placeholder="City" value="'+escapeHtml((p&&p.city)||"")+'"><input class="cur-in" id="cgeo-state-'+code+'" maxlength="20" placeholder="State" value="'+escapeHtml((p&&p.state)||"")+'"></div>'
       +'<div class="cgeo-row"><input class="cur-in" id="cgeo-zip-'+code+'" maxlength="10" placeholder="Zip" value="'+escapeHtml((p&&p.zip)||"")+'"><input class="cur-in" id="cgeo-ctry-'+code+'" maxlength="30" placeholder="Country" value="'+escapeHtml((p&&p.country)||"")+'"></div>'
       +'<div class="cgeo-row"><button class="btn-ghost" id="cgeo-pin-'+code+'"'+(p&&p.lat!=null?' data-lat="'+p.lat+'" data-lon="'+p.lon+'"':'')+' onclick="curPick(\''+code+'\')">'+(p&&p.lat!=null?'\u2691 Pin placed \u2014 tap to move':'\u2690 Place on chart')+'</button></div>'
@@ -2757,6 +2757,7 @@ async function openCaseFiles(){
       body.appendChild(row); continue;
     }
     const hunt=JSON.parse(raw);
+    if(hunt.cold){ continue; }
     if(caseExpired(hunt)){ await purgeCase(code,{silent:true}); continue; }
     const subs=await listSubs(code);
     const submitted=subs.filter(s=>s.status!=="playing").length;
@@ -3225,7 +3226,7 @@ refreshHomeBadge();
       <button class="cold-back" onclick="closeColdCases()">&#8249; BACK</button>
       <div class="cold-brand">Scavenger <span class="amp">&amp;</span> Hunt Co.<small>THE ARCHIVE</small></div>
       <h3>Cold Case Files</h3>
-      <p class="cold-tag">Curated investigations, kept on ice until a detective takes them up.</p>
+      <p class="cold-tag">Curated investigations, waiting wherever the trail leads.</p>
     </div>
     <div class="cold-scroll">
     <div class="chart-win" id="chart-win">
@@ -3236,7 +3237,7 @@ refreshHomeBadge();
     </div>
     <div id="cold-tag" class="cold-tag">CASES ARE FILED BY TERRITORY &middot; SEARCH YOURS</div>
     <div class="cold-search">
-      <input class="cur-in" id="cold-q" maxlength="60" autocomplete="off" onblur="setTimeout(function(){window.scrollTo(0,0)},60)" placeholder="Zip, city, state, or territory&hellip;" onkeydown="if(event.key==='Enter')coldSearch()">
+      <input class="cur-in" id="cold-q" maxlength="60" autocomplete="off" onblur="setTimeout(function(){window.scrollTo(0,0)},60)" placeholder="Zip, city, state, park, or landmark&hellip;" onkeydown="if(event.key==='Enter')coldSearch()">
       <button class="cold-go" onclick="coldSearch()" aria-label="Search the chart"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><circle cx="12" cy="12" r="9.4" fill="none" stroke="#20140C" stroke-width="1.5"/><path d="M12 4.2 L13.6 10.4 L19.8 12 L13.6 13.6 L12 19.8 L10.4 13.6 L4.2 12 L10.4 10.4 Z" fill="#20140C"/><circle cx="12" cy="12" r="1.5" fill="#F3E7C8"/></svg></button>
     </div>
     <div class="cold-hint">SOME TOWNS SHARE A NAME &middot; ADD THE STATE TO BE SURE</div>
