@@ -2144,6 +2144,17 @@ async function renderCurator(){
     if(!hh) continue;
     const p=pub[code];
     const row=document.createElement("div"); row.className="currow";
+    if(p){
+      let dr={avg:0,count:0,mine:0}; try{ dr=await coldCaseRating(code); }catch(e){}
+      row.innerHTML='<div class="cn">'+escapeHtml(hh.title||"Untitled")+' · No. '+code+' <span class="pill ready">IN ARCHIVE</span></div>'
+        +'<div class="cold-file">'
+        +(p.place?'<div class="cold-place">'+escapeHtml(p.place)+'</div>':'')
+        +'<p class="cold-brief">'+escapeHtml(p.blurb||"The particulars are kept under seal until a detective takes the case.")+'</p>'
+        +'<div class="meta cold-meta">CASE No. '+code+'</div>'
+        +'<div class="cold-rate">'+coldRateHTML(code,p.diff||0,dr,false)+'</div></div>'
+        +'<div class="cur-btns"><button class="btn-ghost cur-del" onclick="armDel(\''+code+'\',this)">Delete</button></div>';
+      list.appendChild(row); continue;
+    }
     row.innerHTML='<div class="cn">'+escapeHtml(hh.title||"Untitled")+' \u00b7 No. '+code+(p?' <span class="pill ready">IN ARCHIVE</span>':'')+'</div>'
       +'<input class="cur-in" id="cplace-'+code+'" maxlength="60" placeholder="Location \u2014 e.g. Baker Street, London" value="'+escapeHtml((p&&p.place)||hh.place||"")+'">'
       +'<input class="cur-in" id="cblurb-'+code+'" maxlength="120" placeholder="One-line teaser \u2014 e.g. Solve it before your ranger tour ends" value="'+escapeHtml((p&&p.blurb)||hh.blurb||"")+'">'
@@ -2239,8 +2250,9 @@ async function publishCold(code){
     await Store.set("cold:index", JSON.stringify(idx), true);
     toast("Filed in the Cold Case archive.");
     _coldIdx=idx;
-    closeCurator();
-    openColdDetail(code, true);
+    State._curatorBuildFlow=false;
+    try{ go("s-home"); }catch(e){}
+    renderCurator();
   }catch(e){ toast("The archive did not answer \u2014 try again."); }
 }
 async function retireCold(code){
