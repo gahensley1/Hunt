@@ -584,6 +584,12 @@
   #cred-ov .ladder-list li span{font-size:9px}
   .currow{background:rgba(255,252,244,.55);border:1.5px solid rgba(184,134,59,.5);border-radius:10px;padding:11px 12px;margin-bottom:10px;text-align:left}
   .cur-in{width:100%;margin-top:7px;padding:8px 9px;border:1px solid rgba(122,85,31,.45);border-radius:7px;background:rgba(255,252,244,.8);font-family:var(--type);font-size:16px;color:var(--ink)}
+  .cur-ta{resize:none;line-height:1.35;display:block}
+  .cur-hint{font-family:var(--serif);font-style:italic;font-size:12.5px;color:var(--ink-soft);margin:9px 2px 0;line-height:1.35}
+  .cur-clear{margin-top:2px;color:var(--oxblood);font-size:13px;opacity:.8;letter-spacing:.3px}
+  .cur-clear.armed{color:var(--paper);background:var(--oxblood);opacity:1;border-radius:7px}
+  .cur-withdraw{margin-left:2px}
+  .cur-withdraw.armed{text-decoration:none;background:var(--oxblood);color:var(--paper);border-radius:6px;padding:2px 7px}
   .cur-btns{display:flex;gap:8px;margin-top:9px}
   .cur-door{display:block;margin:5px auto 0;background:none;border:none;font-family:var(--type);font-size:8.5px;letter-spacing:1px;color:var(--ink-soft);opacity:.55;text-decoration:underline dotted}
   .pill.rank1{background:linear-gradient(180deg,#E4C079,#B8863B);color:#2a1c08;border:1px solid #8a6425;box-shadow:0 1px 2px rgba(10,7,4,.3)}
@@ -608,6 +614,7 @@
     opacity:0;pointer-events:none;transition:opacity .25s ease, transform .25s ease;max-width:88%}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(-4px)}
   .toast.err{background:var(--oxblood);color:var(--paper);font-size:20.25px;padding:16.5px 27px;max-width:92%}
+  .toast.filed{font-style:italic}
   .btn-plaque{appearance:none;border:none;background:none;padding:0;cursor:pointer;display:block;width:100%;line-height:0}
   .btn-plaque img{width:100%;max-width:340px;display:block;margin:0 auto;filter:drop-shadow(0 0 3px rgba(10,7,4,.55)) drop-shadow(0 4px 6px rgba(10,7,4,.5));transition:transform .08s ease,filter .12s ease}
   .btn-plaque:active img{transform:translateY(1px) scale(.985);filter:drop-shadow(0 0 2px rgba(10,7,4,.6)) drop-shadow(0 1px 2px rgba(10,7,4,.5)) brightness(1.05)}
@@ -2141,14 +2148,15 @@ async function renderCurator(){
     if(!hh) continue;
     const p=pub[code];
     const row=document.createElement("div"); row.className="currow";
-    row.innerHTML='<div class="cn">'+escapeHtml(hh.title||"Untitled")+' \u00b7 No. '+code+(p?' <span class="pill ready">IN ARCHIVE</span>':'')+'</div>'
+    row.innerHTML='<div class="cn">'+escapeHtml(hh.title||"Untitled")+' \u00b7 No. '+code+(p?' <span class="pill ready">IN ARCHIVE</span> <button class="linkish cur-withdraw" id="cwd-'+code+'" onclick="withdrawCold(\''+code+'\')">withdraw</button>':'')+'</div>'
       +'<input class="cur-in" id="cplace-'+code+'" maxlength="60" placeholder="Location \u2014 e.g. Baker Street, London" value="'+escapeHtml((p&&p.place)||hh.place||"")+'">'
-      +'<input class="cur-in" id="cblurb-'+code+'" maxlength="120" placeholder="Add a teaser line" value="'+escapeHtml((p&&p.blurb)||hh.blurb||"")+'">'
+      +'<textarea class="cur-in cur-ta" id="cblurb-'+code+'" maxlength="120" rows="2" placeholder="Add a teaser line">'+escapeHtml((p&&p.blurb)||hh.blurb||"")+'</textarea>'
       +'<div class="cdiff-row"><span class="cdiff-lbl">Difficulty</span>'+starpickHTML("cdiff-"+code,(p&&p.diff)||0)+'</div>'
       +'<div class="cgeo-row"><input class="cur-in" id="cgeo-city-'+code+'" maxlength="40" placeholder="City" value="'+escapeHtml((p&&p.city)||"")+'"><input class="cur-in" id="cgeo-state-'+code+'" maxlength="20" placeholder="State" value="'+escapeHtml((p&&p.state)||"")+'"></div>'
       +'<div class="cgeo-row"><input class="cur-in" id="cgeo-zip-'+code+'" maxlength="10" placeholder="Zip" oninput="curPubToggle(\''+code+'\')" value="'+escapeHtml((p&&p.zip)||"")+'"><input class="cur-in" id="cgeo-ctry-'+code+'" maxlength="30" placeholder="Country" value="'+escapeHtml((p&&p.country)||"")+'"></div>'
+      +'<div class="cur-hint" id="cph-'+code+'" style="display:'+(((p&&p.zip)||"")?"none":"block")+'">A zip code is the minimum to file \u2014 it pins the case to the map.</div>'
       +'<div class="cur-btns"><button class="btn btn-brass" id="cpub-'+code+'" onclick="publishCold(\''+code+'\')"'+(((p&&p.zip)||"")?"":" disabled")+'>'+(p?"Update":"Publish")+'</button>'
-      +(p?'<button class="btn-ghost" onclick="retireCold(\''+code+'\')">Retire</button>':'')+'</div>';
+      +'</div>';
     list.appendChild(row);
   }
 }
@@ -2220,7 +2228,7 @@ function curGeo(code){
   if(p&&p.dataset.lat){ g.lat=+p.dataset.lat; g.lon=+p.dataset.lon; }
   return g;
 }
-function curPubToggle(code){ try{ var z=(document.getElementById("cgeo-zip-"+code)||{}).value||""; var b=document.getElementById("cpub-"+code); if(b) b.disabled=!z.trim(); }catch(e){} }
+function curPubToggle(code){ try{ var z=((document.getElementById("cgeo-zip-"+code)||{}).value||"").trim(); var b=document.getElementById("cpub-"+code); if(b) b.disabled=!z; var h=document.getElementById("cph-"+code); if(h) h.style.display=z?"none":"block"; }catch(e){} }
 async function publishCold(code){
   try{
     const raw=await Store.get("hunt:"+code,true); if(!raw){ toast("Case not reachable."); return; }
@@ -2237,9 +2245,35 @@ async function publishCold(code){
     const idx=await coldIndex(); const i=idx.findIndex(e=>e.code===code);
     if(i>=0) idx[i]=entry; else idx.push(entry);
     await Store.set("cold:index", JSON.stringify(idx), true);
-    toast("Filed in the Cold Case archive.");
+    toast("Your case has been filed!", 2600, "filed");
+    const cur=document.getElementById("curator-ov"); if(cur) cur.classList.add("hidden");
+  }catch(e){ toast("The archive did not answer \u2014 try again."); }
+}
+let _clearArmed=false, _clearTimer=null;
+async function clearColdArchive(){
+  const btn=document.getElementById("cur-clear-btn");
+  if(!_clearArmed){ _clearArmed=true;
+    if(btn){ btn.textContent="Tap again to wipe every cold case"; btn.classList.add("armed"); }
+    clearTimeout(_clearTimer); _clearTimer=setTimeout(function(){ _clearArmed=false; if(btn){ btn.textContent="Clear the Cold Case archive"; btn.classList.remove("armed"); } }, 4000);
+    return; }
+  _clearArmed=false; clearTimeout(_clearTimer);
+  if(btn){ btn.textContent="Clear the Cold Case archive"; btn.classList.remove("armed"); }
+  try{ const idx=await coldIndex();
+    await Store.set("cold:index", JSON.stringify([]), true);
+    for(const e of idx){ try{ const raw=await Store.get("hunt:"+e.code,true); if(raw){ const hh=JSON.parse(raw); delete hh.cold; delete hh.parAuto; await Store.set("hunt:"+e.code, JSON.stringify(hh), true); } }catch(err){} }
+    toast("The archive is cleared \u2014 every cold case withdrawn.");
     renderCurator();
   }catch(e){ toast("The archive did not answer \u2014 try again."); }
+}
+let _wdArmed={}, _wdTimer={};
+async function withdrawCold(code){
+  const btn=document.getElementById("cwd-"+code);
+  if(!_wdArmed[code]){ _wdArmed[code]=true;
+    if(btn){ btn.textContent="tap again to withdraw"; btn.classList.add("armed"); }
+    clearTimeout(_wdTimer[code]); _wdTimer[code]=setTimeout(function(){ _wdArmed[code]=false; if(btn){ btn.textContent="withdraw"; btn.classList.remove("armed"); } }, 4000);
+    return; }
+  _wdArmed[code]=false; clearTimeout(_wdTimer[code]);
+  retireCold(code);
 }
 async function retireCold(code){
   try{
@@ -3296,7 +3330,7 @@ refreshHomeBadge();
   <div class="cold-page">
     <div class="cold-hd">
       <button class="cold-back" onclick="closeColdCases()">&#8249; BACK</button>
-      <div class="cold-brand">Scavenger <span class="amp">&amp;</span> Hunt Co.<small>THE ARCHIVE</small></div>
+      <div class="cold-brand">Scavenger <span class="amp">&amp;</span> Hunt Co.</div>
       <h3>Cold Case Files</h3>
       <p class="cold-tag">Curated investigations, for you to solve.</p>
     </div>
@@ -3336,6 +3370,7 @@ refreshHomeBadge();
   <div class="tov-card">
     <div class="tov-head"><span class="eyebrow">STAFF ONLY</span><h3>The Curator&rsquo;s Desk</h3></div>
     <div id="curator-list"></div>
+    <button class="btn-ghost cur-clear" id="cur-clear-btn" onclick="clearColdArchive()">Clear the Cold Case archive</button>
     <button class="btn btn-primary" onclick="closeCurator()">Close the Desk</button>
   </div>
 </div>
