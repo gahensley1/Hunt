@@ -590,6 +590,12 @@
   .cur-clear.armed{color:var(--paper);background:var(--oxblood);opacity:1;border-radius:7px}
   .cur-withdraw{margin-left:2px}
   .cur-withdraw.armed{text-decoration:none;background:var(--oxblood);color:var(--paper);border-radius:6px;padding:2px 7px}
+  #curator-list{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .cur-filed{margin:2px 0 14px;padding:10px 12px;background:rgba(122,92,62,.06);border:1px solid rgba(122,92,62,.20);border-radius:10px}
+  .cur-filed-hd{font-family:var(--type);font-size:11px;letter-spacing:1px;color:var(--tweed-dk);margin-bottom:4px}
+  .cur-filed-row{display:flex;align-items:baseline;gap:8px;padding:6px 0;border-top:1px solid rgba(122,92,62,.14)}
+  .cur-filed-row:first-of-type{border-top:none}
+  .cfn{flex:1;font-family:var(--serif);font-size:14px;color:var(--ink);overflow-wrap:anywhere}
   .cur-btns{display:flex;gap:8px;margin-top:9px}
   .cur-door{display:block;margin:5px auto 0;background:none;border:none;font-family:var(--type);font-size:8.5px;letter-spacing:1px;color:var(--ink-soft);opacity:.55;text-decoration:underline dotted}
   .pill.rank1{background:linear-gradient(180deg,#E4C079,#B8863B);color:#2a1c08;border:1px solid #8a6425;box-shadow:0 1px 2px rgba(10,7,4,.3)}
@@ -2142,13 +2148,18 @@ async function renderCurator(){
   let mine=[]; try{ mine=JSON.parse(await Store.get("mycases")||"[]"); }catch(e){}
   const idx=await coldIndex(); const pub={}; idx.forEach(e=>pub[e.code]=e);
   list.innerHTML='<button class="btn btn-brass" onclick="curatorCreateHunt()" style="margin-bottom:10px">+ Create a New Hunt</button>';
-  if(!mine.length){ list.innerHTML+='<div class="empty">Build a case above \u2014 then publish it here.</div>'; return; }
+  if(idx.length){
+    let r='<div class="cur-filed"><div class="cur-filed-hd">Filed cold cases \u00b7 '+idx.length+'</div>';
+    idx.forEach(function(e){ r+='<div class="cur-filed-row"><span class="cfn">'+escapeHtml(e.title||"Untitled")+' \u00b7 No. '+e.code+(e.place?' \u00b7 '+escapeHtml(e.place):'')+'</span><button class="linkish cur-withdraw" id="cwd-'+e.code+'" onclick="withdrawCold(\''+e.code+'\')">withdraw</button></div>'; });
+    r+='</div>'; list.innerHTML+=r;
+  }
+  if(!mine.length){ list.innerHTML+='<div class="empty">No case in progress. Use \u201c+ Create a New Hunt\u201d to begin.</div>'; return; }
   for(const code of mine){
     let hh=null; try{ const r=await Store.get("hunt:"+code,true); hh=r?JSON.parse(r):null; }catch(e){}
     if(!hh) continue;
     const p=pub[code];
     const row=document.createElement("div"); row.className="currow";
-    row.innerHTML='<div class="cn">'+escapeHtml(hh.title||"Untitled")+' \u00b7 No. '+code+(p?' <span class="pill ready">IN ARCHIVE</span> <button class="linkish cur-withdraw" id="cwd-'+code+'" onclick="withdrawCold(\''+code+'\')">withdraw</button>':'')+'</div>'
+    row.innerHTML='<div class="cn">'+escapeHtml(hh.title||"Untitled")+' \u00b7 No. '+code+(p?' <span class="pill ready">IN ARCHIVE</span>':'')+'</div>'
       +'<input class="cur-in" id="cplace-'+code+'" maxlength="60" placeholder="Location \u2014 e.g. Baker Street, London" value="'+escapeHtml((p&&p.place)||hh.place||"")+'">'
       +'<textarea class="cur-in cur-ta" id="cblurb-'+code+'" maxlength="120" rows="2" placeholder="Add a teaser line">'+escapeHtml((p&&p.blurb)||hh.blurb||"")+'</textarea>'
       +'<div class="cdiff-row"><span class="cdiff-lbl">Difficulty</span>'+starpickHTML("cdiff-"+code,(p&&p.diff)||0)+'</div>'
@@ -2214,7 +2225,7 @@ async function hunterRate(code,n){
   try{ toast("Thank you — difficulty logged."); }catch(e){}
 }
 
-function closeCurator(){ document.getElementById("curator-ov").classList.add("hidden"); }
+function closeCurator(){ document.getElementById("curator-ov").classList.add("hidden"); State._curatorBuildFlow=false; go("s-home"); }
 function curatorCreateHunt(){
   State._curatorBuildFlow=true;
   document.getElementById("curator-ov").classList.add("hidden");
@@ -2246,7 +2257,9 @@ async function publishCold(code){
     if(i>=0) idx[i]=entry; else idx.push(entry);
     await Store.set("cold:index", JSON.stringify(idx), true);
     toast("Your case has been filed!", 2600, "filed");
-    const cur=document.getElementById("curator-ov"); if(cur) cur.classList.add("hidden");
+    State._curatorBuildFlow=false;
+    await renderCurator();
+    try{ document.getElementById("curator-list").scrollTop=0; }catch(e){}
   }catch(e){ toast("The archive did not answer \u2014 try again."); }
 }
 let _clearArmed=false, _clearTimer=null;
