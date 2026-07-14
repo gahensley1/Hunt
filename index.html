@@ -626,7 +626,7 @@
   .lic-key{width:100%;box-sizing:border-box;font-family:var(--type);font-size:15px;letter-spacing:2px;text-transform:uppercase;text-align:center;padding:12px;border:1.5px solid rgba(30,28,26,.35);border-radius:8px;background:rgba(255,252,244,.6);color:var(--ink);margin-bottom:10px}
   .lic-key:focus{outline:none;border-color:var(--brass)}
   .lic-modal{max-width:360px;width:100%;max-height:86vh;overflow-y:auto;position:relative}
-  .lic-close{position:absolute;top:6px;right:6px;z-index:1}
+  .lic-close{position:absolute;top:6px;left:6px;z-index:1}
   .lic-tiers{display:flex;flex-direction:column;gap:15px;margin-top:4px}
   .lic-btn{white-space:normal;padding:12px 16px;text-align:center}
   .lic-btn-text{display:flex;flex-direction:column;align-items:center;text-align:center;line-height:1.25;width:100%}
@@ -2138,6 +2138,7 @@ async function renderCurator(){
   const list=document.getElementById("curator-list"); list.innerHTML='<div class="empty">Fetching your cases\u2026</div>';
   let mine=[]; try{ mine=JSON.parse(await Store.get("mycases")||"[]"); }catch(e){}
   const idx=await coldIndex(); const pub={}; idx.forEach(e=>pub[e.code]=e);
+  try{ (_coldIdx||[]).forEach(e=>{ if(!pub[e.code]) pub[e.code]=e; }); }catch(_e){}
   list.innerHTML='<button class="btn btn-brass" onclick="curatorCreateHunt()" style="margin-bottom:10px">+ Create a New Hunt</button>';
   if(!mine.length){ list.innerHTML+='<div class="empty">Build a case above \u2014 then publish it here.</div>'; return; }
   for(const code of mine){
@@ -2244,7 +2245,9 @@ async function publishCold(code){
     hh.place=document.getElementById("cplace-"+code).value.trim();
     hh.blurb=document.getElementById("cblurb-"+code).value.trim();
     await Store.set("hunt:"+code, JSON.stringify(hh), true);
-    const idx=await coldIndex(); const i=idx.findIndex(e=>e.code===code);
+    const idx=await coldIndex();
+    try{ (_coldIdx||[]).forEach(e=>{ if(!idx.some(x=>String(x.code)===String(e.code))) idx.push(e); }); }catch(_e){}
+    const i=idx.findIndex(e=>e.code===code);
     const entry={code, title:hh.title||"Untitled Case", place:hh.place, blurb:hh.blurb, diff:curDiff(code), ...curGeo(code)};
     if(entry.lat==null){ const a=gazAuto(entry); if(a){ entry.lat=+(+a[0]).toFixed(4); entry.lon=+(+a[1]).toFixed(4); } }
     if(i>=0) idx[i]=entry; else idx.push(entry);
@@ -2258,8 +2261,11 @@ async function publishCold(code){
 }
 async function retireCold(code){
   try{
-    const idx=(await coldIndex()).filter(e=>e.code!==code);
+    let idx=await coldIndex();
+    try{ (_coldIdx||[]).forEach(e=>{ if(!idx.some(x=>String(x.code)===String(e.code))) idx.push(e); }); }catch(_e){}
+    idx=idx.filter(e=>String(e.code)!==String(code));
     await Store.set("cold:index", JSON.stringify(idx), true);
+    _coldIdx=idx;
     try{ const raw=await Store.get("hunt:"+code,true); if(raw){ const hh=JSON.parse(raw); delete hh.cold; delete hh.parAuto; await Store.set("hunt:"+code,JSON.stringify(hh),true); } }catch(e){}
     toast("Withdrawn from the archive.");
     renderCurator();
@@ -3370,7 +3376,7 @@ refreshHomeBadge();
     <div class="tov-head"><span class="eyebrow">STAFF ONLY</span><h3>The Curator&rsquo;s Desk</h3></div>
     <div id="curator-list"></div>
     <button class="btn btn-primary" onclick="closeCurator()">Close the Desk</button>
-    <div style="text-align:center;margin-top:9px;font-family:var(--type,monospace);font-size:11px;letter-spacing:.08em;color:#b9b2a6;opacity:.75">build v-0714b</div>
+    <div style="text-align:center;margin-top:9px;font-family:var(--type,monospace);font-size:11px;letter-spacing:.08em;color:#b9b2a6;opacity:.75">build v-0714c</div>
   </div>
 </div>
 <div id="trophy-ov" class="hidden" onclick="if(event.target===this)closeTrophyCase()">
