@@ -392,6 +392,8 @@
   /* cold case files */
   #curator-ov,#curpass-ov,#colddetail-ov{position:fixed;inset:0;background:rgba(18,14,8,.62);z-index:510;display:flex;align-items:center;justify-content:center;padding:18px}
   #curator-ov.hidden,#curpass-ov.hidden,#colddetail-ov.hidden{display:none}
+  #curator-ov .tov-card{overflow:hidden}
+  #curator-ov #curator-list{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
   #cold-ov{position:fixed;inset:0;background:var(--paper);z-index:500;display:flex;flex-direction:column}
   #cold-ov.hidden{display:none}
   .cold-page{display:flex;flex-direction:column;height:100%;width:100%;max-width:520px;margin:0 auto;min-height:0}
@@ -624,7 +626,7 @@
   .lic-key{width:100%;box-sizing:border-box;font-family:var(--type);font-size:15px;letter-spacing:2px;text-transform:uppercase;text-align:center;padding:12px;border:1.5px solid rgba(30,28,26,.35);border-radius:8px;background:rgba(255,252,244,.6);color:var(--ink);margin-bottom:10px}
   .lic-key:focus{outline:none;border-color:var(--brass)}
   .lic-modal{max-width:360px;width:100%;max-height:86vh;overflow-y:auto;position:relative}
-  .lic-close{position:absolute;top:6px;left:6px;z-index:1}
+  .lic-close{position:absolute;top:6px;right:6px;z-index:1}
   .lic-tiers{display:flex;flex-direction:column;gap:15px;margin-top:4px}
   .lic-btn{white-space:normal;padding:12px 16px;text-align:center}
   .lic-btn-text{display:flex;flex-direction:column;align-items:center;text-align:center;line-height:1.25;width:100%}
@@ -785,7 +787,7 @@
   <!-- ================= BUILDER'S LICENCE ================= -->
   <div id="s-licence" class="overlay center">
     <div class="modal lic-modal">
-      <button class="iconbtn lic-close" onclick="closeLicence()" aria-label="Close">‹</button>
+      <button class="iconbtn lic-close" onclick="closeLicence()" aria-label="Close">✕</button>
       <div class="lic-cert">
         <div class="lic-eyebrow">SCAVENGER &amp; HUNT CO.</div>
         <div class="lic-title">The Inspector&rsquo;s Charter</div>
@@ -2100,7 +2102,7 @@ async function openColdCases(){
   }
 }
 function closeColdCases(){ document.getElementById("cold-ov").classList.add("hidden"); }
-function openColdDetail(code,cur){
+function openColdDetail(code){
   const e=_coldIdx.find(x=>String(x.code)===String(code));
   if(!e){ joinColdCase(code); return; }
   const safe=String(e.code).replace(/[^A-Za-z0-9]/g,"");
@@ -2112,11 +2114,8 @@ function openColdDetail(code,cur){
     +'<p class="cold-brief">'+escapeHtml(e.blurb||"The particulars are kept under seal until a detective takes the case.")+'</p>'
     +'<div class="meta cold-meta">'+escapeHtml(m?m.textContent:("CASE No. "+e.code))+'</div>'+'<div class="cold-rate" id="cold-rate"></div>'
     +'</div>'
-    +(cur
-      ? '<button class="btn btn-primary" onclick="curPublishAnother()">Publish another</button>'
-        +'<button class="btn-ghost" onclick="curPublishDone()">Done</button>'
-      : '<button class="btn btn-primary" onclick="joinColdCase(\''+safe+'\')">Take the Case</button>'
-        +'<button class="btn-ghost" onclick="closeColdDetail()">Return it to the drawer</button>');
+    +'<button class="btn btn-primary" onclick="joinColdCase(\''+safe+'\')">Take the Case</button>'
+    +'<button class="btn-ghost" onclick="closeColdDetail()">Return it to the drawer</button>';
   document.getElementById("colddetail-ov").classList.remove("hidden"); try{ populateColdRate(e.code, e.diff||0); }catch(_e){}
 }
 function closeColdDetail(){ document.getElementById("colddetail-ov").classList.add("hidden"); }
@@ -2286,8 +2285,6 @@ async function curDeleteCase(code){
     renderCurator();
   }catch(e){ toast("The archive did not answer — try again."); }
 }
-function curPublishAnother(){ closeColdDetail(); renderCurator(); }
-function curPublishDone(){ closeColdDetail(); try{ go("s-home"); }catch(e){} }
 const _nudgeT={};
 function runNudge(nid,iid){
   const el=document.getElementById(nid), inp=document.getElementById(iid);
@@ -3373,7 +3370,7 @@ refreshHomeBadge();
     <div class="tov-head"><span class="eyebrow">STAFF ONLY</span><h3>The Curator&rsquo;s Desk</h3></div>
     <div id="curator-list"></div>
     <button class="btn btn-primary" onclick="closeCurator()">Close the Desk</button>
-    <div style="text-align:center;margin-top:9px;font-family:var(--type,monospace);font-size:11px;letter-spacing:.08em;color:#b9b2a6;opacity:.75">build v-0714a</div>
+    <div style="text-align:center;margin-top:9px;font-family:var(--type,monospace);font-size:11px;letter-spacing:.08em;color:#b9b2a6;opacity:.75">build v-0714b</div>
   </div>
 </div>
 <div id="trophy-ov" class="hidden" onclick="if(event.target===this)closeTrophyCase()">
