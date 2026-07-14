@@ -180,7 +180,7 @@
   .banner-green{display:block;width:100%;box-sizing:border-box;margin-top:8px;background:linear-gradient(180deg,var(--green),var(--green-dk));color:var(--paper);box-shadow:var(--shadow);border:1px solid rgba(0,0,0,.2);border-radius:10px;font-family:var(--type);font-weight:700;letter-spacing:1px;font-size:15px;padding:13px 14px;text-align:center;cursor:pointer}
   @keyframes ccPulse{0%,100%{box-shadow:0 0 0 0 rgba(216,175,99,0)}50%{box-shadow:0 0 0 7px rgba(216,175,99,.55)}}
   .cc-pulse{border-radius:6px;animation:ccPulse .5s ease-in-out 4}
-  .cc-pulse-cipher{border-radius:6px;animation:ccPulse .5s ease-in-out 5;animation-delay:1.5s}
+  .cc-pulse-cipher{border-radius:6px;animation:ccPulse .5s ease-in-out 8;animation-delay:1.5s}
   .btn-primary{background:linear-gradient(180deg,var(--green),var(--green-dk));color:var(--paper);box-shadow:var(--shadow);border-color:rgba(0,0,0,.2)}
   .btn-brass{background:linear-gradient(180deg,var(--brass-lt),var(--brass));color:#2b2013;box-shadow:var(--shadow);border-color:rgba(0,0,0,.15)}
   .btn-return{background:linear-gradient(180deg,#A03D2A,var(--oxblood));color:var(--paper);box-shadow:var(--shadow);border-color:rgba(0,0,0,.22)}
@@ -626,7 +626,7 @@
   .lic-key{width:100%;box-sizing:border-box;font-family:var(--type);font-size:15px;letter-spacing:2px;text-transform:uppercase;text-align:center;padding:12px;border:1.5px solid rgba(30,28,26,.35);border-radius:8px;background:rgba(255,252,244,.6);color:var(--ink);margin-bottom:10px}
   .lic-key:focus{outline:none;border-color:var(--brass)}
   .lic-modal{max-width:360px;width:100%;max-height:86vh;overflow-y:auto;position:relative}
-  .lic-close{position:absolute;top:6px;left:6px;z-index:2;color:var(--ink);background:rgba(122,85,31,.08);border:1px solid rgba(122,85,31,.4);font-size:16px}
+  .lic-close{position:absolute;top:6px;left:6px;z-index:2;color:var(--ink);background:none;border:none;font-size:20px}
   .lic-tiers{display:flex;flex-direction:column;gap:15px;margin-top:4px}
   .lic-btn{white-space:normal;padding:12px 16px;text-align:center}
   .lic-btn-text{display:flex;flex-direction:column;align-items:center;text-align:center;line-height:1.25;width:100%}
@@ -2022,16 +2022,11 @@ function precinctApply(idx,noGlide){ const sc=document.querySelector(".cold-sear
   if(z==="skip"){ localStorage.removeItem("sh_precinct"); z=""; }
   if(z){ const g=gazLookup(z);
     if(g){ const n=idx.filter(e=>e.lat!=null&&Math.abs(e.lat-g.ll[0])<=0.5&&Math.abs(e.lon-g.ll[1])<=0.65).length;
-      bar.innerHTML='PRECINCT '+escapeHtml(z)+' &mdash; '+(n?n+(n===1?" COLD CASE OPEN":" COLD CASES OPEN"):"ALL QUIET")
-        +' <button class="linkish" onclick="precinctChange()">reassign</button>';
+      bar.innerHTML='PRECINCT '+escapeHtml(z)+' &mdash; '+(n?n+(n===1?" COLD CASE OPEN":" COLD CASES OPEN"):"ALL QUIET");
       hereDraw(g.ll, !noGlide);
       if(noGlide){ window._prcArm=null; } else { window._prcArm={zip:z,ll:g.ll}; }
       return; } }
   hereClear(); bar.remove(); }
-async function precinctChange(){ const nm=await getMyName();
-  const v=await askName("Your detective name","Update your record \u2014 your precinct files with your credentials.",nm||"",false);
-  if(v&&v!==nm){ try{ await setMyName(v); pushProfile(); }catch(e){} }
-  precinctApply(_coldIdx,true); }
 function dropHere(ll,then,label){ return function(){ hereDraw(ll,false,label); hereReveal(); if(then) then(); }; }
 const STATE_FULL=(function(){ const o={}; for(const n in GAZ.sn) o[GAZ.sn[n]]=n.replace(/\b\w/g,c=>c.toUpperCase()); return o; })();
 function cityAmbiguity(q){
@@ -3376,7 +3371,6 @@ refreshHomeBadge();
     <div class="tov-head"><span class="eyebrow">STAFF ONLY</span><h3>The Curator&rsquo;s Desk</h3></div>
     <div id="curator-list"></div>
     <button class="btn btn-primary" onclick="closeCurator()">Close the Desk</button>
-    <div style="text-align:center;margin-top:9px;font-family:var(--type,monospace);font-size:11px;letter-spacing:.08em;color:#b9b2a6;opacity:.75">build v-0714d</div>
   </div>
 </div>
 <div id="trophy-ov" class="hidden" onclick="if(event.target===this)closeTrophyCase()">
