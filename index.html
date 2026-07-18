@@ -523,6 +523,7 @@
   .coldrow.locked .cn{color:var(--ink-soft)}
   .coldstamp.locked{background:var(--tweed-dk)}
 .coldstamp.closed{background:linear-gradient(180deg,var(--green),var(--green-dk))}
+.seat-note{font-family:var(--type);font-size:10.5px;line-height:1.5;letter-spacing:.4px;color:var(--ink-3);text-align:center;margin:14px 16px 0;opacity:.85}
 .cold-closed{font-family:var(--type);font-size:10px;letter-spacing:.8px;color:var(--green-dk);margin:4px 0 0}
   .cold-locknote{font-family:var(--serif);font-style:italic;font-size:11.5px;color:var(--ink-soft);text-align:center;margin:6px 0 0}
   .coldside{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:7px}
@@ -767,6 +768,9 @@
         <button class="wstep" onclick="stepWatch(30)">＋</button>
       </div>
     </div>
+    <p class="seat-note">A case seats <b>50 detectives</b> — the Charter is a personal licence.
+      Detectives may work in pairs and share a telephone. Need more? The complement may be raised
+      from your roster, 25 at a time. Larger operations — a park, a museum, a campus — want an Agency licence.</p>
     <div class="footbar">
       <button id="finish-build" class="btn btn-primary" disabled onclick="finishBuild()">Finish &amp; Get Case Number →</button>
     </div>
@@ -1371,6 +1375,30 @@ function validLicence(key){
    pack. The Charter sells the tool + the base archive \u2014 never the packs. */
 function ownedPacks(){ try{ return JSON.parse(localStorage.getItem("shco:packs")||"[]")||[]; }catch(e){ return []; } }
 function ownsPack(code){ try{ return ownedPacks().indexOf(String(code))>=0; }catch(e){ return false; } }
+/* THE COMPLEMENT \u2014 how many detectives a case may seat.
+   Filed with the CASE (not the device) so a joining hunter on any phone reads the same
+   number the builder paid for. Blocks of 25, to a ceiling of SEAT_MAX; past that the
+   Agency licence is a conversation, not a purchase. */
+async function caseSeats(code){
+  try{ const r=await Store.get("seats:"+code, true); const n=r?parseInt(r,10):0;
+    return Math.min(SEAT_MAX, HUNTER_CAP + (isFinite(n)&&n>0? n*SEAT_BLOCK : 0)); }
+  catch(e){ return HUNTER_CAP; }
+}
+async function raiseComplement(code){
+  const now=await caseSeats(code);
+  if(now>=SEAT_MAX){
+    alert("Case No. "+code+" already seats "+SEAT_MAX+" detectives \u2014 the largest complement the Charter allows.\n\nLarger operations \u2014 a park, a museum, a campus \u2014 want an Agency licence. Write to us and we shall arrange it.");
+    return;
+  }
+  const next=Math.min(SEAT_MAX, now+SEAT_BLOCK);
+  if(!confirm("Raise the complement of Case No. "+code+" from "+now+" to "+next+" detectives?\n\n$"+SEAT_PRICE+", once, for this case.")) return;
+  try{
+    const r=await Store.get("seats:"+code, true); const n=r?parseInt(r,10):0;
+    await Store.set("seats:"+code, String((isFinite(n)&&n>0?n:0)+1), true);
+  }catch(e){ toast("The Yard could not be reached \u2014 try again when you have a signal."); return; }
+  toast("Complement raised \u2014 Case No. "+code+" now seats "+next+" detectives.", 4200);
+  try{ await renderRoster(); }catch(e){}
+}
 function grantPack(code){ try{ const o=ownedPacks(); if(o.indexOf(String(code))<0){ o.push(String(code)); localStorage.setItem("shco:packs", JSON.stringify(o)); } }catch(e){} }
 function isLocked(e){ return !!(e && e.paid && !ownsPack(e.code)); }
 function priceOf(e){ return "$"+String((e&&e.price)||"0.99").replace(/^\$/,""); }
@@ -1964,6 +1992,17 @@ setInterval(()=>{
   }catch(e){}
 },1000);
 /* ---------- COLD CASE FILES: curated solo investigations ---------- */
+/* THE CHARTER IS A PERSONAL LICENCE. A case seats a family, a classroom, a party \u2014
+   not an institution. The cap is the wall: an orientation office would need 105 cases
+   to seat a freshman class, each with its own roster and no combined result. Archive
+   cases are exempt \u2014 they are played alone and keep no roster. */
+const HUNTER_CAP=50;        /* a case seats 50 detectives on the Charter \u2014 the largest honest
+                              personal use: a classroom (~30), a troop, a family reunion (~40),
+                              with headroom. An institution still cannot use it: a freshman class
+                              needs 42 cases, and none of them share a roster. */
+const SEAT_BLOCK=25;       /* the Complement is raised 25 at a time, $4.99 a block */
+const SEAT_MAX=100;        /* beyond this it is an Agency matter \u2014 a conversation, not a button */
+const SEAT_PRICE="4.99";
 const CURATOR_PASS="BAKER221B";   // staff word; client-side gate for launch, real auth arrives with payments
 function fmtDur(ms){ return fmtWatch(Math.max(1,Math.round(ms/60000))); }
 /* ---------- built-in archive: cases that ship inside the app ----------
@@ -3083,6 +3122,15 @@ async function joinCase(){
     if(myHid){ hid=myHid; State.hunterName=label; break; }   // me, resuming (aliased or not)
     const taken=subsNow.some(s=>slugName(s.name)===slug);
     if(!taken){
+      /* full complement? seated detectives always resume above; only NEW seats are refused */
+      const _seats = huntCandidate.cold ? Infinity : await caseSeats(code);
+      if(subsNow.length>=_seats){
+        /* the turned-away are counted \u2014 it is the builder's proof that the case wants raising */
+        try{ await Store.set("turn:"+code+":"+slug, String(Date.now()), true); }catch(e){}
+        err.innerHTML="Case No. "+escapeHtml(code)+" has its full complement of "+_seats+" detectives."
+          +"<br><span class=\"meta\">Ask your builder to raise the complement \u2014 they can seat "+SEAT_BLOCK+" more from their roster.</span>";
+        err.classList.remove("hidden"); State.hunt=null; return;
+      }
       hid="h"+uid(); await Store.set("hid:"+code+":"+slug, hid); State.hunterName=label;
       if(n>1) toast("Another "+name+" is already on this case \u2014 here you\u2019ll appear as \u201c"+label+"\u201d.", 4600);
       break;
@@ -3455,6 +3503,31 @@ async function renderRoster(){
   let tmins=0; try{ const hr=await Store.get("hunt:"+code,true); tmins=hr?(JSON.parse(hr).timerMins||0):0; }catch(e){}
   const submitted=subs.filter(s=>s.status!=="playing").length;
   document.getElementById("roster-tally").textContent=`${subs.length} player${subs.length===1?"":"s"} · ${submitted} submitted`;
+  /* THE COMPLEMENT \u2014 the builder sees the seats, who was turned away, and how to seat them */
+  try{
+    const rt=document.getElementById("roster-tally");
+    const oldNote=document.getElementById("roster-cap"); if(oldNote) oldNote.remove();
+    const seats=await caseSeats(code);
+    let turned=0; try{ turned=(await Store.list("turn:"+code+":", true)).length; }catch(e){}
+    if(subs.length>=seats || turned){
+      const n=document.createElement("div"); n.id="roster-cap"; n.className="meta"; n.style.marginTop="4px";
+      let msg = subs.length>=seats ? ("Full complement \u2014 this case seats "+seats+" detectives.") : (seats+" seats on this case.");
+      if(turned) msg += " "+turned+" detective"+(turned===1?" was":"s were")+" turned away.";
+      n.textContent=msg;
+      rt.parentNode.insertBefore(n, rt.nextSibling);
+      if(seats<SEAT_MAX){
+        const b=document.createElement("button");
+        b.className="btn btn-brass"; b.style.marginTop="8px";
+        b.textContent="Raise the Complement \u2014 "+SEAT_BLOCK+" more seats, $"+SEAT_PRICE;
+        b.onclick=function(){ raiseComplement(code); };
+        n.parentNode.insertBefore(b, n.nextSibling);
+      }else{
+        const a=document.createElement("div"); a.className="meta"; a.style.marginTop="6px";
+        a.textContent="This case seats the largest complement the Charter allows. A park, a museum, a campus \u2014 those want an Agency licence.";
+        n.parentNode.insertBefore(a, n.nextSibling);
+      }
+    }
+  }catch(e){}
   const body=document.getElementById("roster-body"); body.innerHTML="";
   const shareRow=document.createElement("button");
   shareRow.className="btn btn-brass"; shareRow.style.marginBottom="14px";
