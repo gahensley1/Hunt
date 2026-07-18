@@ -1274,7 +1274,7 @@ function soAnchor(){
     const ov=document.getElementById("so-ov"), home=document.getElementById("s-home");
     const a=document.querySelector("#s-home .brand small");
     if(!ov||!home||!a) return;
-    ov.style.top=Math.max(6, a.getBoundingClientRect().top - home.getBoundingClientRect().top)+"px";
+    ov.style.top=Math.max(6, a.getBoundingClientRect().top - home.getBoundingClientRect().top - 20)+"px";
   }catch(e){}
 }
 function soShow(){ const ov=document.getElementById("so-ov"); if(!ov) return; ov.classList.remove("hidden"); soAnchor(); }
@@ -3920,15 +3920,15 @@ refreshHomeBadge();
     <div class="cold-scroll">
     <div class="cold-rail" id="cold-rail">
       <button class="crail" onclick="coldCatOpen('almanac')" aria-label="The Almanac">
-        <span class="crail-d"><svg viewBox="0 0 32 32"><path d="M7 5h18v22H7z"/><path d="M7 11h18"/><path d="M12 5V3M20 5V3"/><text x="16" y="22" text-anchor="middle" id="alm-mon">DEC</text></svg></span>
+        <span class="crail-d"><svg viewBox="0 0 32 32"><path d="M6 6h20v21H6z"/><path d="M6 6h20v5H6z" style="fill:#4a3410;stroke:#4a3410"/><path d="M11 6V3M21 6V3"/><text x="16" y="22" text-anchor="middle" id="alm-mon" style="fill:#4a3410;stroke:none;font:700 9px sans-serif;letter-spacing:.5px">DEC</text></svg></span>
         <span class="crail-l">Almanac<span class="crail-s">seasonal</span></span>
       </button>
       <button class="crail" onclick="coldCatOpen('parlour')" aria-label="The Parlour">
-        <span class="crail-d"><svg viewBox="0 0 32 32"><path d="M7 11h15v6a7 7 0 0 1-7 7h-1a7 7 0 0 1-7-7z"/><path d="M22 13h3a3 3 0 0 1 0 6h-3"/><path d="M6 28h18"/><path d="M12 7c0-1.5 1.5-1.5 1.5-3M17 7c0-1.5 1.5-1.5 1.5-3"/></svg></span>
+        <span class="crail-d"><svg viewBox="0 0 32 32"><path d="M4.5 15L16 5.5 27.5 15"/><path d="M7.5 15v11.5h17V15"/><path d="M23 10V5.5h3V13"/><path d="M13.5 26.5V20h5v6.5"/><path d="M10.5 17.5h3.5V21h-3.5z"/></svg></span>
         <span class="crail-l">Parlour<span class="crail-s">indoors</span></span>
       </button>
       <button class="crail" onclick="coldCatOpen('grounds')" aria-label="The Grounds">
-        <span class="crail-d"><svg viewBox="0 0 32 32"><path d="M16 27c-7-5-10-11-8-19 8-2 14 1 19 8-5 7-11 9-11 11z"/><path d="M16 27C16 19 12 12 8 8"/><path d="M13 15l4-2M18 19l4-2"/></svg></span>
+        <span class="crail-d"><svg viewBox="0 0 32 32"><path d="M16.5 13.5a5 4.5 0 0 1 4-6.5 4.8 4.8 0 0 1 8 2.5 4 4 0 0 1-1.5 7.5c-3.5 1.5-9-.5-10.5-3.5z"/><path d="M22 17v6"/><path d="M18 23h8"/><path d="M6.5 28.5C11 24 9 20 14 16.5"/><path d="M14.5 28.5C17 25 15.5 21 19 18"/></svg></span>
         <span class="crail-l">Grounds<span class="crail-s">outdoors</span></span>
       </button>
     </div>
