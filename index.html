@@ -761,7 +761,7 @@
         <button class="wstep" onclick="stepWatch(30)">＋</button>
       </div>
     </div>
-    <label id="cold-submit-wrap" class="cold-submit-wrap" style="display:none"><input type="checkbox" id="cold-submit-chk"><span>Submit this case for consideration as a Cold Case File. It must belong to a public territory, somewhere a detective could travel and solve.</span></label>
+    <label id="cold-submit-wrap" class="cold-submit-wrap" style="display:none"><input type="checkbox" id="cold-submit-chk"><span>Submit for review as a Cold Case. Location must be a public territory, somewhere a detective could access. National Park, State Park, etc..</span></label>
     <div class="footbar">
       <button id="finish-build" class="btn btn-primary" disabled onclick="finishBuild()">Finish &amp; Get Case Number →</button>
     </div>
@@ -1587,6 +1587,7 @@ function showScrollHint(){ var ov=document.getElementById("scrollhint-ov"); if(o
 async function joinRanksFromDispatch(){
   const v=(document.getElementById("dispatch-name").value||"").trim().replace(/\s+/g," ").slice(0,24);
   if(!v){ toast("State your name to join the ranks."); return; }
+  if(!isNameAllowed(v)){ toast("That name won\u2019t pass the registrar \u2014 choose another."); return; }
   const z=(document.getElementById("dispatch-zip").value||"").trim();
   if(z && !/^\d{5}$/.test(z)){ toast("A five-digit zip, detective."); return; }
   try{ document.getElementById("dispatch-name").blur(); document.getElementById("dispatch-zip").blur(); if(document.activeElement&&document.activeElement.blur) document.activeElement.blur(); }catch(e){}
@@ -1650,6 +1651,23 @@ function credBadgeMedallionSVG(){
 function slugName(n){ return (n||"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,24)||"anon"; }
 async function getMyName(){ return (await Store.get("myName"))||""; }
 async function setMyName(n){ await Store.set("myName", n); }
+/* Registrar decency check. Lenient by design: NAME_HARD is refused wherever it
+   appears; NAME_WORD is refused only when it stands alone as a word, so Peacock,
+   Hancock, Cooney, Spicer, Dick Tracy and the like all pass. Leetspeak is folded
+   in first (c0ck, sh1t). To tune, just edit the two lists. */
+const NAME_HARD=["fuck","shit","cunt","cocksuck","faggot","nigger","nigga","kike","chink","wetback"];
+const NAME_WORD=["cock","coon","spic"];
+function _nameNorm(s){ return String(s||"").toLowerCase()
+  .replace(/0/g,"o").replace(/1/g,"i").replace(/3/g,"e").replace(/4/g,"a")
+  .replace(/5/g,"s").replace(/7/g,"t").replace(/@/g,"a").replace(/\$/g,"s")
+  .replace(/[^a-z]/g,""); }
+function isNameAllowed(name){
+  const flat=_nameNorm(name);
+  for(let i=0;i<NAME_HARD.length;i++){ if(flat.indexOf(NAME_HARD[i])>=0) return false; }
+  const toks=String(name||"").toLowerCase().split(/[\s._\-\/,]+/);
+  for(let j=0;j<toks.length;j++){ if(NAME_WORD.indexOf(_nameNorm(toks[j]))>=0) return false; }
+  return true;
+}
 let _nameSuggestFlip=false;
 const GUEST="\u0000guest";
 function guestName(){
@@ -1675,6 +1693,7 @@ function askName(head, sub, prefill, allowGuest, btnLabel){
 function confirmName(){
   const v=document.getElementById("name-input").value.trim().replace(/\s+/g," ").slice(0,24);
   if(!v){ toast("Enter a name to continue."); return; }
+  if(!isNameAllowed(v)){ toast("That name won\u2019t pass the registrar \u2014 choose another."); return; }
   const pr=document.getElementById("name-prc");
   if(pr&&!pr.classList.contains("hidden")){
     const z=(document.getElementById("name-zip").value||"").trim();
@@ -2459,14 +2478,17 @@ async function renderCurator(){
       if(recs.length){ const sec=document.createElement("div");
         let sh='<p class="ladder-eyebrow" style="margin:6px 0 4px">SUBMISSIONS</p>';
         recs.forEach(function(sb){ const c=String(sb.code||"");
-          sh+='<div class="currow" style="align-items:center"><div style="flex:1;min-width:0">'
+          sh+='<div class="currow" style="flex-direction:column;align-items:stretch;gap:7px"><div style="min-width:0">'
             +'<b>'+escapeHtml(sb.title||("Case No. "+c))+'</b>'
             +'<div class="meta">CASE No. '+escapeHtml(c)+' \u00b7 '+escapeHtml(sb.byName||"a detective")+(sb.byBadge?' \u00b7 '+escapeHtml(sb.byBadge):'')+'</div>'
             +((sb.zip||sb.place||sb.city)?'<div class="meta">'+escapeHtml([sb.place,sb.city].filter(Boolean).join(", "))+(sb.zip?(((sb.place||sb.city)?' \u00b7 ':'')+'ZIP '+escapeHtml(String(sb.zip))):'')+'</div>':'')
-            +'</div><button class="btn btn-brass sub-take" data-code="'+escapeHtml(c)+'" style="flex:none">Take Case</button>'
-            +'<button class="btn-ghost sub-dismiss" data-code="'+escapeHtml(c)+'" style="flex:none">Dismiss</button></div>'; });
+            +'</div><div style="display:flex;gap:6px;flex-wrap:wrap">'
+            +'<button class="btn-ghost sub-review" data-code="'+escapeHtml(c)+'" style="flex:1 1 auto">Review / Edit</button>'
+            +'<button class="btn btn-brass sub-accept" data-code="'+escapeHtml(c)+'" style="flex:1 1 auto">Accept &amp; File</button>'
+            +'<button class="btn-ghost sub-dismiss" data-code="'+escapeHtml(c)+'" style="flex:1 1 auto">Dismiss</button></div></div>'; });
         sec.innerHTML=sh;
-        sec.querySelectorAll(".sub-take").forEach(function(b){ b.onclick=function(){ subTake(b.getAttribute("data-code")); }; });
+        sec.querySelectorAll(".sub-review").forEach(function(b){ b.onclick=function(){ subReview(b.getAttribute("data-code")); }; });
+        sec.querySelectorAll(".sub-accept").forEach(function(b){ b.onclick=function(){ subAccept(b.getAttribute("data-code")); }; });
         sec.querySelectorAll(".sub-dismiss").forEach(function(b){ b.onclick=function(){ subDismiss(b.getAttribute("data-code")); }; });
         list.appendChild(sec); } } }catch(_e){}
   /* THE SHELVES — every pack in the archive (built-in or published), open to amendment */
@@ -2614,11 +2636,37 @@ async function subTerrFile(){
   document.getElementById("subterr-ov").classList.add("hidden");
   toast("Filed for consideration in the Cold Case Files.", 3200);
 }
-async function subTake(code){ code=String(code||""); if(!code) return;
-  let mine=[]; try{ mine=JSON.parse(await Store.get("mycases")||"[]"); }catch(e){}
-  if(!mine.includes(code)){ mine.unshift(code); await Store.set("mycases", JSON.stringify(mine)); }
+/* Review a submission: open its full board in the build screen so every clue
+   photo can be inspected and a bad or inappropriate one replaced. The submission
+   marker is left in place, so after finishing you can still Accept & File it. */
+function subReview(code){ curEditCase(String(code||"")); }
+/* Accept a submission: publish it straight into the Cold Case Files as a free
+   Territory case, geo-tagged from the submitted zip (nearest zip if inexact) so
+   it lands on the chart at once. No manual territory step. */
+async function subAccept(code){ code=String(code||""); if(!code) return;
+  let rec=null; try{ const r=await Store.get("submission:"+code, true); if(r) rec=JSON.parse(r); }catch(e){}
+  if(!rec){ toast("That submission is no longer on the desk."); await renderCurator(); return; }
+  const zip=String(rec.zip||"").trim();
+  if(!/^\d{5}$/.test(zip)||!gazAuto({zip:zip})){ toast("This submission has no precinct \u2014 open Review / Edit to set its territory."); return; }
+  let hh=null; try{ const r=await Store.get("hunt:"+code, true); if(r) hh=JSON.parse(r); }catch(e){}
+  if(!hh){ toast("The case body is not reachable."); return; }
+  hh.cold=true; hh.parAuto=true; hh.cat=""; hh.paid=false; hh.price="";
+  hh.place=String(rec.place||hh.place||"").trim();
+  if(rec.desc && !hh.blurb) hh.blurb=String(rec.desc).trim();
+  await Store.set("hunt:"+code, JSON.stringify(hh), true);
+  const idx=await coldIndex();
+  try{ (_coldIdx||[]).forEach(function(e){ if(!idx.some(function(x){ return String(x.code)===String(e.code); })) idx.push(e); }); }catch(_e){}
+  const geo={zip:zip}; if(rec.city) geo.city=rec.city;
+  const entry={code:code, title:hh.title||"Untitled Case", place:hh.place, blurb:hh.blurb||"", diff:curDiff(code), ...geo, cat:"", paid:false, price:""};
+  const a=gazAuto(entry); if(a){ entry.lat=+(+a[0]).toFixed(4); entry.lon=+(+a[1]).toFixed(4); }
+  const i=idx.findIndex(function(e){ return String(e.code)===String(code); });
+  if(i>=0) idx[i]=entry; else idx.push(entry);
+  await Store.set("cold:index", JSON.stringify(idx), true);
+  _coldIdx=idx;
   try{ await Store.del("submission:"+code, true); }catch(e){}
-  toast("Case No. "+code+" taken — set its territory below and publish.", 3600); await renderCurator(); }
+  try{ let mine=JSON.parse(await Store.get("mycases")||"[]"); if(!mine.includes(code)){ mine.unshift(code); await Store.set("mycases", JSON.stringify(mine)); } }catch(e){}
+  toast("Case No. "+code+" filed to the Territories \u2014 it\u2019s on the chart.", 3600);
+  await renderCurator(); }
 async function subDismiss(code){ code=String(code||""); if(!code) return;
   try{ await Store.del("submission:"+code, true); }catch(e){}
   toast("Submission dismissed."); await renderCurator(); }
