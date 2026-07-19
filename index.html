@@ -397,7 +397,7 @@
   #cold-ov{position:fixed;inset:0;background:var(--paper);z-index:500;display:flex;flex-direction:column}
   #cold-ov.hidden{display:none}
   .cold-page{display:flex;flex-direction:column;height:100%;width:100%;max-width:520px;margin:0 auto;min-height:0}
-  .cold-hd{position:relative;padding:calc(var(--safe-t) + 30px) 16px 12px;text-align:center;border-bottom:2px solid rgba(184,134,59,.6);background:var(--paper-2)}
+  .cold-hd{position:relative;padding:calc(var(--safe-t) + 30px) 16px 0;text-align:center;border-bottom:2px solid rgba(184,134,59,.6);background:var(--paper-2)}
   .btn-ghost.btn-big{font-size:15px;font-weight:700}
   .cred-badge{background:none;border:0;padding:0;display:block;margin:10px auto 0;width:188px;height:188px;cursor:pointer;-webkit-tap-highlight-color:transparent}
   .cred-badge svg{width:100%;height:100%;display:block;pointer-events:none;filter:drop-shadow(0 4px 3px rgba(10,7,4,.6)) drop-shadow(0 10px 14px rgba(10,7,4,.35))}
@@ -500,20 +500,22 @@
   .crail-art img{position:absolute;inset:0;width:100%;height:100%;display:block}
   .crail-cal i{position:absolute;left:0;right:0;top:51%;transform:translateY(calc(-50% - 1px));text-align:center;font:700 8.75px var(--type);font-style:normal;letter-spacing:.5px;color:#5B3A1A}
   .crail-l{font-family:var(--type);font-size:14.25px;font-weight:700;letter-spacing:1.1px;color:var(--title);text-transform:uppercase;text-align:center}
-  .crail-s{display:block;font-family:var(--serif);font-style:italic;font-weight:400;font-size:13.5px;letter-spacing:0;color:var(--ink-soft);text-transform:none;margin-top:1px}
+  .crail-s{display:block;font-family:var(--serif);font-style:italic;font-weight:400;font-size:16.2px;letter-spacing:0;color:var(--ink-soft);text-transform:none;margin-top:.5px}
+  .cold-submit-wrap{display:flex;gap:9px;align-items:flex-start;margin:2px 14px 12px;font-family:var(--type);font-size:12.5px;line-height:1.4;color:var(--ink);text-align:left;cursor:pointer}
+  .cold-submit-wrap input{margin:2px 0 0;flex:none;width:16px;height:16px;accent-color:#B8863B;cursor:pointer}
   .crail svg{width:32px;height:32px;fill:none;stroke:#4a3410;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
   .crail svg text{font-family:var(--type);font-size:9px;font-weight:900;fill:#4a3410;stroke:none;letter-spacing:.3px}
   .cold-cathd{display:none;position:relative;padding:12px 16px 4px;text-align:center}
   .cold-cathd h4{font-family:var(--serif);font-weight:900;font-size:21px;margin:0;color:var(--title)}
   .cold-cathd p{font-family:var(--type);font-size:9.5px;letter-spacing:1.3px;color:var(--ink-soft);margin:3px 0 0;text-transform:uppercase}
-  .cold-sect{position:relative;padding:14px 16px 0;text-align:center}
+  .cold-sect{position:relative;padding:7px 16px 0;text-align:center}
   .cold-sect h4{font-family:var(--serif);font-weight:900;font-size:21px;margin:0;color:var(--title)}
   .cold-sect p.cold-tag{margin:-2px 0 0}
   .cold-hd p.cold-tag{margin:-2.5px 4px 0}
   #cold-ov.cat .cold-sect{display:none}
   #cold-tag p.cold-tag{margin-top:5px}
   #cold-ov.cat .cold-cathd{display:block}
-  #cold-ov.cat #chart-win,#cold-ov.cat #cold-tag,#cold-ov.cat .cold-search,#cold-ov.cat .cold-rail{display:none}
+  #cold-ov.cat #chart-win,#cold-ov.cat #cold-tag,#cold-ov.cat .cold-search,#cold-ov.cat .cold-rail,#cold-ov.cat .cold-hint,#cold-ov.cat .precinct-bar{display:none}
   .cold-scroll{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
   .cold-body{padding:10px 16px 14px}
   .cold-ft{padding:2px 16px calc(6px + var(--safe-b));border-top:1px solid rgba(184,134,59,.35);background:var(--paper-2)}
@@ -750,6 +752,7 @@
     </div>
     <p class="seat-note">A case seats <b>50 detectives</b>. The Charter is a personal licence. Need more? The complement may be raised
       from your roster, 25 at a time. Larger operations will need an Agency licence.</p>
+    <label id="cold-submit-wrap" class="cold-submit-wrap" style="display:none"><input type="checkbox" id="cold-submit-chk"><span>Submit this case for consideration as a Cold Case File. It must belong to a public territory, somewhere a detective could travel and solve.</span></label>
     <div class="footbar">
       <button id="finish-build" class="btn btn-primary" disabled onclick="finishBuild()">Finish &amp; Get Case Number →</button>
     </div>
@@ -1196,6 +1199,7 @@ function go(id){
   const el=document.getElementById(id); el.classList.add("active");
   document.getElementById("app").scrollTop=0; window.scrollTo(0,0);
   if(id==="s-home") refreshHomeBadge();
+  if(id==="s-build"){ try{ coldSubmitVis(); }catch(e){} }
 }
 function refreshHomeBadge(){
   try{ const b=document.getElementById("home-cred-badge"); if(b&&!b.innerHTML) b.innerHTML=credBadgeSVG(); }catch(e){}
@@ -2422,6 +2426,23 @@ async function renderCurator(){
   const idx=await coldIndex(); const pub={}; idx.forEach(e=>pub[e.code]=e);
   try{ (_coldIdx||[]).forEach(e=>{ if(!pub[e.code]) pub[e.code]=e; }); }catch(_e){}
   list.innerHTML='<button class="btn btn-brass" onclick="curatorCreateHunt()" style="margin-bottom:10px">+ Create a New Hunt</button>';
+  /* THE SUBMISSIONS — builder-sent cases awaiting territorial review */
+  try{ const subKeys=await Store.list("submission:", true);
+    if(subKeys.length){ const recs=[];
+      for(const k of subKeys){ try{ const r=await Store.get(k,true); if(r) recs.push(JSON.parse(r)); }catch(e){} }
+      recs.sort(function(a,b){ return (b.ts||0)-(a.ts||0); });
+      if(recs.length){ const sec=document.createElement("div");
+        let sh='<p class="ladder-eyebrow" style="margin:6px 0 4px">SUBMISSIONS</p>';
+        recs.forEach(function(sb){ const c=String(sb.code||"");
+          sh+='<div class="currow" style="align-items:center"><div style="flex:1;min-width:0">'
+            +'<b>'+escapeHtml(sb.title||("Case No. "+c))+'</b>'
+            +'<div class="meta">CASE No. '+escapeHtml(c)+' \u00b7 '+escapeHtml(sb.byName||"a detective")+(sb.byBadge?' \u00b7 '+escapeHtml(sb.byBadge):'')+'</div>'
+            +'</div><button class="btn btn-brass sub-take" data-code="'+escapeHtml(c)+'" style="flex:none">Take Case</button>'
+            +'<button class="btn-ghost sub-dismiss" data-code="'+escapeHtml(c)+'" style="flex:none">Dismiss</button></div>'; });
+        sec.innerHTML=sh;
+        sec.querySelectorAll(".sub-take").forEach(function(b){ b.onclick=function(){ subTake(b.getAttribute("data-code")); }; });
+        sec.querySelectorAll(".sub-dismiss").forEach(function(b){ b.onclick=function(){ subDismiss(b.getAttribute("data-code")); }; });
+        list.appendChild(sec); } } }catch(_e){}
   /* THE SHELVES — every pack in the archive (built-in or published), open to amendment */
   try{
     const shelfNames={almanac:"The Almanac", parlour:"The Parlour", grounds:"The Grounds"};
@@ -2536,6 +2557,17 @@ async function hunterRate(code,n){
   try{ toast("Thank you — difficulty logged."); }catch(e){}
 }
 
+function coldSubmitVis(){ try{ const w=document.getElementById("cold-submit-wrap"); if(!w) return;
+  const clone=!!(State.build&&State.build.fromArchive); w.style.display=clone?"none":"flex";
+  const c=document.getElementById("cold-submit-chk"); if(c) c.checked=false; }catch(e){} }
+async function subTake(code){ code=String(code||""); if(!code) return;
+  let mine=[]; try{ mine=JSON.parse(await Store.get("mycases")||"[]"); }catch(e){}
+  if(!mine.includes(code)){ mine.unshift(code); await Store.set("mycases", JSON.stringify(mine)); }
+  try{ await Store.del("submission:"+code, true); }catch(e){}
+  toast("Case No. "+code+" taken — set its territory below and publish.", 3600); await renderCurator(); }
+async function subDismiss(code){ code=String(code||""); if(!code) return;
+  try{ await Store.del("submission:"+code, true); }catch(e){}
+  toast("Submission dismissed."); await renderCurator(); }
 function closeCurator(){ document.getElementById("curator-ov").classList.add("hidden"); }
 function curatorCreateHunt(){
   State._curatorBuildFlow=true;
@@ -2884,6 +2916,13 @@ async function finishBuild(){
   // record in my cases
   let mine=[]; try{mine=JSON.parse(await Store.get("mycases")||"[]");}catch(e){}
   if(!mine.includes(code)){ mine.unshift(code); await Store.set("mycases",JSON.stringify(mine)); }
+  // Cold Case File submission — builder-initiated territorial review queue
+  try{ const _chk=document.getElementById("cold-submit-chk");
+    if(_chk && _chk.checked && !(State.build&&State.build.fromArchive)){
+      const _rec={code, title:State.build.title||"Untitled Case", byName:(await getMyName())||"", byBadge:(myCred()?fmtCred(myCred()):""), ts:Date.now()};
+      await Store.set("submission:"+code, JSON.stringify(_rec), true);
+      toast("Filed for consideration in the Cold Case Files.", 3200);
+    } }catch(e){}
   if(State._curatorEdit){
     State._curatorEdit=false; State.build=null;
     go("s-home"); openCurator(); await renderCurator();
@@ -3721,12 +3760,11 @@ refreshHomeBadge();
       <button class="cold-back" onclick="coldBack()">&#8249; BACK</button>
       <div class="cold-brand">Scavenger <span class="amp">&amp;</span> Hunt Co.</div>
       <h3>Cold Case Files</h3>
-      <p class="cold-tag">Curated investigations, for you to solve.</p>
     </div>
     <div class="cold-scroll">
     <div class="cold-sect" id="bureau-hd">
       <h4>The Case Bureau</h4>
-      <p class="cold-tag">Seasonal, indoor and outdoor case collections.</p>
+      <p class="cold-tag">Curated investigations, for you to solve.</p>
     </div>
     <div class="cold-rail" id="cold-rail">
       <button class="crail" onclick="coldCatOpen('almanac')" aria-label="The Almanac">
