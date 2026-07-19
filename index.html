@@ -635,6 +635,12 @@
   .currow{background:rgba(255,252,244,.55);border:1.5px solid rgba(184,134,59,.5);border-radius:10px;padding:11px 12px;margin-bottom:10px;text-align:left}
   .cur-in{width:100%;margin-top:7px;padding:8px 9px;border:1px solid rgba(122,85,31,.45);border-radius:7px;background:rgba(255,252,244,.8);font-family:var(--type);font-size:16px;color:var(--ink)}
   .cur-btns{display:flex;gap:8px;margin-top:9px}
+  #cur-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
+  #cur-tabs button{flex:1 1 calc(50% - 3px)}
+  .cur-subtabs{display:flex;gap:6px;margin:0 0 8px}
+  .cur-subtabs button{flex:1 1 0;min-width:0}
+  #cur-tabs button,.cur-subtabs button{font-family:var(--type);font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink-soft);background:rgba(255,252,244,.5);border:1.5px solid rgba(184,134,59,.45);border-radius:8px;padding:7px 2px;cursor:pointer}
+  #cur-tabs button.on,.cur-subtabs button.on{color:var(--ink);border-color:var(--brass-dk);background:rgba(216,175,99,.22);font-weight:700}
   .cur-door{display:block;margin:5px auto 0;background:none;border:none;font-family:var(--type);font-size:8.5px;letter-spacing:1px;color:var(--ink-soft);opacity:.55;text-decoration:underline dotted}
   .pill.rank1{background:linear-gradient(180deg,#E4C079,#B8863B);color:#2a1c08;border:1px solid #8a6425;box-shadow:0 1px 2px rgba(10,7,4,.3)}
   .done-rank{font-family:var(--serif);font-weight:900;font-size:21px;color:var(--oxblood);margin:0 0 10px;letter-spacing:.4px}
@@ -2465,11 +2471,17 @@ function tryCurPass(){
 async function renderCurator(){
   closeColdCases();
   document.getElementById("curator-ov").classList.remove("hidden");
-  const list=document.getElementById("curator-list"); list.innerHTML='<div class="empty">Fetching your cases\u2026</div>';
+  const tab=State.curTab||"desk";
+  ["desk","subs","arch","terr"].forEach(function(t){ const b=document.getElementById("curtab-"+t); if(b) b.classList.toggle("on",t===tab); });
+  const list=document.getElementById("curator-list"); list.innerHTML='<div class="empty">Fetching the files\u2026</div>';
   let mine=[]; try{ mine=JSON.parse(await Store.get("mycases")||"[]"); }catch(e){}
   const idx=await coldIndex(); const pub={}; idx.forEach(e=>pub[e.code]=e);
   try{ (_coldIdx||[]).forEach(e=>{ if(!pub[e.code]) pub[e.code]=e; }); }catch(_e){}
-  list.innerHTML='<button class="btn btn-brass" onclick="curatorCreateHunt()" style="margin-bottom:10px">+ Create a New Hunt</button>';
+  try{ const _sk=await Store.list("submission:", true);
+    const tb=document.getElementById("curtab-subs"); if(tb) tb.textContent="Submissions"+(_sk.length?" ("+_sk.length+")":""); }catch(_e){}
+  list.innerHTML="";
+  /* SUBMISSIONS tab \u2014 builder-sent cases awaiting territorial review */
+  if(tab==="subs"){
   /* THE SUBMISSIONS — builder-sent cases awaiting territorial review */
   try{ const subKeys=await Store.list("submission:", true);
     if(subKeys.length){ const recs=[];
@@ -2491,18 +2503,23 @@ async function renderCurator(){
         sec.querySelectorAll(".sub-accept").forEach(function(b){ b.onclick=function(){ subAccept(b.getAttribute("data-code")); }; });
         sec.querySelectorAll(".sub-dismiss").forEach(function(b){ b.onclick=function(){ subDismiss(b.getAttribute("data-code")); }; });
         list.appendChild(sec); } } }catch(_e){}
+    if(!list.children.length){ list.innerHTML='<div class="empty">No submissions await review.</div>'; }
+    return;
+  }
+  /* ARCHIVE tab \u2014 the three shelves, one at a time */
+  if(tab==="arch"){
   /* THE SHELVES — every pack in the archive (built-in or published), open to amendment */
   try{
     const shelfNames={almanac:"The Almanac", parlour:"The Parlour", grounds:"The Grounds"};
     const builtinCodes=(typeof BUILTIN_INDEX!=="undefined"? BUILTIN_INDEX:[]).map(function(b){ return String(b.code); });
     const packs=Object.values(pub).filter(function(e){ return !!e.cat; });
-    if(packs.length){
+    {
       const sec=document.createElement("div");
-      let sh='<p class="ladder-eyebrow" style="margin:6px 0 4px">THE SHELVES</p>';
-      ["almanac","parlour","grounds"].forEach(function(cat){
+      const shelf=State.curShelf||"almanac";
+      let sh='<div class="cur-subtabs">'+[["almanac","Almanac"],["parlour","Parlour"],["grounds","Grounds"]].map(function(p){ return '<button'+(p[0]===shelf?' class="on"':'')+' onclick="curShelfTab(\''+p[0]+'\')">'+p[1]+'</button>'; }).join('')+'</div>';
+      [shelf].forEach(function(cat){
         const rows=packs.filter(function(e){ return e.cat===cat; });
-        if(!rows.length) return;
-        sh+='<div class="meta" style="margin:6px 0 2px">'+shelfNames[cat]+'</div>';
+        if(!rows.length){ sh+='<div class="empty">Nothing filed on this shelf.</div>'; return; }
         rows.forEach(function(e){
           const amended = mine.indexOf(String(e.code))>=0;
           const src = builtinCodes.indexOf(String(e.code))>=0 ? (amended? "built-in \u00b7 amended" : "built-in") : "published";
@@ -2517,6 +2534,36 @@ async function renderCurator(){
       list.appendChild(sec);
     }
   }catch(_e){}
+    if(!list.children.length){ list.innerHTML='<div class="empty">Nothing filed on this shelf.</div>'; }
+    return;
+  }
+  /* TERRITORIES tab \u2014 every case filed by territory; Edit reuses the submission review tool */
+  if(tab==="terr"){
+    const rows=Object.values(pub).filter(function(e){ return !e.cat; })
+      .sort(function(a,b){ return String(a.title||"").localeCompare(String(b.title||"")); });
+    const sec=document.createElement("div");
+    let sh='<p class="ladder-eyebrow" style="margin:6px 0 4px">FILED BY TERRITORY</p>';
+    if(!rows.length) sh+='<div class="empty">No cases filed by territory.</div>';
+    rows.forEach(function(e){ const c=String(e.code);
+      sh+='<div class="currow" style="flex-direction:column;align-items:stretch;gap:7px"><div style="min-width:0">'
+        +'<b>'+escapeHtml(e.title||("Case No. "+c))+'</b>'
+        +'<div class="meta">CASE No. '+escapeHtml(c)+((e.place||e.city)?' \u00b7 '+escapeHtml([e.place,e.city].filter(Boolean).join(", ")):'')+'</div>'
+        +'</div><div style="display:flex;gap:6px;flex-wrap:wrap">'
+        +'<button class="btn btn-brass terr-edit" data-code="'+escapeHtml(c)+'" style="flex:1 1 auto">Edit</button>'
+        +'<button class="btn-ghost terr-ret" data-code="'+escapeHtml(c)+'" style="flex:1 1 auto">Retire</button>'
+        +'<button class="btn-ghost cur-del terr-del" data-code="'+escapeHtml(c)+'" style="flex:1 1 auto">Delete</button></div></div>';
+    });
+    sh+='<p class="cur-clear-note">Testing tool &mdash; clears map cases only; the three shelves are left alone.</p>'
+      +'<button class="cur-clear" id="cur-clear-btn" onclick="armClearTerritory(this)">Clear all territory cold cases</button>';
+    sec.innerHTML=sh;
+    sec.querySelectorAll(".terr-edit").forEach(function(b){ b.onclick=function(){ subReview(b.getAttribute("data-code")); }; });
+    sec.querySelectorAll(".terr-ret").forEach(function(b){ b.onclick=function(){ retireCold(b.getAttribute("data-code")); }; });
+    sec.querySelectorAll(".terr-del").forEach(function(b){ b.onclick=function(){ armDel(b.getAttribute("data-code"),b); }; });
+    list.appendChild(sec);
+    return;
+  }
+  /* DESK tab \u2014 create + your own cases */
+  list.innerHTML='<button class="btn btn-brass" onclick="curatorCreateHunt()" style="margin-bottom:10px">+ Create a New Hunt</button>';
   if(!mine.length){ const _em=document.createElement("div"); _em.className="empty"; _em.style.marginTop="8px"; _em.textContent="Build a case above \u2014 then publish it here."; list.appendChild(_em); return; }
   for(const code of mine){
     let hh=null; try{ const r=await Store.get("hunt:"+code,true); hh=r?JSON.parse(r):null; }catch(e){}
@@ -2551,6 +2598,8 @@ async function renderCurator(){
     list.appendChild(row);
   }
 }
+function curTab(t){ State.curTab=t; renderCurator(); }
+function curShelfTab(sh){ State.curShelf=sh; State.curTab="arch"; renderCurator(); }
 /* ===== Cold Case difficulty ratings (curator seed + live hunter average) ===== */
 function curDiff(code){ try{ var el=document.getElementById("cdiff-"+code); return el?(+el.dataset.val||0):0; }catch(e){ return 0; } }
 function setCurDiff(code,n){
@@ -3922,9 +3971,13 @@ refreshHomeBadge();
 <div id="curator-ov" class="hidden" onclick="if(event.target===this)closeCurator()">
   <div class="tov-card">
     <div class="tov-head"><span class="eyebrow">STAFF ONLY</span><h3>The Curator&rsquo;s Desk</h3></div>
+    <div id="cur-tabs">
+      <button id="curtab-desk" class="on" onclick="curTab('desk')">Desk</button>
+      <button id="curtab-subs" onclick="curTab('subs')">Submissions</button>
+      <button id="curtab-arch" onclick="curTab('arch')">Archive</button>
+      <button id="curtab-terr" onclick="curTab('terr')">Territories</button>
+    </div>
     <div id="curator-list"></div>
-    <p class="cur-clear-note">Testing tool &mdash; clears map cases only; the three shelves are left alone.</p>
-    <button class="cur-clear" id="cur-clear-btn" onclick="armClearTerritory(this)">Clear all territory cold cases</button>
     <button class="btn btn-primary" onclick="closeCurator()">Close the Desk</button>
   </div>
 </div>
