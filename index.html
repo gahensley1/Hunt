@@ -413,9 +413,9 @@
   .cred-badge{background:none;border:0;padding:0;display:block;margin:10px auto 0;width:188px;height:188px;cursor:pointer;-webkit-tap-highlight-color:transparent}
   .cred-badge svg{width:100%;height:100%;display:block;pointer-events:none;filter:drop-shadow(0 4px 3px rgba(10,7,4,.6)) drop-shadow(0 10px 14px rgba(10,7,4,.35))}
   .cred-badge text{font-family:var(--type);font-size:19.4px;letter-spacing:1.5px;fill:#4A3A22}
-  #record-ov{position:fixed;inset:0;background:rgba(20,13,7,.88);z-index:520;display:flex;align-items:center;justify-content:center;padding:16px}
+  #record-ov{position:fixed;inset:0;background:rgba(20,13,7,.88);z-index:520;display:flex;align-items:center;justify-content:center;padding:10px;overflow:hidden}
   #record-ov.hidden{display:none}
-  #record-ov .tov-card{position:relative;border:1px solid rgba(94,70,48,.5);border-radius:3px;background:radial-gradient(130% 60% at 12% 4%,rgba(150,110,60,.13),transparent 58%),radial-gradient(90% 46% at 92% 90%,rgba(120,80,40,.12),transparent 60%),radial-gradient(50% 34% at 74% 46%,rgba(150,120,70,.08),transparent 55%),var(--parch) left top/300px 300px repeat,linear-gradient(178deg,#EFE7D3,#E4D6BC);background-color:#EDE4D3;box-shadow:0 16px 46px rgba(10,7,3,.6),inset 0 0 60px rgba(94,60,28,.16),inset 0 0 0 1px rgba(216,175,99,.18)}
+  #record-ov .tov-card{position:relative;width:100%;border:1px solid rgba(94,70,48,.5);border-radius:3px;background:radial-gradient(130% 60% at 12% 4%,rgba(150,110,60,.13),transparent 58%),radial-gradient(90% 46% at 92% 90%,rgba(120,80,40,.12),transparent 60%),radial-gradient(50% 34% at 74% 46%,rgba(150,120,70,.08),transparent 55%),var(--parch) left top/300px 300px repeat,linear-gradient(178deg,#EFE7D3,#E4D6BC);background-color:#EDE4D3;box-shadow:0 16px 46px rgba(10,7,3,.6),inset 0 0 60px rgba(94,60,28,.16),inset 0 0 0 1px rgba(216,175,99,.18)}
   #record-ov .tov-card::before,#record-ov .tov-card::after{content:"";position:absolute;z-index:-1;background:#E6D8BE;border:1px solid rgba(94,70,48,.4);box-shadow:0 6px 18px rgba(10,7,3,.42)}
   #record-ov .tov-card::before{inset:6px -9px -12px 8px;transform:rotate(-1.5deg)}
   #record-ov .tov-card::after{inset:10px 8px -8px -10px;transform:rotate(1.3deg)}
@@ -651,7 +651,7 @@
   .seal-mono .amp{font-family:var(--serif);font-style:italic;font-weight:700;font-size:1.7em;line-height:0;vertical-align:-.14em;margin:0 .02em;color:#5A1F14;text-shadow:0 1px 0 rgba(200,96,68,.55)}
   .seal-lbl{display:block;text-align:center;font-family:var(--type);font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:#6B3430;opacity:.82;margin:9px 0 0}
   .seal-btn:active .seal-disc{transform:translateY(1px)}
-  .seal-replystamp{position:absolute;left:72%;top:86.2%;width:25.9%;transform:translate(-50%,-50%);display:none;pointer-events:none}
+  .seal-replystamp{position:absolute;left:72%;top:86.2%;width:31.08%;filter:brightness(.5);transform:translate(-50%,-50%);display:none;pointer-events:none}
   .seal-btn.has-reply .seal-replystamp{display:block}
   .am-thread{margin:0 0 12px}
   .am-th-hd{font-family:var(--type);font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:var(--oxblood);opacity:.9;margin:0 0 7px}
@@ -783,8 +783,8 @@
     </div>
     <button class="build-hint" onclick="buildBorrowCase()">Stuck for clues? <b>Take a case from the Cold Case Files</b> and make it your own.</button>
     <div id="build-grid" class="grid"></div>
-    <label id="cold-submit-wrap" class="cold-submit-wrap" style="display:none"><input type="checkbox" id="cold-submit-chk"><span>Submit for review as a Cold Case. Location must be a public territory, somewhere a detective could access. National Park, State Park, etc..</span></label>
-    <p class="seat-note">A case seats <b>50 detectives</b>. Need more? Once over,25 at a time can be added with a premium . Larger operations over 100 will need an Agency licence.</p>
+    <label id="cold-submit-wrap" class="cold-submit-wrap" style="display:none"><input type="checkbox" id="cold-submit-chk"><span>Submit for consideration as a Cold Case? Location must be a public territory with access e.g. National or State Park</span></label>
+    <p class="seat-note">A case seats <b>50 detectives</b>. Once over 25 an be added at a premium. Over 100 will need an Agency licence.</p>
     <div class="watchbox">
       <span class="eyebrow">THE POCKET WATCH</span>
       <div class="watch-row">
