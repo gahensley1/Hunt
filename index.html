@@ -396,6 +396,15 @@
   #curator-ov .tov-card{overflow:hidden}
   #curator-ov #curator-list{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch}
   #cold-ov{position:fixed;inset:0;background:var(--paper);z-index:500;display:flex;flex-direction:column}
+  #subterr-ov{position:fixed;inset:0;background:rgba(20,30,24,.55);z-index:540;display:flex;align-items:center;justify-content:center;padding:18px}
+  #subterr-ov.hidden{display:none}
+  .subterr-card{position:relative;width:100%;max-width:360px;max-height:88vh;overflow-y:auto;background:var(--paper);border:1.5px solid rgba(184,134,59,.6);border-radius:12px;padding:22px 16px 16px;text-align:center}
+  .subterr-card h3{font-family:var(--serif);font-size:21px;margin:4px 0 6px}
+  .subterr-card .st-sub{font-family:var(--type);font-size:12.5px;letter-spacing:.03em;color:var(--ink);margin:0 0 12px}
+  .subterr-lab{display:block;text-align:left;font-family:var(--type);font-size:11.5px;letter-spacing:.08em;color:var(--ink);margin:0 0 2px}
+  .subterr-card .field{margin:2px 0 10px}
+  .subterr-card textarea.field{resize:vertical;min-height:64px;font-size:15px}
+  .subterr-card .btn{width:100%;margin-top:4px}
   #cold-ov.hidden{display:none}
   .cold-page{display:flex;flex-direction:column;height:100%;width:100%;max-width:520px;margin:0 auto;min-height:0}
   .cold-hd{position:relative;padding:calc(var(--safe-t) + 30px) 16px 0;text-align:center;border-bottom:2px solid rgba(184,134,59,.6);background:var(--paper-2)}
@@ -733,6 +742,7 @@
     </div>
     <button class="build-hint" onclick="buildBorrowCase()">Stuck for clues? <b>Take a case from the Cold Case Files</b> and make it your own.</button>
     <div id="build-grid" class="grid"></div>
+    <p class="seat-note">A case seats <b>50 detectives</b>. Need more? Once over,25 at a time can be added with a premium . Larger operations over 100 will need an Agency licence.</p>
     <div class="watchbox">
       <span class="eyebrow">THE POCKET WATCH</span>
       <div class="watch-row">
@@ -751,8 +761,6 @@
         <button class="wstep" onclick="stepWatch(30)">＋</button>
       </div>
     </div>
-    <p class="seat-note">A case seats <b>50 detectives</b>. The Charter is a personal licence. Need more? The complement may be raised
-      from your roster, 25 at a time. Larger operations will need an Agency licence.</p>
     <label id="cold-submit-wrap" class="cold-submit-wrap" style="display:none"><input type="checkbox" id="cold-submit-chk"><span>Submit this case for consideration as a Cold Case File. It must belong to a public territory, somewhere a detective could travel and solve.</span></label>
     <div class="footbar">
       <button id="finish-build" class="btn btn-primary" disabled onclick="finishBuild()">Finish &amp; Get Case Number →</button>
@@ -1044,6 +1052,22 @@
   </div>
 </div>
 
+<div id="subterr-ov" class="hidden">
+  <div class="subterr-card">
+    <button class="cdx" onclick="subTerrClose()" aria-label="Close">&#10005;</button>
+    <h3>File the Territory</h3>
+    <p class="st-sub">Every Cold Case belongs to a public territory. A ZIP code is required; if the grounds are a National or State Park, name the park and its city.</p>
+    <label class="subterr-lab" for="st-zip">ZIP CODE &mdash; REQUIRED</label>
+    <input id="st-zip" class="field" inputmode="numeric" maxlength="5" placeholder="e.g. 31401" oninput="subZipCheck()">
+    <label class="subterr-lab" for="st-place">THE GROUNDS</label>
+    <input id="st-place" class="field" placeholder="National or State Park, landmark, or venue">
+    <label class="subterr-lab" for="st-city">CITY &amp; STATE</label>
+    <input id="st-city" class="field" placeholder="e.g. Savannah, Georgia">
+    <label class="subterr-lab" for="st-desc">PARTICULARS &mdash; OPTIONAL</label>
+    <textarea id="st-desc" class="field" placeholder="What makes this territory the scene?"></textarea>
+    <button id="st-file" class="btn btn-primary" disabled onclick="subTerrFile()">File for Consideration</button>
+  </div>
+</div>
 <div id="toast" class="toast"></div>
 
 <script>
@@ -2438,6 +2462,7 @@ async function renderCurator(){
           sh+='<div class="currow" style="align-items:center"><div style="flex:1;min-width:0">'
             +'<b>'+escapeHtml(sb.title||("Case No. "+c))+'</b>'
             +'<div class="meta">CASE No. '+escapeHtml(c)+' \u00b7 '+escapeHtml(sb.byName||"a detective")+(sb.byBadge?' \u00b7 '+escapeHtml(sb.byBadge):'')+'</div>'
+            +((sb.zip||sb.place||sb.city)?'<div class="meta">'+escapeHtml([sb.place,sb.city].filter(Boolean).join(", "))+(sb.zip?(((sb.place||sb.city)?' \u00b7 ':'')+'ZIP '+escapeHtml(String(sb.zip))):'')+'</div>':'')
             +'</div><button class="btn btn-brass sub-take" data-code="'+escapeHtml(c)+'" style="flex:none">Take Case</button>'
             +'<button class="btn-ghost sub-dismiss" data-code="'+escapeHtml(c)+'" style="flex:none">Dismiss</button></div>'; });
         sec.innerHTML=sh;
@@ -2561,6 +2586,34 @@ async function hunterRate(code,n){
 function coldSubmitVis(){ try{ const w=document.getElementById("cold-submit-wrap"); if(!w) return;
   const clone=!!(State.build&&State.build.fromArchive); w.style.display=clone?"none":"flex";
   const c=document.getElementById("cold-submit-chk"); if(c) c.checked=false; }catch(e){} }
+function openSubTerritory(){
+  ["st-zip","st-place","st-city","st-desc"].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=""; });
+  document.getElementById("st-file").disabled=true;
+  document.getElementById("subterr-ov").classList.remove("hidden");
+}
+function subZipCheck(){
+  var z=document.getElementById("st-zip");
+  z.value=z.value.replace(/\D/g,"").slice(0,5);
+  document.getElementById("st-file").disabled=!/^\d{5}$/.test(z.value);
+}
+function subTerrClose(){
+  document.getElementById("subterr-ov").classList.add("hidden");
+  State._pendingSub=null;
+  toast("Submission withdrawn \u2014 your case is unchanged.", 3200);
+}
+async function subTerrFile(){
+  var p=State._pendingSub; if(!p){ document.getElementById("subterr-ov").classList.add("hidden"); return; }
+  var zip=document.getElementById("st-zip").value;
+  if(!/^\d{5}$/.test(zip)) return;
+  var rec={code:p.code, title:p.title, byName:(await getMyName())||"", byBadge:(myCred()?fmtCred(myCred()):""),
+    zip:zip, place:document.getElementById("st-place").value.trim(),
+    city:document.getElementById("st-city").value.trim(),
+    desc:document.getElementById("st-desc").value.trim(), ts:Date.now()};
+  await Store.set("submission:"+p.code, JSON.stringify(rec), true);
+  State._pendingSub=null;
+  document.getElementById("subterr-ov").classList.add("hidden");
+  toast("Filed for consideration in the Cold Case Files.", 3200);
+}
 async function subTake(code){ code=String(code||""); if(!code) return;
   let mine=[]; try{ mine=JSON.parse(await Store.get("mycases")||"[]"); }catch(e){}
   if(!mine.includes(code)){ mine.unshift(code); await Store.set("mycases", JSON.stringify(mine)); }
@@ -2920,9 +2973,8 @@ async function finishBuild(){
   // Cold Case File submission — builder-initiated territorial review queue
   try{ const _chk=document.getElementById("cold-submit-chk");
     if(_chk && _chk.checked && !(State.build&&State.build.fromArchive)){
-      const _rec={code, title:State.build.title||"Untitled Case", byName:(await getMyName())||"", byBadge:(myCred()?fmtCred(myCred()):""), ts:Date.now()};
-      await Store.set("submission:"+code, JSON.stringify(_rec), true);
-      toast("Filed for consideration in the Cold Case Files.", 3200);
+      State._pendingSub={code, title:State.build.title||"Untitled Case"};
+      openSubTerritory();
     } }catch(e){}
   if(State._curatorEdit){
     State._curatorEdit=false; State.build=null;
