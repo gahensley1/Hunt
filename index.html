@@ -665,6 +665,10 @@
   #commish-btn.hidden{display:none}
   .commish-foot{font-family:var(--serif);font-style:italic;font-size:9px;color:var(--ink-soft);margin:0 0 1px}
   #commish-seal{position:absolute;right:8px;bottom:6px;width:54px;opacity:.16;pointer-events:none}
+.note-row{border:1px solid rgba(94,70,48,.35);border-radius:6px;background:rgba(244,235,214,.45);padding:8px 10px;margin:8px 0;text-align:left}
+.note-txt{font-family:var(--type);font-size:12px;line-height:1.45;color:var(--ink);word-break:break-word}
+.note-acts{display:flex;gap:8px;margin-top:7px}
+.note-acts button{flex:1 1 0;padding:5px 0;text-align:center}
   .am-thread{margin:0 0 12px}
   .am-th-hd{font-family:var(--type);font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:var(--oxblood);opacity:.9;margin:0 0 7px}
   .am-reply{border:1px solid var(--brass);border-radius:3px;background:rgba(184,134,59,.10);padding:9px 11px;margin:0 0 8px}
@@ -2669,9 +2673,9 @@ async function renderCurator(){
     _jokeEditIdx=-1; let jh='<p class="ladder-eyebrow" style="margin:0">NOTES</p>'
       +'<div class="meta">One a day on the Commissioner\u2019s dispatch, in this order.'+(live?'':' Showing the standard ten \u2014 any change writes a live book.')+'</div>';
     book.forEach(function(t,i){
-      jh+='<div style="display:flex;gap:8px;align-items:flex-start"><div class="meta" style="flex:1;min-width:0;text-align:left">'+(i+1)+'. '+escapeHtml(t)+'</div>'
-        +'<button class="btn-ghost joke-edit" data-i="'+i+'" style="flex:none;padding:4px 10px">Edit</button>'
-        +'<button class="btn-ghost cur-del joke-del" data-i="'+i+'" style="flex:none;padding:4px 10px">Delete</button></div>';
+      jh+='<div class="note-row"><div class="note-txt">'+(i+1)+'. '+escapeHtml(t)+'</div>'
+        +'<div class="note-acts"><button class="btn-ghost joke-edit" data-i="'+i+'">Edit</button>'
+        +'<button class="btn-ghost cur-del joke-del" data-i="'+i+'">Delete</button></div></div>';
     });
     jh+='<textarea class="cur-in" id="joke-text" maxlength="180" placeholder="A new note\u2026" style="min-height:48px"></textarea>'
       +'<div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn btn-brass" style="flex:1 1 auto" id="joke-add" onclick="jokeAdd()">Add a Note</button>'
