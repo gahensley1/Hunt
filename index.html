@@ -2767,9 +2767,8 @@ async function showCommish(){
     if(mode==="order") localStorage.setItem("sh_order_seen",String(ord.id));
     localStorage.setItem("sh_commish_day",commishDay());
     c.classList.remove("hidden"); c.classList.remove("fade");
-    try{ const amp=document.querySelector(".hero .brand .amp"), pl=document.querySelector(".stack .btn-plaque"), hr=home.getBoundingClientRect();
-      if(amp&&pl){ const a=amp.getBoundingClientRect().bottom-hr.top, p=pl.getBoundingClientRect().top-hr.top;
-        const gap=Math.max(10,Math.round((p-a-c.offsetHeight)*0.283)); c.style.top=Math.round(a+gap)+"px"; } }catch(e){}
+    try{ const tg=document.querySelector(".hero .brand small"), hr=home.getBoundingClientRect();
+      if(tg){ c.style.top=Math.round(tg.getBoundingClientRect().top-hr.top-1)+"px"; } }catch(e){}
     let left=10; const foot=document.getElementById("commish-foot");
     const put=function(){ foot.textContent="This dispatch will self-destruct in "+left+" second"+(left===1?"":"s")+"."; };
     put();
