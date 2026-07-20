@@ -581,6 +581,9 @@
   .prc-ask-cap{font-family:var(--serif);font-weight:700;font-size:15px;letter-spacing:1.6px;text-align:center;color:var(--ink);opacity:.95;margin:0}
   .cold-scroll .cold-tag,.cold-hd .cold-tag{font-family:var(--type);font-size:clamp(9px,2.85vw,13.4px);letter-spacing:.12em;white-space:nowrap;text-align:center;color:var(--ink);opacity:.85;margin:18px 14px -2px}
   .cold-hint{font-family:var(--type);font-size:clamp(9px,2.85vw,13.4px);letter-spacing:.12em;white-space:nowrap;text-align:center;color:var(--ink);opacity:.85;margin:6px 14px 0}
+  .cold-filterbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:8px 14px 4px;padding:6px 12px;border:1px solid rgba(138,51,36,.42);border-radius:8px;background:rgba(138,51,36,.07)}
+  .cold-filterbar .cfb-txt{font-family:var(--type);font-size:11px;letter-spacing:1.1px;font-weight:700;color:var(--oxblood)}
+  .cold-filterbar .cfb-x{flex:0 0 auto;width:22px;height:22px;padding:0;border:0;background:none;cursor:pointer;color:var(--oxblood);font-size:15px;line-height:1}
   .heretxt{font-family:var(--type);fill:#8A3324;letter-spacing:1.5px}
   .cold-search .cur-in{flex:1 1 auto;width:auto;min-width:0;margin:0;font-size:16px;padding:11px 12px}
   .cold-go{flex:0 0 46px;width:46px;height:46px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:50%;border:1.5px solid #7A5A28;background:radial-gradient(circle at 35% 30%,var(--brass-lt),var(--brass) 65%,#8F6A2E);box-shadow:0 2px 5px rgba(10,7,4,.35),inset 0 1px 2px rgba(255,240,200,.55)}
@@ -657,11 +660,11 @@
   #commish-card{position:absolute;left:50%;transform:translateX(-50%);width:calc(100% - 28px);max-width:520px;display:flex;flex-direction:column;z-index:498;background:repeating-linear-gradient(180deg,transparent 0 25px,rgba(94,70,48,.10) 25px 26px),#F4EBD6;border:1px solid rgba(94,70,48,.55);border-radius:4px;box-shadow:0 14px 38px rgba(10,7,3,.55);padding:6px 16px 4px;text-align:center;overflow:hidden}
   #commish-card.hidden{display:none}
   #commish-card.fade{transition:opacity .6s ease;opacity:0}
-  .commish-hd{font-family:var(--type);font-size:7px;letter-spacing:1.4px;font-weight:700;color:var(--oxblood);margin:1px 0 0}
-  .commish-date{font-family:var(--type);font-size:7px;letter-spacing:2px;color:var(--ink-soft);margin:1px 0 4px}
+  .commish-hd{font-family:var(--type);font-size:7px;letter-spacing:1.4px;font-weight:700;color:#451912;margin:1px 0 0}
+  .commish-date{font-family:var(--type);font-size:7px;letter-spacing:2px;color:#25211C;margin:1px 0 4px}
   .commish-rule{border:none;border-top:1.5px dashed rgba(94,70,48,.5);margin:0 2px}
   .commish-msg{font-family:var(--serif);font-weight:700;font-size:12.5px;line-height:1.3;color:var(--ink);margin:0 6px;flex:1;display:flex;align-items:center;justify-content:center;min-height:0;overflow:hidden}
-  #commish-btn{margin:0 0 4px;font-size:12px;padding:7px 12px;border-radius:8px}
+  #commish-btn{align-self:center;width:auto;max-width:100%;margin:2px auto 1px;font-size:10.5px;letter-spacing:.6px;padding:3px 16px;border-radius:20px;box-shadow:0 1px 3px rgba(10,7,4,.28)}
   #commish-btn.hidden{display:none}
   .commish-foot{font-family:var(--serif);font-style:italic;font-size:9px;color:var(--ink-soft);margin:0 0 1px}
   #commish-seal{position:absolute;right:8px;bottom:6px;width:54px;opacity:.16;pointer-events:none}
@@ -682,6 +685,12 @@
   .am-note{font-family:var(--type);font-size:12.5px;line-height:1.5;color:var(--ink);margin:2px 0 10px;text-align:left}
   #am-text{min-height:120px;resize:vertical;font-family:var(--sans)}
   .am-sig{font-family:var(--type);font-size:10.5px;letter-spacing:.6px;color:var(--ink-3);margin:0 0 12px;text-align:right;opacity:.85}
+  .pv-caution{font-family:var(--type);font-size:9.5px;letter-spacing:.4px;color:var(--ink-3);opacity:.8;margin:3px 2px 11px;line-height:1.4}
+  #scrollhint-ov .sh-restore-link{position:relative;z-index:2;display:block;width:100%;margin:0 auto 6px;padding:0;background:none;border:0;cursor:pointer;font-family:var(--serif);font-weight:700;font-size:10px;letter-spacing:1.6px;text-align:center;color:var(--tweed-dk);opacity:.82;text-decoration:underline;text-underline-offset:2px}
+  #scrollhint-ov .sh-restore{position:relative;z-index:2;margin:0 auto 8px;padding:9px 10px 8px;border:1px solid rgba(216,175,99,.4);border-radius:8px;background:rgba(94,70,48,.06)}
+  #scrollhint-ov .sh-restore.hidden{display:none}
+  #scrollhint-ov .sh-restore-lab{font-family:var(--type);font-size:10px;letter-spacing:1.4px;text-transform:uppercase;text-align:center;color:var(--tweed-dk);opacity:.9;margin-bottom:5px}
+  #scrollhint-ov .sh-restore-btn{display:flex;align-items:center;justify-content:center;min-height:38px;width:100%;margin-top:2px;padding:7px 0;border:0;cursor:pointer;border-radius:7px;background:linear-gradient(#3a5343,#2E4739);color:#F4E9D2;font-family:var(--serif);font-weight:700;font-size:13px;letter-spacing:.8px}
   #curator-ov .tov-card{position:relative}
   .msg-body{font-family:var(--type);font-size:13px;line-height:1.5;color:var(--ink);margin:6px 0 0;white-space:pre-wrap;word-break:break-word}
   .currow.msg-unread{border-color:var(--brass-dk);background:rgba(216,175,99,.14)}
@@ -761,7 +770,7 @@
       <p class="commish-date" id="commish-date"></p>
       <hr class="commish-rule">
       <p class="commish-msg" id="commish-msg"></p>
-      <button class="banner-green hidden" id="commish-btn" onclick="commishColdOpen()" style="margin-top:0">Inspect the Cold Case Files</button>
+      <button class="banner-green hidden" id="commish-btn" onclick="commishColdOpen()">Inspect the Cold Case Files</button>
       <p class="commish-foot" id="commish-foot"></p>
       <img decoding="async" id="commish-seal" alt="" aria-hidden="true">
     </div>
@@ -810,7 +819,7 @@
     <button class="build-hint" onclick="buildBorrowCase()">Stuck for clues? <b>Take a case from the Cold Case Files</b> and make it your own.</button>
     <div id="build-grid" class="grid"></div>
     <label id="cold-submit-wrap" class="cold-submit-wrap" style="display:none"><input type="checkbox" id="cold-submit-chk"><span>Submit for consideration as a Cold Case? Location must be a public territory with access e.g. National or State Park</span></label>
-    <p class="seat-note">A case seats <b>50 detectives</b>. Once over 25 an be added at a premium. Over 100 will need an Agency licence.</p>
+    <p class="seat-note">A case seats <b>50 detectives</b>. Once over, 25 can be added at time for a premium. Over 100 requires an Agency licence.</p>
     <div class="watchbox">
       <span class="eyebrow">THE POCKET WATCH</span>
       <div class="watch-row">
@@ -1111,6 +1120,12 @@
       <p class="sh-body">You are cordially invited to join the ranks of Scotland Yard to take up the detective's mantle.</p>
       <input id="dispatch-name" class="field" maxlength="24" placeholder="e.g. Bonnie of Baker Street" autocomplete="off" autocorrect="off" autocapitalize="words" spellcheck="false" name="shco-alias" style="margin-top:2px">
       <input id="dispatch-zip" class="field" inputmode="numeric" maxlength="5" placeholder="Precinct zip code" autocomplete="postal-code" style="margin-top:-6px">
+      <button type="button" id="dispatch-restore-link" class="sh-restore-link" onclick="gateShowRestore(event)">Already issued a badge? Restore your record.</button>
+      <div id="dispatch-restore" class="sh-restore hidden">
+        <div class="sh-restore-lab">DETECTIVE&rsquo;S CREDENTIALS</div>
+        <input id="dispatch-badge" class="field" placeholder="DET-XXXXXX-XXXX" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" onclick="event.stopPropagation()">
+        <button type="button" class="sh-restore-btn" onclick="event.stopPropagation();restoreFromGate()">Restore</button>
+      </div>
       <p class="sh-disclaimer">Your name and badge are yours alone — no ledgers sold, no watching eyes.</p>
       <img class="sh-dart" decoding="async" alt="" aria-hidden="true" src="data:image/webp;base64,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">
       <button class="sh-vg" onclick="joinRanksFromDispatch()">Join the Ranks</button>
@@ -1131,7 +1146,8 @@
     <label class="subterr-lab" for="st-city">CITY &amp; STATE</label>
     <input id="st-city" class="field" placeholder="e.g. Savannah, Georgia">
     <label class="subterr-lab" for="st-desc">PARTICULARS &mdash; OPTIONAL</label>
-    <textarea id="st-desc" class="field" placeholder="What makes this territory the scene?"></textarea>
+    <textarea id="st-desc" class="field" placeholder="Describe the grounds &mdash; its landmarks, points of interest, and what makes it a fitting scene for a hunt."></textarea>
+    <p class="pv-caution">Kindly share no personal particulars &mdash; telephone numbers, home addresses, or others&rsquo; names.</p>
     <button id="st-file" class="btn btn-primary" disabled onclick="subTerrFile()">File for Consideration</button>
   </div>
 </div>
@@ -1691,6 +1707,24 @@ async function restoreByCipher(){
   await renderRecord();
   toast("Welcome back"+(pr.name?", Detective "+pr.name:"")+".", 3400);
 }
+function gateShowRestore(ev){
+  if(ev){ try{ ev.stopPropagation(); }catch(e){} }
+  var p=document.getElementById("dispatch-restore"); if(!p) return;
+  var link=document.getElementById("dispatch-restore-link"); if(link) link.classList.add("hidden");
+  p.classList.remove("hidden");
+  try{ document.getElementById("dispatch-badge").focus(); }catch(e){}
+}
+async function restoreFromGate(){
+  var el=document.getElementById("dispatch-badge"); if(!el) return;
+  var t=(el.value||"").trim();
+  if(!validCred(t)){ toast("That badge number doesn\u2019t check out \u2014 mind the dashes and try again."); return; }
+  var pr=await adoptProfile(t.toUpperCase().replace(/[^A-Z0-9]/g,""));
+  if(!pr){ toast("No record found under that badge number."); return; }
+  var sh=document.getElementById("scrollhint-ov"); if(sh) sh.classList.add("hidden");
+  try{ unlockBodyScroll(); }catch(e){}
+  await openRecord();
+  toast("Welcome back"+(pr.name?", Detective "+pr.name:"")+".", 3400);
+}
 const PEN_SVG='<svg viewBox="0 0 64 64" width="46" height="46" aria-hidden="true"><path d="M12,56 C16,44 24,26 40,12 C46,7 52,5 56,5 C54,10 50,17 44,25 C36,36 26,48 17,54 Z" fill="#6B5638" opacity=".92"/><path d="M13,55 C26,42 40,24 55,6" stroke="#33230F" stroke-width="1.3" fill="none"/><path d="M24,40 C30,37 36,31 41,25 M31,32 C36,29 41,24 45,19 M19,47 C24,44 29,40 33,35" stroke="#33230F" stroke-width=".7" fill="none" opacity=".65"/><path d="M12,56 L15,48 L19,52 Z" fill="#241708"/></svg>';
 function penCue(done){
  const go=function(){ if(done){ const f=done; done=null; setTimeout(f,250); } };
@@ -2092,7 +2126,7 @@ function renderColdPins(idx){ const layer=document.getElementById("pin-layer"); 
     const xy=lonLatToXY(e.lon,e.lat);
     const g=document.createElementNS("http://www.w3.org/2000/svg","g");
     g.setAttribute("class","cpin"); g.dataset.code=e.code; g.dataset.x=xy[0]; g.dataset.y=xy[1];
-    g.innerHTML='<circle r="10" fill="#8A3324" stroke="#4A1508" stroke-width="2"/><circle r="3.6" fill="#D8AF63"/>';
+    g.innerHTML='<circle r="5" fill="#8A3324" stroke="#4A1508" stroke-width="1"/><circle r="1.8" fill="#D8AF63"/>';
     layer.appendChild(g); }
   chartScalePins(); }
 function chartLocator(x,y){ const l=document.getElementById("loc-layer"); if(!l) return;
@@ -2317,28 +2351,39 @@ function coldSearch(){
   const qEl=document.getElementById("cold-q"); qEl.blur();
   setTimeout(function(){window.scrollTo(0,0)},60);
   const sc=document.querySelector(".cold-scroll"); if(sc) sc.scrollTo({top:0,behavior:"smooth"});
-  const q=(qEl.value||"").trim(); if(!q) return;
-  const ql=q.toLowerCase();
-  const hits=_coldIdx.filter(e=>[e.title,e.place,e.city,e.state,e.zip,e.country]
-    .some(v=>v&&String(v).toLowerCase().indexOf(ql)>=0));
-  const pinned=hits.filter(e=>e.lat!=null);
+  const q=(qEl.value||"").trim();
+  if(!q){ clearColdQ(); return; }
+  const ql=q.toLowerCase(), up=q.toUpperCase(), idx=_coldIdx||[];
+  const cap=function(s){ return String(s).replace(/\b\w/g,function(c){return c.toUpperCase();}); };
+  if(/^\d{5}$/.test(q)){ State.coldQ={mode:"zip5",value:q,label:"ZIP "+q}; renderColdList();
+    const n=coldFilter(idx).length, g=gazLookup(q);
+    if(g) chartGoZip(q,g.ll,g.w,dropHere(g.ll,coachShow,g.label));
+    toast(n? (n===1?"One case in zip "+q+".":n+" cases in zip "+q+".") : "No cases filed in zip "+q+" yet."); return; }
+  if(/^\d{3}$/.test(q)){ State.coldQ={mode:"zip3",value:q,label:"ZIP "+q+"\u2013"}; renderColdList();
+    const n=coldFilter(idx).length, g=gazLookup(q);
+    if(g) chartGo(g.ll[1],g.ll[0],g.w,dropHere(g.ll,null,g.label));
+    toast(n? n+" case"+(n===1?"":"s")+" in the "+q+" postal region." : "No cases in the "+q+" region yet."); return; }
+  const stAbbr = GAZ.s[up]? up : (GAZ.sn[ql]||null);
+  if(stAbbr && ql.indexOf(",")<0){ const lbl=(STATE_FULL[stAbbr]||stAbbr).toUpperCase();
+    State.coldQ={mode:"state",value:stAbbr,label:lbl}; renderColdList();
+    const n=coldFilter(idx).length, fit=stateFit(stAbbr);
+    if(fit) chartGo(fit.ll[1],fit.ll[0],fit.w,dropHere(fit.ll,null,lbl));
+    toast(n? n+" case"+(n===1?"":"s")+" in "+lbl+"." : "No cases filed in "+lbl+" yet."); return; }
+  let cityQ=ql; const ci=ql.indexOf(","); if(ci>=0) cityQ=ql.slice(0,ci).trim();
+  if(cityQ && idx.some(function(e){ return String(e.city||"").toLowerCase()===cityQ; })){
+    State.coldQ={mode:"city",value:cityQ,label:cap(cityQ).toUpperCase()}; renderColdList();
+    const n=coldFilter(idx).length, g=gazLookup(q);
+    if(g){ if(g.label.indexOf("zip ")===0) chartGoZip(q,g.ll,g.w,dropHere(g.ll,null,g.label)); else chartGo(g.ll[1],g.ll[0],g.w,dropHere(g.ll,null,g.label)); }
+    toast(n+" case"+(n===1?"":"s")+" in "+cap(cityQ)+"."); return; }
+  State.coldQ={mode:"text",value:ql,label:'\u201C'+q.toUpperCase()+'\u201D'}; renderColdList();
+  const hits=coldFilter(idx), pinned=hits.filter(function(e){ return e.lat!=null; });
   if(pinned.length){ chartGo(pinned[0].lon,pinned[0].lat,1.5,function(){ chartTipShow(pinned[0].code); });
-    toast(hits.length===1?"One case answers to that.":hits.length+" cases answer \u2014 nearest shown."); return; }
-  if(hits.length){ const gh=gazLookup(q);
-    if(gh){ if(gh.label.indexOf("zip ")===0) chartGoZip(q,gh.ll,gh.w,dropHere(gh.ll,coachShow,gh.label)); else chartGo(gh.ll[1],gh.ll[0],gh.w,dropHere(gh.ll,null,gh.label));
-      toast(hits.length+(hits.length===1?" case answers":" cases answer")+" \u2014 filed without a pin."); return; }
-    openColdDetail(hits[0].code); return; }
+    toast(hits.length+" case"+(hits.length===1?"":"s")+" \u2014 nearest shown."); return; }
   const g=gazLookup(q);
-  if(g){ if(g.label.indexOf("zip ")===0) chartGoZip(q,g.ll,g.w,dropHere(g.ll,coachShow,g.label)); else chartGo(g.ll[1],g.ll[0],g.w,dropHere(g.ll,null,g.label));
-    const amb=cityAmbiguity(q);
-    toast(amb? q.replace(/\b\w/g,c=>c.toUpperCase())+" is filed in "+amb.length+" territories \u2014 "+amb.join(", ")+". Add the state to be sure." : "No cases filed there \u2014 yet.");
-    return; }
-  const parts=q.split(/[\s,]+/).filter(Boolean);
-  if(parts.length>1){
-    let best=null;
-    for(let i=parts.length-1;i>=0;i--){ const g2=gazLookup(parts[i]); if(g2&&(!best||g2.w<best.w)) best=g2; }
-    if(best){ chartGo(best.ll[1],best.ll[0],best.w,dropHere(best.ll,null,best.label)); toast("Nearest chart reference: "+best.label.toUpperCase()+"."); return; } }
-  toast("The chart shows no such place."); }
+  if(g){ if(g.label.indexOf("zip ")===0) chartGoZip(q,g.ll,g.w,dropHere(g.ll,coachShow,g.label)); else chartGo(g.ll[1],g.ll[0],g.w,dropHere(g.ll,null,g.label)); }
+  toast(hits.length? hits.length+" case"+(hits.length===1?"":"s")+" answer \u2014 filed without a pin." : "No cases match \u2014 chart moved to the nearest reference.");
+}
+
 function curPick(code){ _pickCode=code;
   const cur=document.getElementById("curator-ov"); if(cur) cur.classList.add("hidden");
   const win=document.getElementById("chart-win"); if(win) win.classList.add("picking");
@@ -2347,8 +2392,15 @@ function curPick(code){ _pickCode=code;
 const COLD_CATS={almanac:{label:"The Almanac",sub:"Seasonal"},parlour:{label:"The Parlour",sub:"Indoors"},grounds:{label:"The Grounds",sub:"Outdoors"}};
 function almanacMonth(){ return ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"][new Date().getMonth()]; }
 function coldFilter(idx){ const c=State.coldCat;
-  return c? (idx||[]).filter(function(e){ return e.cat===c; })
-          : (idx||[]).filter(function(e){ return !e.cat; }); }
+  let arr = c? (idx||[]).filter(function(e){ return e.cat===c; })
+             : (idx||[]).filter(function(e){ return !e.cat; });
+  const q=State.coldQ;
+  if(q){ if(q.mode==="state") arr=arr.filter(function(e){ return entryState(e)===q.value; });
+    else if(q.mode==="zip5") arr=arr.filter(function(e){ return String(e.zip||"")===q.value; });
+    else if(q.mode==="zip3") arr=arr.filter(function(e){ return String(e.zip||"").slice(0,3)===q.value; });
+    else if(q.mode==="city") arr=arr.filter(function(e){ return String(e.city||"").toLowerCase()===q.value; });
+    else if(q.mode==="text"){ const t=q.value; arr=arr.filter(function(e){ return [e.title,e.place,e.city,e.zip].some(function(v){ return v&&String(v).toLowerCase().indexOf(t)>=0; }); }); } }
+  return arr; }
 function coldCatOpen(cat){
   if(!COLD_CATS[cat]) return;
   State.coldCat=cat;
@@ -2368,7 +2420,7 @@ function coldCatBack(){
    blank-page problem. Send them to the archive, where "Make it your own
    case" hands them a finished board instead of homework. */
 function buildBorrowCase(){ try{ openColdCases(); }catch(e){} }
-async function openColdCases(){
+async function openColdCases(){ State.coldQ=null;
   try{ const am=document.getElementById("alm-mon"); if(am) am.textContent=almanacMonth(); }catch(e){}
   document.getElementById("cold-ov").classList.remove("hidden");
   const ch=document.getElementById("chart-host"); if(ch&&!ch.firstChild) ch.innerHTML=MAP_CHART;
@@ -2376,8 +2428,36 @@ async function openColdCases(){
   let idx=[]; try{ idx=await coldIndex(); }catch(e){}
   _coldIdx=idx;
   if(!State.coldCat){ chartInitOnce(); renderColdPins(idx); precinctApply(idx); setTimeout(function(){ penCue(ceremonyGlide); },900); }
+  renderColdList();
+}
+function zipState(zip){ const m=String(zip||"").match(/^(\d{3})/); if(!m) return ""; const n=+m[1];
+  for(const r of GAZ.zr){ if(n>=r[0]&&n<=r[1]) return r[2]; } return ""; }
+function entryState(e){ if(e.__st!=null) return e.__st; return (e.__st=zipState(e.zip)); }
+let _stFit={};
+function stateFit(ST){ if(_stFit[ST]) return _stFit[ST];
+  let mnLat=999,mnLon=999,mxLat=-999,mxLon=-999,any=false;
+  for(const r of GAZ.zr){ if(r[2]!==ST) continue;
+    for(let pp=r[0];pp<=r[1];pp++){ const c=GAZ.z[String(pp).padStart(3,"0")]; if(!c) continue;
+      any=true; if(c[0]<mnLat)mnLat=c[0]; if(c[0]>mxLat)mxLat=c[0]; if(c[1]<mnLon)mnLon=c[1]; if(c[1]>mxLon)mxLon=c[1]; } }
+  let res;
+  if(!any){ const s=GAZ.s[ST]; res=s?{ll:s,w:140}:null; }
+  else{ const cLat=(mnLat+mxLat)/2, cLon=(mnLon+mxLon)/2, lonSpan=mxLon-mnLon, latSpan=mxLat-mnLat;
+    const sv=chartSvg(), rr=sv?sv.getBoundingClientRect():null, asp=(rr&&rr.width>0)?rr.height/rr.width:0.5;
+    const xu=lonSpan/360*1000, yu=latSpan/180*500;
+    let w=Math.max(xu, yu/asp)*1.3; w=Math.max(3,Math.min(1000,w));
+    res={ll:[cLat,cLon],w:w}; }
+  return (_stFit[ST]=res); }
+function renderColdChip(n){ const list=document.getElementById("cold-list"); if(!list) return;
+  let bar=document.getElementById("cold-filterbar");
+  if(!State.coldQ){ if(bar) bar.remove(); return; }
+  if(!bar){ bar=document.createElement("div"); bar.id="cold-filterbar"; bar.className="cold-filterbar"; list.parentNode.insertBefore(bar,list); }
+  bar.innerHTML='<span class="cfb-txt">SHOWING '+Number(n)+' IN '+escapeHtml(State.coldQ.label)+'</span>'
+    +'<button class="cfb-x" onclick="clearColdQ()" aria-label="Clear filter">&#10005;</button>'; }
+function clearColdQ(){ State.coldQ=null; const q=document.getElementById("cold-q"); if(q) q.value=""; renderColdList(); }
+function renderColdList(){
+  const list=document.getElementById("cold-list"); if(!list) return;
   list.innerHTML="";
-  const shown=coldFilter(idx);
+  const shown=coldFilter(_coldIdx); renderColdChip(shown.length);
   if(!shown.length){ const _k=COLD_CATS[State.coldCat]; list.innerHTML='<div class="empty"><img decoding="async" class="em-coin" src="'+COIN_CLD+'" alt="">'+(_k? "No cases are filed under "+escapeHtml(_k.label)+" yet.<br>The shelf is being stocked." : "The archive is being assembled.<br>Curated cases from Scavenger &amp; Hunt Co. will appear here.")+'</div>'; return; }
   for(const e of shown){
     const row=document.createElement("button"); row.className="coldrow";
@@ -2725,16 +2805,29 @@ async function renderCurator(){
    BY ORDER OF THE COMMISSIONER \u2014 daily dispatch
    ============================================================ */
 const COMMISH_JOKES=[
- "Bonnie B. Baker of 221B was asked how she takes her tea. \u201CWith evidence,\u201D she said.",
- "Scotland Yard reports crime is down. Bonnie reports it is merely hiding better.",
- "Bonnie deduced the whole affair from an empty biscuit tin. Chiefly, that someone owed her a biscuit.",
- "Bonnie never guesses. She estimates with unbearable confidence.",
- "The Yard asked Bonnie her method. \u201CFour paws on the ground, one nose above the facts.\u201D",
- "A constable mislaid his notebook, and the Yard opened an inquiry into the inquiry. Bonnie found it within the hour.",
- "Bonnie solved the case of the missing kettle before breakfast. It was steaming obvious.",
- "\u201CElementary,\u201D says Bonnie \u2014 though at her height, everything is a tall order.",
- "The Yard promoted a sergeant for finding his own desk. Bonnie had found it first.",
- "Bonnie of Baker Street can smell a lie at forty paces. A sausage at four hundred."
+ "Never merely walk when you might investigate. Open a Cold Case File & go on the hunt.",
+ "Rain has the children gloomy? The Cold Case Files keep young minds occupied.",
+ "An unsolved case is a standing reproach. Several await you in the Cold Case Files.",
+ "Bonnie solved hers before her breakfast biscuit. The Cold Case Files await your wit.",
+ "Every square of ground holds a mystery. Find yours in the Cold Case Files.",
+ "An idle afternoon is an unopened case. The Cold Case Files are stacked and waiting.",
+ "Deputise the household. A Cold Case File is fine sport for a wet afternoon.",
+ "The pavement is your board; the clues are already set. Open a Cold Case File.",
+ "New files reach the archive by the week. When last did you inspect the Cold Cases?",
+ "On vacation or traveling? Open a Cold Case & lend The Agency a hand.",
+ "New city, unfamiliar streets? See it as a detective — open a Cold Case File.",
+ "A road trip wants a game. Pack a Cold Case File for every stop along the way.",
+ "Tour the sights, or solve them. A Cold Case File turns a landmark into a lead.",
+ "Hours to kill before the train? A Cold Case File fills them handsomely.",
+ "A family afield wants a purpose. Let a Cold Case File set the day’s course.",
+ "Grandchildren visiting? Deputise the small ones with a Cold Case File.",
+ "A gathering wants a game. A Cold Case File makes every guest a detective.",
+ "A finer outing than dinner: two detectives upon one Cold Case File.",
+ "Prise them from the screens. A Cold Case File is the better mystery.",
+ "School holidays stretching long? A Cold Case File fills the emptiest day.",
+ "A quarter-hour at midday? Crack a Cold Case File near the office.",
+ "Fair weather at last — the grounds have thawed. Take up a Cold Case File.",
+ "You think you know your own streets? A Cold Case File says otherwise."
 ];
 let _commishTick=null;
 function commishDate(){ const d=new Date();
@@ -2768,7 +2861,7 @@ async function showCommish(){
     }
     document.getElementById("commish-date").textContent=commishDate();
     document.getElementById("commish-msg").textContent=text;
-    document.getElementById("commish-btn").classList.toggle("hidden", mode!=="cold");
+    document.getElementById("commish-btn").classList.remove("hidden");
     try{ const s=document.getElementById("commish-seal"); if(s&&!s.getAttribute("src")) s.src=SEAL_IMG; }catch(e){}
     if(mode==="order") localStorage.setItem("sh_order_seen",String(ord.id));
     localStorage.setItem("sh_commish_day",commishDay());
@@ -4293,6 +4386,7 @@ setTimeout(showCommish, 2600);
     <div id="am-thread"></div>
     <p class="am-note">A question or comment for Scavenger &amp; Hunt Co.? Leave word below &mdash; we read every letter.</p>
     <textarea id="am-text" class="field" maxlength="800" placeholder="Your message to the Agency&hellip;"></textarea>
+    <p class="pv-caution">Kindly share no personal particulars &mdash; telephone numbers, home addresses, or others&rsquo; names.</p>
     <p class="am-sig" id="am-sig"></p>
     <button id="am-send" class="btn btn-primary" onclick="sendAgencyMsg()">Post the Letter</button>
   </div>
