@@ -654,7 +654,7 @@
   .seal-replystamp{position:absolute;left:72%;top:86.2%;width:31.08%;filter:brightness(.5);transform:translate(-50%,-50%);display:none;pointer-events:none}
   .seal-btn.has-reply .seal-replystamp{display:block}
   /* By Order of the Commissioner — daily dispatch card */
-  #commish-card{position:absolute;left:50%;transform:translateX(-50%);width:calc(100% - 28px);max-width:520px;aspect-ratio:460/131;display:flex;flex-direction:column;z-index:498;background:repeating-linear-gradient(180deg,transparent 0 25px,rgba(94,70,48,.10) 25px 26px),#F4EBD6;border:1px solid rgba(94,70,48,.55);border-radius:4px;box-shadow:0 14px 38px rgba(10,7,3,.55);padding:6px 16px 4px;text-align:center;overflow:hidden}
+  #commish-card{position:absolute;left:50%;transform:translateX(-50%);width:calc(100% - 28px);max-width:520px;display:flex;flex-direction:column;z-index:498;background:repeating-linear-gradient(180deg,transparent 0 25px,rgba(94,70,48,.10) 25px 26px),#F4EBD6;border:1px solid rgba(94,70,48,.55);border-radius:4px;box-shadow:0 14px 38px rgba(10,7,3,.55);padding:6px 16px 4px;text-align:center;overflow:hidden}
   #commish-card.hidden{display:none}
   #commish-card.fade{transition:opacity .6s ease;opacity:0}
   .commish-hd{font-family:var(--type);font-size:7px;letter-spacing:1.4px;font-weight:700;color:var(--oxblood);margin:1px 0 0}
@@ -2666,17 +2666,19 @@ async function renderCurator(){
     const book=await commishJokes();
     let live=false; try{ live=!!(await Store.get("commish:jokes",true)); }catch(_e){}
     const jb=document.createElement("div"); jb.className="currow"; jb.style.cssText="flex-direction:column;align-items:stretch;gap:7px";
-    let jh='<p class="ladder-eyebrow" style="margin:0">THE JOKE BOOK</p>'
+    _jokeEditIdx=-1; let jh='<p class="ladder-eyebrow" style="margin:0">NOTES</p>'
       +'<div class="meta">One a day on the Commissioner\u2019s dispatch, in this order.'+(live?'':' Showing the standard ten \u2014 any change writes a live book.')+'</div>';
     book.forEach(function(t,i){
       jh+='<div style="display:flex;gap:8px;align-items:flex-start"><div class="meta" style="flex:1;min-width:0;text-align:left">'+(i+1)+'. '+escapeHtml(t)+'</div>'
+        +'<button class="btn-ghost joke-edit" data-i="'+i+'" style="flex:none;padding:4px 10px">Edit</button>'
         +'<button class="btn-ghost cur-del joke-del" data-i="'+i+'" style="flex:none;padding:4px 10px">Delete</button></div>';
     });
-    jh+='<textarea class="cur-in" id="joke-text" maxlength="180" placeholder="A new entry for the book\u2026" style="min-height:48px"></textarea>'
-      +'<div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn btn-brass" style="flex:1 1 auto" onclick="jokeAdd()">Add to the Book</button>'
-      +(live?'<button class="btn-ghost" style="flex:1 1 auto" onclick="jokeRestore()">Restore the standard book</button>':'')+'</div>';
+    jh+='<textarea class="cur-in" id="joke-text" maxlength="180" placeholder="A new note\u2026" style="min-height:48px"></textarea>'
+      +'<div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn btn-brass" style="flex:1 1 auto" id="joke-add" onclick="jokeAdd()">Add a Note</button>'
+      +(live?'<button class="btn-ghost" style="flex:1 1 auto" onclick="jokeRestore()">Restore the standard notes</button>':'')+'</div>';
     jb.innerHTML=jh;
     jb.querySelectorAll(".joke-del").forEach(function(b){ b.onclick=function(){ jokeDel(parseInt(b.getAttribute("data-i"),10)); }; });
+    jb.querySelectorAll(".joke-edit").forEach(function(b){ b.onclick=function(){ jokeEdit(parseInt(b.getAttribute("data-i"),10)); }; });
     list.appendChild(jb);
   }catch(_e){}
   if(!mine.length){ const _em=document.createElement("div"); _em.className="empty"; _em.style.marginTop="8px"; _em.textContent="Build a case above \u2014 then publish it here."; list.appendChild(_em); return; }
@@ -2767,8 +2769,9 @@ async function showCommish(){
     if(mode==="order") localStorage.setItem("sh_order_seen",String(ord.id));
     localStorage.setItem("sh_commish_day",commishDay());
     c.classList.remove("hidden"); c.classList.remove("fade");
-    try{ const tg=document.querySelector(".hero .brand small"), hr=home.getBoundingClientRect();
-      if(tg){ c.style.top=Math.round(tg.getBoundingClientRect().top-hr.top-1)+"px"; } }catch(e){}
+    try{ const tg=document.querySelector(".hero .brand small"), orn=document.querySelector(".rule-orn"), hr=home.getBoundingClientRect();
+      if(tg&&orn){ const top=Math.round(tg.getBoundingClientRect().top-hr.top-1);
+        c.style.top=top+"px"; c.style.height=Math.round(orn.getBoundingClientRect().bottom-hr.top+1-top)+"px"; } }catch(e){}
     let left=10; const foot=document.getElementById("commish-foot");
     const put=function(){ foot.textContent="This dispatch will self-destruct in "+left+" second"+(left===1?"":"s")+"."; };
     put();
@@ -2780,21 +2783,29 @@ async function commishJokes(){
   try{ const r=await Store.get("commish:jokes",true);
     if(r){ const a=JSON.parse(r); if(Array.isArray(a)&&a.length) return a.map(String); } }catch(e){}
   return COMMISH_JOKES; }
+let _jokeEditIdx=-1;
+function jokeEdit(i){
+  _jokeEditIdx=i;
+  commishJokes().then(function(book){
+    const el=document.getElementById("joke-text"); if(el&&book[i]!=null){ el.value=book[i]; el.focus(); }
+    const b=document.getElementById("joke-add"); if(b) b.textContent="Save the Note"; }); }
 async function jokeAdd(){
   const el=document.getElementById("joke-text"); const t=(el.value||"").trim();
-  if(!t){ toast("Write the joke first."); return; }
-  const book=(await commishJokes()).slice(); book.push(t.slice(0,180));
+  if(!t){ toast("Write the note first."); return; }
+  const book=(await commishJokes()).slice();
+  if(_jokeEditIdx>=0&&_jokeEditIdx<book.length){ book[_jokeEditIdx]=t.slice(0,180); _jokeEditIdx=-1; }
+  else book.push(t.slice(0,180));
   await Store.set("commish:jokes", JSON.stringify(book), true);
-  toast("Entered in the joke book."); await renderCurator(); }
+  toast("Entered in the notes."); await renderCurator(); }
 async function jokeDel(i){
   const book=(await commishJokes()).slice(); if(i<0||i>=book.length) return;
   book.splice(i,1);
   if(book.length){ await Store.set("commish:jokes", JSON.stringify(book), true); }
-  else{ try{ await Store.del("commish:jokes",true); }catch(e){} toast("Book emptied \u2014 the standard ten stand in."); await renderCurator(); return; }
-  toast("Struck from the book."); await renderCurator(); }
+  else{ try{ await Store.del("commish:jokes",true); }catch(e){} toast("Notes emptied \u2014 the standard ten stand in."); await renderCurator(); return; }
+  toast("Struck from the notes."); await renderCurator(); }
 async function jokeRestore(){
   try{ await Store.del("commish:jokes",true); }catch(e){}
-  toast("The standard book is restored."); await renderCurator(); }
+  toast("The standard notes are restored."); await renderCurator(); }
 async function postOrder(){
   const t=(document.getElementById("order-text").value||"").trim();
   if(!t){ toast("Write the order first."); return; }
