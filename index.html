@@ -654,16 +654,16 @@
   .seal-replystamp{position:absolute;left:72%;top:86.2%;width:31.08%;filter:brightness(.5);transform:translate(-50%,-50%);display:none;pointer-events:none}
   .seal-btn.has-reply .seal-replystamp{display:block}
   /* By Order of the Commissioner — daily dispatch card */
-  #commish-card{position:absolute;left:50%;transform:translateX(-50%);width:calc(100% - 28px);max-width:520px;z-index:498;background:repeating-linear-gradient(180deg,transparent 0 25px,rgba(94,70,48,.10) 25px 26px),#F4EBD6;border:1px solid rgba(94,70,48,.55);border-radius:4px;box-shadow:0 14px 38px rgba(10,7,3,.55);padding:12px 16px 9px;text-align:center;overflow:hidden}
+  #commish-card{position:absolute;left:50%;transform:translateX(-50%);width:calc(100% - 28px);max-width:520px;aspect-ratio:460/131;display:flex;flex-direction:column;z-index:498;background:repeating-linear-gradient(180deg,transparent 0 25px,rgba(94,70,48,.10) 25px 26px),#F4EBD6;border:1px solid rgba(94,70,48,.55);border-radius:4px;box-shadow:0 14px 38px rgba(10,7,3,.55);padding:6px 16px 4px;text-align:center;overflow:hidden}
   #commish-card.hidden{display:none}
   #commish-card.fade{transition:opacity .6s ease;opacity:0}
-  .commish-hd{font-family:var(--type);font-size:11px;letter-spacing:2px;font-weight:700;color:var(--oxblood);margin:1px 0 0}
-  .commish-date{font-family:var(--type);font-size:9.5px;letter-spacing:2.4px;color:var(--ink-soft);margin:1px 0 8px}
-  .commish-rule{border:none;border-top:1.5px dashed rgba(94,70,48,.5);margin:0 2px 10px}
-  .commish-msg{font-family:var(--serif);font-weight:700;font-size:16.5px;line-height:1.35;color:var(--ink);margin:0 6px 10px}
-  #commish-btn{margin:0 0 10px}
+  .commish-hd{font-family:var(--type);font-size:7px;letter-spacing:1.4px;font-weight:700;color:var(--oxblood);margin:1px 0 0}
+  .commish-date{font-family:var(--type);font-size:7px;letter-spacing:2px;color:var(--ink-soft);margin:1px 0 4px}
+  .commish-rule{border:none;border-top:1.5px dashed rgba(94,70,48,.5);margin:0 2px}
+  .commish-msg{font-family:var(--serif);font-weight:700;font-size:12.5px;line-height:1.3;color:var(--ink);margin:0 6px;flex:1;display:flex;align-items:center;justify-content:center;min-height:0;overflow:hidden}
+  #commish-btn{margin:0 0 4px;font-size:12px;padding:7px 12px;border-radius:8px}
   #commish-btn.hidden{display:none}
-  .commish-foot{font-family:var(--serif);font-style:italic;font-size:11.5px;color:var(--ink-soft);margin:0 0 2px}
+  .commish-foot{font-family:var(--serif);font-style:italic;font-size:9px;color:var(--ink-soft);margin:0 0 1px}
   #commish-seal{position:absolute;right:8px;bottom:6px;width:54px;opacity:.16;pointer-events:none}
   .am-thread{margin:0 0 12px}
   .am-th-hd{font-family:var(--type);font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:var(--oxblood);opacity:.9;margin:0 0 7px}
@@ -752,7 +752,7 @@
   <!-- ================= HOME ================= -->
   <section id="s-home" class="screen active">
     <div id="commish-card" class="hidden" role="dialog" aria-label="By order of the Commissioner">
-      <button class="cdx" onclick="dismissCommish()" aria-label="Close">&#10005;</button>
+      <button class="cdx" style="width:24px;height:24px;font-size:12px" onclick="dismissCommish()" aria-label="Close">&#10005;</button>
       <p class="commish-hd">BY ORDER OF THE COMMISSIONER</p>
       <p class="commish-date" id="commish-date"></p>
       <hr class="commish-rule">
