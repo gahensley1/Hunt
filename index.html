@@ -654,7 +654,7 @@
   .seal-replystamp{position:absolute;left:72%;top:86.2%;width:31.08%;filter:brightness(.5);transform:translate(-50%,-50%);display:none;pointer-events:none}
   .seal-btn.has-reply .seal-replystamp{display:block}
   /* By Order of the Commissioner — daily dispatch card */
-  #commish-card{position:fixed;top:46px;left:50%;transform:translateX(-50%);width:calc(100% - 28px);max-width:520px;z-index:498;background:repeating-linear-gradient(180deg,transparent 0 25px,rgba(94,70,48,.10) 25px 26px),#F4EBD6;border:1px solid rgba(94,70,48,.55);border-radius:4px;box-shadow:0 14px 38px rgba(10,7,3,.55);padding:12px 16px 9px;text-align:center;overflow:hidden}
+  #commish-card{position:absolute;left:50%;transform:translateX(-50%);width:calc(100% - 28px);max-width:520px;z-index:498;background:repeating-linear-gradient(180deg,transparent 0 25px,rgba(94,70,48,.10) 25px 26px),#F4EBD6;border:1px solid rgba(94,70,48,.55);border-radius:4px;box-shadow:0 14px 38px rgba(10,7,3,.55);padding:12px 16px 9px;text-align:center;overflow:hidden}
   #commish-card.hidden{display:none}
   #commish-card.fade{transition:opacity .6s ease;opacity:0}
   .commish-hd{font-family:var(--type);font-size:11px;letter-spacing:2px;font-weight:700;color:var(--oxblood);margin:1px 0 0}
@@ -2767,6 +2767,9 @@ async function showCommish(){
     if(mode==="order") localStorage.setItem("sh_order_seen",String(ord.id));
     localStorage.setItem("sh_commish_day",commishDay());
     c.classList.remove("hidden"); c.classList.remove("fade");
+    try{ const amp=document.querySelector(".hero .brand .amp"), pl=document.querySelector(".stack .btn-plaque"), hr=home.getBoundingClientRect();
+      if(amp&&pl){ const a=amp.getBoundingClientRect().bottom-hr.top, p=pl.getBoundingClientRect().top-hr.top;
+        const gap=Math.max(10,Math.round((p-a-c.offsetHeight)*0.283)); c.style.top=Math.round(a+gap)+"px"; } }catch(e){}
     let left=10; const foot=document.getElementById("commish-foot");
     const put=function(){ foot.textContent="This dispatch will self-destruct in "+left+" second"+(left===1?"":"s")+"."; };
     put();
