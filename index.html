@@ -207,6 +207,8 @@
   .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px 12px calc(120px + var(--safe-b))}
   .grid>.tile{align-self:start}
   .cell{display:flex;flex-direction:column;gap:4px}
+  .grid>.tdph{border:1.5px dashed var(--tweed);border-radius:12px;background:rgba(94,70,48,.06);box-sizing:border-box}
+  .cell.tdlift{z-index:60;pointer-events:none;box-shadow:0 10px 22px rgba(0,0,0,.38);opacity:.97}
   .tile{
     position:relative;aspect-ratio:1/1;border-radius:12px;overflow:hidden;background:var(--paper-2);
     border:1px solid var(--line);display:grid;place-items:center;cursor:pointer;
@@ -3361,6 +3363,106 @@ function renderBuild(){
   document.getElementById("tile-count").textContent=n;
   document.getElementById("finish-build").disabled = n<1;
 }
+/* --- Build-grid tile reorder: long-press to lift, slide to place. Build mode only.
+   Hunter submissions and verification key off t.id, never the array index, so a
+   reorder on an amended case cannot orphan a find - only the displayed number moves. */
+var _td=null, _tdClick=0, _tdTimer=0;
+function _tdFlip(grid,mut){
+  const pre=[].slice.call(grid.children).map(c=>[c,c.getBoundingClientRect()]);
+  mut();
+  for(const p of pre){
+    const c=p[0], f=p[1];
+    if(!c.parentNode || (_td&&c===_td.cell)) continue;
+    const l=c.getBoundingClientRect(), dx=f.left-l.left, dy=f.top-l.top;
+    if(!dx&&!dy) continue;
+    c.style.transition="none"; c.style.transform="translate("+dx+"px,"+dy+"px)";
+    void c.offsetWidth;
+    c.style.transition="transform .16s linear"; c.style.transform="";
+  }
+}
+function tdDown(ev){
+  if(_td) return;
+  if(ev.button!==undefined&&ev.button>0) return;
+  if(ev.target&&ev.target.closest&&ev.target.closest(".rm")) return;
+  const st={id:ev.pointerId,cell:ev.currentTarget,x0:ev.clientX,y0:ev.clientY,cx:ev.clientX,cy:ev.clientY,lift:false,iv:0};
+  _td=st;
+  _tdTimer=setTimeout(function(){ if(_td===st) _tdLift(st); },400);
+  window.addEventListener("pointermove",tdMove,{passive:false});
+  window.addEventListener("pointerup",tdUp);
+  window.addEventListener("pointercancel",tdUp);
+}
+function _tdLift(st){
+  const cell=st.cell, grid=cell.parentNode;
+  if(!grid||!State.build||!State.build.tiles){ _tdEnd(st); return; }
+  const r=cell.getBoundingClientRect();
+  st.lift=true; st.from=+cell.dataset.i;
+  cell.style.position="fixed"; cell.style.left=r.left+"px"; cell.style.top=r.top+"px";
+  cell.style.width=r.width+"px"; cell.style.margin="0";
+  cell.classList.add("tdlift");
+  const ph=document.createElement("div");
+  ph.className="cell tdph"; ph.style.height=r.height+"px";
+  grid.insertBefore(ph,cell); st.ph=ph;
+  st.iv=setInterval(function(){ _tdEdge(st); },30);
+  _tdMoveTo(st,st.cx,st.cy);
+}
+function _tdMoveTo(st,cx,cy){
+  st.cx=cx; st.cy=cy;
+  st.cell.style.transform="translate("+(cx-st.x0)+"px,"+(cy-st.y0)+"px) scale(1.04)";
+  const el=document.elementFromPoint(cx,cy);
+  const over=el&&el.closest?el.closest(".cell"):null;
+  if(!over||over===st.ph||over===st.cell) return;
+  const grid=st.ph.parentNode;
+  if(!grid||over.parentNode!==grid) return;
+  const kids=[].slice.call(grid.children);
+  const before=kids.indexOf(over)<kids.indexOf(st.ph);
+  _tdFlip(grid,function(){ grid.insertBefore(st.ph, before?over:over.nextSibling); });
+}
+function _tdEdge(st){
+  if(!st.lift) return;
+  const h=window.innerHeight; let d=0;
+  if(st.cy<90) d=-12; else if(st.cy>h-120) d=12;
+  if(!d) return;
+  const b=window.scrollY; window.scrollBy(0,d);
+  if(window.scrollY!==b) _tdMoveTo(st,st.cx,st.cy);
+}
+function tdMove(ev){
+  const st=_td; if(!st||ev.pointerId!==st.id) return;
+  if(!st.lift){
+    if(Math.abs(ev.clientX-st.x0)+Math.abs(ev.clientY-st.y0)>8){ clearTimeout(_tdTimer); _tdEnd(st); }
+    return;
+  }
+  ev.preventDefault();
+  _tdMoveTo(st,ev.clientX,ev.clientY);
+}
+function tdUp(ev){
+  const st=_td; if(!st||(ev&&ev.pointerId!==undefined&&ev.pointerId!==st.id)) return;
+  clearTimeout(_tdTimer);
+  if(!st.lift){ _tdEnd(st); return; }
+  _tdClick=Date.now();
+  const grid=st.ph.parentNode;
+  const cells=[].slice.call(grid.children).filter(c=>c!==st.cell&&c.classList.contains("cell"));
+  const to=cells.indexOf(st.ph), from=st.from;
+  st.ph.remove();
+  if(to>=0&&to!==from&&State.build&&State.build.tiles&&from>=0&&from<State.build.tiles.length){
+    State.build.tiles.splice(to,0,State.build.tiles.splice(from,1)[0]);
+    if(State._builderEdit&&State._builderEditN>0&&!State._tdWarned){
+      State._tdWarned=true;
+      toast("Renumbering a case already afoot \u2014 hunters' finds are kept.",3600);
+    }
+  }
+  _tdEnd(st);
+  renderBuild();
+}
+function _tdEnd(st){
+  if(st&&st.iv) clearInterval(st.iv);
+  _td=null;
+  window.removeEventListener("pointermove",tdMove);
+  window.removeEventListener("pointerup",tdUp);
+  window.removeEventListener("pointercancel",tdUp);
+}
+(function(){ const g=document.getElementById("build-grid");
+  if(g) g.addEventListener("touchmove",function(e){ if(_td&&_td.lift) e.preventDefault(); },{passive:false});
+})();
 function tileEl(t,i,mode){
   const wrap=document.createElement("div"); wrap.className="cell";
   const d=document.createElement("div");
@@ -3370,7 +3472,8 @@ function tileEl(t,i,mode){
   const media = tileHTML(t);
   if(mode==="build"){
     d.innerHTML=num+media+`<button class="rm" onclick="event.stopPropagation();quickRemove(${i})">✕</button>`;
-    wrap.onclick=()=>openTileEdit(i);
+    wrap.dataset.i=i; wrap.addEventListener("pointerdown",tdDown);
+    wrap.onclick=()=>{ if(Date.now()-_tdClick<350) return; openTileEdit(i); };
   }else{ // hunter
     d.innerHTML=num+media;
     if(State.founds[t.id]){ d.classList.add("found"); d.innerHTML+=`<img decoding="async" class="thumb" src="${State.founds[t.id]}">`; }
@@ -3522,7 +3625,7 @@ async function builderEditCase(code){
     const hh=JSON.parse(raw);
     let n=0; try{ n=(await listSubs(code)).length; }catch(e){}
     State.build=hh; State.build.code=code;
-    State._builderEdit=code;
+    State._builderEdit=code; State._builderEditN=n; State._tdWarned=false;
     const bti=document.getElementById("build-title-input"); if(bti) bti.value=hh.title||"";
     renderBuild(); try{ paintWatch(); }catch(e){}
     go("s-build");
