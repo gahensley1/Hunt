@@ -100,6 +100,8 @@
   .hunt-title-txt{min-width:0;flex:1 1 auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .title-in{flex:1;min-width:0;font-family:var(--serif);font-weight:700;font-style:normal;font-size:22px;letter-spacing:.3px;line-height:1.1;color:#fff;background:transparent;border:none;outline:none;padding:2px 2px;margin:0;-webkit-appearance:none}
   .title-in::placeholder{color:#fff;opacity:.95;font-style:normal;font-weight:700}
+  #tile-clue::placeholder,#crop-clue::placeholder{color:var(--ink-soft);opacity:.55}
+  .crop-cluerow{margin:2px 0 2px}
   .title-in:focus{border-bottom:1.5px solid var(--brass)}
   .topbar .sub{font-family:var(--type);font-size:11px;opacity:.75;letter-spacing:1px;flex-shrink:0;white-space:nowrap}
   .nudge{position:absolute;width:44px;height:44px;pointer-events:none;opacity:0;z-index:30;filter:drop-shadow(0 3px 5px rgba(20,14,8,.5))}
@@ -203,6 +205,8 @@
   .counter{font-family:var(--type);letter-spacing:1px;font-size:13px;color:var(--ink-soft)}
   .counter b{color:var(--green);font-size:15px}
   .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px 12px calc(120px + var(--safe-b))}
+  .grid>.tile{align-self:start}
+  .cell{display:flex;flex-direction:column;gap:4px}
   .tile{
     position:relative;aspect-ratio:1/1;border-radius:12px;overflow:hidden;background:var(--paper-2);
     border:1px solid var(--line);display:grid;place-items:center;cursor:pointer;
@@ -210,9 +214,9 @@
   .tile img{width:100%;height:100%;object-fit:cover;display:block}
   .tile .obj{font-size:min(13vw,52px);line-height:1}
   .tile.obj-tile{border:1px solid rgba(30,28,26,.12)}
-  .tile .cap{
-    position:absolute;left:0;right:0;bottom:0;padding:4px 6px;font-family:var(--type);font-size:11px;letter-spacing:.3px;
-    color:#fff;background:linear-gradient(0deg,rgba(0,0,0,.65),transparent);text-align:center;
+  .cell .cap{
+    padding:0 2px;font-family:var(--type);font-size:11px;letter-spacing:.3px;
+    color:var(--ink-soft);text-align:center;min-height:13px;line-height:13px;
     white-space:nowrap;overflow:hidden;text-overflow:ellipsis
   }
   .tile .rm{
@@ -1020,6 +1024,7 @@
       <div class="crop-frame"></div>
     </div>
     <div class="zoomrow">🔍<input id="crop-zoom" type="range" min="1" max="3" step="0.01" value="1">🔎</div>
+    <div id="crop-cluerow" class="crop-cluerow" style="display:none"><input id="crop-clue" class="field" maxlength="12" placeholder="clue?"></div>
     <div class="row2">
       <button class="btn btn-ghost" onclick="closeOverlay('ov-crop')">Cancel</button>
       <button class="btn btn-primary" onclick="confirmCrop()">Use Photo</button>
@@ -1040,7 +1045,7 @@
   <div class="modal">
     <h3>Edit clue</h3>
     <div class="target-big" id="tile-preview"></div>
-    <input id="tile-clue" class="field" placeholder="Add a hint (optional) — e.g. “red front door”">
+    <input id="tile-clue" class="field" maxlength="12" placeholder="clue?">
     <div class="row2">
       <button class="btn btn-ox" onclick="removeTile()">Remove</button>
       <button class="btn btn-primary" onclick="saveTileEdit()">Save</button>
@@ -2114,10 +2119,23 @@ function chartScalePins(vpw){ const k=_vb.w/1000*2.6, sv=vpw?null:chartSvg();
   const T=_vb.w>160?15:(_vb.w>60?17:20), sT=T*_vb.w/(10*W);
   const _mag=1000/_vb.w, _pt=Math.max(0,Math.min(1,Math.log(_mag/7)/Math.log(2000/7)));
   const pinBoost=_vb.w<=0.5?2.4:0.5+1.1*_pt;
+  const _D=0.026*W*pinBoost, _pxu=W/_vb.w, _P=[];
+  document.querySelectorAll("#pin-layer .cpin").forEach(g=>{ g._fx=0; g._fy=0; _P.push({g:g,x:+g.dataset.x,y:+g.dataset.y}); });
+  const _seen=new Array(_P.length).fill(false);
+  for(let i=0;_vb.w<=2&&i<_P.length;i++){ if(_seen[i]) continue;
+    const grp=[i]; _seen[i]=true;
+    for(let j=i+1;j<_P.length;j++){ if(_seen[j]) continue;
+      const ddx=(_P[j].x-_P[i].x)*_pxu, ddy=(_P[j].y-_P[i].y)*_pxu;
+      if(ddx*ddx+ddy*ddy < _D*_D){ grp.push(j); _seen[j]=true; } }
+    if(grp.length<2) continue;
+    let cx=0,cy=0; grp.forEach(q=>{ cx+=_P[q].x; cy+=_P[q].y; }); cx/=grp.length; cy/=grp.length;
+    const _R=(1.05*_D/(2*Math.sin(Math.PI/Math.max(2,grp.length))))/_pxu;
+    grp.forEach((q,n)=>{ const a=-Math.PI/2+2*Math.PI*n/grp.length;
+      _P[q].g._fx=cx+_R*Math.cos(a)-_P[q].x; _P[q].g._fy=cy+_R*Math.sin(a)-_P[q].y; }); }
   document.querySelectorAll("#pin-layer .cpin, #loc-layer g, #here-layer g, #park-layer .npark").forEach(g=>{
     const m=g.classList.contains("npark")?0:(+g.dataset.k||1);
     const s=m?(k*m*(g.classList.contains("cpin")?pinBoost:1)):sT;
-    g.setAttribute("transform","translate("+g.dataset.x+" "+g.dataset.y+") scale("+s+")"); });
+    g.setAttribute("transform","translate("+((+g.dataset.x)+(g._fx||0))+" "+((+g.dataset.y)+(g._fy||0))+") scale("+s+")"); });
   if(spOn&&_sparkEls){ const mg=_vb.w*0.08, x0=_vb.x-mg, x1=_vb.x+_vb.w+mg, y0=_vb.y-mg, y1=_vb.y+_vb.h+mg, sS=sT*0.75, dOn=_vb.w<=6;
     for(let i=0;i<_sparkEls.length;i++){ const o=_sparkEls[i], on=(o.d?dOn:true)&&(o.x>=x0&&o.x<=x1&&o.y>=y0&&o.y<=y1);
       if(on){ if(o.v!==1){ o.el.style.display=""; o.v=1; } o.el.setAttribute("transform","translate("+o.x+" "+o.y+") scale("+sS+")"); }
@@ -2202,10 +2220,10 @@ function chartTap(cx,cy,target){
     if(_pinShown===String(code)){ chartTipHide(); openColdDetail(code); } else chartTipShow(code); return; }
   const tree=target&&target.closest?target.closest(".npark"):null;
   if(tree&&_NPARK){ const ti=+tree.dataset.i, pp=_NPARK[ti]; chartTipHide();
-    coldFilterToPlace(pp[0]); chartGo(pp[2],pp[1],Math.min(_vb.w,6),function(){ chartParkTip(ti); }); return; }
+    coldFilterToPlace(pp[0],pp[1],pp[2]); chartGo(pp[2],pp[1],Math.min(_vb.w,6),function(){ chartParkTip(ti); }); return; }
   const stree=target&&target.closest?target.closest(".spark"):null;
   if(stree){ const si=+stree.dataset.i, sp2=sparkParse()[si]; chartTipHide();
-    coldFilterToPlace(sp2[0]); chartGo(sp2[2],sp2[1],Math.min(_vb.w,6),function(){ chartSparkTip(si); }); return; }
+    coldFilterToPlace(sp2[0],sp2[1],sp2[2]); chartGo(sp2[2],sp2[1],Math.min(_vb.w,6),function(){ chartSparkTip(si); }); return; }
   if(State.coldQ){ clearColdQ(); chartTipHide(); return; }
   const wasTip=_pinShown; chartTipHide(); if(wasTip) return;
   const c=chartPt(cx,cy), ll=xyToLonLat(c.x,c.y);
@@ -2404,6 +2422,10 @@ function curPick(code){ _pickCode=code;
   chartTipHide(); toast("Tap the chart where the case lives."); }
 const COLD_CATS={almanac:{label:"The Almanac",sub:"Seasonal"},parlour:{label:"The Parlour",sub:"Indoors"},grounds:{label:"The Grounds",sub:"Outdoors"}};
 function almanacMonth(){ return ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"][new Date().getMonth()]; }
+const PARK_NEAR_MI=25;
+function coldNear(e,q){ if(e.lat==null||e.lon==null) return false;
+  const dy=(+e.lat-q.lat)*69, dx=(+e.lon-q.lon)*69*Math.cos((+e.lat+q.lat)/2*Math.PI/180);
+  return Math.sqrt(dx*dx+dy*dy)<=q.mi; }
 function coldFilter(idx){ const c=State.coldCat;
   let arr = c? (idx||[]).filter(function(e){ return e.cat===c; })
              : (idx||[]).filter(function(e){ return !e.cat; });
@@ -2412,6 +2434,7 @@ function coldFilter(idx){ const c=State.coldCat;
     else if(q.mode==="zip5") arr=arr.filter(function(e){ return String(e.zip||"")===q.value; });
     else if(q.mode==="zip3") arr=arr.filter(function(e){ return String(e.zip||"").slice(0,3)===q.value; });
     else if(q.mode==="city") arr=arr.filter(function(e){ return String(e.city||"").toLowerCase()===q.value; });
+    else if(q.mode==="near") arr=arr.filter(function(e){ return coldNear(e,q); });
     else if(q.mode==="text"){ const t=q.value; arr=arr.filter(function(e){ return [e.title,e.place,e.city,e.zip].some(function(v){ return v&&String(v).toLowerCase().indexOf(t)>=0; }); }); } }
   return arr; }
 function coldCatOpen(cat){
@@ -2466,9 +2489,11 @@ function renderColdChip(n){ const list=document.getElementById("cold-list"); if(
   if(!bar){ bar=document.createElement("div"); bar.id="cold-filterbar"; bar.className="cold-filterbar"; list.parentNode.insertBefore(bar,list); }
   bar.innerHTML='<span class="cfb-txt">SHOWING '+Number(n)+' IN '+escapeHtml(State.coldQ.label)+'</span>'
     +'<button class="cfb-x" onclick="clearColdQ()" aria-label="Clear filter">&#10005;</button>'; }
-function coldFilterToPlace(name){ if(!name) return;
+function coldFilterToPlace(name,lat,lon){ if(!name) return;
   const q=document.getElementById("cold-q"); if(q) q.value=name;
-  State.coldQ={mode:"text", value:String(name).toLowerCase(), label:String(name).toUpperCase()};
+  State.coldQ=(lat!=null&&lon!=null)
+    ? {mode:"near", lat:+lat, lon:+lon, mi:PARK_NEAR_MI, value:String(name).toLowerCase(), label:String(name).toUpperCase()+" AREA"}
+    : {mode:"text", value:String(name).toLowerCase(), label:String(name).toUpperCase()};
   renderColdList(); }
 function clearColdQ(){ State.coldQ=null; const q=document.getElementById("cold-q"); if(q) q.value=""; renderColdList(); }
 function renderColdList(){
@@ -3319,21 +3344,23 @@ function renderBuild(){
   document.getElementById("finish-build").disabled = n<1;
 }
 function tileEl(t,i,mode){
+  const wrap=document.createElement("div"); wrap.className="cell";
   const d=document.createElement("div");
   d.className="tile"+(t.type==="object"?" obj-tile":"");
   if(t.type==="object") d.style.background=objBg(i);
   const num=`<div class="num">${i+1}</div>`;
   const media = tileHTML(t);
-  const cap = t.clue ? `<div class="cap">${escapeHtml(t.clue)}</div>` : "";
   if(mode==="build"){
-    d.innerHTML=num+media+cap+`<button class="rm" onclick="event.stopPropagation();quickRemove(${i})">✕</button>`;
-    d.onclick=()=>openTileEdit(i);
+    d.innerHTML=num+media+`<button class="rm" onclick="event.stopPropagation();quickRemove(${i})">✕</button>`;
+    wrap.onclick=()=>openTileEdit(i);
   }else{ // hunter
     d.innerHTML=num+media;
     if(State.founds[t.id]){ d.classList.add("found"); d.innerHTML+=`<img decoding="async" class="thumb" src="${State.founds[t.id]}">`; }
-    d.onclick=()=>openClue(t);
+    wrap.onclick=()=>openClue(t);
   }
-  return d;
+  wrap.appendChild(d);
+  wrap.insertAdjacentHTML("beforeend",`<div class="cap">${t.clue?escapeHtml(t.clue):""}</div>`);
+  return wrap;
 }
 function escapeHtml(s){return (s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
 function safeImgSrc(s){s=((s||"")+"").trim();return (/^data:image\/(png|jpe?g|webp|gif|bmp);base64,[A-Za-z0-9+/=\s]+$/i.test(s)||/^blob:/i.test(s))?s:"";}
@@ -3356,12 +3383,12 @@ function onFileChosen(e){
   if(!f) return;
   const mode=State.captureMode;
   const rd=new FileReader();
-  rd.onload=()=>openCrop(rd.result,(dataUrl)=>{
+  rd.onload=()=>openCrop(rd.result,(dataUrl,clue)=>{
     if(mode==="hunt" && State.huntTarget){
       State.founds[State.huntTarget.id]=dataUrl;
       renderHunt(); saveHunterSub("playing"); toast("Find logged ✓");
     }else if(State.build){
-      State.build.tiles.push({id:uid(),type:"photo",src:dataUrl,clue:""});
+      State.build.tiles.push({id:uid(),type:"photo",src:dataUrl,clue:(clue||"")});
       renderBuild();
     }
   });
@@ -3387,7 +3414,7 @@ function openTileEdit(i){
 }
 function saveTileEdit(){
   const t=State.build.tiles[State.editTileId];
-  t.clue=document.getElementById("tile-clue").value.trim();
+  t.clue=document.getElementById("tile-clue").value.trim().slice(0,12);
   closeOverlay("ov-tile"); renderBuild();
 }
 function removeTile(){
@@ -3400,6 +3427,10 @@ function removeTile(){
    ============================================================ */
 function openCrop(dataUrl,resolve){
   State.cropResolve=resolve;
+  { const cr=document.getElementById("crop-cluerow"), ci=document.getElementById("crop-clue");
+    const isBuild=!!State.build && !(State.captureMode==="hunt" && State.huntTarget);
+    if(ci) ci.value="";
+    if(cr) cr.style.display=isBuild?"":"none"; }
   const img=new Image();
   img.onload=()=>{
     // The overlay must be visible BEFORE measuring, otherwise clientWidth is 0
@@ -3454,7 +3485,8 @@ function confirmCrop(){
   ctx.drawImage(c.img, sx, sy, sSize, sSize, 0,0,OUT,OUT);
   const out=cv.toDataURL("image/jpeg",0.72);
   closeOverlay("ov-crop");
-  const r=State.cropResolve; State.cropResolve=null; if(r) r(out);
+  const ci=document.getElementById("crop-clue"); const clue=ci?ci.value.trim().slice(0,12):"";
+  const r=State.cropResolve; State.cropResolve=null; if(r) r(out,clue);
 }
 
 /* ============================================================
