@@ -1319,21 +1319,42 @@ function go(id){
   if(id==="s-home") refreshHomeBadge();
   clearTimeout(window._clueTipT); clearTimeout(window._moveTipT); clearTimeout(window._huntTipT);
   if(id==="s-build"){ try{ coldSubmitVis(); setFinishLabel(); }catch(e){}
-    window._clueTipT=setTimeout(function(){
-      try{ if(document.getElementById("s-build").classList.contains("active"))
-        toast("Edit your clue and text by tapping your clue tile",4600); }catch(e){}
-    },2000);
-    window._moveTipT=setTimeout(function(){
-      try{ if(document.getElementById("s-build").classList.contains("active"))
-        toast("Press and hold a tile to move it.",4600,"tip"); }catch(e){}
-    },6900);
+    _tipQueue("_clueTipT","s-build","build-grid","Edit your clue and text by tapping your clue tile","",2000);
+    _tipQueue("_moveTipT","s-build","build-grid","Press and hold a tile to move it.","tip",6900);
   }
   if(id==="s-hunt"){
-    window._huntTipT=setTimeout(function(){
-      try{ if(document.getElementById("s-hunt").classList.contains("active"))
-        toast("Found your clue? Tap the tile and confirm you found it!",4600,"tip"); }catch(e){}
-    },5600);
+    _tipQueue("_huntTipT","s-hunt","hunt-grid","Found your clue? Tap the tile and confirm you found it!","tip",5600);
   }
+}
+/* A tip may only fire when the hunter/builder is actually looking at the grid.
+   Blocks on: backgrounded tab (the native camera), wrong screen, any open .overlay,
+   a toast already showing, and - the catch-all - anything physically covering the
+   grid, tested with elementFromPoint so future gates need no maintenance here. */
+function _tipClear(scrId,gridId){
+  try{
+    if(document.visibilityState==="hidden") return false;
+    const scr=document.getElementById(scrId);
+    if(!scr||!scr.classList.contains("active")) return false;
+    if(document.querySelector(".overlay.open")) return false;
+    const tw=document.getElementById("toast");
+    if(tw&&tw.classList.contains("show")) return false;
+    const g=document.getElementById(gridId);
+    if(!g) return false;
+    const r=g.getBoundingClientRect();
+    const top=Math.max(r.top,0), bot=Math.min(r.bottom,window.innerHeight);
+    if(r.width<8||bot-top<24) return false;
+    const el=document.elementFromPoint(r.left+r.width/2,(top+bot)/2);
+    return !!(el&&g.contains(el));
+  }catch(e){ return false; }
+}
+function _tipQueue(key,scrId,gridId,msg,cls,delay){
+  let tries=0;
+  const fire=function(){
+    if(_tipClear(scrId,gridId)){ toast(msg,4600,cls||undefined); return; }
+    if(++tries>30) return;
+    window[key]=setTimeout(fire,1200);
+  };
+  window[key]=setTimeout(fire,delay);
 }
 function refreshHomeBadge(){
   try{ const b=document.getElementById("home-cred-badge"); if(b&&!b.innerHTML) b.innerHTML=credBadgeSVG(); }catch(e){}
