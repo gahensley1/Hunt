@@ -209,6 +209,7 @@
   .cell{display:flex;flex-direction:column;gap:4px}
   .grid>.tdph{border:1.5px dashed var(--tweed);border-radius:12px;background:rgba(94,70,48,.06);box-sizing:border-box}
   .cell.tdlift{z-index:60;pointer-events:none;box-shadow:0 10px 22px rgba(0,0,0,.38);opacity:.97}
+  #build-grid .cell,#build-grid .tile,#build-grid .tile img{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;-webkit-user-drag:none}
   .tile{
     position:relative;aspect-ratio:1/1;border-radius:12px;overflow:hidden;background:var(--paper-2);
     border:1px solid var(--line);display:grid;place-items:center;cursor:pointer;
@@ -1316,7 +1317,7 @@ function go(id){
   const el=document.getElementById(id); el.classList.add("active");
   document.getElementById("app").scrollTop=0; window.scrollTo(0,0);
   if(id==="s-home") refreshHomeBadge();
-  clearTimeout(window._clueTipT); clearTimeout(window._moveTipT);
+  clearTimeout(window._clueTipT); clearTimeout(window._moveTipT); clearTimeout(window._huntTipT);
   if(id==="s-build"){ try{ coldSubmitVis(); setFinishLabel(); }catch(e){}
     window._clueTipT=setTimeout(function(){
       try{ if(document.getElementById("s-build").classList.contains("active"))
@@ -1326,6 +1327,12 @@ function go(id){
       try{ if(document.getElementById("s-build").classList.contains("active"))
         toast("Press and hold a tile to move it.",4600,"tip"); }catch(e){}
     },6900);
+  }
+  if(id==="s-hunt"){
+    window._huntTipT=setTimeout(function(){
+      try{ if(document.getElementById("s-hunt").classList.contains("active"))
+        toast("Found your clue? Tap the tile and confirm you found it!",4600,"tip"); }catch(e){}
+    },5600);
   }
 }
 function refreshHomeBadge(){
@@ -3466,7 +3473,9 @@ function _tdEnd(st){
   window.removeEventListener("pointercancel",tdUp);
 }
 (function(){ const g=document.getElementById("build-grid");
-  if(g) g.addEventListener("touchmove",function(e){ if(_td&&_td.lift) e.preventDefault(); },{passive:false});
+  if(!g) return;
+  g.addEventListener("touchmove",function(e){ if(_td&&_td.lift) e.preventDefault(); },{passive:false});
+  g.addEventListener("contextmenu",function(e){ e.preventDefault(); });
 })();
 function tileEl(t,i,mode){
   const wrap=document.createElement("div"); wrap.className="cell";
@@ -3490,7 +3499,7 @@ function tileEl(t,i,mode){
 }
 function escapeHtml(s){return (s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
 function safeImgSrc(s){s=((s||"")+"").trim();return (/^data:image\/(png|jpe?g|webp|gif|bmp);base64,[A-Za-z0-9+/=\s]+$/i.test(s)||/^blob:/i.test(s))?s:"";}
-function tileHTML(t){if(t&&t.type==="photo"){var u=safeImgSrc(t.src);return u?('<img decoding="async" src="'+u+'" alt="">'):'<div class="obj">\u2014</div>';}return '<div class="obj">'+escapeHtml((t&&t.emoji)||"")+'</div>';}
+function tileHTML(t){if(t&&t.type==="photo"){var u=safeImgSrc(t.src);return u?('<img decoding="async" draggable="false" src="'+u+'" alt="">'):'<div class="obj">\u2014</div>';}return '<div class="obj">'+escapeHtml((t&&t.emoji)||"")+'</div>';}
 
 /* --- source picker --- */
 function openSource(){ openOverlay("ov-source"); }
