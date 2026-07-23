@@ -336,6 +336,8 @@
   .caserow{display:flex;align-items:center;gap:12px;background:#fff8ec;border:1px solid var(--line);border-radius:14px;padding:13px;margin-bottom:10px;cursor:pointer}
   .caserow .cn{font-family:var(--serif);font-weight:700;font-size:18px;color:var(--green)}
   .caserow .meta{font-family:var(--type);font-size:11px;letter-spacing:.5px;color:var(--ink-soft);margin-top:2px}
+  .cf-amend{margin-left:auto;flex:none;font-family:var(--type);font-size:11px;letter-spacing:1px;padding:7px 11px;border:1.5px solid var(--tweed);border-radius:8px;background:transparent;color:var(--ink);cursor:pointer}
+  .cf-amend:active{background:rgba(94,70,48,.12)}
   .pill{margin-left:auto;font-family:var(--type);font-size:10px;letter-spacing:1px;padding:5px 9px;border-radius:20px;white-space:nowrap}
   .pill.wait{background:rgba(122,92,62,.15);color:var(--tweed-dk)}
   .pill.ready{background:rgba(46,71,57,.15);color:var(--green)}
@@ -1316,7 +1318,7 @@ function go(id){
     window._clueTipT=setTimeout(function(){
       try{ if(document.getElementById("s-build").classList.contains("active"))
         toast("Edit your clue and text by tapping your clue tile",4600); }catch(e){}
-    },10000);
+    },2000);
   }
 }
 function refreshHomeBadge(){
@@ -1950,6 +1952,7 @@ async function startBuild(){
     if(!name){ showScrollHint(); return; }
     await ensureCred();
     State.build={code:null,title:"Untitled Case",tiles:[],builder:name,timerMins:0};
+    State._builderEdit=null;
     { const bti=document.getElementById("build-title-input"); if(bti) bti.value=""; }
     renderBuild(); paintWatch(); go("s-build");
     if(document.getElementById("cred-ov").classList.contains("hidden")) nudgeTitle();
@@ -3099,7 +3102,7 @@ function setFinishLabel(){ try{ const b=document.getElementById("finish-build");
   else b.innerHTML="Finish &amp; Get Case Number \u2192";
 }catch(e){} }
 function coldSubmitVis(){ try{ const w=document.getElementById("cold-submit-wrap"); if(!w) return;
-  const hide=!!(State.build&&State.build.fromArchive) || !!State._curatorEdit; w.style.display=hide?"none":"flex";
+  const hide=!!(State.build&&State.build.fromArchive) || !!State._curatorEdit || !!State._builderEdit; w.style.display=hide?"none":"flex";
   const c=document.getElementById("cold-submit-chk"); if(c) c.checked=false; }catch(e){} }
 function openSubTerritory(){
   ["st-zip","st-place","st-city","st-desc"].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=""; });
@@ -3330,6 +3333,15 @@ function confirmLeaveBuild(){
     toast("Amendments discarded \u2014 Case No. "+_c+" is unchanged.", 3000);
     return;
   }
+  if(State._builderEdit){
+    const _b=State._builderEdit;
+    if(!confirm("Leave Case No. "+_b+" without saving your changes?\n\nThe filed case stays exactly as it is.")) return;
+    State._builderEdit=null; State.build=null;
+    try{ const bti=document.getElementById("build-title-input"); if(bti) bti.value=""; }catch(e){}
+    openCaseFiles();
+    toast("Changes discarded \u2014 Case No. "+_b+" is unchanged.", 3000);
+    return;
+  }
   if(State.build && State.build.tiles.length>0){
     if(!confirm("Leave without saving this case? Your board will be lost.")) return;
   }
@@ -3498,6 +3510,26 @@ function confirmCrop(){
 /* ============================================================
    FINISH BUILD → save + share
    ============================================================ */
+/* Load one of the builder's OWN filed cases back into the build screen so a mistake
+   can be corrected. Reads only. finishBuild() reuses State.build.code when present,
+   so finishing AMENDS the same case number rather than minting a new one, and the
+   filed copy is left untouched unless the builder actually finishes. */
+async function builderEditCase(code){
+  code=String(code||"");
+  try{
+    const raw=await Store.get("hunt:"+code,true);
+    if(!raw){ toast("That case is not reachable \u2014 check connection."); return; }
+    const hh=JSON.parse(raw);
+    let n=0; try{ n=(await listSubs(code)).length; }catch(e){}
+    State.build=hh; State.build.code=code;
+    State._builderEdit=code;
+    const bti=document.getElementById("build-title-input"); if(bti) bti.value=hh.title||"";
+    renderBuild(); try{ paintWatch(); }catch(e){}
+    go("s-build");
+    toast(n ? "Amending Case No. "+code+" \u2014 "+n+" hunter"+(n===1?"":"s")+" already afoot."
+            : "Amending Case No. "+code+" \u2014 finish to save.", 3800);
+  }catch(err){ toast("The case would not open \u2014 "+((err&&err.message)||"try again")+"."); }
+}
 async function finishBuild(){
   // A case deserves a name — nudge before minting the number
   const t=(State.build.title||"").trim();
@@ -3531,6 +3563,12 @@ async function finishBuild(){
     if(_sub && String(_sub)===String(code)){ State.curTab="terr"; await subAccept(code); return; }
     await renderCurator();
     toast("Case No. "+code+" amended.", 3200);
+    return;
+  }
+  if(State._builderEdit){
+    State._builderEdit=null; State.build=null;
+    toast("Case No. "+code+" amended.", 3200);
+    openCaseFiles();
     return;
   }
   if(State._curatorBuildFlow){
@@ -3952,6 +3990,11 @@ async function openCaseFiles(){
       <div class="meta">${escapeHtml(hunt.title||"Untitled")} · ${hunt.tiles.length} clues · ${subs.length} player${subs.length===1?"":"s"}${expNote}</div></div>
       <span class="pill ${pill.c}">${pill.t}</span>`;
     row.onclick=()=>openRoster(code);
+    const amend=document.createElement("button");
+    amend.className="cf-amend"; amend.type="button"; amend.textContent="Amend";
+    amend.setAttribute("aria-label","Amend Case No. "+code);
+    amend.onclick=(ev)=>{ ev.stopPropagation(); builderEditCase(code); };
+    row.appendChild(amend);
     body.appendChild(row);
    }catch(e){}
   }
