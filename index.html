@@ -415,14 +415,6 @@
   .cold-hd{position:relative;padding:calc(var(--safe-t) + 30px) 16px 0;text-align:center;border-bottom:2px solid rgba(184,134,59,.6);background:var(--paper-2)}
   .btn-ghost.btn-big{font-size:15px;font-weight:700}
   .cred-badge{background:none;border:0;padding:0;display:block;margin:10px auto 0;width:min(282px,100%);aspect-ratio:1;height:auto;cursor:pointer;-webkit-tap-highlight-color:transparent}
-  #home-menu-btn{position:fixed;left:12px;top:calc(9px + var(--safe-t));z-index:90;display:flex;flex-direction:column;justify-content:center;gap:4.5px;width:42px;height:42px;padding:0 8px;background:none;border:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
-  #home-menu-btn i{display:block;height:3.2px;border-radius:1px;background:linear-gradient(180deg,#E4C079 0,#B8863B 50%,#7A551F 100%);box-shadow:0 0 0 .5px #6E4E1C,0 1px 2px rgba(10,7,4,.55)}
-  #home-menu-btn:active i{transform:translateY(.5px)}
-  #home-menu{position:fixed;left:12px;top:calc(56px + var(--safe-t));z-index:91;display:none;min-width:196px;padding:6px;border:1.5px solid var(--brass);border-radius:5px;background:var(--parch),var(--paper);background-size:cover;box-shadow:0 8px 18px rgba(10,7,4,.55),inset 0 0 0 1px rgba(94,70,48,.35)}
-  #home-menu.open{display:block}
-  #home-menu button{display:block;width:100%;text-align:left;background:none;border:0;font-family:var(--type);font-size:13px;letter-spacing:.8px;color:var(--ink);padding:9px 10px;cursor:pointer;border-radius:3px}
-  #home-menu button+button{border-top:1px solid rgba(94,70,48,.32)}
-  #home-menu button:active{background:rgba(94,70,48,.12)}
   .cred-badge svg{width:100%;height:100%;display:block;pointer-events:none;filter:drop-shadow(0 4px 3px rgba(10,7,4,.6)) drop-shadow(0 10px 14px rgba(10,7,4,.35))}
   .cred-badge text{font-family:var(--type);font-size:19.4px;letter-spacing:1.5px;fill:#4A3A22}
   #record-ov{position:fixed;inset:0;background:rgba(20,13,7,.88);z-index:520;display:flex;align-items:center;justify-content:center;padding:10px;overflow:hidden}
@@ -774,11 +766,6 @@
 
   <!-- ================= HOME ================= -->
   <section id="s-home" class="screen active">
-    <button id="home-menu-btn" onclick="homeMenuToggle(event)" aria-label="Menu" aria-expanded="false" aria-haspopup="true"><i></i><i></i><i></i></button>
-    <div id="home-menu" role="menu" aria-label="Menu">
-      <button role="menuitem" onclick="homeMenuGo('agency')">Write to the Agency</button>
-      <button role="menuitem" onclick="homeMenuGo('cases')">Find My Cases</button>
-    </div>
     <div id="commish-card" class="hidden" role="dialog" aria-label="By order of the Commissioner">
       <button class="cdx" style="width:24px;height:24px;font-size:12px" onclick="dismissCommish()" aria-label="Close">&#10005;</button>
       <p class="commish-hd">BY ORDER OF THE COMMISSIONER</p>
@@ -1319,24 +1306,6 @@ const State = {
 };
 
 /* ---------- routing ---------- */
-function homeMenuToggle(ev){ if(ev) ev.stopPropagation();
-  const m=document.getElementById("home-menu"), b=document.getElementById("home-menu-btn");
-  const on=!m.classList.contains("open");
-  m.classList.toggle("open",on); b.setAttribute("aria-expanded",on?"true":"false");
-}
-function homeMenuClose(){ const m=document.getElementById("home-menu");
-  if(m&&m.classList.contains("open")){ m.classList.remove("open");
-    document.getElementById("home-menu-btn").setAttribute("aria-expanded","false"); }
-}
-function homeMenuGo(what){ homeMenuClose();
-  if(what==="agency") openAgencyMsg(); else if(what==="cases") openCaseFiles();
-}
-document.addEventListener("pointerdown",function(e){
-  const m=document.getElementById("home-menu");
-  if(!m||!m.classList.contains("open")) return;
-  if(e.target.closest&&(e.target.closest("#home-menu")||e.target.closest("#home-menu-btn"))) return;
-  homeMenuClose();
-});
 function go(id){
   document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
   const el=document.getElementById(id); el.classList.add("active");
@@ -1347,7 +1316,7 @@ function go(id){
     window._clueTipT=setTimeout(function(){
       try{ if(document.getElementById("s-build").classList.contains("active"))
         toast("Edit your clue and text by tapping your clue tile",4600); }catch(e){}
-    },8000);
+    },10000);
   }
 }
 function refreshHomeBadge(){
