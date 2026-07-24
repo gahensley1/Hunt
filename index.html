@@ -122,6 +122,30 @@
   .nudge-ripple{position:absolute;left:7px;top:7px;width:22px;height:22px;border:2px solid var(--brass);border-radius:50%;opacity:0;transform:scale(.3)}
   .nudge.play .nudge-ripple{animation:nudgeRip .9s ease-out 1.5s forwards}
   @keyframes nudgeRip{0%{opacity:.95;transform:scale(.35)}100%{opacity:0;transform:scale(2.8)}}
+  /* Build-grid pan tour: demonstrates long-press-and-slide once, then retires.
+     Replaces the oxblood "Press and hold a tile to move it." toast. */
+  .gridwrap{position:relative}
+  #move-nudge{--pan:122px;left:0;top:0}
+  #move-nudge.pan{animation:panFly 3.8s cubic-bezier(.45,.05,.35,1) forwards}
+  #move-nudge.pan .nudge-ripple{animation:nudgeRip 1.1s ease-out .9s forwards}
+  @keyframes panFly{
+    0%{opacity:0;transform:translate(210px,-58px) rotate(18deg) scale(.7)}
+    16%{opacity:1;transform:translate(4px,4px) rotate(-5deg) scale(1)}
+    22%{transform:translate(0,2px) rotate(0deg) scale(1)}
+    30%{transform:translate(0,4px) rotate(0deg) scale(.88)}
+    46%{transform:translate(0,4px) rotate(0deg) scale(.88)}
+    68%{transform:translate(var(--pan),4px) rotate(0deg) scale(.88)}
+    76%{transform:translate(var(--pan),2px) rotate(0deg) scale(1)}
+    88%{opacity:1;transform:translate(calc(var(--pan) + 38px),-16px) rotate(9deg) scale(.94)}
+    100%{opacity:0;transform:translate(calc(var(--pan) + 128px),-90px) rotate(26deg) scale(.65)}
+  }
+  #move-rail{position:absolute;z-index:20;opacity:0;pointer-events:none;transition:opacity .3s ease}
+  #move-rail.on{opacity:1}
+  #move-rail .rail{stroke:var(--brass-lt);stroke-width:1.5;stroke-dasharray:4 4;fill:none;opacity:.85}
+  #move-rail .head{fill:var(--brass-lt)}
+  #move-rail.on .head{animation:headSlide 1.5s cubic-bezier(.45,.05,.35,1) infinite}
+  @keyframes headSlide{0%{transform:translateX(0);opacity:0}18%{opacity:1}82%{opacity:1}100%{transform:translateX(96px);opacity:0}}
+  @media (prefers-reduced-motion:reduce){#move-nudge,#move-rail{display:none}}
   /* first-visit welcome tour */
   #tour-sign{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:80;pointer-events:none;opacity:0}
   #tour-sign .tsign{width:min(90vw,360px);height:auto;display:block}
@@ -831,7 +855,10 @@
       <span class="counter"><b id="tile-count">0</b> / 100 clues</span>
     </div>
     <button class="build-hint" onclick="buildBorrowCase()">Stuck for clues? <b>Take a case from the Cold Case Files</b> and make it your own.</button>
-    <div id="build-grid" class="grid"></div>
+    <div class="gridwrap"><div id="build-grid" class="grid"></div>
+      <svg id="move-rail" width="150" height="16" viewBox="0 0 150 16" aria-hidden="true"><path class="rail" d="M6 8 H132"/><g class="head"><path d="M128 2 L140 8 L128 14 Z"/></g></svg>
+      <div id="move-nudge" class="nudge" aria-hidden="true"><svg viewBox="0 0 44 44" width="44" height="44"><circle cx="18" cy="18" r="11" fill="rgba(237,228,211,.22)" stroke="#D8AF63" stroke-width="2.5"/><line x1="26" y1="26" x2="38" y2="38" stroke="#D8AF63" stroke-width="3.5" stroke-linecap="round"/></svg><span class="nudge-ripple"></span></div>
+    </div>
     <label id="cold-submit-wrap" class="cold-submit-wrap" style="display:none"><input type="checkbox" id="cold-submit-chk"><span>Submit for consideration as a Cold Case? Location must be a public territory with access e.g. National or State Park</span></label>
     <p class="seat-note">A case seats <b>50 detectives</b>. Once over, 25 can be added at time for a premium. Over 100 requires an Agency licence.</p>
     <div class="watchbox">
@@ -1324,8 +1351,8 @@ function go(id){
   if(id==="s-home") refreshHomeBadge();
   clearTimeout(window._clueTipT); clearTimeout(window._moveTipT); clearTimeout(window._huntTipT);
   if(id==="s-build"){ try{ coldSubmitVis(); setFinishLabel(); }catch(e){}
-    _tipQueue("_clueTipT","s-build","build-grid","Edit your clue and text by tapping your clue tile","",2000);
-    _tipQueue("_moveTipT","s-build","build-grid","Press and hold a tile to move it.","tip",6900);
+    _tipQueue("_clueTipT","s-build","build-grid","Edit your clue and text by tapping your clue tile","",2000,3800);
+    clearTimeout(window._moveTipT); window._moveTipT=setTimeout(_movePanTour,6400);
   }
   if(id==="s-hunt"){
     _tipQueue("_huntTipT","s-hunt","hunt-grid","Found your clue? Tap the tile and confirm you found it!","tip",5600);
@@ -1352,14 +1379,45 @@ function _tipClear(scrId,gridId){
     return !!(el&&g.contains(el));
   }catch(e){ return false; }
 }
-function _tipQueue(key,scrId,gridId,msg,cls,delay){
+function _tipQueue(key,scrId,gridId,msg,cls,delay,ms){
   let tries=0;
   const fire=function(){
-    if(_tipClear(scrId,gridId)){ toast(msg,4600,cls||undefined); return; }
+    if(_tipClear(scrId,gridId)){ toast(msg,ms||4600,cls||undefined); return; }
     if(++tries>30) return;
     window[key]=setTimeout(fire,1200);
   };
   window[key]=setTimeout(fire,delay);
+}
+/* Build-grid pan tour. Shows the long-press-and-slide reorder gesture once and
+   retires for good the first time the builder actually moves a tile (tdUp).
+   Reduced motion falls back to the toast this replaced, so the message survives. */
+function _movePanTour(){
+  try{ if(localStorage.getItem("shco:movetour")) return; }catch(e){}
+  try{
+    if(window.matchMedia && matchMedia("(prefers-reduced-motion:reduce)").matches){
+      if(_tipClear("s-build","build-grid")) toast("Press and hold a tile to move it.",3800,"tip");
+      return;
+    }
+  }catch(e){}
+  const grid=document.getElementById("build-grid");
+  const n=document.getElementById("move-nudge"), r=document.getElementById("move-rail");
+  if(!grid||!n||!r) return;
+  if(!_tipClear("s-build","build-grid")) return;
+  const cells=grid.querySelectorAll(".cell");
+  if(cells.length<2) return;                       // nothing to demonstrate with one tile
+  const t=cells[0].querySelector(".tile"); if(!t) return;
+  const gb=grid.getBoundingClientRect(), tb=t.getBoundingClientRect();
+  if(!tb.width) return;
+  n.style.left=(tb.left-gb.left+tb.width/2-22)+"px";
+  n.style.top =(tb.top -gb.top +tb.height/2-22)+"px";
+  n.style.setProperty("--pan",(tb.width+10)+"px");  // one cell + the grid gap
+  r.style.left=(tb.left-gb.left)+"px";
+  r.style.top =(tb.bottom-gb.top+2)+"px";           // the clue line, under the tile
+  r.classList.add("on"); void n.offsetWidth; n.classList.add("pan");
+  clearTimeout(window._panTourT);
+  window._panTourT=setTimeout(function(){
+    r.classList.remove("on"); n.classList.remove("pan");
+  },3900);
 }
 function refreshHomeBadge(){
   try{ const b=document.getElementById("home-cred-badge"); if(b&&!b.innerHTML) b.innerHTML=credBadgeSVG(); }catch(e){}
@@ -2167,9 +2225,12 @@ function chartScalePins(vpw){ const k=_vb.w/1000*2.6, sv=vpw?null:chartSvg();
   if(sp){ if(spOn) renderSparks(); sp.setAttribute("display",spOn?"inline":"none"); }
   const T=_vb.w>160?15:(_vb.w>60?17:20), sT=T*_vb.w/(10*W);
   const _mag=1000/_vb.w, _pt=Math.max(0,Math.min(1,Math.log(_mag/7)/Math.log(2000/7)));
-  const pinBoost=0.5+0.5*_pt;   // 0.5x wide -> 1.0x at max zoom. Sized so genuinely
+  const _ramp=0.5+0.5*_pt;      // 0.5x wide -> 1.0x at max zoom. Sized so genuinely
                                 // separate cases resolve as separate pins instead of
-                                // needing displacement; retires the 2.4x hard step.
+                                // needing displacement.
+  const pinBoost=_vb.w<=0.5?2.0:_ramp;  // hard step: 2.0x on the final zoom step only,
+                                // so the deepest view is actually tappable. Every zoom
+                                // below max is byte-for-byte unchanged.
   _pinR=0.013*W*pinBoost;   // on-screen pin radius, px - used by _pinsAt for tap maths
   /* Overlapping pins are useless, and moving them lies about where a case is.
      So any set closer than one pin-width collapses into a single counted marker
@@ -2181,7 +2242,7 @@ function chartScalePins(vpw){ const k=_vb.w/1000*2.6, sv=vpw?null:chartSvg();
     const P=[]; layer.querySelectorAll(".cpin").forEach(g=>{ g.style.display="";
       P.push({g:g,x:+g.dataset.x,y:+g.dataset.y}); });
     if(P.length<2) return;
-    const D=0.026*W*pinBoost, pxu=W/_vb.w, seen=new Array(P.length).fill(false);
+    const D=0.026*W*_ramp, pxu=W/_vb.w, seen=new Array(P.length).fill(false);
     for(let i=0;i<P.length;i++){ if(seen[i]) continue;
       const grp=[i]; seen[i]=true;
       for(let j=0;j<P.length;j++){ if(seen[j]) continue;
@@ -3567,6 +3628,8 @@ function tdUp(ev){
   st.ph.remove();
   if(to>=0&&to!==from&&State.build&&State.build.tiles&&from>=0&&from<State.build.tiles.length){
     State.build.tiles.splice(to,0,State.build.tiles.splice(from,1)[0]);
+    try{ localStorage.setItem("shco:movetour","1"); }catch(e){}
+    clearTimeout(window._moveTipT);
     if(State._builderEdit&&State._builderEditN>0&&!State._tdWarned){
       State._tdWarned=true;
       toast("Renumbering a case already afoot \u2014 hunters' finds are kept.",3600);
