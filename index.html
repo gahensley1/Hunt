@@ -786,9 +786,19 @@
   /* Anchored beside the ADD CLUE tile. The bottom-centre default lands under the
      Finish bar on the build page and runs off frame; this parks it in the clear
      parchment next to the blank tile. Positioned from the tile rect at runtime. */
-  .toast.atadd{bottom:auto;transform:none;max-width:none;white-space:normal;text-align:center;
-    font-size:12px;line-height:1.35;padding:9px 11px;border-radius:12px}
-  .toast.atadd.show{transform:none}
+  .toast.atadd,.toast.atrow2{bottom:auto;transform:none;max-width:none;text-align:center;
+    font-size:12px;line-height:1.35;padding:9px 11px;border-radius:12px;white-space:pre-line}
+  .toast.atadd.show,.toast.atrow2.show{transform:none}
+  /* Hunt tour highlight: the tile's own EDGE lights brass and fades back. Uses
+     box-shadow, not border-width, so nothing in the grid shifts while it runs. */
+  .cell.huntspot .tile{animation:huntEdge .82s ease-out forwards}
+  @keyframes huntEdge{
+    0%  {box-shadow:0 0 0 0 rgba(216,175,99,0);    border-color:var(--line)}
+    22% {box-shadow:0 0 0 3px rgba(216,175,99,.9); border-color:var(--brass-lt)}
+    72% {box-shadow:0 0 0 3px rgba(216,175,99,.75);border-color:var(--brass-lt)}
+    100%{box-shadow:0 0 0 0 rgba(216,175,99,0);    border-color:var(--line)}
+  }
+  @media (prefers-reduced-motion:reduce){ .cell.huntspot .tile{animation:none} }
   .btn-plaque{appearance:none;border:none;background:none;padding:0;cursor:pointer;display:block;width:100%;line-height:0}
   .btn-plaque img{width:100%;max-width:340px;display:block;margin:0 auto;filter:drop-shadow(0 0 3px rgba(10,7,4,1)) drop-shadow(0 4px 6px rgba(10,7,4,1));transition:transform .08s ease,filter .12s ease}
   .btn-plaque:active img{transform:translateY(1px) scale(.985);filter:drop-shadow(0 0 2px rgba(10,7,4,1)) drop-shadow(0 1px 2px rgba(10,7,4,1)) brightness(1.05)}
@@ -1387,11 +1397,11 @@ function go(id){
   if(id==="s-home") refreshHomeBadge();
   clearTimeout(window._clueTipT); clearTimeout(window._moveTipT); clearTimeout(window._huntTipT);
   if(id==="s-build"){ try{ coldSubmitVis(); setFinishLabel(); }catch(e){}
-    _tipQueue("_clueTipT","s-build","build-grid","Edit your clue and text by tapping your clue tile","atadd",2000,3800);
-    window._moveTryN=0; window._moveTourDone=false; _movePanArm(6400);
+    _tipQueue("_clueTipT","s-build","build-grid","Tap (+) to start adding clues.\nEdit your clue and text by tapping your clue tile","atadd",2000,5200);
+    window._moveTryN=0; window._moveTourDone=false; window._buildEnterT=Date.now(); _movePanArm(6400);
   }
   if(id==="s-hunt"){
-    _tipQueue("_huntTipT","s-hunt","hunt-grid","Found your clue? Tap the tile and confirm you found it!","tip",5600);
+    window._huntTryN=0; window._huntTourDone=false; _huntArm(2200);
   }
 }
 /* A tip may only fire when the hunter/builder is actually looking at the grid.
@@ -1424,6 +1434,39 @@ function _tipQueue(key,scrId,gridId,msg,cls,delay,ms){
   };
   window[key]=setTimeout(fire,delay);
 }
+const MOVE_TIP="Tap & hold to rearrange order";
+const HUNT_TIP="Tap any clue in any order to document your find!";
+function _huntArm(delay){ clearTimeout(window._huntTipT); window._huntTipT=setTimeout(_huntTour,delay||1200); }
+/* Hunt-page tour. States the rule - any clue, any order - then proves it by lighting
+   NON-ADJACENT tiles, which is the whole point: 1, then 3, then 5. Retires for good
+   once the hunter logs a find. */
+function _huntTour(){
+  try{ if(localStorage.getItem("shco:hunttour")) return; }catch(e){}
+  const grid=document.getElementById("hunt-grid"); if(!grid) return;
+  const cells=[].slice.call(grid.querySelectorAll(".cell"));
+  if(!_tipClear("s-hunt","hunt-grid")||!cells.length){
+    if((window._huntTryN=(window._huntTryN||0)+1)<=40) _huntArm(1200);
+    return;
+  }
+  window._huntTourDone=true;
+  toast(HUNT_TIP,4200,"atrow2");          // closes 2s after the third tile fires
+  try{ if(window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches) return; }catch(e){}
+  const n=cells.length;
+  let pick = n>=5 ? [0,2,4]
+           : n>=3 ? [0,Math.floor((n-1)/2),n-1]
+           : n===2 ? [0,1] : [0];
+  pick=pick.filter(function(v,i,a){ return a.indexOf(v)===i; });
+  const T=[];
+  pick.forEach(function(idx,k){
+    T.push(setTimeout(function(){ const c=cells[idx]; if(!c) return;
+      c.classList.add("huntspot");
+      T.push(setTimeout(function(){ c.classList.remove("huntspot"); },840));
+    },600+k*800)); });
+  clearTimeout(window._huntTourT);
+  window._huntTourT=setTimeout(function(){ T.forEach(clearTimeout);
+    grid.querySelectorAll(".cell.huntspot").forEach(function(c){ c.classList.remove("huntspot"); });
+  },600+pick.length*800+1000);
+}
 /* Arm or re-arm the pan tour. One timer, so repeated calls debounce rather than stack. */
 function _movePanArm(delay){
   clearTimeout(window._moveTipT);
@@ -1436,7 +1479,7 @@ function _movePanTour(){
   try{ if(localStorage.getItem("shco:movetour")) return; }catch(e){}
   try{
     if(window.matchMedia && matchMedia("(prefers-reduced-motion:reduce)").matches){
-      if(_tipClear("s-build","build-grid")) toast("Press and hold a tile to move it.",3800,"tip");
+      if(_tipClear("s-build","build-grid")) toast(MOVE_TIP,3800,"tip atadd");
       return;
     }
   }catch(e){}
@@ -1452,6 +1495,7 @@ function _movePanTour(){
     return;
   }
   window._moveTourDone=true;
+  toast(MOVE_TIP,3800,"tip atadd");            // the words, beside the demonstration
   const solo=cells.length<2;                       // one tile: lift-and-return, no swap
   const t=cells[0].querySelector(".tile"); if(!t) return;
   const gb=grid.getBoundingClientRect(), tb=t.getBoundingClientRect();
@@ -1499,8 +1543,32 @@ function refreshHomeBadge(){
 function toast(msg,ms,cls){
   const t=document.getElementById("toast"); t.textContent=msg; t.className="toast show"+(cls?" "+cls:"");
   if(cls&&cls.indexOf("atadd")>=0){ _toastAtAdd(t); }
+  else if(cls&&cls.indexOf("atrow2")>=0){ _toastAtRow2(t); }
   else { t.style.left=""; t.style.top=""; t.style.width=""; }
   clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove("show"),ms||1900);
+}
+/* Park the hunt tip under the SECOND row of tiles - the tour highlights tiles in
+   rows 1 and 2, so sitting below row 2 keeps the words beside the demonstration
+   without covering it. Falls back to the last row when the hunt is short. */
+function _toastAtRow2(t){
+  try{
+    const g=document.getElementById("hunt-grid");
+    const cells=g?[].slice.call(g.querySelectorAll(".cell")):[];
+    if(!cells.length){ t.classList.remove("atrow2"); t.style.left=""; t.style.top=""; t.style.width=""; return; }
+    const rows=[];
+    cells.forEach(function(c){ const r=c.getBoundingClientRect();
+      const row=rows.filter(function(q){ return Math.abs(q.top-r.top)<4; })[0];
+      if(row){ row.bottom=Math.max(row.bottom,r.bottom); }
+      else rows.push({top:r.top,bottom:r.bottom}); });
+    const gr=g.getBoundingClientRect(), W=window.innerWidth, M=10, G=10;
+    const row=rows[Math.min(1,rows.length-1)];
+    const w=Math.min(300,W-M*2);
+    t.style.width=w+"px";
+    t.style.left=Math.max(M,Math.min(W-w-M,gr.left+gr.width/2-w/2))+"px";
+    t.style.top="0px";
+    const h=t.getBoundingClientRect().height;
+    t.style.top=Math.max(8,Math.min(window.innerHeight-h-8,row.bottom+G))+"px";
+  }catch(e){ t.classList.remove("atrow2"); }
 }
 /* Park the build tip beside the blank ADD CLUE tile. Prefers the clear space to
    its right; drops underneath it when that space is too narrow (a full grid row).
@@ -1516,10 +1584,16 @@ function _toastAtAdd(t){
       t.style.left=(r.right+G)+"px";
       t.style.top=Math.max(8,r.top)+"px";
     }else{
+      /* No room beside it. Go ABOVE THE GRID, never below the tile - below is exactly
+         where the rail sits and where the tour animates, and a toast parked there
+         hides the gesture it is describing. */
+      const g=document.getElementById("build-grid"), gr=g.getBoundingClientRect();
       const w=Math.min(220,W-M*2);
       t.style.width=w+"px";
-      t.style.left=Math.max(M,Math.min(W-w-M,r.left+r.width/2-w/2))+"px";
-      t.style.top=(r.bottom+G)+"px";
+      t.style.left=Math.max(M,Math.min(W-w-M,gr.left+gr.width/2-w/2))+"px";
+      t.style.top="0px";
+      const h=t.getBoundingClientRect().height;
+      t.style.top=Math.max(8,gr.top-h-G)+"px";
     }
   }catch(e){ t.classList.remove("atadd"); }
 }
@@ -3609,7 +3683,12 @@ function renderBuild(){
   /* A builder who lands on an empty grid misses the tour entirely - the arm in go()
      expires before the first photo exists. Re-arm as soon as there is a tile to lift. */
   try{ const sb=document.getElementById("s-build");
-    if(!window._moveTourDone && n>=1 && sb && sb.classList.contains("active")) _movePanArm(1500);
+    if(!window._moveTourDone && n>=1 && sb && sb.classList.contains("active")){
+      /* Respect the original 6400ms slot so the tour never overtakes the clue tip;
+         only a LATE tile add (natural slot already gone) falls back to 1500ms. */
+      const left=6400-(Date.now()-(window._buildEnterT||0));
+      _movePanArm(Math.max(1500,left));
+    }
   }catch(e){}
 }
 /* --- Build-grid tile reorder: long-press to lift, slide to place. Build mode only.
@@ -3784,6 +3863,7 @@ function onFileChosen(e){
   rd.onload=()=>openCrop(rd.result,(dataUrl,clue)=>{
     if(mode==="hunt" && State.huntTarget){
       State.founds[State.huntTarget.id]=dataUrl;
+      try{ localStorage.setItem("shco:hunttour","1"); }catch(e){}
       renderHunt(); saveHunterSub("playing"); toast("Find logged ✓");
     }else if(State.build){
       State.build.tiles.push({id:uid(),type:"photo",src:dataUrl,clue:(clue||"")});
