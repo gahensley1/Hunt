@@ -124,8 +124,15 @@
   @keyframes nudgeRip{0%{opacity:.95;transform:scale(.35)}100%{opacity:0;transform:scale(2.8)}}
   /* Build-grid pan tour: demonstrates long-press-and-slide once, then retires.
      Replaces the oxblood "Press and hold a tile to move it." toast. */
-  .gridwrap{position:relative}
-  #move-nudge{--pan:122px;left:0;top:0}
+  .gridwrap{position:relative;--pan:122px}
+  #move-nudge{left:0;top:0}
+  /* the tile the tour is demonstrating on */
+  .cell.tourlift{z-index:6}
+  .cell.tourlift .tile{transform:scale(1.07);box-shadow:0 10px 22px rgba(10,7,4,.5)}
+  .cell.tourmove{transition:transform .42s cubic-bezier(.45,.05,.35,1)}
+  .cell.tourR{transform:translateX(var(--pan))}
+  .cell.tourL{transform:translateX(calc(var(--pan) * -1))}
+  .cell.tourOut{transform:translate(46px,-8px)}
   #move-nudge.pan{animation:panFly 3.8s cubic-bezier(.45,.05,.35,1) forwards}
   #move-nudge.pan .nudge-ripple{animation:nudgeRip 1.1s ease-out .9s forwards}
   @keyframes panFly{
@@ -145,7 +152,25 @@
   #move-rail .head{fill:var(--brass-lt)}
   #move-rail.on .head{animation:headSlide 1.5s cubic-bezier(.45,.05,.35,1) infinite}
   @keyframes headSlide{0%{transform:translateX(0);opacity:0}18%{opacity:1}82%{opacity:1}100%{transform:translateX(96px);opacity:0}}
-  @media (prefers-reduced-motion:reduce){#move-nudge,#move-rail{display:none}}
+  /* Single-tile build: nothing to swap with, so the glass lifts the tile, carries it
+     a little way and sets it back. Teaches press-hold-drag without implying a slot. */
+  #move-nudge.pan1{animation:panLift 3.8s cubic-bezier(.45,.05,.35,1) forwards}
+  #move-nudge.pan1 .nudge-ripple{animation:nudgeRip 1.1s ease-out .9s forwards}
+  @keyframes panLift{
+    0%{opacity:0;transform:translate(210px,-58px) rotate(18deg) scale(.7)}
+    16%{opacity:1;transform:translate(4px,4px) rotate(-5deg) scale(1)}
+    22%{transform:translate(0,2px) rotate(0deg) scale(1)}
+    30%{transform:translate(0,4px) rotate(0deg) scale(.88)}
+    44%{transform:translate(0,4px) rotate(0deg) scale(.88)}
+    58%{transform:translate(46px,-4px) rotate(0deg) scale(.88)}
+    72%{transform:translate(0,4px) rotate(0deg) scale(.88)}
+    80%{transform:translate(0,2px) rotate(0deg) scale(1)}
+    90%{opacity:1;transform:translate(40px,-18px) rotate(9deg) scale(.94)}
+    100%{opacity:0;transform:translate(130px,-90px) rotate(26deg) scale(.65)}
+  }
+  .cell.tourlift .tile,.cell.tourmove{transition:transform .3s cubic-bezier(.45,.05,.35,1),box-shadow .3s ease}
+  @media (prefers-reduced-motion:reduce){#move-nudge,#move-rail{display:none}
+    .cell.tourlift .tile,.cell.tourR,.cell.tourL,.cell.tourOut{transform:none;box-shadow:none}}
   /* first-visit welcome tour */
   #tour-sign{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:80;pointer-events:none;opacity:0}
   #tour-sign .tsign{width:min(90vw,360px);height:auto;display:block}
@@ -1404,19 +1429,37 @@ function _movePanTour(){
   if(!grid||!n||!r) return;
   if(!_tipClear("s-build","build-grid")) return;
   const cells=grid.querySelectorAll(".cell");
-  if(cells.length<2) return;                       // nothing to demonstrate with one tile
+  if(!cells.length) return;                        // no tiles at all: nothing to lift
+  const solo=cells.length<2;                       // one tile: lift-and-return, no swap
   const t=cells[0].querySelector(".tile"); if(!t) return;
   const gb=grid.getBoundingClientRect(), tb=t.getBoundingClientRect();
   if(!tb.width) return;
   n.style.left=(tb.left-gb.left+tb.width/2-22)+"px";
   n.style.top =(tb.top -gb.top +tb.height/2-22)+"px";
-  n.style.setProperty("--pan",(tb.width+10)+"px");  // one cell + the grid gap
-  r.style.left=(tb.left-gb.left)+"px";
-  r.style.top =(tb.bottom-gb.top+2)+"px";           // the clue line, under the tile
-  r.classList.add("on"); void n.offsetWidth; n.classList.add("pan");
+  grid.parentNode.style.setProperty("--pan",(tb.width+10)+"px"); // one cell + grid gap
+  const a=cells[0], bcell=solo?null:cells[1];
+  a.classList.add("tourmove"); if(bcell) bcell.classList.add("tourmove");
+  if(!solo){                                       // a rail implies a destination slot
+    r.style.left=(tb.left-gb.left)+"px";
+    r.style.top =(tb.bottom-gb.top+2)+"px";         // the clue line, under the tile
+    r.classList.add("on");
+  }
+  void n.offsetWidth; n.classList.add(solo?"pan1":"pan");
+  const T=[]; const at=(ms,fn)=>T.push(setTimeout(fn,ms));
+  at(1140,()=>a.classList.add("tourlift"));                       // press registers
+  if(solo){
+    at(2200,()=>a.classList.add("tourOut"));                      // carried a little way
+    at(2740,()=>a.classList.remove("tourOut"));                   // and set back
+    at(3050,()=>a.classList.remove("tourlift"));
+  }else{
+    at(2000,()=>{ a.classList.add("tourR"); bcell.classList.add("tourL"); });
+    at(2900,()=>a.classList.remove("tourlift"));
+  }
   clearTimeout(window._panTourT);
   window._panTourT=setTimeout(function(){
-    r.classList.remove("on"); n.classList.remove("pan");
+    T.forEach(clearTimeout);
+    r.classList.remove("on"); n.classList.remove("pan"); n.classList.remove("pan1");
+    cells.forEach(c=>c.classList.remove("tourlift","tourmove","tourR","tourL","tourOut"));
   },3900);
 }
 function refreshHomeBadge(){
