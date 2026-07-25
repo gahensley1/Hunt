@@ -128,7 +128,7 @@
      identified at a glance. Remove before store submission. Rotation is logged in
      the handoff; do not reuse a colour until the cycle repeats. */
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#4E9A87;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#7FA33C;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -389,10 +389,19 @@
   /* share / case number */
   .caseno{
     font-family:var(--type);text-align:center;background:#fff8ec;border:2px dashed var(--tweed);border-radius:16px;
-    padding:18px;margin:8px 0 6px
+    padding:12px 18px 14px;margin:8px 0 6px
   }
+  .caseno .btn-ghost{margin:12px auto 0}
+  /* Case Ready only: the owner asked for no brass rule on this screen's notes,
+     and the archive cluster set 1.25x and centred beneath the Share button. */
+  #s-share .note{border-left:none;border-radius:10px;padding:11px 13px}
+  #s-share .arch-note{margin-top:14px;text-align:center;font-size:16.25px}
+  #s-share .arch-note .archlink{font-size:15px;display:block;width:fit-content;margin:8px auto 0}
+  .archlink{display:inline-block;margin-top:6px;font-family:var(--type);font-size:12px;
+    letter-spacing:1.2px;font-weight:700;color:var(--green);text-decoration:underline;
+    text-underline-offset:3px;cursor:pointer}
   .caseno .lbl{letter-spacing:3px;font-size:12px;color:var(--tweed-dk)}
-  .caseno .num{font-family:var(--serif);font-weight:900;font-size:48px;letter-spacing:6px;color:var(--green);margin-top:4px;line-height:1}
+  .caseno .num{font-family:var(--serif);font-weight:900;font-size:48px;letter-spacing:6px;color:var(--green);margin-top:2px;line-height:1}
   .note{font-size:13px;color:var(--ink-soft);line-height:1.5;background:rgba(184,134,59,.10);border-left:3px solid var(--brass);padding:11px 13px;border-radius:0 10px 10px 0;margin-top:6px}
   .note b{color:var(--ink)}
 
@@ -902,7 +911,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">19e</p>
+      <p id="buildmark" aria-label="test build marker">19g</p>
     </div>
   </section>
 
@@ -964,10 +973,17 @@
     <div class="body">
       <p class="eyebrow" style="text-align:center">Your hunt is filed &amp; ready to send</p>
       <p class="clue-text" style="margin:2px 8px 10px">(A notification will be sent when your sleuth(s) complete the hint)</p>
-      <div class="caseno"><div class="lbl">CASE No.</div><div class="num" id="share-code">000000</div></div>
+      <div class="caseno">
+        <div class="lbl">CASE No.</div>
+        <div class="num" id="share-code">000000</div>
+        <button class="btn btn-ghost" onclick="copyCode()">Copy Case Number</button>
+      </div>
       <div class="stack" style="padding:16px 0 0">
         <button class="btn btn-primary" onclick="shareCase()"><span class="em">✉️</span> Share via Message</button>
-        <button class="btn btn-ghost" onclick="copyCode()">Copy Case Number</button>
+      </div>
+      <div class="note arch-note">
+        Review each sleuth&#39;s solved cases in the <b>CASE FILE RECORD</b> archive on the home page.
+        <span class="archlink" onclick="goArchive()">Take me there now &rsaquo;</span>
       </div>
       <div class="note">
         <b>How sharing works:</b> your hunter opens Scavenger &amp; Hunt Co. on their phone, taps <b>Join a Hunt</b>, and enters this case number. The board loads automatically. Add this app to your Home Screen so it's easy to reopen.
@@ -4652,6 +4668,9 @@ function appendColdRail(body){
     rail.onclick=openColdCases; body.appendChild(rail);
   }catch(e){}
 }
+/* Case Ready -> the CASE FILE RECORD archive. Routes via home so the archive is
+   entered the same way the home stamp enters it, and Back lands somewhere sane. */
+function goArchive(){ try{ go("s-home"); }catch(e){} setTimeout(openCaseFiles,60); }
 async function openCaseFiles(){
   markTourDone();
   const body=document.getElementById("cases-body"); body.innerHTML="";
