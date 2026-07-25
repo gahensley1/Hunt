@@ -128,7 +128,7 @@
      identified at a glance. Remove before store submission. Rotation is logged in
      the handoff; do not reuse a colour until the cycle repeats. */
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#7A5A98;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#4E9A87;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -375,6 +375,12 @@
     color:var(--brass-lt);font-family:var(--paper-type,inherit);font-size:12px;letter-spacing:.6px;opacity:.75;
     pointer-events:none}
   .clue-zoom{margin:-6px 0 10px;text-align:center;font-size:11.5px;letter-spacing:.4px;color:var(--ink-soft);opacity:.9}
+  /* Rolling highlight for the enlarge command - a brass sweep passing across the words. */
+  .clue-zoom.rollhi{background-image:linear-gradient(100deg,transparent 20%,rgba(216,175,99,.85) 50%,transparent 80%);
+    background-size:220% 100%;background-repeat:no-repeat;-webkit-background-clip:text;background-clip:text;
+    color:var(--brass-lt);animation:clueRoll 1.1s ease-in-out 2}
+  @keyframes clueRoll{0%{background-position:180% 0}100%{background-position:-80% 0}}
+  @media (prefers-reduced-motion:reduce){ .clue-zoom.rollhi{animation:none;color:var(--brass-lt)} }
   .target-big{width:min(60vw,240px);height:min(60vw,240px);margin:4px auto 12px;border-radius:14px;overflow:hidden;background:var(--paper-2);display:grid;place-items:center;border:1px solid var(--line)}
   .target-big img{width:100%;height:100%;object-fit:cover}
   .target-big .obj{font-size:96px}
@@ -895,7 +901,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">18d</p>
+      <p id="buildmark" aria-label="test build marker">18e</p>
     </div>
   </section>
 
@@ -1461,6 +1467,7 @@ function _tipQueue(key,scrId,gridId,msg,cls,delay,ms){
 }
 const MOVE_TIP="Tap & hold to rearrange order";
 const HUNT_TIP="Tap any clue in any order to document your find!";
+const HUNT_ZOOM_TIP="Tap a clue \u2014 you can enlarge the image to study it.";
 function _huntArm(delay){ clearTimeout(window._huntTipT); window._huntTipT=setTimeout(_huntTour,delay||1200); }
 /* Hunt-page tour. States the rule - any clue, any order - then proves it by lighting
    NON-ADJACENT tiles, which is the whole point: 1, then 3, then 5. Retires for good
@@ -1491,6 +1498,16 @@ function _huntTour(){
   window._huntTourT=setTimeout(function(){ T.forEach(clearTimeout);
     grid.querySelectorAll(".cell.huntspot").forEach(function(c){ c.classList.remove("huntspot"); });
   },600+pick.length*800+1000);
+  /* Second beat of the tour: once the black tip has closed (4200ms), tell them the
+     clue can be studied - but only if there is a photograph to enlarge. */
+  const hasPhoto=(State.hunt&&State.hunt.tiles||[]).some(function(t){ return t.type==="photo"&&safeImgSrc(t.src); });
+  if(hasPhoto){
+    clearTimeout(window._huntZoomTipT);
+    window._huntZoomTipT=setTimeout(function(){
+      try{ if(localStorage.getItem("shco:hunttour")) return; }catch(e){}
+      if(_tipClear("s-hunt","hunt-grid")) toast(HUNT_ZOOM_TIP,4600,"tip atrow2");
+    },4400);
+  }
 }
 /* Arm or re-arm the pan tour. One timer, so repeated calls debounce rather than stack. */
 function _movePanArm(delay){
@@ -3899,6 +3916,7 @@ function onFileChosen(e){
     if(mode==="hunt" && State.huntTarget){
       State.founds[State.huntTarget.id]=dataUrl;
       try{ localStorage.setItem("shco:hunttour","1"); }catch(e){}
+      clearTimeout(window._huntZoomTipT);
       renderHunt();
       saveHunterSub("playing").then(function(r){
         toast(r && r._durable===false
@@ -4299,7 +4317,18 @@ function openClue(t){
   const canZoom = t.type==="photo" && !!safeImgSrc(t.src);
   target.onclick = canZoom ? function(){ openLoupe(t); } : null;
   target.style.cursor = canZoom ? "zoom-in" : "";
-  document.getElementById("clue-zoom").textContent = canZoom ? "Tap the image to examine" : "";
+  const zoomNote=document.getElementById("clue-zoom");
+  zoomNote.textContent = canZoom ? "Tap the image to examine" : "";
+  /* Tour is still live and this clue can be enlarged: sweep a brass highlight across
+     the command so the gesture is unmissable the first time. Retires with the tour. */
+  zoomNote.classList.remove("rollhi"); target.classList.remove("huntspot");
+  let _tourLive=true; try{ if(localStorage.getItem("shco:hunttour")) _tourLive=false; }catch(e){}
+  if(canZoom && _tourLive){
+    void zoomNote.offsetWidth;                 // restart the animation on re-open
+    zoomNote.classList.add("rollhi");
+    setTimeout(function(){ if(target){ target.classList.add("huntspot"); } },120);
+    setTimeout(function(){ if(target){ target.classList.remove("huntspot"); } },1050);
+  }
   const actions=document.getElementById("clue-actions"); actions.innerHTML="";
   if(State.locked){
     actions.append(btn("btn btn-primary","Done",()=>closeOverlay("ov-clue")));
