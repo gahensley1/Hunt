@@ -128,7 +128,7 @@
      identified at a glance. Remove before store submission. Rotation is logged in
      the handoff; do not reuse a colour until the cycle repeats. */
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#3B6BA5;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#B5566B;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -902,7 +902,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">19a</p>
+      <p id="buildmark" aria-label="test build marker">19c</p>
     </div>
   </section>
 
@@ -1430,25 +1430,29 @@ function go(id){
   if(id==="s-home") refreshHomeBadge();
   clearTimeout(window._clueTipT); clearTimeout(window._moveTipT); clearTimeout(window._huntTipT);
   if(id==="s-build"){ try{ coldSubmitVis(); setFinishLabel(); }catch(e){}
-    _tipQueue("_clueTipT","s-build","build-grid","Tap (+) to start adding clues.\nEdit your clue and text by tapping your clue tile","atadd",2000,5200);
-    window._moveTryN=0; window._moveTourDone=false; window._buildEnterT=Date.now(); _movePanArm(6400);
+    _tipQueue("_clueTipT","s-build","build-grid","Tap (+) to start adding clues.\nEdit your clue and text by tapping your clue tile","atadd",1000,5200);
+    window._moveTryN=0; window._moveTourDone=false; window._buildEnterT=Date.now(); _movePanArm(3200);
   }
   if(id==="s-hunt"){
-    window._huntTryN=0; window._huntTourDone=false; _huntArm(2200);
+    window._huntTryN=0; window._huntTourDone=false; _huntArm(1100);
   }
 }
 /* A tip may only fire when the hunter/builder is actually looking at the grid.
    Blocks on: backgrounded tab (the native camera), wrong screen, any open .overlay,
    a toast already showing, and - the catch-all - anything physically covering the
    grid, tested with elementFromPoint so future gates need no maintenance here. */
-function _tipClear(scrId,gridId){
+/* ignoreToast: the hunt tour's second beat is DESIGNED to land while the black tip
+   is still up, so that one caller must skip the "no toast showing" guard. */
+function _tipClear(scrId,gridId,ignoreToast){
   try{
     if(document.visibilityState==="hidden") return false;
     const scr=document.getElementById(scrId);
     if(!scr||!scr.classList.contains("active")) return false;
     if(document.querySelector(".overlay.open")) return false;
-    const tw=document.getElementById("toast");
-    if(tw&&tw.classList.contains("show")) return false;
+    if(!ignoreToast){
+      const tw=document.getElementById("toast");
+      if(tw&&tw.classList.contains("show")) return false;
+    }
     const g=document.getElementById(gridId);
     if(!g) return false;
     const r=g.getBoundingClientRect();
@@ -1463,14 +1467,14 @@ function _tipQueue(key,scrId,gridId,msg,cls,delay,ms){
   const fire=function(){
     if(_tipClear(scrId,gridId)){ toast(msg,ms||4600,cls||undefined); return; }
     if(++tries>30) return;
-    window[key]=setTimeout(fire,1200);
+    window[key]=setTimeout(fire,600);
   };
   window[key]=setTimeout(fire,delay);
 }
 const MOVE_TIP="Tap & hold to rearrange order";
 const HUNT_TIP="Tap any clue in any order to document your find!";
 const HUNT_ZOOM_TIP="Tap a clue \u2014 you can enlarge the image to study it.";
-function _huntArm(delay){ clearTimeout(window._huntTipT); window._huntTipT=setTimeout(_huntTour,delay||1200); }
+function _huntArm(delay){ clearTimeout(window._huntTipT); window._huntTipT=setTimeout(_huntTour,delay||600); }
 /* Hunt-page tour. States the rule - any clue, any order - then proves it by lighting
    NON-ADJACENT tiles, which is the whole point: 1, then 3, then 5. Retires for good
    once the hunter logs a find. */
@@ -1479,7 +1483,7 @@ function _huntTour(){
   const grid=document.getElementById("hunt-grid"); if(!grid) return;
   const cells=[].slice.call(grid.querySelectorAll(".cell"));
   if(!_tipClear("s-hunt","hunt-grid")||!cells.length){
-    if((window._huntTryN=(window._huntTryN||0)+1)<=40) _huntArm(1200);
+    if((window._huntTryN=(window._huntTryN||0)+1)<=40) _huntArm(600);
     return;
   }
   window._huntTourDone=true;
@@ -1507,14 +1511,14 @@ function _huntTour(){
     clearTimeout(window._huntZoomTipT);
     window._huntZoomTipT=setTimeout(function(){
       try{ if(localStorage.getItem("shco:hunttour")) return; }catch(e){}
-      if(_tipClear("s-hunt","hunt-grid")) toast2(HUNT_ZOOM_TIP,4600,"tip atunder");
+      if(_tipClear("s-hunt","hunt-grid",true)) toast2(HUNT_ZOOM_TIP,4600,"tip atunder");
     },3700);
   }
 }
 /* Arm or re-arm the pan tour. One timer, so repeated calls debounce rather than stack. */
 function _movePanArm(delay){
   clearTimeout(window._moveTipT);
-  window._moveTipT=setTimeout(_movePanTour,delay||1200);
+  window._moveTipT=setTimeout(_movePanTour,delay||600);
 }
 /* Build-grid pan tour. Shows the long-press-and-slide reorder gesture once and
    retires for good the first time the builder actually moves a tile (tdUp).
@@ -1531,11 +1535,11 @@ function _movePanTour(){
   const n=document.getElementById("move-nudge"), r=document.getElementById("move-rail");
   if(!grid||!n||!r) return;
   /* Blocked (a toast still showing, an overlay open) or no tiles yet: RE-ARM, do not
-     die. This was a one-shot timer - it burned at 6400ms on the empty grid a new
+     die. This was a one-shot timer - it burned at 3200ms on the empty grid a new
      builder starts on, and never returned once they had added their photos. */
   const cells=grid.querySelectorAll(".cell");
   if(!_tipClear("s-build","build-grid")||!cells.length){
-    if((window._moveTryN=(window._moveTryN||0)+1)<=40) _movePanArm(1200);
+    if((window._moveTryN=(window._moveTryN||0)+1)<=40) _movePanArm(600);
     return;
   }
   window._moveTourDone=true;
@@ -3768,10 +3772,10 @@ function renderBuild(){
      expires before the first photo exists. Re-arm as soon as there is a tile to lift. */
   try{ const sb=document.getElementById("s-build");
     if(!window._moveTourDone && n>=1 && sb && sb.classList.contains("active")){
-      /* Respect the original 6400ms slot so the tour never overtakes the clue tip;
+      /* Respect the original 3200ms slot so the tour never overtakes the clue tip;
          only a LATE tile add (natural slot already gone) falls back to 1500ms. */
-      const left=6400-(Date.now()-(window._buildEnterT||0));
-      _movePanArm(Math.max(1500,left));
+      const left=3200-(Date.now()-(window._buildEnterT||0));
+      _movePanArm(Math.max(750,left));
     }
   }catch(e){}
 }
