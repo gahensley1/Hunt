@@ -128,7 +128,7 @@
      identified at a glance. Remove before store submission. Rotation is logged in
      the handoff; do not reuse a colour until the cycle repeats. */
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#4E9A87;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#3B6BA5;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -810,9 +810,10 @@
   /* Anchored beside the ADD CLUE tile. The bottom-centre default lands under the
      Finish bar on the build page and runs off frame; this parks it in the clear
      parchment next to the blank tile. Positioned from the tile rect at runtime. */
-  .toast.atadd,.toast.atrow2{bottom:auto;transform:none;max-width:none;text-align:center;
+  .toast.atadd,.toast.atrow2,.toast.atunder{bottom:auto;transform:none;max-width:none;text-align:center;
     font-size:12px;line-height:1.35;padding:9px 11px;border-radius:12px;white-space:pre-line}
-  .toast.atadd.show,.toast.atrow2.show{transform:none}
+  .toast.atadd.show,.toast.atrow2.show,.toast.atunder.show{transform:none}
+  #toast2{z-index:621}
   /* Hunt tour highlight: the tile's own EDGE lights brass and fades back. Uses
      box-shadow, not border-width, so nothing in the grid shifts while it runs. */
   .cell.huntspot .tile{animation:huntEdge .82s ease-out forwards}
@@ -901,7 +902,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">18e</p>
+      <p id="buildmark" aria-label="test build marker">19a</p>
     </div>
   </section>
 
@@ -1271,6 +1272,7 @@
   </div>
 </div>
 <div id="toast" class="toast"></div>
+<div id="toast2" class="toast"></div>
 
 <script>
 if("scrollRestoration" in history){ try{ history.scrollRestoration="manual"; }catch(e){} }
@@ -1505,8 +1507,8 @@ function _huntTour(){
     clearTimeout(window._huntZoomTipT);
     window._huntZoomTipT=setTimeout(function(){
       try{ if(localStorage.getItem("shco:hunttour")) return; }catch(e){}
-      if(_tipClear("s-hunt","hunt-grid")) toast(HUNT_ZOOM_TIP,4600,"tip atrow2");
-    },4400);
+      if(_tipClear("s-hunt","hunt-grid")) toast2(HUNT_ZOOM_TIP,4600,"tip atunder");
+    },3700);
   }
 }
 /* Arm or re-arm the pan tour. One timer, so repeated calls debounce rather than stack. */
@@ -1588,6 +1590,36 @@ function toast(msg,ms,cls){
   else if(cls&&cls.indexOf("atrow2")>=0){ _toastAtRow2(t); }
   else { t.style.left=""; t.style.top=""; t.style.width=""; }
   clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove("show"),ms||1900);
+}
+/* Second toast channel. The tour's oxblood beat has to appear while the black tip
+   is STILL up (half a second of overlap) so the two read in succession, and a
+   single shared node cannot show two messages at once. Parked directly under the
+   black one and left there - it does not slide up when the black expires. */
+function toast2(msg,ms,cls){
+  const t=document.getElementById("toast2"); if(!t) return;
+  t.textContent=msg; t.className="toast show"+(cls?" "+cls:"");
+  if(cls&&cls.indexOf("atunder")>=0){ _toastUnder(t); }
+  else { t.style.left=""; t.style.top=""; t.style.width=""; }
+  clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove("show"),ms||1900);
+}
+function hideToast2(){
+  try{ const t=document.getElementById("toast2"); if(t){ clearTimeout(t._t); t.classList.remove("show"); } }catch(e){}
+}
+/* Park directly beneath the black toast's live rect. Falls back to the row-2
+   anchor if the black tip is not on screen for any reason. */
+function _toastUnder(t){
+  try{
+    const a=document.getElementById("toast");
+    const r=a?a.getBoundingClientRect():null;
+    if(!a||!r||!r.height||!a.classList.contains("show")){ _toastAtRow2(t); return; }
+    const W=window.innerWidth, M=10, G=8;
+    const w=Math.min(300,W-M*2);
+    t.style.width=w+"px";
+    t.style.left=Math.max(M,Math.min(W-w-M,r.left+r.width/2-w/2))+"px";
+    t.style.top="0px";
+    const h=t.getBoundingClientRect().height;
+    t.style.top=Math.max(8,Math.min(window.innerHeight-h-8,r.bottom+G))+"px";
+  }catch(e){ t.classList.remove("atunder"); }
 }
 /* Park the hunt tip under the SECOND row of tiles - the tour highlights tiles in
    rows 1 and 2, so sitting below row 2 keeps the words beside the demonstration
@@ -3916,7 +3948,7 @@ function onFileChosen(e){
     if(mode==="hunt" && State.huntTarget){
       State.founds[State.huntTarget.id]=dataUrl;
       try{ localStorage.setItem("shco:hunttour","1"); }catch(e){}
-      clearTimeout(window._huntZoomTipT);
+      clearTimeout(window._huntZoomTipT); hideToast2();
       renderHunt();
       saveHunterSub("playing").then(function(r){
         toast(r && r._durable===false
