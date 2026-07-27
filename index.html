@@ -952,7 +952,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">22b</p>
+      <p id="buildmark" aria-label="test build marker">23b</p>
     </div>
   </section>
 
@@ -1191,7 +1191,10 @@
       <div class="crop-frame"></div>
     </div>
     <div class="zoomrow">🔍<input id="crop-zoom" type="range" min="1" max="3" step="0.01" value="1">🔎</div>
-    <div id="crop-cluerow" class="crop-cluerow" style="display:none"><input id="crop-clue" class="field" maxlength="12" placeholder="clue?"></div>
+    <div id="crop-cluerow" class="crop-cluerow" style="display:none"><input id="crop-clue" class="field" maxlength="12" placeholder="clue?">
+      <p class="hint-toggle" id="crop-hint-toggle" onclick="toggleTileHint('crop')">＋ Add a hidden hint</p>
+      <p class="hint-guide" id="crop-hint-guide">Mark the finds you expect to be hard. A hunter can spend a coin to see it.</p>
+      <textarea id="crop-hint" class="field hint-field" maxlength="140" rows="3" placeholder="A quiet word for a hunter who is stuck. Costs them one coin."></textarea></div>
     <div class="row2">
       <button class="btn btn-ghost" onclick="closeOverlay('ov-crop')">Cancel</button>
       <button class="btn btn-primary" onclick="confirmCrop()">Use Photo</button>
@@ -4053,7 +4056,7 @@ function onFileChosen(e){
   if(!f) return;
   const mode=State.captureMode;
   const rd=new FileReader();
-  rd.onload=()=>openCrop(rd.result,(dataUrl,clue)=>{
+  rd.onload=()=>openCrop(rd.result,(dataUrl,clue,hint)=>{
     if(mode==="hunt" && State.huntTarget){
       State.founds[State.huntTarget.id]=dataUrl;
       try{ localStorage.setItem("shco:hunttour","1"); }catch(e){}
@@ -4065,7 +4068,9 @@ function onFileChosen(e){
           : "Find logged ✓");
       }).catch(function(){ toast("Find kept on this device only — no record filed yet."); });
     }else if(State.build){
-      State.build.tiles.push({id:uid(),type:"photo",src:dataUrl,clue:(clue||"")});
+      const nt={id:uid(),type:"photo",src:dataUrl,clue:(clue||"")};
+      if(hint) nt.hint=hint;
+      State.build.tiles.push(nt);
       renderBuild();
     }
   });
@@ -4118,6 +4123,11 @@ function openCrop(dataUrl,resolve){
   { const cr=document.getElementById("crop-cluerow"), ci=document.getElementById("crop-clue");
     const isBuild=!!State.build && !(State.captureMode==="hunt" && State.huntTarget);
     if(ci) ci.value="";
+    const hi=document.getElementById("crop-hint"), hto=document.getElementById("crop-hint-toggle"),
+          hgd=document.getElementById("crop-hint-guide");
+    if(hi){ hi.value=""; hi.classList.remove("open"); }
+    if(hto) hto.classList.remove("open");
+    if(hgd) hgd.classList.remove("open");
     if(cr) cr.style.display=isBuild?"":"none"; }
   const img=new Image();
   img.onload=()=>{
@@ -4221,7 +4231,8 @@ function confirmCrop(){
   const out=cv.toDataURL("image/jpeg",0.72);
   closeOverlay("ov-crop");
   const ci=document.getElementById("crop-clue"); const clue=ci?ci.value.trim().slice(0,12):"";
-  const r=State.cropResolve; State.cropResolve=null; if(r) r(out,clue);
+  const hi=document.getElementById("crop-hint"); const hint=hi?hi.value.trim().slice(0,140):"";
+  const r=State.cropResolve; State.cropResolve=null; if(r) r(out,clue,hint);
 }
 
 /* ============================================================
@@ -4256,6 +4267,17 @@ async function finishBuild(){
     if(inp){ try{inp.scrollIntoView({behavior:"smooth",block:"center"});}catch(e){} }
     nudgeTitle();
     return;
+  }
+  // A case with no hidden hint leaves a stuck hunter no way through. Say so once,
+  // then never again: the second tap files exactly as before.
+  {
+    const tiles=(State.build&&State.build.tiles)||[];
+    let seen=false; try{ seen=localStorage.getItem("shco:hinttip")==="1"; }catch(e){}
+    if(!seen && tiles.length && !tiles.some(function(t){ return t.hint; })){
+      try{ localStorage.setItem("shco:hinttip","1"); }catch(e){}
+      toast("No hidden hints on this case. A stuck hunter will have no way through. Tap Finish again to file as is.", 4600);
+      return;
+    }
   }
   const editing=!!(State.build && State.build.code);
   const code = editing ? String(State.build.code) : await genCode();
@@ -4717,11 +4739,12 @@ function _lpUp(e){
   st.addEventListener("touchmove",function(e){ e.preventDefault(); },{passive:false});
 })();
 /* The builder folds the hint away by default; a fifty-clue build never sees it. */
-function toggleTileHint(){
-  const hf=document.getElementById("tile-hint"), ht=document.getElementById("tile-hint-toggle");
+function toggleTileHint(pfx){
+  pfx=pfx||"tile";
+  const hf=document.getElementById(pfx+"-hint"), ht=document.getElementById(pfx+"-hint-toggle");
   if(!hf||!ht) return;
   hf.classList.add("open"); ht.classList.add("open");
-  const hg=document.getElementById("tile-hint-guide"); if(hg) hg.classList.add("open");
+  const hg=document.getElementById(pfx+"-hint-guide"); if(hg) hg.classList.add("open");
   try{ hf.focus(); }catch(e){}
 }
 /* The hunter's side of the hidden hint. Drawn on every open so a purchase shows at
