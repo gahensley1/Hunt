@@ -161,7 +161,7 @@
   .coin-line{font-family:var(--type);font-size:12px;letter-spacing:.6px;
     text-align:center;color:var(--tweed-dk);margin:0 0 12px;opacity:.9}
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#B5566B;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#7A5A98;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -953,7 +953,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">23c</p>
+      <p id="buildmark" aria-label="test build marker">23d</p>
     </div>
   </section>
 
@@ -3086,6 +3086,11 @@ function openColdDetail(code, autoSample){
   document.getElementById("colddetail-ov").classList.remove("hidden"); try{ populateColdRate(e.code, e.diff||0); }catch(_e){}
   if(autoSample){ try{ coldSample(String(e.code)); }catch(_e){} }
 }
+/* Send a turned-away hunter to the shelf where the pack is sold. */
+async function joinGetPack(code){
+  try{ await openColdCases(); openColdDetail(code); }
+  catch(e){ try{ toast("The archive would not open \u2014 try the Cold Case Files."); }catch(_e){} }
+}
 async function buyPack(code){
   try{
     const e=(_coldIdx||[]).find(function(x){ return String(x.code)===String(code); });
@@ -4501,6 +4506,14 @@ async function joinCase(){
   const raw=await Store.get("hunt:"+code,true);
   if(!raw){ err.textContent="No case found for No. "+code+". Check the digits and try again."; err.classList.remove("hidden"); return; }
   const huntCandidate=JSON.parse(raw);
+  // A sealed archive is sealed on every road in. The shelves check isLocked();
+  // this is the same gate for a hand-typed case number.
+  if(huntCandidate.cold && huntCandidate.paid && !ownsPack(code)){
+    err.innerHTML="Case No. "+escapeHtml(code)+" is filed in a sealed archive."
+      +"<br><span class=\"meta\">The pack must be in your credentials before you may take it up. "
+      +"<b class=\"hint-link\" onclick=\"joinGetPack('"+escapeHtml(code)+"')\">Open it in the Cold Case Files</b></span>";
+    err.classList.remove("hidden"); return;
+  }
   // cold cases learn: par time drawn from the record of past full solves
   if(huntCandidate.cold&&huntCandidate.parAuto){
     try{ const sr=await Store.get("coldstat:"+code,true);
