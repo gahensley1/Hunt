@@ -145,14 +145,15 @@
     letter-spacing:.6px;color:var(--tweed-dk);cursor:pointer;user-select:none;opacity:1}
   .hint-toggle:active{opacity:.55}
   .hint-toggle.open{display:none}
-  .hint-guide{margin:-6px 0 12px;text-align:center;font-family:var(--serif);font-size:12.5px;
+  .hint-guide{margin:2px 0 10px;text-align:center;font-family:var(--serif);font-size:12.5px;
     line-height:1.4;color:var(--ink-soft);opacity:.8;padding:0 6px}
   .hint-guide.open{display:none}
   .hint-note{margin:-8px 0 14px;text-align:center;font-family:var(--serif);font-size:12.5px;
     color:var(--ink-soft);opacity:.8}
-  .hint-field{display:none;font-family:var(--serif);font-size:14px;line-height:1.35;
+  .hint-field{display:block;font-family:var(--serif);font-size:14px;line-height:1.35;
     resize:none;margin:12px 0 10px}
   .hint-field.open{display:block}
+    #ov-crop .modal,#ov-tile .modal{max-height:92vh;overflow-y:auto}
   /* the hunter's side: the coin bought a quiet word */
   .hint-shown{font-family:var(--serif);font-style:italic;text-align:center;
     color:var(--tweed-dk);margin:0 8px 14px;font-size:15px;line-height:1.45;
@@ -161,7 +162,7 @@
   .coin-line{font-family:var(--type);font-size:12px;letter-spacing:.6px;
     text-align:center;color:var(--tweed-dk);margin:0 0 12px;opacity:.9}
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#B5566B;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#7A5A98;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -953,7 +954,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">25c</p>
+      <p id="buildmark" aria-label="test build marker">26d</p>
     </div>
   </section>
 
@@ -1189,10 +1190,8 @@
       <div class="crop-frame"></div>
     </div>
     <div class="zoomrow">🔍<input id="crop-zoom" type="range" min="1" max="3" step="0.01" value="1">🔎</div>
-    <div id="crop-cluerow" class="crop-cluerow" style="display:none"><input id="crop-clue" class="field" maxlength="12" placeholder="short clue — 12 characters">
-      <p class="hint-toggle" id="crop-hint-toggle" onclick="toggleTileHint('crop')">＋ Add a hidden hint</p>
-      <p class="hint-guide" id="crop-hint-guide">Mark the finds you expect to be hard. A hunter can spend a coin to see it.</p>
-      <textarea id="crop-hint" class="field hint-field" maxlength="140" rows="3" placeholder="A quiet word for a hunter who is stuck. Costs them one coin."></textarea></div>
+    <div id="crop-cluerow" class="crop-cluerow" style="display:none"><p class="hint-guide">(hints/clues are optional &amp; can be added by tapping clues later)</p><input id="crop-clue" class="field" maxlength="12" placeholder="short clue — 12 characters">
+      <textarea id="crop-hint" class="field hint-field" maxlength="140" rows="4" placeholder="Add a hidden hint for extreme difficult finds. A hunter can spend collected coins to reveal.&#10;Use  sparingly."></textarea></div>
     <div class="row2">
       <button class="btn btn-ghost" onclick="closeOverlay('ov-crop')">Cancel</button>
       <button class="btn btn-primary" onclick="confirmCrop()">Use Photo</button>
@@ -1214,9 +1213,7 @@
     <h3>Edit clue</h3>
     <div class="target-big" id="tile-preview"></div>
     <input id="tile-clue" class="field" maxlength="12" placeholder="short clue — 12 characters">
-    <p class="hint-toggle" id="tile-hint-toggle" onclick="toggleTileHint()">＋ Add a hidden hint</p>
-    <p class="hint-guide" id="tile-hint-guide">Mark the finds you expect to be hard. A hunter can spend a coin to see it.</p>
-    <textarea id="tile-hint" class="field hint-field" maxlength="140" rows="3" placeholder="A quiet word for a hunter who is stuck. Costs them one coin."></textarea>
+    <textarea id="tile-hint" class="field hint-field" maxlength="140" rows="4" placeholder="Add a hidden hint for extreme difficult finds. A hunter can spend collected coins to reveal.&#10;Use  sparingly."></textarea>
     <div class="row2">
       <button class="btn btn-ox" onclick="removeTile()">Remove</button>
       <button class="btn btn-primary" onclick="saveTileEdit()">Save</button>
@@ -4222,14 +4219,9 @@ function openTileEdit(i){
   prev.innerHTML = tileHTML(t);
   if(t.type==="object") prev.style.background=objBg(i); else prev.style.background="var(--paper-2)";
   document.getElementById("tile-clue").value=t.clue||"";
-  /* the hint row stays folded away unless this clue already carries one, so a
-     fifty-clue build never has to look at it */
-  const hf=document.getElementById("tile-hint"), ht=document.getElementById("tile-hint-toggle");
+  /* the hint field is always open on every clue; it simply restores what is there */
+  const hf=document.getElementById("tile-hint");
   if(hf){ hf.value=t.hint||""; }
-  if(ht){ ht.classList.toggle("open", !!(t.hint&&t.hint.length)); }
-  const hg=document.getElementById("tile-hint-guide");
-  if(hg){ hg.classList.toggle("open", !!(t.hint&&t.hint.length)); }
-  if(hf){ hf.classList.toggle("open", !!(t.hint&&t.hint.length)); }
   openOverlay("ov-tile");
 }
 function saveTileEdit(){
@@ -4253,11 +4245,8 @@ function openCrop(dataUrl,resolve){
   { const cr=document.getElementById("crop-cluerow"), ci=document.getElementById("crop-clue");
     const isBuild=!!State.build && !(State.captureMode==="hunt" && State.huntTarget);
     if(ci) ci.value="";
-    const hi=document.getElementById("crop-hint"), hto=document.getElementById("crop-hint-toggle"),
-          hgd=document.getElementById("crop-hint-guide");
-    if(hi){ hi.value=""; hi.classList.remove("open"); }
-    if(hto) hto.classList.remove("open");
-    if(hgd) hgd.classList.remove("open");
+    const hi=document.getElementById("crop-hint");
+    if(hi){ hi.value=""; }
     if(cr) cr.style.display=isBuild?"":"none"; }
   const img=new Image();
   img.onload=()=>{
@@ -5033,22 +5022,11 @@ async function buyEverything(){
    never shown the bundle \u2014 only what is still missing. */
 function renderLicTiers(){
   const host=document.getElementById("lic-tiers"); if(!host) return;
-  const lic=hasLicence(); const bv=bundleVolume();
-  const month=new Date().getMonth()+1;
+  /* This screen sells the Charter and nothing else. Volumes are offered on the cold-case
+     detail card, where the buyer has a case in front of them; here they are context-free. */
+  const lic=hasLicence();
   let h="";
   if(!lic) h+='<button class="btn btn-primary lic-btn" onclick="purchaseLicence()"><span class="lic-btn-text">The Inspector\u2019s Charter<small>unlimited builds \u2014 $6.99</small></span></button>';
-  /* one button per volume the detective does not yet hold; a seasonal pack shows
-     only in its own month */
-  VOLUMES.forEach(function(v){
-    if(ownsVolume(v.id)) return;
-    if(v.kind==="seasonal" && v.season && v.season!==month) return;
-    h+='<button class="btn btn-primary lic-btn" onclick="buyVolume(\''+v.id+'\')"><span class="lic-btn-text">'
-      +escapeHtml(v.label)+'<small>'+escapeHtml(v.sub)+' \u2014 $'+escapeHtml(v.price)+'</small></span></button>';
-  });
-  if(!lic && bv && !ownsVolume(bv.id))
-    h+='<button class="btn btn-brass lic-btn" onclick="buyEverything()"><span class="lic-btn-text">Both, and save<small>the Charter and '
-      +escapeHtml(bv.label.replace("Case Files, ",""))+' \u2014 $'+BUNDLE_PRICE+'</small></span></button>';
-  if(!h) h='<p class="lic-small">Every case file on offer is already on your shelf.</p>';
   host.innerHTML=h;
 }
 
