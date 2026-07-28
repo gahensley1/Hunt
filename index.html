@@ -161,7 +161,7 @@
   .coin-line{font-family:var(--type);font-size:12px;letter-spacing:.6px;
     text-align:center;color:var(--tweed-dk);margin:0 0 12px;opacity:.9}
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#7A5A98;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#B5566B;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -676,7 +676,7 @@
   .coldrow .caseno{display:block;font-family:var(--type);font-size:9px;font-weight:700;letter-spacing:1.4px;color:var(--tweed-dk);margin-bottom:2px}
   .coldrow.locked{opacity:.6;filter:saturate(.5)}
   .coldrow.locked .cn{color:var(--ink-soft)}
-  .coldstamp.locked{background:var(--tweed-dk)}
+  .coldstamp.locked{background:var(--tweed-dk)} .volband{font-family:var(--type);font-size:8.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--brass);margin:1px 0 3px} .cold-volnote{font-family:var(--serif);font-style:italic;font-size:11.5px;color:var(--ink-soft);text-align:center;margin:6px 0 0}
 .coldstamp.closed{background:linear-gradient(180deg,var(--green),var(--green-dk))}
 .seat-note{font-family:var(--type);font-size:10.5px;line-height:1.5;letter-spacing:.4px;color:var(--ink-3);text-align:center;margin:14px 16px 0;opacity:.85}
 .cold-closed{font-family:var(--type);font-size:10px;letter-spacing:.8px;color:var(--green-dk);margin:4px 0 0}
@@ -953,7 +953,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">24d</p>
+      <p id="buildmark" aria-label="test build marker">25c</p>
     </div>
   </section>
 
@@ -1859,13 +1859,21 @@ var _buyPending=null;
 const VOLUMES=[
   { id:"vol1", label:"Case Files, Volume I", sub:"twelve investigations",
     price:"4.99", kind:"volume", season:0, bundle:true,
-    codes:["140140","151515","161616","171717","181818","191919","060606","200820","250250","260260","270270","280280"] }
-  /* VOLUME II \u2014 add one row here and nothing else changes. The tier list, the
+    codes:["140140","151515","161616","171717","181818","191919","060606","200820","250250","260260","270270","280280"] },
+  { id:"vol2", label:"Case Files, Volume II", sub:"six investigations",
+    price:"2.99", kind:"volume", season:0, bundle:false,
+    codes:["202020","232323","242424","290290","300300","310310"] }
+  /* VOLUME III \u2014 add one row here and nothing else changes. The tier list, the
      purchase path and every ownsPack() gate pick it up on their own. Volume II is
      always sold on its own; the bundle stays pinned to Volume I by the flag above.
      A seasonal pack is the same row with kind:"seasonal" and season set 1\u201312. */
 ];
 function volumeById(id){ return VOLUMES.find(function(v){ return v.id===id; })||null; }
+/* Which volume, if any, publishes this case? Drives the shelf mark and the
+   detail-card offer, so a new VOLUMES row lights them up with no code change. */
+function volumeOf(code){ const c=String(code); return VOLUMES.find(function(v){ return v.codes.indexOf(c)>=0; })||null; }
+function volumeShort(v){ return v? String(v.label).replace("Case Files, ","") : ""; }
+function volumeSaving(v){ try{ return (v.codes.length*0.99-parseFloat(v.price)).toFixed(2); }catch(e){ return ""; } }
 function bundleVolume(){ return VOLUMES.find(function(v){ return v.bundle; })||null; }
 function ownsVolume(id){
   try{ const v=volumeById(id); if(!v) return false;
@@ -3140,13 +3148,15 @@ function renderColdList(){
   if(!shown.length){ const _k=COLD_CATS[State.coldCat]; list.innerHTML='<div class="empty"><img decoding="async" class="em-coin" src="'+COIN_CLD+'" alt="">'+(_k? "No cases are filed under "+escapeHtml(_k.label)+" yet.<br>The shelf is being stocked." : "The archive is being assembled.<br>Curated cases from Scavenger &amp; Hunt Co. will appear here.")+'</div>'; return; }
   for(const e of shown){
     const row=document.createElement("button"); row.className="coldrow";
-    row.innerHTML='<div class="cn-wrap"><span class="caseno">CASE No. '+escapeHtml(String(e.code))+'</span>'
+    row.innerHTML='<div class="cn-wrap">'
       +'<div class="cn">'+escapeHtml(e.title||("Case No. "+e.code))+'</div>'
+      +(function(){ const v=volumeOf(e.code);
+          return v? '<div class="volband">'+escapeHtml(v.label)+'</div>' : ""; })()
       +(e.place?'<div class="cold-place">'+escapeHtml(e.place)+'</div>':'')
       +(e.blurb?'<div class="meta">'+escapeHtml(e.blurb)+'</div>':'')
       +'<div class="meta cold-meta" id="coldmeta-'+e.code+'">Consulting the ledger\u2026</div></div>'
       +'<span class="coldside">'
-      +(isLocked(e)? '<span class="coldstamp locked">'+escapeHtml(priceOf(e))+'</span>'
+      +(isLocked(e)? '<span class="coldstamp locked">BUY</span>'
                    : (caseClosedOn(e.code)? '<span class="coldstamp closed">CASE CLOSED</span>'
                                           : '<span class="coldstamp">COLD CASE</span>'))
       +'<span class="coldsamp" role="button" tabindex="0">View sample</span></span>';
@@ -3188,7 +3198,10 @@ function openColdDetail(code, autoSample){
     +'<button class="btn-ghost" id="cold-sample-btn" onclick="coldSample(\''+safe+'\')">View the sample grid</button>'
     +'<div id="cold-sample"></div>'
     +(isLocked(e)
-      ? '<button class="btn btn-primary" onclick="buyPack(\''+safe+'\')">Buy this pack \u2014 '+escapeHtml(priceOf(e))+'</button>'
+      ? '<button class="btn btn-primary" onclick="buyPack(\''+safe+'\')">Buy this Case \u2014 '+escapeHtml(priceOf(e))+'</button>'
+        +(function(){ try{ const v=volumeOf(e.code); if(!v||ownsVolume(v.id)) return "";
+            return '<button class="btn btn-brass" onclick="buyVolume(\''+v.id+'\')">'+escapeHtml(v.label)+' \u2014 all '+v.codes.length+', $'+escapeHtml(v.price)+'</button>'
+              +'<p class="cold-volnote">This case is one of '+v.codes.length+' in '+escapeHtml(volumeShort(v))+'. Taken together they are $'+escapeHtml(v.price)+' \u2014 $'+volumeSaving(v)+' less than singly.</p>'; }catch(_e){ return ""; } })()
         +'<p class="cold-locknote">Yours to keep, and to run for your own detectives. The founding cases are free.</p>'
       : '<button class="btn btn-primary" onclick="joinColdCase(\''+safe+'\')">Take the Case</button>'
         +'<button class="btn btn-brass" onclick="makeItYours(\''+safe+'\')">Make it your own case</button>')
