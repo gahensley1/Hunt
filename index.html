@@ -164,7 +164,7 @@
   .coin-line{font-family:var(--type);font-size:12px;letter-spacing:.6px;
     text-align:center;color:var(--tweed-dk);margin:0 0 12px;opacity:.9}
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#B4532A;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#B5566B;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -956,7 +956,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">26h</p>
+      <p id="buildmark" aria-label="test build marker">27c</p>
     </div>
   </section>
 
@@ -1858,22 +1858,57 @@ var _buyPending=null;
    member pack, so every existing gate \u2014 isLocked, buyPack, makeItYours, the
    join-path check \u2014 keeps working untouched. Seasonal packs are never in here. */
 const VOLUMES=[
-  { id:"vol1", label:"Case Files, Volume I", sub:"twelve investigations",
-    price:"4.99", kind:"volume", season:0, bundle:true,
-    codes:["140140","151515","161616","171717","181818","191919","060606","200820","250250","260260","270270","280280"] },
-  { id:"vol2", label:"Case Files, Volume II", sub:"six investigations",
-    price:"2.99", kind:"volume", season:0, bundle:false,
-    codes:["202020","232323","242424","290290","300300","310310"] }
-  /* VOLUME III \u2014 add one row here and nothing else changes. The tier list, the
-     purchase path and every ownsPack() gate pick it up on their own. Volume II is
-     always sold on its own; the bundle stays pinned to Volume I by the flag above.
-     A seasonal pack is the same row with kind:"seasonal" and season set 1\u201312. */
+  /* SHELF-PURE VOLUMES. Three cases each, $1.49, forever - both the size and the price
+     are locked owner decisions. A shelf gains a volume every three cases, and shelves
+     may run out of step with one another (the Almanac is expected to run ahead). To add
+     one, append a row: the shelf eyebrow, the detail-card offer and every ownsPack()
+     gate pick it up with no code change. Membership FREEZES at purchase, so a published
+     volume's codes must never be edited afterwards. Single cases are not sold.
+     LABELS AND sub ARE PLACEHOLDER COPY - owner wording replaces them.
+     months is inert today; the season gate that would read it is still owed. */
+  { id:"alm1", label:"The Almanac, Volume I", sub:"midwinter - three investigations",
+    price:"1.49", kind:"volume", shelf:"almanac", months:[12,1],
+    codes:["241224","122112","010101"] },
+  { id:"alm2", label:"The Almanac, Volume II", sub:"spring - three investigations",
+    price:"1.49", kind:"volume", shelf:"almanac", months:[2,3,4,5],
+    codes:["020214","030317","053105"] },
+  { id:"alm3", label:"The Almanac, Volume III", sub:"autumn - three investigations",
+    price:"1.49", kind:"volume", shelf:"almanac", months:[9,10,11],
+    codes:["093009","311031","112211"] },
+  { id:"par1", label:"The Parlour, Volume I", sub:"the ground floor - three investigations",
+    price:"1.49", kind:"volume", shelf:"parlour", months:[],
+    codes:["242424","151515","202020"] },
+  { id:"par2", label:"The Parlour, Volume II", sub:"upstairs - three investigations",
+    price:"1.49", kind:"volume", shelf:"parlour", months:[],
+    codes:["191919","161616","232323"] },
+  { id:"par3", label:"The Parlour, Volume III", sub:"below stairs - three investigations",
+    price:"1.49", kind:"volume", shelf:"parlour", months:[],
+    codes:["181818","171717","140140"] },
+  { id:"gnd1", label:"The Grounds, Volume I", sub:"the town - three investigations",
+    price:"1.49", kind:"volume", shelf:"grounds", months:[],
+    codes:["250250","290290","300300"] },
+  { id:"gnd2", label:"The Grounds, Volume II", sub:"open country - three investigations",
+    price:"1.49", kind:"volume", shelf:"grounds", months:[],
+    codes:["260260","270270","280280"] },
+  { id:"gnd3", label:"The Grounds, Volume III", sub:"the hours - three investigations",
+    price:"1.49", kind:"volume", shelf:"grounds", months:[],
+    codes:["060606","200820","310310"] }
 ];
 function volumeById(id){ return VOLUMES.find(function(v){ return v.id===id; })||null; }
 /* Which volume, if any, publishes this case? Drives the shelf mark and the
    detail-card offer, so a new VOLUMES row lights them up with no code change. */
-function volumeOf(code){ const c=String(code); return VOLUMES.find(function(v){ return v.codes.indexOf(c)>=0; })||null; }
-function volumeShort(v){ return v? String(v.label).replace("Case Files, ","") : ""; }
+function volumeOf(code){ const c=String(code);
+  /* A curator-filed case carries its volume on its own index entry; the 27 founding
+     cases are still enumerated in VOLUMES[].codes. Record first, registry second. */
+  try{ const e=(typeof _coldIdx!=="undefined"?_coldIdx:[]).find(function(x){ return String(x.code)===c; });
+       if(e&&e.vol){ const v=volumeById(e.vol); if(v) return v; } }catch(_e){}
+  return VOLUMES.find(function(v){ return v.codes.indexOf(c)>=0; })||null; }
+function volumeShort(v){ return v? String(v.label).split(", ").pop() : ""; }
+/* Which numbered volume of its own shelf is this - 1, 2, 3... Drives the BUY VOL n
+   stamp and the shelf order, so both follow the registry with no second list. */
+function volumeNo(v){ if(!v) return 0;
+  const s=VOLUMES.filter(function(x){ return x.shelf===v.shelf; }); return s.indexOf(v)+1; }
+function volumeRank(code){ const v=volumeOf(code); return v? VOLUMES.indexOf(v) : -1; }
 function volumeSaving(v){ try{ return (v.codes.length*0.99-parseFloat(v.price)).toFixed(2); }catch(e){ return ""; } }
 function bundleVolume(){ return VOLUMES.find(function(v){ return v.bundle; })||null; }
 function ownsVolume(id){
@@ -3145,7 +3180,8 @@ function clearColdQ(){ State.coldQ=null; const q=document.getElementById("cold-q
 function renderColdList(){
   const list=document.getElementById("cold-list"); if(!list) return;
   list.innerHTML="";
-  const shown=coldFilter(_coldIdx); renderColdChip(shown.length);
+  const shown=coldFilter(_coldIdx).slice().sort(function(a,b){ return volumeRank(a.code)-volumeRank(b.code); });
+  renderColdChip(shown.length);
   if(!shown.length){ const _k=COLD_CATS[State.coldCat]; list.innerHTML='<div class="empty"><img decoding="async" class="em-coin" src="'+COIN_CLD+'" alt="">'+(_k? "No cases are filed under "+escapeHtml(_k.label)+" yet.<br>The shelf is being stocked." : "The archive is being assembled.<br>Curated cases from Scavenger &amp; Hunt Co. will appear here.")+'</div>'; return; }
   for(const e of shown){
     const row=document.createElement("button"); row.className="coldrow";
@@ -3157,7 +3193,7 @@ function renderColdList(){
       +(e.blurb?'<div class="meta">'+escapeHtml(e.blurb)+'</div>':'')
       +'<div class="meta cold-meta" id="coldmeta-'+e.code+'">Consulting the ledger\u2026</div></div>'
       +'<span class="coldside">'
-      +(isLocked(e)? '<span class="coldstamp locked">BUY</span>'
+      +(isLocked(e)? '<span class="coldstamp locked">'+(function(){ const v=volumeOf(e.code); return v? 'BUY VOL '+volumeNo(v) : 'BUY'; })()+'</span>'
                    : (caseClosedOn(e.code)? '<span class="coldstamp closed">CASE CLOSED</span>'
                                           : '<span class="coldstamp">COLD CASE</span>'))
       +'<span class="coldsamp" role="button" tabindex="0">View sample</span></span>';
@@ -3199,10 +3235,9 @@ function openColdDetail(code, autoSample){
     +'<button class="btn-ghost" id="cold-sample-btn" onclick="coldSample(\''+safe+'\')">View the sample grid</button>'
     +'<div id="cold-sample"></div>'
     +(isLocked(e)
-      ? '<button class="btn btn-primary" onclick="buyPack(\''+safe+'\')">Buy this Case \u2014 '+escapeHtml(priceOf(e))+'</button>'
-        +(function(){ try{ const v=volumeOf(e.code); if(!v||ownsVolume(v.id)) return "";
-            return '<button class="btn btn-brass" onclick="buyVolume(\''+v.id+'\')">'+escapeHtml(v.label)+' \u2014 all '+v.codes.length+', $'+escapeHtml(v.price)+'</button>'
-              +'<p class="cold-volnote">This case is one of '+v.codes.length+' in '+escapeHtml(volumeShort(v))+'. Taken together they are $'+escapeHtml(v.price)+' \u2014 $'+volumeSaving(v)+' less than singly.</p>'; }catch(_e){ return ""; } })()
+      ? (function(){ try{ const v=volumeOf(e.code); if(!v||ownsVolume(v.id)) return "";
+            return '<button class="btn btn-primary" onclick="buyVolume(\''+v.id+'\')">'+escapeHtml(v.label)+' \u2014 all '+v.codes.length+', $'+escapeHtml(v.price)+'</button>'
+              +'<p class="cold-volnote">This case is one of '+v.codes.length+' in '+escapeHtml(v.label)+'. Cases are issued by the volume.</p>'; }catch(_e){ return ""; } })()
         +'<p class="cold-locknote">Yours to keep, and to run for your own detectives. The founding cases are free.</p>'
       : '<button class="btn btn-primary" onclick="joinColdCase(\''+safe+'\')">Take the Case</button>'
         +'<button class="btn btn-brass" onclick="makeItYours(\''+safe+'\')">Make it your own case</button>')
@@ -3487,8 +3522,11 @@ async function renderCurator(){
       +'<select class="cur-in" id="ccat-'+code+'">'+['','almanac','parlour','grounds'].map(function(k){
           return '<option value="'+k+'"'+(((p&&p.cat)||hh.cat||"")===k?' selected':'')+'>'+(k?COLD_CATS[k].label+" \u2014 "+COLD_CATS[k].sub+" (no precinct)":"Filed by territory \u2014 needs a precinct")+'</option>'; }).join('')+'</select>'
       +'<input class="cur-in" id="cblurb-'+code+'" maxlength="120" placeholder="One-line teaser \u2014 e.g. Solve it before your ranger tour ends" value="'+escapeHtml((p&&p.blurb)||hh.blurb||"")+'">'
-      +'<div class="cpack-row"><label class="cpack-lbl"><input type="checkbox" id="cpaid-'+code+'"'+(((p&&p.paid)||hh.paid)?' checked':'')+'> Sell as a pack</label>'
-        +'<span class="cpack-cur">$</span><input class="cur-in cpack-price" id="cprice-'+code+'" maxlength="6" inputmode="decimal" placeholder="0.99" value="'+escapeHtml(String((p&&p.price)||hh.price||""))+'"></div>'
+      +'<select class="cur-in" id="cvol-'+code+'"><option value="">Free case \u2014 no volume, plays free forever</option>'
+        +['almanac','parlour','grounds'].map(function(sh){
+            const vs=VOLUMES.filter(function(v){ return v.shelf===sh; }); if(!vs.length) return "";
+            return '<optgroup label="'+escapeHtml(COLD_CATS[sh].label)+'">'+vs.map(function(v){
+              return '<option value="'+v.id+'"'+((((p&&p.vol)||hh.vol||"")===v.id)?' selected':'')+'>'+escapeHtml(v.label)+' \u2014 $'+escapeHtml(v.price)+'</option>'; }).join('')+'</optgroup>'; }).join('')+'</select>'
       +'<div class="cdiff-row"><span class="cdiff-lbl">Difficulty</span>'+starpickHTML("cdiff-"+code,(p&&p.diff)||0)+'</div>'
       +'<div class="cgeo-row"><input class="cur-in" id="cgeo-city-'+code+'" maxlength="40" placeholder="City" value="'+escapeHtml((p&&p.city)||"")+'"><input class="cur-in" id="cgeo-state-'+code+'" maxlength="20" placeholder="State" value="'+escapeHtml((p&&p.state)||"")+'"></div>'
       +'<div class="cgeo-row"><input class="cur-in" id="cgeo-zip-'+code+'" maxlength="10" placeholder="Zip (required)" value="'+escapeHtml((p&&p.zip)||"")+'"><input class="cur-in" id="cgeo-ctry-'+code+'" maxlength="30" placeholder="Country" value="'+escapeHtml((p&&p.country)||"")+'"></div>'
@@ -3832,20 +3870,23 @@ async function publishCold(code){
     const raw=await Store.get("hunt:"+code,true); if(!raw){ toast("Case not reachable."); return; }
     const hh=JSON.parse(raw);
     const geo=curGeo(code); const gz=String(geo.zip||"").trim();
-    const _cat=((document.getElementById("ccat-"+code)||{}).value)||"";
+    /* ONE CONTROL DECIDES PAID-NESS. Choosing a volume makes the case paid at that
+       volume's price and files it on that volume's shelf; choosing Free leaves it free
+       forever. There is no longer any way to publish a paid case with no volume - that
+       was the state that rendered a locked row with nothing on it to buy. */
+    const _vol=volumeById(String(((document.getElementById("cvol-"+code)||{}).value)||""));
+    const _cat=_vol? _vol.shelf : (((document.getElementById("ccat-"+code)||{}).value)||"");
     if(!_cat && (!/^\d{5}$/.test(gz)||!gazAuto({zip:gz}))){ toast("A case filed by territory must answer to a precinct \u2014 a valid zip code is required."); return; }
-    const _paid=!!((document.getElementById("cpaid-"+code)||{}).checked);
-    let _price=String(((document.getElementById("cprice-"+code)||{}).value)||"").replace(/[^0-9.]/g,"");
-    if(_paid && !_price) _price="0.99";
-    if(_paid && !_cat){ toast("A pack must sit on a shelf \u2014 choose one above."); return; }
-    hh.cold=true; hh.parAuto=true; hh.cat=_cat; hh.paid=_paid; hh.price=_paid?_price:"";
+    const _paid=!!_vol;
+    const _price=_vol? _vol.price : "";
+    hh.cold=true; hh.parAuto=true; hh.cat=_cat; hh.paid=_paid; hh.price=_price; hh.vol=_vol?_vol.id:"";
     hh.place=document.getElementById("cplace-"+code).value.trim();
     hh.blurb=document.getElementById("cblurb-"+code).value.trim();
     await Store.set("hunt:"+code, JSON.stringify(hh), true);
     const idx=await coldIndex();
     try{ (_coldIdx||[]).forEach(e=>{ if(!idx.some(x=>String(x.code)===String(e.code))) idx.push(e); }); }catch(_e){}
     const i=idx.findIndex(e=>e.code===code);
-    const entry={code, title:hh.title||"Untitled Case", place:hh.place, blurb:hh.blurb, diff:curDiff(code), ...geo, cat:hh.cat||"", paid:!!hh.paid, price:hh.paid?(hh.price||"0.99"):""};
+    const entry={code, title:hh.title||"Untitled Case", place:hh.place, blurb:hh.blurb, diff:curDiff(code), ...geo, cat:hh.cat||"", paid:!!hh.paid, price:hh.price||"", vol:hh.vol||""};
     if(entry.lat==null){ const a=gazAuto(entry); if(a){ entry.lat=+(+a[0]).toFixed(4); entry.lon=+(+a[1]).toFixed(4); } }
     if(i>=0) idx[i]=entry; else idx.push(entry);
     await Store.set("cold:index", JSON.stringify(idx), true);
@@ -5004,8 +5045,8 @@ async function buyVolume(id){
   const n=v.codes.length;
   const r=await requirePurchase("volume",{ arg:v.id,
     title:v.label,
-    body:n+" curated investigations, yours to keep and to run for your own detectives. Seasonal cases are issued separately. Payment arrives with the App Store release \u2014 this preview unlocks the volume at once.",
-    cta:v.label.replace("Case Files, ","")+" \u00b7 $"+v.price});
+    body:n+" curated investigations, yours to keep and to run for your own detectives. Payment arrives with the App Store release \u2014 this preview unlocks the volume at once.",
+    cta:v.label+" \u00b7 $"+v.price});
   if(r==="owned"){ closeOverlay("s-licence"); toast(v.label+" is already on your shelf.", 3200); return; }
   if(r!=="granted") return;
   closeOverlay("s-licence");
