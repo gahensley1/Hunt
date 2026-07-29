@@ -164,7 +164,7 @@
   .coin-line{font-family:var(--type);font-size:12px;letter-spacing:.6px;
     text-align:center;color:var(--tweed-dk);margin:0 0 12px;opacity:.9}
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#7A5A98;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#4E9A87;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -543,7 +543,7 @@
   .cold-page{display:flex;flex-direction:column;height:100%;width:100%;max-width:520px;margin:0 auto;min-height:0}
   .cold-hd{position:relative;padding:calc(var(--safe-t) + 30px) 16px 0;text-align:center;border-bottom:2px solid rgba(184,134,59,.6);background:var(--paper-2)}
   .btn-ghost.btn-big{font-size:15px;font-weight:700}
-  .cred-badge{background:none;border:0;padding:0;display:block;margin:10px auto 0;width:min(282px,100%);aspect-ratio:1;height:auto;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .cred-badge{background:none;border:0;padding:0;display:block;margin:7.5px auto 0;width:min(211.5px,75%);aspect-ratio:1;height:auto;cursor:pointer;-webkit-tap-highlight-color:transparent}
   .cred-badge svg{width:100%;height:100%;display:block;pointer-events:none;filter:drop-shadow(0 4px 3px rgba(10,7,4,.6)) drop-shadow(0 10px 14px rgba(10,7,4,.35))}
   .cred-badge text{font-family:var(--type);font-size:19.4px;letter-spacing:1.5px;fill:#4A3A22}
   #record-ov{position:fixed;inset:0;background:rgba(20,13,7,.88);z-index:520;display:flex;align-items:center;justify-content:center;padding:10px;overflow:hidden}
@@ -747,8 +747,8 @@
   .cold-meta{margin-top:4px}
   .tb-cold{background:#3E5A66;color:#EAF2F5}
   .rank-stamp{display:inline-block;font-family:var(--type);font-size:16.5px;font-weight:700;letter-spacing:1.3px;color:var(--ink);border:3px solid var(--ink);border-radius:0;padding:4.5px 15px;transform:rotate(-3deg);opacity:.88;text-align:center;white-space:nowrap}
-  .rank-stamp.home{display:block;width:max-content;max-width:100%;box-sizing:border-box;white-space:normal;word-break:break-word;margin:21.51px auto 0;pointer-events:none;transform:none;position:relative;font-size:30.94px;padding:8.44px 26.83px 8.44px 28.13px;border-width:5.63px}
-  .rank-stamp.home::before{content:"RANK";position:absolute;top:-30px;left:0;right:0;text-align:center;font-family:var(--type);font-size:24px;line-height:1;letter-spacing:2px;color:var(--ink);opacity:.7}
+  .rank-stamp.home{display:block;width:max-content;max-width:100%;box-sizing:border-box;white-space:normal;word-break:break-word;margin:16.13px auto 0;pointer-events:none;transform:none;position:relative;font-size:23.21px;padding:6.33px 20.12px 6.33px 21.10px;border-width:4.22px}
+  .rank-stamp.home::before{content:"RANK";position:absolute;top:-22.5px;left:0;right:0;text-align:center;font-family:var(--type);font-size:18px;line-height:1;letter-spacing:1.5px;color:var(--ink);opacity:.7}
   #cred-rank{display:block;width:auto;max-width:100%;box-sizing:border-box;margin:5px auto 6px;font-size:16px;padding:4px 12px;border-width:2px;transform:none;white-space:normal;word-break:break-word}
   .cred-card{position:relative}
   #cred-ov .btn{padding:11px 16px;font-size:14.5px}
@@ -963,7 +963,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">28d</p>
+      <p id="buildmark" aria-label="test build marker">28e</p>
     </div>
   </section>
 
@@ -1694,8 +1694,8 @@ function refreshHomeBadge(){
     const el=document.getElementById("home-rank-stamp");
     const rank=myRankName();
     el.textContent=rank;
-    const base=30.94, len=rank.length;
-    const size = len<=12 ? base : Math.max(15, base - (len-12)*0.95);
+    const base=23.21, len=rank.length;
+    const size = len<=12 ? base : Math.max(11.25, base - (len-12)*0.7125);
     el.style.fontSize=size+"px";
   }catch(e){}
   try{ refreshSealDot(); }catch(e){}
