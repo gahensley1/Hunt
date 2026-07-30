@@ -163,8 +163,12 @@
   .hint-buy{margin:0 auto 14px;display:block;width:fit-content}
   .coin-line{font-family:var(--type);font-size:12px;letter-spacing:.6px;
     text-align:center;color:var(--tweed-dk);margin:0 0 12px;opacity:.9}
+  .st-deed{display:flex;gap:9px;align-items:flex-start;margin:10px 0 4px;
+    font-family:var(--type);font-size:11.5px;line-height:1.45;text-align:left;
+    color:var(--ink);opacity:.9;border-left:2px solid var(--brass);padding:2px 0 2px 9px;cursor:pointer}
+  .st-deed input{margin:1px 0 0;flex:none;width:16px;height:16px;accent-color:#B8863B;cursor:pointer}
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#4E9A87;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#3B6BA5;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -963,7 +967,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">28e</p>
+      <p id="buildmark" aria-label="test build marker">29a</p>
     </div>
   </section>
 
@@ -1378,6 +1382,7 @@
     <label class="subterr-lab" for="st-desc">PARTICULARS &mdash; OPTIONAL</label>
     <textarea id="st-desc" class="field" placeholder="Describe the grounds &mdash; its landmarks, points of interest, and what makes it a fitting scene for a hunt."></textarea>
     <p class="pv-caution">Kindly share no personal particulars &mdash; telephone numbers, home addresses, or others&rsquo; names.</p>
+    <label class="st-deed"><input type="checkbox" id="st-deed-chk" onchange="subZipCheck()"><span>A case filed for territory passes into the permanent record of Scavenger &amp; Hunt Co. and may no longer be struck by its author. Your credentials and particulars remain your own.</span></label>
     <button id="st-file" class="btn btn-primary" disabled onclick="subTerrFile()">File for Consideration</button>
   </div>
 </div>
@@ -1506,16 +1511,23 @@ const Store = {
     for(const kk of this.mem.keys()){ if(kk.startsWith(pre)) out.push(kk.slice(shared?3:3)); }
     return out;
   },
+  /* RETURNS HONESTLY. A shared delete returns the SERVER's verdict, not a local
+     one — purgeCase relies on this to avoid telling a builder a record was
+     destroyed when the Yard refused or was unreachable. Local cleanup still
+     happens either way. Local-only deletes return true as before. */
   async del(key,shared=false){
+    let remote=null;                       // null = no server call attempted
     if(shared && this.base()){
+      remote=false;
       try{
         const r=await fetch(this.base()+"/kv/"+encodeURIComponent(key),{method:"DELETE",headers:{"X-Curator-Token":CURATOR_PASS}});
-        if(r.ok) return true;
-      }catch(e){ /* offline → fall through to local */ }
+        remote=!!r.ok;
+      }catch(e){ /* offline → local cleanup still runs, verdict stays false */ }
     }
-    if(this.ok){ try{await window.storage.delete(key,shared); return true;}catch(e){/*fallthrough*/} }
+    if(this.ok){ try{await window.storage.delete(key,shared);}catch(e){/*fallthrough*/} }
     if(!shared && this.ls){ try{ this.ls.removeItem(this.lsKey(key)); }catch(e){} }
-    this.mem.delete(this.k(key,shared)); return true;
+    this.mem.delete(this.k(key,shared));
+    return remote===null ? true : remote;
   }
 };
 
@@ -3833,13 +3845,18 @@ function coldSubmitVis(){ try{ const w=document.getElementById("cold-submit-wrap
   const c=document.getElementById("cold-submit-chk"); if(c) c.checked=false; }catch(e){} }
 function openSubTerritory(){
   ["st-zip","st-place","st-city","st-desc"].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=""; });
+  var _d=document.getElementById("st-deed-chk"); if(_d) _d.checked=false;
   document.getElementById("st-file").disabled=true;
   document.getElementById("subterr-ov").classList.remove("hidden");
 }
+/* The File button opens only when BOTH conditions hold: a valid territory,
+   and the deed accepted. Called by the ZIP field and the deed checkbox alike. */
 function subZipCheck(){
   var z=document.getElementById("st-zip");
   z.value=z.value.replace(/\D/g,"").slice(0,5);
-  document.getElementById("st-file").disabled=!/^\d{5}$/.test(z.value);
+  var d=document.getElementById("st-deed-chk");
+  var ok=/^\d{5}$/.test(z.value) && !!(d&&d.checked);
+  document.getElementById("st-file").disabled=!ok;
 }
 function subTerrClose(){
   document.getElementById("subterr-ov").classList.add("hidden");
@@ -3850,11 +3867,19 @@ async function subTerrFile(){
   var p=State._pendingSub; if(!p){ document.getElementById("subterr-ov").classList.add("hidden"); return; }
   var zip=document.getElementById("st-zip").value;
   if(!/^\d{5}$/.test(zip)) return;
+  var _d=document.getElementById("st-deed-chk");
+  if(!_d||!_d.checked){ toast("Kindly accept the terms of filing before the case is entered."); return; }
   var rec={code:p.code, title:p.title, byName:(await getMyName())||"", byBadge:(myCred()?fmtCred(myCred()):""),
     zip:zip, place:document.getElementById("st-place").value.trim(),
     city:document.getElementById("st-city").value.trim(),
     desc:document.getElementById("st-desc").value.trim(), ts:Date.now()};
   await Store.set("submission:"+p.code, JSON.stringify(rec), true);
+  /* THE DEED. Filing for territory passes the case into the Company's record;
+     from this moment its author may no longer strike it (see deleteCaseAsk).
+     Released again only if the Yard dismisses the submission (subDismiss). */
+  try{ const _hr=await Store.get("hunt:"+p.code,true);
+    if(_hr){ const _hh=JSON.parse(_hr); _hh.deeded=true; _hh.deededAt=Date.now();
+      await Store.set("hunt:"+p.code, JSON.stringify(_hh), true); } }catch(e){}
   State._pendingSub=null;
   document.getElementById("subterr-ov").classList.add("hidden");
   toast("Filed for consideration in the Cold Case Files.", 3200);
@@ -3892,6 +3917,11 @@ async function subAccept(code){ code=String(code||""); if(!code) return;
   await renderCurator(); }
 async function subDismiss(code){ code=String(code||""); if(!code) return;
   try{ await Store.del("submission:"+code, true); }catch(e){}
+  /* A dismissed case was never taken into the record - return it to its author. */
+  try{ const _hr=await Store.get("hunt:"+code,true);
+    if(_hr){ const _hh=JSON.parse(_hr);
+      if(_hh.deeded && !_hh.cold){ delete _hh.deeded; delete _hh.deededAt;
+        await Store.set("hunt:"+code, JSON.stringify(_hh), true); } } }catch(e){}
   toast("Submission dismissed."); await renderCurator(); }
 function closeCurator(){ document.getElementById("curator-ov").classList.add("hidden"); }
 function curatorCreateHunt(){
@@ -5428,19 +5458,35 @@ function caseExpired(hunt){ return !!(hunt&&hunt.createdAt) && (Date.now()-hunt.
 function caseDaysLeft(hunt){ return hunt&&hunt.createdAt? Math.ceil((hunt.createdAt+caseKeepDays(hunt)*DAY_MS-Date.now())/86400000) : null; }
 function caseKeptUntil(hunt){ return hunt&&hunt.createdAt? new Date(hunt.createdAt+caseKeepDays(hunt)*DAY_MS) : null; }
 function fmtDate(d){ return d? d.toLocaleDateString([], {month:"short",day:"numeric",year:"numeric"}) : ""; }
+/* Returns true only if the record is genuinely gone from the Yard. On failure the
+   case is LEFT in "mycases" — it still exists, and the builder is told so. */
 async function purgeCase(code, opts){
+  let failed=0;
   try{
-    for(const k of await Store.list("sub:"+code+":",true)) await Store.del(k,true);
-    for(const k of await Store.list("res:"+code+":",true)) await Store.del(k,true);
-    await Store.del("hunt:"+code,true);
-  }catch(e){}
+    for(const k of await Store.list("sub:"+code+":",true)) if(!await Store.del(k,true)) failed++;
+    for(const k of await Store.list("res:"+code+":",true)) if(!await Store.del(k,true)) failed++;
+    if(!await Store.del("hunt:"+code,true)) failed++;
+  }catch(e){ failed++; }
+  if(failed){
+    if(!(opts&&opts.silent)) toast("The Yard could not be reached \u2014 Case "+code+" still stands on the record. Try again when the line is open.", 4200);
+    return false;
+  }
   let mine=[]; try{mine=JSON.parse(await Store.get("mycases")||"[]");}catch(e){}
   const i=mine.indexOf(code); if(i>-1){ mine.splice(i,1); await Store.set("mycases",JSON.stringify(mine)); }
   try{localStorage.removeItem("finseen:"+code);}catch(e){}
   if(!(opts&&opts.silent)) toast("Case "+code+" struck from the record.", 2600);
+  return true;
 }
 async function deleteCaseAsk(){
   const code=State.roster; if(!code) return;
+  /* THE DEED (see subTerrFile). A case filed for territory belongs to the Company.
+     This guard is the BUILDER's door only — the Curator's Desk (curDeleteCase)
+     is deliberately unguarded, because staff may always strike a record. */
+  let _hh=null; try{ const _r=await Store.get("hunt:"+code,true); if(_r) _hh=JSON.parse(_r); }catch(e){}
+  if(_hh && (_hh.deeded || _hh.cold)){
+    toast("Case No. "+code+" has passed into the Company\u2019s record and is kept by the Yard \u2014 it can no longer be struck here.", 4600);
+    return;
+  }
   if(!confirm("Strike Case No. "+code+" from the record?\n\nThe board, every hunter's submission, and all photos are destroyed for everyone — permanently. This cannot be undone.")) return;
   await purgeCase(code);
   await openCaseFiles();

@@ -1,0 +1,23 @@
+{
+ "tags": {
+  "GAZ5_BLOB": 1,
+  "M": 1,
+  "NAME_HARD": 1,
+  "SEAT_MAX": 1,
+  "State": 1,
+  "book": 1,
+  "curIdx": 1,
+  "g": -1,
+  "kids": 1,
+  "li": -1,
+  "mnLat": 1,
+  "mnLon": 1,
+  "others": 1,
+  "pj": 1,
+  "span": -2,
+  "ss": 1,
+  "str": 1,
+  "toks": 1,
+  "totalT": 1
+ }
+}
