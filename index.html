@@ -168,7 +168,7 @@
     color:var(--ink);opacity:.9;border-left:2px solid var(--brass);padding:2px 0 2px 9px;cursor:pointer}
   .st-deed input{margin:1px 0 0;flex:none;width:16px;height:16px;accent-color:#B8863B;cursor:pointer}
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#4E9A87;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#7FA33C;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -245,9 +245,13 @@
   @keyframes beckonLine{0%,100%{box-shadow:0 1.5px 0 0 transparent}50%{box-shadow:0 1.5px 0 0 var(--brass)}}
   @media (prefers-reduced-motion:reduce){.nudge.play{animation:none;opacity:0}.beckon{animation:none}}
   .iconbtn{
-    appearance:none;border:none;background:rgba(255,255,255,.10);color:var(--paper);
-    width:40px;height:40px;border-radius:11px;font-size:19px;display:grid;place-items:center;cursor:pointer;
-    border:1px solid rgba(255,255,255,.14);
+    appearance:none;border:none;background:none;color:var(--paper);
+    width:48px;height:48px;margin:-4px;font-size:19px;display:grid;place-items:center;cursor:pointer;
+    position:relative;z-index:1;
+  }
+  .iconbtn::before{
+    content:"";position:absolute;inset:4px;border-radius:11px;
+    background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.14);z-index:-1;
   }
   .iconbtn:active{transform:scale(.94)}
 
@@ -807,7 +811,8 @@
   .seal-mono{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:900;font-size:25px;letter-spacing:.5px;color:#5A1F14;text-shadow:0 1px 0 rgba(200,96,68,.55);pointer-events:none}
   .seal-mono .amp{font-family:var(--serif);font-style:italic;font-weight:700;font-size:1.7em;line-height:0;vertical-align:-.14em;margin:0 .02em;color:#5A1F14;text-shadow:0 1px 0 rgba(200,96,68,.55)}
   .seal-lbl{display:block;text-align:center;font-family:var(--type);font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:#6B3430;opacity:.82;margin:9px 0 0}
-  .seal-btn:active .seal-disc{transform:translateY(1px)} .stamp-link{display:block;margin:12px auto 4px;background:none;border:0;padding:0;cursor:pointer;width:100%;max-width:358px} .stamp-link img{display:block;width:100%;height:auto} .stamp-link:active img{opacity:.85}
+  .seal-btn:active .seal-disc{transform:translateY(1px)} .stamp-link{display:block;margin:12px auto 4px;background:none;border:0;padding:0;cursor:pointer;width:100%;max-width:358px;position:relative}
+  .stamp-link::before{content:"";position:absolute;inset:-8px 0} .stamp-link img{display:block;width:100%;height:auto} .stamp-link:active img{opacity:.85}
   .seal-replystamp{position:absolute;left:72%;top:86.2%;width:31.08%;filter:brightness(.5);transform:translate(-50%,-50%);display:none;pointer-events:none}
   .seal-btn.has-reply .seal-replystamp{display:block}
   /* By Order of the Commissioner — daily dispatch card */
@@ -917,6 +922,7 @@
   .cur-del.armed{background:var(--oxblood);color:#fff;border-radius:8px;padding:5px 9px}
   .build-hint{display:block;width:calc(100% - 28px);margin:0 14px 8px;padding:2px 0 4px;background:none;border:none;font-family:var(--serif);font-style:italic;font-size:12px;line-height:1.35;color:var(--ink-soft);text-align:center;-webkit-tap-highlight-color:transparent}
   .build-hint b{font-style:normal;font-weight:700;color:var(--title)}
+  .hint-link{padding:16px 0}
   .build-hint .hint-link{cursor:pointer;text-decoration:underline;text-decoration-color:rgba(120,90,40,.45);text-underline-offset:3px}
   .build-hint .hint-link:active{opacity:.6}
   #s-home{position:relative}
@@ -929,6 +935,8 @@
   .cur-clear-note{font-family:var(--serif);font-style:italic;font-size:11px;color:var(--ink-soft);text-align:center;margin:0 0 2px}
   .keepline{font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--ink-soft);text-align:center;margin:8px 16px 0}
   .keep-btn{background:none;border:none;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--brass);text-decoration:underline;text-underline-offset:2px;padding:2px;cursor:pointer}
+
+  :focus-visible{outline:1.5px solid #B8863B;outline-offset:1px}
 </style>
 </head>
 <body>
@@ -967,7 +975,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">29e</p>
+      <p id="buildmark" aria-label="test build marker">29g</p>
     </div>
   </section>
 
@@ -975,7 +983,7 @@
   <section id="s-build" class="screen">
     <div class="topbar">
       <button class="iconbtn" onclick="confirmLeaveBuild()">‹</button>
-      <input id="build-title-input" class="title-in" type="text" maxlength="40" placeholder="(Name your Hunt)" oninput="onBuildTitleInput(this.value)" autocomplete="off" autocorrect="off" autocapitalize="words" spellcheck="false" name="shco-casetitle" enterkeyhint="done" onkeydown="if(event.key==='Enter')this.blur()">
+      <input id="build-title-input" aria-label="Name your Hunt" class="title-in" type="text" maxlength="40" placeholder="(Name your Hunt)" oninput="onBuildTitleInput(this.value)" autocomplete="off" autocorrect="off" autocapitalize="words" spellcheck="false" name="shco-casetitle" enterkeyhint="done" onkeydown="if(event.key==='Enter')this.blur()">
       <div id="title-nudge" class="nudge" aria-hidden="true">
         <span class="nudge-ripple"></span>
         <svg viewBox="0 0 48 48" width="44" height="44">
@@ -1058,7 +1066,7 @@
       </div>
       <p class="tagline" style="margin:6px 0 18px">Enter the case number your Builder sent you.</p>
       <div class="nudge-wrap">
-      <input id="join-code" class="field code-in" inputmode="numeric" maxlength="8" placeholder="000000" oninput="this.value=this.value.replace(/[^0-9]/g,'');nudgeStop('join-nudge','join-code')">
+      <input id="join-code" aria-label="Case number" class="field code-in" inputmode="numeric" maxlength="8" placeholder="000000" oninput="this.value=this.value.replace(/[^0-9]/g,'');nudgeStop('join-nudge','join-code')">
       <div id="join-nudge" class="nudge" aria-hidden="true">
         <span class="nudge-ripple"></span>
         <svg viewBox="0 0 48 48" width="44" height="44">
@@ -1393,8 +1401,8 @@
     <button id="st-file" class="btn btn-primary" disabled onclick="subTerrFile()">File for Consideration</button>
   </div>
 </div>
-<div id="toast" class="toast"></div>
-<div id="toast2" class="toast"></div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<div id="toast2" class="toast" role="status" aria-live="polite"></div>
 
 <script>
 if("scrollRestoration" in history){ try{ history.scrollRestoration="manual"; }catch(e){} }
@@ -4311,7 +4319,7 @@ function tileEl(t,i,mode){
     wrap.onclick=()=>{ if(Date.now()-_tdClick<350) return; openTileEdit(i); };
   }else{ // hunter
     d.innerHTML=num+media;
-    if(State.founds[t.id]){ d.classList.add("found"); d.innerHTML+=`<img decoding="async" class="thumb" src="${State.founds[t.id]}">`; }
+    if(State.founds[t.id]){ d.classList.add("found"); d.innerHTML+=`<img decoding="async" class="thumb" alt="Find photograph" src="${State.founds[t.id]}">`; }
     wrap.onclick=()=>openClue(t);
   }
   wrap.appendChild(d);
@@ -5631,7 +5639,7 @@ async function openVerify(code, hid){
   hunt.tiles.forEach((t,i)=>{
     const target = tileHTML(t);
     const hunterSrc=findMap[t.id];
-    const proof = hunterSrc ? `<img decoding="async" src="${hunterSrc}">` : `<div class="obj" style="opacity:.4">—</div>`;
+    const proof = hunterSrc ? `<img decoding="async" alt="Submitted photograph" src="${hunterSrc}">` : `<div class="obj" style="opacity:.4">—</div>`;
     const m=State.verify.marks[t.id];
     const toggles = hunterSrc ? `<div class="vtoggle">
         <button class="vt yes${m===1?" on":""}" onclick="mark('${t.id}',1,this)">✓</button>
