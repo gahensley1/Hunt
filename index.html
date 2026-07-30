@@ -168,7 +168,7 @@
     color:var(--ink);opacity:.9;border-left:2px solid var(--brass);padding:2px 0 2px 9px;cursor:pointer}
   .st-deed input{margin:1px 0 0;flex:none;width:16px;height:16px;accent-color:#B8863B;cursor:pointer}
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#3B6BA5;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#C88A2E;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -967,7 +967,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">29a</p>
+      <p id="buildmark" aria-label="test build marker">29b</p>
     </div>
   </section>
 
@@ -1124,6 +1124,13 @@
       <div class="lic-or">OR REDEEM A KEY</div>
       <input id="lic-key" class="lic-key" placeholder="SHCO-XXXX-XXXX" autocapitalize="characters" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter')redeemLicence()">
       <button class="btn btn-brass" onclick="redeemLicence()">Redeem License Key</button>
+      <div class="lic-or">RESTORE PURCHASES</div>
+      <button class="btn btn-brass" id="lic-restore-btn" onclick="restorePurchases()">Restore Purchases</button>
+      <div id="lic-restore-entry" class="hidden">
+        <input id="lic-badge" class="lic-key" placeholder="DET-XXXXXX-XXXX" autocapitalize="characters" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter')restoreConfirm()">
+        <button class="btn btn-brass" onclick="restoreConfirm()">Restore by Badge No.</button>
+        <p class="lic-small">Your badge number is on your purchase receipt and your Record.</p>
+      </div>
     </div>
   </div>
 
@@ -2048,6 +2055,26 @@ function continueAfterReceipt(){
   closeOverlay("s-receipt");
   const after=State.afterLic; State.afterLic=null;
   if(after==="build") startBuild(); else go("s-home");
+}
+async function restorePurchases(){
+  var cred=myCred();
+  if(cred){
+    var pr=await adoptProfile(cred);
+    if(pr&&(pr.lic||(pr.packs&&pr.packs.length))){ toast("Your purchases have been restored.",3400); renderLicTiers(); if(hasLicence()){ licenceGranted(); } return; }
+    if(pr){ toast("Your record was found, but no purchases are recorded under it.",4200); return; }
+  }
+  var e=document.getElementById("lic-restore-entry"); if(e) e.classList.remove("hidden");
+  var b=document.getElementById("lic-restore-btn"); if(b) b.classList.add("hidden");
+  try{ document.getElementById("lic-badge").focus(); }catch(e2){}
+}
+async function restoreConfirm(){
+  var el=document.getElementById("lic-badge"); if(!el) return;
+  var t=(el.value||"").trim();
+  if(!validCred(t)){ toast("That badge number doesn\u2019t check out \u2014 mind the dashes and try again."); return; }
+  var pr=await adoptProfile(t.toUpperCase().replace(/[^A-Z0-9]/g,""));
+  if(!pr){ toast("No record found under that badge number."); return; }
+  if(pr.lic||(pr.packs&&pr.packs.length)){ toast("Your purchases have been restored.",3400); renderLicTiers(); if(hasLicence()){ licenceGranted(); return; } }
+  else{ toast("Your record was found, but no purchases are recorded under it.",4200); }
 }
 function redeemLicence(){
   const raw=document.getElementById("lic-key").value;
