@@ -168,7 +168,7 @@
     color:var(--ink);opacity:.9;border-left:2px solid var(--brass);padding:2px 0 2px 9px;cursor:pointer}
   .st-deed input{margin:1px 0 0;flex:none;width:16px;height:16px;accent-color:#B8863B;cursor:pointer}
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#C88A2E;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#7A5A98;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -967,7 +967,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">29b</p>
+      <p id="buildmark" aria-label="test build marker">29d</p>
     </div>
   </section>
 
@@ -1493,7 +1493,7 @@ const Store = {
   async set(key,val,shared=false){
     if(shared && this.base()){
       try{
-        const r=await fetch(this.base()+"/kv/"+encodeURIComponent(key),{method:"PUT",body:val,headers:{"X-Curator-Token":CURATOR_PASS}});
+        const r=await fetch(this.base()+"/kv/"+encodeURIComponent(key),{method:"PUT",body:val,headers:Object.assign({},_curHdr())});
         if(r.ok) return true;
       }catch(e){ /* offline → fall through to local */ }
     }
@@ -1504,7 +1504,7 @@ const Store = {
   async list(prefix,shared=false){
     if(shared && this.base()){
       try{
-        const r=await fetch(this.base()+"/list?prefix="+encodeURIComponent(prefix));
+        const r=await fetch(this.base()+"/list?prefix="+encodeURIComponent(prefix),{headers:Object.assign({},_curHdr())});
         if(r.ok){ const j=await r.json(); return j.keys||[]; }
       }catch(e){ /* offline → fall through to local */ }
     }
@@ -1527,7 +1527,7 @@ const Store = {
     if(shared && this.base()){
       remote=false;
       try{
-        const r=await fetch(this.base()+"/kv/"+encodeURIComponent(key),{method:"DELETE",headers:{"X-Curator-Token":CURATOR_PASS}});
+        const r=await fetch(this.base()+"/kv/"+encodeURIComponent(key),{method:"DELETE",headers:Object.assign({},_curHdr())});
         remote=!!r.ok;
       }catch(e){ /* offline → local cleanup still runs, verdict stays false */ }
     }
@@ -1537,6 +1537,12 @@ const Store = {
     return remote===null ? true : remote;
   }
 };
+
+/* ---------- the archivist's word ----------
+   Held in memory for this session only, never written to the file, never
+   stored. Set when the curator presents credentials; gone on reload. */
+var CURATOR_WORD="";
+function _curHdr(){ return CURATOR_WORD ? {"X-Curator-Token":CURATOR_WORD} : {}; }
 
 /* ---------- state ---------- */
 const State = {
@@ -2678,7 +2684,9 @@ const HUNTER_CAP=50;        /* a case seats 50 detectives on the Charter \u2014 
 const SEAT_BLOCK=25;       /* the Complement is raised 25 at a time, $4.99 a block */
 const SEAT_MAX=100;        /* beyond this it is an Agency matter \u2014 a conversation, not a button */
 const SEAT_PRICE="4.99";
-const CURATOR_PASS="BAKER221B";   // staff word; client-side gate for launch, real auth arrives with payments
+const CURATOR_NAME="BAKER221B";   /* the nameplate on the door. Not a secret and not
+                                     treated as one: the word itself is typed at the desk
+                                     and lives only in CURATOR_WORD for the session. */
 function fmtDur(ms){ return fmtWatch(Math.max(1,Math.round(ms/60000))); }
 /* ---------- built-in archive: cases that ship inside the app ----------
    Storage always wins; these answer only when nothing is filed under the
@@ -3415,13 +3423,17 @@ function joinColdCase(code){
 /* the curator's desk (staff) */
 function openCurator(){
   document.getElementById("curpass-ov").classList.remove("hidden");
+  const who=document.getElementById("curname-in"); if(who) who.value="";
   const inp=document.getElementById("curpass-in"); inp.value="";
-  setTimeout(function(){ try{ inp.focus(); }catch(e){} },60);
+  setTimeout(function(){ try{ (who||inp).focus(); }catch(e){} },60);
 }
 function closeCurPass(){ document.getElementById("curpass-ov").classList.add("hidden"); }
 function tryCurPass(){
-  const p=document.getElementById("curpass-in").value;
-  if(String(p).trim().toUpperCase()!==CURATOR_PASS){ toast("The archivist shakes his head."); return; }
+  const who=(document.getElementById("curname-in")||{}).value||"";
+  const p=document.getElementById("curpass-in").value||"";
+  if(String(who).trim().toUpperCase()!==CURATOR_NAME){ toast("The archivist shakes his head."); return; }
+  if(!String(p).trim()){ toast("The word, please."); return; }
+  CURATOR_WORD=String(p);          /* session only \u2014 never stored, never shipped */
   closeCurPass(); renderCurator();
 }
 async function renderCurator(){
@@ -5514,7 +5526,12 @@ async function deleteCaseAsk(){
     toast("Case No. "+code+" has passed into the Company\u2019s record and is kept by the Yard \u2014 it can no longer be struck here.", 4600);
     return;
   }
+  /* TWO STAGES. The first asks; the second requires the number written out, so a
+     mis-tap cannot destroy a board. Both must pass before anything is struck. */
   if(!confirm("Strike Case No. "+code+" from the record?\n\nThe board, every hunter's submission, and all photos are destroyed for everyone — permanently. This cannot be undone.")) return;
+  const _wr=prompt("The archivist requires it in writing.\n\nWrite the case number — "+code+" — to strike it from the record.");
+  if(_wr===null) return;
+  if(String(_wr).trim()!==String(code)){ toast("That is not the number. Case "+code+" stands on the record.", 3400); return; }
   await purgeCase(code);
   await openCaseFiles();
 }
@@ -5872,7 +5889,8 @@ setTimeout(function(){ if(!_deepCase) showCommish(); }, 2600);
 <div id="curpass-ov" class="hidden" onclick="if(event.target===this)closeCurPass()">
   <div class="tov-card">
     <div class="tov-head"><span class="eyebrow">STAFF ONLY</span><h3>Curator&rsquo;s Entrance</h3></div>
-    <p class="curpass-note">The archivist looks up from his ledger.<br>The word, please.</p>
+    <p class="curpass-note">The archivist looks up from his ledger.<br>Your name and the word, please.</p>
+    <input id="curname-in" class="lic-key" type="text" autocomplete="off" spellcheck="false" placeholder="NAME" onkeydown="if(event.key==='Enter')document.getElementById('curpass-in').focus()">
     <input id="curpass-in" class="lic-key" type="password" autocomplete="off" spellcheck="false" placeholder="THE WORD" onkeydown="if(event.key==='Enter')tryCurPass()">
     <button class="btn btn-primary" onclick="tryCurPass()">Present Credentials</button>
     <button class="btn-ghost" onclick="closeCurPass()">Withdraw</button>
