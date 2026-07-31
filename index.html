@@ -172,7 +172,7 @@
      #ov-buy (560), which purchaseLicence() opens on top of this screen. */
   #s-licence{z-index:550}
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#7FA33C;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#B4532A;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -984,7 +984,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">29w</p>
+      <p id="buildmark" aria-label="test build marker">29x</p>
     </div>
   </section>
 
@@ -4857,7 +4857,15 @@ async function joinCase(){
   const code=document.getElementById("join-code").value.trim();
   const err=document.getElementById("join-err");
   if(code.length!==6){ err.textContent="Enter the 6-digit case number."; joinFail(err); return; }
-  const raw=await Store.get("hunt:"+code,true);
+  /* THE THREE OPENING READS RUN TOGETHER. Each is independent of the others and each
+     was its own round trip; on phone data that was most of the wait between the tap
+     and the board. Fired here, awaited where they were needed before. Store.get and
+     Store.list both swallow their own errors, so an early return leaves nothing
+     unhandled. */
+  const _pHunt=Store.get("hunt:"+code,true);
+  const _pStat=Store.get("coldstat:"+code,true);
+  let   _pSubs=listSubNames(code);
+  const raw=await _pHunt;
   if(!raw){ err.textContent="No case found for No. "+code+". Check the digits and try again."; joinFail(err); return; }
   const huntCandidate=JSON.parse(raw);
   // A sealed archive is sealed on every road in. The shelves check isLocked();
@@ -4870,7 +4878,7 @@ async function joinCase(){
   }
   // cold cases learn: par time drawn from the record of past full solves
   if(huntCandidate.cold&&huntCandidate.parAuto){
-    try{ const sr=await Store.get("coldstat:"+code,true);
+    try{ const sr=await _pStat;
       if(sr){ const s=JSON.parse(sr);
         if(s.n>=3&&s.totalMs>0){ huntCandidate.timerMins=Math.max(30, Math.ceil((s.totalMs/s.n)*1.25/1800000)*30); } } }catch(e){}
   }
@@ -4882,10 +4890,11 @@ async function joinCase(){
     name=await askName("State your name, detective","Join the ranks \u2014 this name is yours for good; credentials issued under it.","",false);
     if(name===null) return; // user backed out — stay on Join screen
     await setMyName(name); await ensureCred();
+    _pSubs=listSubNames(code);   // the prompt may have sat open a while: take a fresh roster
   }
   // roster seat: the name itself, or an automatic alias if another detective holds it on this case
   let hid=null;
-  const subsNow=await listSubNames(code);
+  const subsNow=await _pSubs;
   for(let n=1;n<100;n++){
     const label = n===1 ? name : (name.slice(0,20).trim()+" "+n);
     const slug=slugName(label);
