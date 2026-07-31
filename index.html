@@ -168,7 +168,7 @@
     color:var(--ink);opacity:.9;border-left:2px solid var(--brass);padding:2px 0 2px 9px;cursor:pointer}
   .st-deed input{margin:1px 0 0;flex:none;width:16px;height:16px;accent-color:#B8863B;cursor:pointer}
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#7A5A98;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#4E9A87;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -358,7 +358,7 @@
   .build-finish{display:flex;padding:6px 12px calc(18px + var(--safe-b))}
 
   /* ---------- overlays ---------- */
-  .overlay{position:fixed;inset:0;z-index:40;background:rgba(20,18,16,.55);/* backdrop-filter:blur(2px); 29j diagnostic */display:none;align-items:flex-end;justify-content:center}
+  .overlay{position:fixed;inset:0;z-index:40;background:rgba(20,18,16,.55);backdrop-filter:blur(2px);display:none;align-items:flex-end;justify-content:center}
   .overlay.center{align-items:center}
   .overlay.open{display:flex;animation:fade .2s ease both}
   #ov-name{z-index:600}
@@ -975,7 +975,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">29l</p>
+      <p id="buildmark" aria-label="test build marker">29m</p>
     </div>
   </section>
 
@@ -5975,5 +5975,54 @@ setTimeout(function(){ if(!_deepCase) showCommish(); }, 2600);
 <div id="ov-rotate">  <h2>Scavenger &amp; Hunt Co<span class="rl-dot" onclick="toggleRotLock()">.</span></h2>
   <p>The Agency conducts its business in portrait only. Kindly right your device before continuing the investigation.</p>
 </div>
+<div id="tapprobe" style="position:fixed;left:0;right:0;bottom:0;z-index:99999;pointer-events:none;background:rgba(20,18,16,.92);color:#EDE4D3;font:11px/1.35 monospace;padding:6px 8px;max-height:38vh;overflow:hidden;white-space:pre-wrap;display:none"></div>
+<script>
+/* ===== TAP PROBE - DIAGNOSTIC ONLY, REMOVE WITH THIS BLOCK =====
+   Names the element that actually receives each tap, and every layer stacked
+   above the thing you aimed at. Toggle: tap the build marker five times.      */
+(function(){
+  var box=null, on=false, log=[];
+  function el(){ return box||(box=document.getElementById("tapprobe")); }
+  function desc(n){
+    if(!n) return "none";
+    var s=(n.id?("#"+n.id):"")+(n.className&&typeof n.className==="string"?("."+n.className.trim().split(/\s+/).join(".")):"");
+    return (n.tagName||"?")+(s||"");
+  }
+  function stack(x,y){
+    var out=[], seen=0;
+    try{
+      var list=document.elementsFromPoint?document.elementsFromPoint(x,y):[document.elementFromPoint(x,y)];
+      for(var i=0;i<list.length&&seen<5;i++){
+        var n=list[i], z="";
+        try{ z=getComputedStyle(n).zIndex; }catch(e){}
+        out.push(desc(n)+(z&&z!=="auto"?(" z"+z):"")); seen++;
+      }
+    }catch(e){ out.push("probe error: "+e.message); }
+    return out;
+  }
+  function report(x,y,tag){
+    var lines=stack(x,y);
+    log.unshift(tag+" @"+Math.round(x)+","+Math.round(y)+"\n  "+lines.join("\n  "));
+    log=log.slice(0,4);
+    var b=el(); if(b){ b.textContent=log.join("\n----\n"); }
+  }
+  document.addEventListener("pointerdown",function(e){
+    if(!on) return;
+    report(e.clientX,e.clientY,"TAP");
+  },true);
+  function toggle(){
+    on=!on; var b=el(); if(!b) return;
+    b.style.display=on?"block":"none";
+    b.textContent=on?"TAP PROBE ON - tap anything.\nTap the build marker 5x to switch off.":"";
+  }
+  var hits=0,last=0;
+  document.addEventListener("click",function(e){
+    var t=e.target; if(!t||t.id!=="buildmark") return;
+    var now=Date.now(); if(now-last>1200) hits=0; last=now; hits++;
+    if(hits>=5){ hits=0; toggle(); }
+  },true);
+  window.TAPPROBE=toggle;
+})();
+</script>
 </body>
 </html>
