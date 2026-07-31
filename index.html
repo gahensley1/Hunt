@@ -168,7 +168,7 @@
     color:var(--ink);opacity:.9;border-left:2px solid var(--brass);padding:2px 0 2px 9px;cursor:pointer}
   .st-deed input{margin:1px 0 0;flex:none;width:16px;height:16px;accent-color:#B8863B;cursor:pointer}
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#B5566B;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#7A5A98;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -595,9 +595,9 @@
   .rec-commend b{display:block;font-family:var(--serif);font-weight:700;font-size:13px;color:var(--ink)}
   .rec-commend span{display:block;font-family:var(--type);font-size:10px;line-height:1.5;color:var(--ink-soft)}
   .rec-prog{font-family:var(--serif);font-style:italic;font-size:12.5px;color:var(--ink);margin:2px 0 8px;line-height:1.4}
-  #scrollhint-ov{position:fixed;inset:0;background:transparent;z-index:530;display:flex;align-items:center;justify-content:center;padding:22px}
+  #scrollhint-ov{position:fixed;inset:0;background:transparent;z-index:530;display:flex;align-items:center;justify-content:center;padding:22px;pointer-events:none}
   #scrollhint-ov.hidden{display:none}
-  #scrollhint-ov .sh-card{position:relative;width:min(90vw,358px);max-height:94vh;overflow:hidden;cursor:pointer;border-radius:16px;padding:8px;background:var(--leather),#38271a;background-size:cover;box-shadow:0 20px 46px rgba(10,7,4,.62),inset 0 0 0 1px rgba(216,175,99,.4),inset 0 2px 6px rgba(0,0,0,.4)}
+  #scrollhint-ov .sh-card{pointer-events:auto;position:relative;width:min(90vw,358px);max-height:94vh;overflow:hidden;cursor:pointer;border-radius:16px;padding:8px;background:var(--leather),#38271a;background-size:cover;box-shadow:0 20px 46px rgba(10,7,4,.62),inset 0 0 0 1px rgba(216,175,99,.4),inset 0 2px 6px rgba(0,0,0,.4)}
   #scrollhint-ov .sh-frame{position:relative;overflow-y:auto;max-height:calc(94vh - 16px);border:2px solid rgba(216,175,99,.5);border-radius:10px;padding:13px 15px 9px;background:var(--parch),var(--paper);background-size:cover;box-shadow:inset 0 0 0 1px rgba(94,70,48,.35)}
   #scrollhint-ov .sh-frame::before{content:"";position:absolute;inset:6px;border:1px solid rgba(94,70,48,.5);border-radius:6px;pointer-events:none}
   #scrollhint-ov .sh-defs{position:absolute;width:0;height:0}
@@ -975,7 +975,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">29k</p>
+      <p id="buildmark" aria-label="test build marker">29l</p>
     </div>
   </section>
 
@@ -2485,7 +2485,14 @@ function cancelName(){
    a detective who left mid-registration carried an invisible full-screen overlay
    onto every later screen, where it swallowed every tap. Reported as "the buy
    popup is late"; it was never reached. */
-function dismissRegistrar(){ try{ if(State._nameResolve) cancelName(); }catch(e){} }
+function dismissRegistrar(){ try{ if(State._nameResolve) cancelName(); }catch(e){}
+  /* #scrollhint-ov is a TRANSPARENT full-screen sheet at z-index:530 - ten times
+     above every .overlay - and it is not classed .overlay, so it never appeared in
+     any open-overlay audit. Left up, it swallows every tap in the app while showing
+     nothing but its own card. It goes when the archive is entered. */
+  try{ const _sh=document.getElementById("scrollhint-ov");
+    if(_sh && !_sh.classList.contains("hidden")){ _sh.classList.add("hidden"); unlockBodyScroll(); } }catch(e){}
+}
 
 /* ---------- share helpers ---------- */
 /* The invitation carries a live link. Origin is derived, never hardcoded, so the
