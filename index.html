@@ -172,7 +172,7 @@
      #ov-buy (560), which purchaseLicence() opens on top of this screen. */
   #s-licence{z-index:550}
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#B5566B;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#7A5A98;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -984,7 +984,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">29s</p>
+      <p id="buildmark" aria-label="test build marker">29t</p>
     </div>
   </section>
 
@@ -1095,7 +1095,7 @@
   <!-- ================= HUNT (hunter) ================= -->
   <section id="s-hunt" class="screen">
     <div class="topbar">
-      <button class="iconbtn" onclick="go('s-home')">‹</button>
+      <button class="iconbtn" onclick="backFromHunt()">‹</button>
       <h2 id="hunt-title"><span class="hunt-title-txt" id="hunt-title-txt">On the Hunt</span> <span class="sub" id="hunt-caseno"></span></h2>
     </div>
     <div class="prog-wrap">
@@ -3445,9 +3445,18 @@ async function makeItYours(code){
   }
 }
 function closeColdDetail(){ document.getElementById("colddetail-ov").classList.add("hidden"); }
+function backFromHunt(){
+  const from=State._huntFrom;
+  go("s-home");
+  if(from && from.indexOf("cold:")===0){ try{ openColdCases(); }catch(e){} }
+}
 function joinColdCase(code){
   try{ const _e=(_coldIdx||[]).find(function(x){ return String(x.code)===String(code); });
        if(isLocked(_e)){ openColdDetail(code); toast("That pack is sealed \u2014 buy it to take the case."); return; } }catch(e){}
+  /* Remember the archive so the hunt board can go back to it. Consumed by
+     joinCase(), which is the single funnel into s-hunt, so a hunt joined by
+     code or by link clears the flag instead of inheriting it. */
+  State._coldOrigin=code;
   closeColdDetail(); closeColdCases(); try{ document.getElementById("join-code").value=code; }catch(e){} joinCase();
 }
 /* the curator's desk (staff) */
@@ -4816,6 +4825,7 @@ function openJoin(){
    to put the reader in front of them rather than invent a new failure state. */
 function joinFail(err){ try{ go("s-join"); }catch(e){} err.classList.remove("hidden"); }
 async function joinCase(){
+  State._huntFrom=State._coldOrigin?("cold:"+State._coldOrigin):null; State._coldOrigin=null;
   const code=document.getElementById("join-code").value.trim();
   const err=document.getElementById("join-err");
   if(code.length!==6){ err.textContent="Enter the 6-digit case number."; joinFail(err); return; }
