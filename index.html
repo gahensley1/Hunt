@@ -172,7 +172,7 @@
      #ov-buy (560), which purchaseLicence() opens on top of this screen. */
   #s-licence{z-index:550}
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#3B6BA5;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#C88A2E;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -806,6 +806,13 @@
   .currow{background:rgba(255,252,244,.55);border:1.5px solid rgba(184,134,59,.5);border-radius:10px;padding:11px 12px;margin-bottom:10px;text-align:left}
   .cur-in{width:100%;margin-top:7px;padding:8px 9px;border:1px solid rgba(122,85,31,.45);border-radius:7px;background:rgba(255,252,244,.8);font-family:var(--type);font-size:16px;color:var(--ink)}
   .cur-btns{display:flex;gap:8px;margin-top:9px}
+  .ledg-nav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 8px}
+  .ledg-month{font-family:var(--type);font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:var(--ink)}
+  .ledg-head{font-family:var(--type);font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:var(--ink-soft)}
+  .ledg-stats{display:flex;flex-wrap:wrap;gap:4px 14px}
+  .ledg-stat{display:flex;align-items:baseline;gap:5px;flex:0 0 auto}
+  .ledg-k{font-family:var(--paper);font-size:11px;color:var(--ink-soft)}
+  .ledg-v{font-family:var(--paper);font-size:13px;font-weight:700;color:var(--ink)}
   #cur-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
   #cur-tabs button{flex:1 1 calc(33.33% - 4px)}
   .cur-subtabs{display:flex;gap:6px;margin:0 0 8px}
@@ -984,7 +991,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">30a</p>
+      <p id="buildmark" aria-label="test build marker">30b</p>
     </div>
   </section>
 
@@ -3523,11 +3530,120 @@ function tryCurPass(){
   CURATOR_WORD=String(p);          /* session only \u2014 never stored, never shipped */
   closeCurPass(); renderCurator();
 }
+function _ledgNow(){ const n=new Date(); return n.getUTCFullYear()+"-"+String(n.getUTCMonth()+1).padStart(2,"0"); }
+function _ledgShift(m,by){
+  const p=String(m).split("-"), d=new Date(Date.UTC(Number(p[0]),Number(p[1])-1+by,1));
+  return d.getUTCFullYear()+"-"+String(d.getUTCMonth()+1).padStart(2,"0");
+}
+function _ledgLabel(m){
+  const M=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const p=String(m).split("-"); return (M[Number(p[1])-1]||"")+" "+p[0];
+}
+function _ledgNum(v){ const n=Number(v); return isFinite(n)?n:0; }
+function _ledgPct(v){ return (v===null||v===undefined)?"\u2014":(_ledgNum(v)+"%"); }
+function _ledgMins(v){ return (v===null||v===undefined)?"\u2014":(_ledgNum(v)+" min"); }
+function _ledgStat(label,val){
+  return '<div class="ledg-stat"><span class="ledg-k">'+escapeHtml(label)+'</span><span class="ledg-v">'+escapeHtml(String(val))+'</span></div>';
+}
+async function loadLedger(m){
+  const sec=document.getElementById("cur-ledger"); if(!sec) return;
+  const month=/^[0-9]{4}-[0-9]{2}$/.test(String(m))?String(m):_ledgNow();
+  State.ledgMonth=month;
+  const nav='<div class="ledg-nav">'
+    +'<button class="btn-ghost" id="ledg-prev">&#8249; Earlier</button>'
+    +'<span class="ledg-month">'+escapeHtml(_ledgLabel(month))+'</span>'
+    +'<button class="btn-ghost" id="ledg-next">Later &#8250;</button></div>';
+  sec.innerHTML='<p class="ladder-eyebrow" style="margin:6px 0 4px">THE COMPANY LEDGER</p>'+nav
+    +'<div class="empty">Compiling the ledger\u2026</div>';
+  const wire=function(){
+    const a=document.getElementById("ledg-prev"), b=document.getElementById("ledg-next");
+    if(a) a.onclick=function(){ loadLedger(_ledgShift(month,-1)); };
+    if(b) b.onclick=function(){ loadLedger(_ledgShift(month,1)); };
+    const r=document.getElementById("ledg-again");
+    if(r) r.onclick=function(){ loadLedger(month); };
+  };
+  wire();
+  let rep=null, err="";
+  try{
+    const base=Store.base();
+    if(!base) err="The sync office cannot be reached.";
+    else{
+      const res=await fetch(base+"/report?month="+encodeURIComponent(month),{headers:_curHdr()});
+      if(res.status===403) err="The archivist does not recognise your word. Close the Desk and sign in again.";
+      else if(!res.ok) err="The ledger could not be drawn (\u2116 "+res.status+").";
+      else rep=await res.json();
+    }
+  }catch(e){ err="The ledger could not be drawn."; }
+  if(err){ sec.innerHTML='<p class="ladder-eyebrow" style="margin:6px 0 4px">THE COMPANY LEDGER</p>'+nav
+      +'<div class="empty">'+escapeHtml(err)+'</div>'; wire(); return; }
+
+  const T=(rep&&rep.totals)||{}, SH=(rep&&rep.shelves)||{}, CS=(rep&&rep.cases)||[], BD=(rep&&rep.badges)||[];
+  let h='<p class="ladder-eyebrow" style="margin:6px 0 4px">THE COMPANY LEDGER</p>'+nav;
+  h+='<div class="meta" style="margin:0 0 8px">'+(rep&&rep.sealed?"Sealed \u00b7 this month is closed and will not change.":"Compiled to the minute \u00b7 this month is still open.")+'</div>';
+
+  h+='<div class="currow" style="flex-direction:column;align-items:stretch;gap:6px"><div class="ledg-head">THE MONTH IN FIGURES</div><div class="ledg-stats">'
+    +_ledgStat("Badges issued",_ledgNum(T.badge_issued))
+    +_ledgStat("Cases looked at",_ledgNum(T.cold_viewed))
+    +_ledgStat("Cases taken",_ledgNum(T.case_opened))
+    +_ledgStat("Cases closed",_ledgNum(T.case_finished))
+    +_ledgStat("Hints revealed",_ledgNum(T.hint_completed))
+    +'</div></div>';
+
+  const shk=Object.keys(SH);
+  h+='<div class="ledg-head" style="margin:12px 0 4px">BY SHELF</div>';
+  if(!shk.length) h+='<div class="empty">No shelf has been visited yet.</div>';
+  shk.sort().forEach(function(k){
+    const s=SH[k]||{};
+    h+='<div class="currow" style="flex-direction:column;align-items:stretch;gap:6px">'
+      +'<b>'+escapeHtml(String(k).toUpperCase())+'</b>'
+      +'<div class="meta">'+_ledgNum(s.cases)+(_ledgNum(s.cases)===1?' case':' cases')+' on the shelf</div><div class="ledg-stats">'
+      +_ledgStat("Looked at",_ledgNum(s.viewed))
+      +_ledgStat("Taken",_ledgNum(s.opened))
+      +_ledgStat("Take-up",_ledgPct(s.takeRatePct))
+      +_ledgStat("Closed",_ledgNum(s.finished))
+      +_ledgStat("Solved",_ledgNum(s.solved))
+      +_ledgStat("Typical solve",_ledgMins(s.meanSolveMinutes))
+      +'</div></div>';
+  });
+
+  h+='<div class="ledg-head" style="margin:12px 0 4px">CASE BY CASE</div>';
+  if(!CS.length) h+='<div class="empty">No case has been opened yet.</div>';
+  CS.slice(0,25).forEach(function(c){
+    const town=(c.hometowns&&c.hometowns.length)?c.hometowns[0].city:"";
+    h+='<div class="currow" style="flex-direction:column;align-items:stretch;gap:6px">'
+      +'<b>Case No. '+escapeHtml(String(c.code||""))+'</b>'
+      +'<div class="meta">'+escapeHtml(String(c.shelf||"unknown").toUpperCase())
+        +(town?' \u00b7 chiefly '+escapeHtml(String(town)):'')+'</div><div class="ledg-stats">'
+      +_ledgStat("Looked at",_ledgNum(c.viewed))
+      +_ledgStat("Taken",_ledgNum(c.opened))
+      +_ledgStat("Take-up",_ledgPct(c.takeRatePct))
+      +_ledgStat("Hunters",_ledgNum(c.joined))
+      +_ledgStat("First finds",_ledgNum(c.first_find))
+      +_ledgStat("Closed",_ledgNum(c.finished))
+      +_ledgStat("Typical solve",_ledgMins(c.meanSolveMinutes))
+      +_ledgStat("Hints",_ledgNum(c.hints))
+      +_ledgStat("From out of town",_ledgPct(c.outOfTownPct))
+      +'</div></div>';
+  });
+  if(CS.length>25) h+='<p class="meta">Showing the twenty-five busiest of '+CS.length+' cases.</p>';
+
+  h+='<div class="ledg-head" style="margin:12px 0 4px">WHERE BADGES WERE ISSUED</div>';
+  if(!BD.length) h+='<div class="empty">No badge has been issued yet.</div>';
+  BD.slice(0,40).forEach(function(b){
+    h+='<div class="currow"><div style="min-width:0"><b>'+escapeHtml(String(b.city||"unknown"))+'</b>'
+      +'<div class="meta">'+escapeHtml([b.region,b.country].filter(Boolean).join(", "))+'</div></div>'
+      +'<span class="ledg-v">'+_ledgNum(b.issued)+'</span></div>';
+  });
+
+  h+='<p class="cur-clear-note">Counts are of events, not of people. A hunter with no connection is never counted, so every figure is a floor.</p>'
+    +'<button class="btn-ghost" id="ledg-again" style="width:100%">Draw the ledger again</button>';
+  sec.innerHTML=h; wire();
+}
 async function renderCurator(){
   closeColdCases();
   document.getElementById("curator-ov").classList.remove("hidden");
   const tab=State.curTab||"desk";
-  ["desk","msgs","subs","arch","terr"].forEach(function(t){ const b=document.getElementById("curtab-"+t); if(b) b.classList.toggle("on",t===tab); });
+  ["desk","msgs","subs","arch","terr","ledg"].forEach(function(t){ const b=document.getElementById("curtab-"+t); if(b) b.classList.toggle("on",t===tab); });
   const list=document.getElementById("curator-list"); list.innerHTML='<div class="empty">Fetching the files\u2026</div>';
   let mine=[]; try{ mine=JSON.parse(await Store.get("mycases")||"[]"); }catch(e){}
   const idx=await coldIndex(); const pub={}; idx.forEach(e=>pub[e.code]=e);
@@ -3644,6 +3760,12 @@ async function renderCurator(){
     sec.querySelectorAll(".terr-ret").forEach(function(b){ b.onclick=function(){ retireCold(b.getAttribute("data-code")); }; });
     sec.querySelectorAll(".terr-del").forEach(function(b){ b.onclick=function(){ armDel(b.getAttribute("data-code"),b); }; });
     list.appendChild(sec);
+    return;
+  }
+  if(tab==="ledg"){
+    const sec=document.createElement("div"); sec.id="cur-ledger";
+    list.innerHTML=""; list.appendChild(sec);
+    await loadLedger(State.ledgMonth||"");
     return;
   }
   /* DESK tab \u2014 create + your own cases */
@@ -6031,6 +6153,7 @@ setTimeout(function(){ if(!_deepCase) showCommish(); }, 2600);
       <button id="curtab-subs" onclick="curTab('subs')">Submissions</button>
       <button id="curtab-arch" onclick="curTab('arch')">Archive</button>
       <button id="curtab-terr" onclick="curTab('terr')">Territories</button>
+      <button id="curtab-ledg" onclick="curTab('ledg')">Ledger</button>
     </div>
     <div id="curator-list"></div>
     <button class="btn btn-primary" onclick="closeCurator()">Close the Desk</button>
