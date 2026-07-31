@@ -172,7 +172,7 @@
      #ov-buy (560), which purchaseLicence() opens on top of this screen. */
   #s-licence{z-index:550}
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#B4532A;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#C88A2E;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -984,7 +984,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">29x</p>
+      <p id="buildmark" aria-label="test build marker">29z</p>
     </div>
   </section>
 
@@ -1007,7 +1007,7 @@
     <div class="buildbar">
       <span class="counter"><b id="tile-count">0</b> / 50 clues</span>
     </div>
-    <p class="build-hint">Stuck for clues? <b class="hint-link" onclick="buildBorrowCase()">Take a case from the Cold Case Files</b> and make it your own.</p>
+    <p class="build-hint" id="build-borrow-hint">Stuck for clues? <b class="hint-link" onclick="buildBorrowCase()">Take a case from the Cold Case Files</b> and make it your own.</p>
     <div class="gridwrap"><div id="build-grid" class="grid"></div>
       <svg id="move-rail" width="150" height="16" viewBox="0 0 150 16" aria-hidden="true"><path class="rail" d="M6 8 H132"/><g class="head"><path d="M128 2 L140 8 L128 14 Z"/></g></svg>
       <div id="move-nudge" class="nudge" aria-hidden="true"><svg viewBox="0 0 44 44" width="44" height="44"><circle cx="18" cy="18" r="11" fill="rgba(237,228,211,.22)" stroke="#D8AF63" stroke-width="2.5"/><line x1="26" y1="26" x2="38" y2="38" stroke="#D8AF63" stroke-width="3.5" stroke-linecap="round"/></svg><span class="nudge-ripple"></span></div>
@@ -2135,13 +2135,31 @@ function validCred(key){
   for(const c of body+chk){ if(!LIC_ALPHA.includes(c)) return false; }
   return licCheck(body)===chk;
 }
+/* ---------- THE COMPANY LEDGER — a fire-and-forget ping (SPEC-51.4 §3) ----------
+   Four event names and nothing else; the Worker rejects any other. The payload is the
+   event, the case number, a clue id and the shelf — no name, no credential, no location.
+   Where in the world it came from is stamped server-side from the request itself; the
+   client never sends location and never asks for it.
+   text/plain is deliberate: it is a CORS-safelisted content type, so this costs no
+   preflight and adds no round trip to anything it accompanies. It never blocks, never
+   surfaces an error and never retries — offline, the count is simply lost. */
+const EV_NAMES=["badge_issued","case_opened","case_finished","hint_completed"];
+function ev(name,code,tile,cat){
+  try{
+    if(EV_NAMES.indexOf(name)<0) return;
+    const b=Store.base(); if(!b) return;
+    fetch(b+"/ev",{method:"POST",headers:{"Content-Type":"text/plain"},keepalive:true,
+      body:JSON.stringify({e:name,code:String(code||""),tile:String(tile||""),cat:String(cat||"")})
+    }).catch(function(){});
+  }catch(e){}
+}
 async function mintCred(){
   for(let t=0;t<8;t++){
     const a=new Uint32Array(6); crypto.getRandomValues(a);
     let body=""; for(let i=0;i<6;i++) body+=LIC_ALPHA[a[i]%LIC_ALPHA.length];
     const code="DET"+body+licCheck(body);
     let exists=null; try{ exists=await Store.get("profile:"+code,true); }catch(e){ return code; } // offline/unreachable: accept locally, sync reconciles later
-    if(!exists) return code;
+    if(!exists){ ev("badge_issued"); return code; }
   }
   return null;
 }
@@ -3948,6 +3966,10 @@ function setFinishLabel(){ try{ const b=document.getElementById("finish-build");
 }catch(e){} }
 function coldSubmitVis(){ try{ const w=document.getElementById("cold-submit-wrap"); if(!w) return;
   const hide=!!(State.build&&State.build.fromArchive) || !!State._curatorEdit || !!State._builderEdit; w.style.display=hide?"none":"flex";
+  /* The borrow hint goes with it. On a case that IS a cold case — taken from the
+     archive, or amended from the Curator's Desk — offering to fetch one from the
+     Cold Case Files is telling the builder to do what he has already done. */
+  const bh=document.getElementById("build-borrow-hint"); if(bh) bh.style.display=hide?"none":"";
   const c=document.getElementById("cold-submit-chk"); if(c) c.checked=false; }catch(e){} }
 function openSubTerritory(){
   ["st-zip","st-place","st-city","st-desc"].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=""; });
@@ -4883,6 +4905,7 @@ async function joinCase(){
         if(s.n>=3&&s.totalMs>0){ huntCandidate.timerMins=Math.max(30, Math.ceil((s.totalMs/s.n)*1.25/1800000)*30); } } }catch(e){}
   }
   if(caseExpired(huntCandidate)){ err.textContent="Case No. "+code+" has closed — its keep ran out and the records were retired."; joinFail(err); return; }
+  ev("case_opened", code, "", huntCandidate.cold ? (huntCandidate.cat||"territory") : "");
   State.hunt=huntCandidate; State.founds={};
   // permanent detective name — chosen once, for good; credentials issued under it.
   let name=await getMyName();
@@ -5180,6 +5203,7 @@ async function finishHunt(auto){
   }
   const mySub=await saveHunterSub("submitted");
   State.locked=true;
+  ev("case_finished", State.hunt.code);
   if(State.hunt.cold&&mySub&&mySub.finishedAt&&mySub.startedAt&&mySub.found===mySub.total){
     try{ const k="coldstat:"+State.hunt.code; let s={n:0,totalMs:0};
       try{ const r=await Store.get(k,true); if(r) s=JSON.parse(r)||s; }catch(e){}
@@ -5310,7 +5334,7 @@ function openCoinShop(){
 /* a revealed hint stays revealed - owner decision; the coin is not spent twice */
 function hintKey(code,tileId){ return "shco:hint:"+code+":"+tileId; }
 function hintSeen(code,tileId){ try{ return !!localStorage.getItem(hintKey(code,tileId)); }catch(e){ return false; } }
-function markHintSeen(code,tileId){ try{ localStorage.setItem(hintKey(code,tileId),"1"); }catch(e){} }
+function markHintSeen(code,tileId){ try{ localStorage.setItem(hintKey(code,tileId),"1"); }catch(e){} ev("hint_completed",code,tileId); }
 /* rank ladder — promoted by cases completed (myCoins().length). Thresholds are a single tunable array. */
 const RANKS=[
   {min:0,   comm:0, name:"Detective Constable"},
