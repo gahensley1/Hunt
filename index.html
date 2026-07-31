@@ -172,7 +172,7 @@
      #ov-buy (560), which purchaseLicence() opens on top of this screen. */
   #s-licence{z-index:550}
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#7A5A98;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#A8478F;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -984,7 +984,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">29t</p>
+      <p id="buildmark" aria-label="test build marker">29v</p>
     </div>
   </section>
 
@@ -1578,6 +1578,13 @@ const State = {
 
 /* ---------- routing ---------- */
 function go(id){
+  if(State._coldPending){ try{ closeColdDetail(); closeColdCases(); }catch(e){} State._coldPending=false; }
+  /* A toast belongs to the screen that raised it. Its dismissal timer used to run on
+     past a navigation, so a message from the previous screen sat on the new one and
+     read as arriving late. The four toasts that ANNOUNCE a new screen now fire after
+     their go() call instead of before it. */
+  try{ ["toast","toast2"].forEach(function(id){ const t=document.getElementById(id);
+    if(t){ clearTimeout(t._t); t.classList.remove("show"); } }); }catch(e){}
   document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
   const el=document.getElementById(id); el.classList.add("active");
   document.getElementById("app").scrollTop=0; window.scrollTo(0,0);
@@ -2047,12 +2054,12 @@ function openLicence(after){
 function closeLicence(){ State.afterLic=null; closeOverlay("s-licence"); }
 function licenceGranted(){
   closeOverlay("s-licence");
-  toast("Happy Building.", 3200);
   pushProfile();
   const after=State.afterLic; State.afterLic=null;
   if(after==="build") startBuild();
   else if(after && after.indexOf("cold:")===0) openColdDetail(after.slice(5));
   else go("s-home");
+  toast("Happy Building.", 3200);
 }
 async function purchaseLicence(){
   const r=await requirePurchase("licence",{
@@ -3457,7 +3464,13 @@ function joinColdCase(code){
      joinCase(), which is the single funnel into s-hunt, so a hunt joined by
      code or by link clears the flag instead of inheriting it. */
   State._coldOrigin=code;
-  closeColdDetail(); closeColdCases(); try{ document.getElementById("join-code").value=code; }catch(e){} joinCase();
+  /* Do NOT close the archive here. joinCase() awaits a network read, and closing
+     first revealed whatever screen sat underneath - the home screen - for the whole
+     round trip, so taking a case flashed home before the grid appeared. The archive
+     now stands until go() has somewhere to put the hunter: the board on success, the
+     join screen on failure. Both routes navigate, so nothing is left stranded. */
+  State._coldPending=true;
+  try{ document.getElementById("join-code").value=code; }catch(e){} joinCase();
 }
 /* the curator's desk (staff) */
 function openCurator(){
@@ -4628,8 +4641,8 @@ async function finishBuild(){
   }
   if(State._builderEdit){
     State._builderEdit=null; State.build=null;
-    toast("Case No. "+code+" amended.", 3200);
     openCaseFiles();
+    toast("Case No. "+code+" amended.", 3200);
     return;
   }
   if(State._curatorBuildFlow){
@@ -4905,11 +4918,12 @@ async function joinCase(){
   if(!State.locked) subNow=await saveHunterSub(wasReturned?"returned":"playing");
   State._subStart=(subNow&&subNow.startedAt)||0;
   if(!State._subStart&&prev){ try{ State._subStart=JSON.parse(prev).startedAt||0; }catch(e){} }
-  if(State.hunt.timerMins&&State._subStart&&!State.locked&&!prevStatus)
-    toast("\u231A The watch is set \u2014 you have "+fmtWatch(State.hunt.timerMins)+" to file your case.", 4600);
+  const _watchMsg=(State.hunt.timerMins&&State._subStart&&!State.locked&&!prevStatus)
+    ? "\u231A The watch is set \u2014 you have "+fmtWatch(State.hunt.timerMins)+" to file your case." : null;
   document.getElementById("hunt-title-txt").textContent=State.hunt.title||"On the Hunt";
   document.getElementById("hunt-caseno").textContent="CASE No. "+code;
   renderHunt(); go("s-hunt");
+  if(_watchMsg) toast(_watchMsg, 4600);
   pulseWatch();   // a case rejoined after its hour has struck files itself at the door
   if(wasReturned) toast("\uD83E\uDDD0 Balderdash \u2014 "+State.returnedCount+" find"+(State.returnedCount===1?" didn't":"s didn't")+" pass muster. Retake and resubmit.", 5200, "err");
   else if(prevStatus==="reviewed" && State._revSeen!==code){
@@ -5464,8 +5478,8 @@ async function recoverCase(){
   if(!raw){ toast("No case found under \u2116 "+code+"."); return; }
   let mine=[]; try{mine=JSON.parse(await Store.get("mycases")||"[]");}catch(e){}
   if(!mine.includes(code)){ mine.unshift(code); await Store.set("mycases",JSON.stringify(mine)); }
-  toast("Case "+code+" restored to your files.", 2600);
   openCaseFiles();
+  toast("Case "+code+" restored to your files.", 2600);
 }
 
 async function openRoster(code){
