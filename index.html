@@ -168,7 +168,7 @@
     color:var(--ink);opacity:.9;border-left:2px solid var(--brass);padding:2px 0 2px 9px;cursor:pointer}
   .st-deed input{margin:1px 0 0;flex:none;width:16px;height:16px;accent-color:#B8863B;cursor:pointer}
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#3B6BA5;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#C88A2E;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -358,7 +358,7 @@
   .build-finish{display:flex;padding:6px 12px calc(18px + var(--safe-b))}
 
   /* ---------- overlays ---------- */
-  .overlay{position:fixed;inset:0;z-index:40;background:rgba(20,18,16,.55);backdrop-filter:blur(2px);display:none;align-items:flex-end;justify-content:center}
+  .overlay{position:fixed;inset:0;z-index:40;background:rgba(20,18,16,.55);/* backdrop-filter:blur(2px); 29j diagnostic */display:none;align-items:flex-end;justify-content:center}
   .overlay.center{align-items:center}
   .overlay.open{display:flex;animation:fade .2s ease both}
   #ov-name{z-index:600}
@@ -975,7 +975,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">29i</p>
+      <p id="buildmark" aria-label="test build marker">29j</p>
     </div>
   </section>
 
