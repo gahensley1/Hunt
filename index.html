@@ -168,7 +168,7 @@
     color:var(--ink);opacity:.9;border-left:2px solid var(--brass);padding:2px 0 2px 9px;cursor:pointer}
   .st-deed input{margin:1px 0 0;flex:none;width:16px;height:16px;accent-color:#B8863B;cursor:pointer}
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#C88A2E;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#B5566B;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -975,7 +975,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">29j</p>
+      <p id="buildmark" aria-label="test build marker">29k</p>
     </div>
   </section>
 
@@ -2014,6 +2014,11 @@ function buyDecline(){
 }
 
 async function buyConfirm(){
+  /* A purchase is only ever completed from a popup that was actually on screen.
+     Without this, a tap landing on a covered or stale overlay could grant. The
+     preview grant is free; on store day this body becomes StoreKit. */
+  const _ovb=document.getElementById("ov-buy");
+  if(!_ovb||!_ovb.classList.contains("open")) return;
   const p=_buyPending; _buyPending=null;
   closeOverlay("ov-buy");
   if(!p) return;
@@ -2475,6 +2480,12 @@ function cancelName(){
   closeOverlay("ov-name");
   const r=State._nameResolve; State._nameResolve=null; if(r) r(null);
 }
+/* THE REGISTRAR MUST NOT OUTLIVE THE SCREEN THAT SUMMONED IT. askName() opens
+   #ov-name and awaits an answer; nothing in the app closed it on navigation, so
+   a detective who left mid-registration carried an invisible full-screen overlay
+   onto every later screen, where it swallowed every tap. Reported as "the buy
+   popup is late"; it was never reached. */
+function dismissRegistrar(){ try{ if(State._nameResolve) cancelName(); }catch(e){} }
 
 /* ---------- share helpers ---------- */
 /* The invitation carries a live link. Origin is derived, never hardcoded, so the
@@ -3199,7 +3210,7 @@ function coldCatBack(){
    blank-page problem. Send them to the archive, where "Make it your own
    case" hands them a finished board instead of homework. */
 function buildBorrowCase(){ try{ openColdCases(); }catch(e){} }
-async function openColdCases(){ State.coldQ=null;
+async function openColdCases(){ dismissRegistrar(); State.coldQ=null;
   try{ const am=document.getElementById("alm-mon"); if(am) am.textContent=almanacMonth(); }catch(e){}
   document.getElementById("cold-ov").classList.remove("hidden");
   const ch=document.getElementById("chart-host"); if(ch&&!ch.firstChild) ch.innerHTML=MAP_CHART;
@@ -3295,6 +3306,7 @@ function renderColdList(){
 }
 function closeColdCases(){ State.coldCat=null; const _o=document.getElementById("cold-ov"); _o.classList.remove("cat"); _o.classList.add("hidden"); }
 function openColdDetail(code, autoSample){
+  dismissRegistrar();
   const e=_coldIdx.find(x=>String(x.code)===String(code));
   if(!e){ joinColdCase(code); return; }
   const safe=String(e.code).replace(/[^A-Za-z0-9]/g,"");
