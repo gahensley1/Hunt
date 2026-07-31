@@ -167,8 +167,12 @@
     font-family:var(--type);font-size:11.5px;line-height:1.45;text-align:left;
     color:var(--ink);opacity:.9;border-left:2px solid var(--brass);padding:2px 0 2px 9px;cursor:pointer}
   .st-deed input{margin:1px 0 0;flex:none;width:16px;height:16px;accent-color:#B8863B;cursor:pointer}
+  /* The Charter can be summoned from inside the archive, which stands at 500/510.
+     At the .overlay default of 40 it opened underneath and was invisible. Below
+     #ov-buy (560), which purchaseLicence() opens on top of this screen. */
+  #s-licence{z-index:550}
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#C88A2E;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#B5566B;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -980,7 +984,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">29r</p>
+      <p id="buildmark" aria-label="test build marker">29s</p>
     </div>
   </section>
 
@@ -2046,7 +2050,9 @@ function licenceGranted(){
   toast("Happy Building.", 3200);
   pushProfile();
   const after=State.afterLic; State.afterLic=null;
-  if(after==="build") startBuild(); else go("s-home");
+  if(after==="build") startBuild();
+  else if(after && after.indexOf("cold:")===0) openColdDetail(after.slice(5));
+  else go("s-home");
 }
 async function purchaseLicence(){
   const r=await requirePurchase("licence",{
@@ -2077,7 +2083,9 @@ function purchaseGranted(tier,priceLine){
 function continueAfterReceipt(){
   closeOverlay("s-receipt");
   const after=State.afterLic; State.afterLic=null;
-  if(after==="build") startBuild(); else go("s-home");
+  if(after==="build") startBuild();
+  else if(after && after.indexOf("cold:")===0) openColdDetail(after.slice(5));
+  else go("s-home");
 }
 async function restorePurchases(){
   var cred=myCred();
@@ -3402,7 +3410,11 @@ async function makeItYours(code){
        only clones the free founding cases. */
     const _e=(_coldIdx||[]).find(function(x){ return String(x.code)===String(code); });
     if(_e && _e.paid && !ownsPack(code)){ closeColdDetail(); toast("That pack must be bought before you can run it yourself \u2014 " + priceOf(_e) + ".", 3600); openColdDetail(code); return; }
-    if(!hasLicence() && !ownsPack(code)){ closeColdDetail(); closeColdCases(); openLicence("build"); return; }
+    /* Do NOT tear down the archive to ask for the Charter. Closing both overlays
+       left the hunter on the home screen when they declined, and in a blank build
+       when they accepted. The paid-pack branch above is the pattern: come back to
+       the case the hunter was reading. */
+    if(!hasLicence() && !ownsPack(code)){ openLicence("cold:"+code); return; }
     const n=((src.tiles||[]).length);
     const title=src.title||"this case";
     if(!confirm(
