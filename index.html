@@ -208,20 +208,48 @@
   /* THE BURN. A scorch line travels up the card while the paper darkens and lifts.
      Period machinery easing \u2014 slow in, no bounce. */
   .tg-scorch{position:absolute;left:0;right:0;bottom:0;height:0;z-index:4;pointer-events:none;
-    background:linear-gradient(to top,rgba(24,14,8,.96) 60%,rgba(138,51,36,.85) 88%,rgba(216,175,99,0) 100%)}
-  .tg.burning{animation:tgLift 1.35s cubic-bezier(.22,.61,.36,1) forwards}
+    background:linear-gradient(to top,rgba(18,11,6,.98) 0%,rgba(20,12,7,.98) 86%,rgba(96,38,18,.95) 93%,rgba(196,96,36,.8) 97%,rgba(232,142,58,0) 100%)}
+  .tg-scorch::before{content:"";position:absolute;left:-10px;right:-10px;top:-11px;height:18px;
+    background:
+      radial-gradient(circle 9px at 16px 15px,rgba(26,14,8,.42),rgba(26,14,8,0) 74%) repeat-x 0 0/33px 18px,
+      radial-gradient(circle 6px at 10px 13px,rgba(26,14,8,.34),rgba(26,14,8,0) 76%) repeat-x 6px 0/21px 18px,
+      radial-gradient(circle 4px at 6px 15px,rgba(26,14,8,.28),rgba(26,14,8,0) 80%) repeat-x 3px 0/13px 18px;
+    filter:blur(1.1px)}
+  .tg-scorch::after{content:"";position:absolute;left:-6px;right:-6px;top:-16px;height:5px;
+    background:
+      radial-gradient(ellipse 14px 4px at 18% 50%,rgba(216,175,99,.95),rgba(216,175,99,0) 70%),
+      radial-gradient(ellipse 20px 4px at 52% 60%,rgba(232,142,58,.95),rgba(232,142,58,0) 70%),
+      radial-gradient(ellipse 12px 3px at 81% 40%,rgba(216,175,99,.9),rgba(216,175,99,0) 70%),
+      linear-gradient(to right,rgba(138,51,36,0),rgba(138,51,36,.8) 20%,rgba(232,142,58,.9) 55%,rgba(138,51,36,.8) 85%,rgba(138,51,36,0));
+    filter:blur(1.2px)}
+  .tg.burning{animation:tgLift 1.35s cubic-bezier(.22,.61,.36,1) forwards,
+    tgEat 1.35s cubic-bezier(.22,.61,.36,1) forwards;
+    -webkit-mask-image:linear-gradient(to bottom,#000 0 50%,rgba(0,0,0,0) 50% 100%),
+      radial-gradient(circle 12px at 16px 50%,#000 60%,rgba(0,0,0,0) 61%),
+      radial-gradient(circle 8px at 10px 50%,#000 60%,rgba(0,0,0,0) 61%),
+      radial-gradient(circle 5px at 7px 50%,#000 60%,rgba(0,0,0,0) 61%);
+    mask-image:linear-gradient(to bottom,#000 0 50%,rgba(0,0,0,0) 50% 100%),
+      radial-gradient(circle 12px at 16px 50%,#000 60%,rgba(0,0,0,0) 61%),
+      radial-gradient(circle 8px at 10px 50%,#000 60%,rgba(0,0,0,0) 61%),
+      radial-gradient(circle 5px at 7px 50%,#000 60%,rgba(0,0,0,0) 61%);
+    -webkit-mask-size:100% 200%,33px 200%,21px 200%,13px 200%;
+    mask-size:100% 200%,33px 200%,21px 200%,13px 200%;
+    -webkit-mask-repeat:no-repeat,repeat-x,repeat-x,repeat-x;
+    mask-repeat:no-repeat,repeat-x,repeat-x,repeat-x}
   .tg.burning .tg-scorch{animation:tgBurn 1.35s cubic-bezier(.22,.61,.36,1) forwards}
   @keyframes tgBurn{ from{height:0} to{height:112%} }
+  @keyframes tgEat{ from{-webkit-mask-position:0 0;mask-position:0 0}
+    to{-webkit-mask-position:0 100%;mask-position:0 100%} }
   @keyframes tgLift{ 0%{transform:translateY(0) scale(1);opacity:1}
     70%{transform:translateY(-6px) scale(.985);opacity:1}
     100%{transform:translateY(-22px) scale(.94);opacity:0} }
   @media (prefers-reduced-motion:reduce){
-    .tg.burning{animation:tgFade .5s linear forwards}
+    .tg.burning{animation:tgFade .5s linear forwards;-webkit-mask-image:none;mask-image:none}
     .tg.burning .tg-scorch{animation:none}
     @keyframes tgFade{ to{opacity:0} }
   }
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#4E9A87;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#B4532A;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -1073,7 +1101,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">31e</p>
+      <p id="buildmark" aria-label="test build marker">31h</p>
     </div>
   </section>
 
@@ -1363,7 +1391,7 @@
 <div id="ov-dispatch" class="overlay center">
   <div class="modal">
     <div class="tg" id="tg-card">
-      <button class="tg-x" onclick="closeDispatch()" aria-label="Close the dispatch">\u2715</button>
+      <button class="tg-x" onclick="closeDispatch()" aria-label="Close the dispatch">✕</button>
       <div class="tg-h">SCOTLAND YARD</div>
       <div class="tg-meta"><div id="tg-date"></div><div id="tg-time"></div></div>
       <div id="tg-body"></div>
@@ -2014,7 +2042,7 @@ function openDispatch(code){
    page is hidden \u2014 a dispatch must never destroy itself in a pocket. */
 function _tgArm(){
   _tgClear();
-  _tgTimer=setTimeout(burnDispatch, 8000);
+  _tgTimer=setTimeout(burnDispatch, 6000);
 }
 function _tgClear(){ if(_tgTimer){ clearTimeout(_tgTimer); _tgTimer=null; } }
 document.addEventListener("visibilitychange", function(){
@@ -4363,7 +4391,7 @@ async function renderCurator(){
     let hh=null; try{ const r=await Store.get("hunt:"+code,true); hh=r?JSON.parse(r):null; }catch(e){}
     if(!hh) continue;
     const p=pub[code];
-    if(p && !p.cat) continue;
+    if(p && !p.cat && !p.place) continue;
     const row=document.createElement("div"); row.className="currow";
     if(p){
       let dr={avg:0,count:0,mine:0}; try{ dr=await coldCaseRating(code); }catch(e){}
@@ -4817,6 +4845,11 @@ function armDel(code,btn){
 }
 async function curDeleteCase(code){
   try{
+    /* ORDER IS THE WHOLE POINT. purgeCase deliberately returns false and KEEPS the
+       case when the Yard refuses (\u00a745.2). Unindexing first meant an outage could
+       strike the case from the archive while hunt:, sub: and res: survived, and the
+       Desk then re-rendered as though it had worked. Purge, bail, then unindex. */
+    if(!await purgeCase(code)) return;
     let idx=await coldIndex();
     if(idx.some(function(e){ return String(e.code)===String(code); })){
       idx=idx.filter(function(e){ return String(e.code)!==String(code); });
@@ -4825,7 +4858,6 @@ async function curDeleteCase(code){
       try{ await Store.del("coldstat:"+code, true); }catch(e){}
       try{ await Store.del("crate:"+code, true); }catch(e){}
     }
-    await purgeCase(code);
     renderCurator();
   }catch(e){ toast("The archive did not answer — try again."); }
 }
@@ -6317,6 +6349,11 @@ async function purgeCase(code, opts){
   try{
     for(const k of await Store.list("sub:"+code+":",true)) if(!await Store.del(k,true)) failed++;
     for(const k of await Store.list("res:"+code+":",true)) if(!await Store.del(k,true)) failed++;
+    /* A territory case may be waiting on the archivist's desk. subAccept and subDismiss
+       clear that marker; nothing else did, so a struck case left one pointing at a
+       hunt: record that no longer exists. Counted, not swallowed \u2014 the Worker answers
+       200 to a DELETE on a key it does not hold, so an ordinary purge cannot fail here. */
+    if(!await Store.del("submission:"+code,true)) failed++;
     if(!await Store.del("hunt:"+code,true)) failed++;
   }catch(e){ failed++; }
   if(failed){
