@@ -172,7 +172,7 @@
      #ov-buy (560), which purchaseLicence() opens on top of this screen. */
   #s-licence{z-index:550}
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#B4532A;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#C88A2E;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -1012,7 +1012,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">30h</p>
+      <p id="buildmark" aria-label="test build marker">31b</p>
     </div>
   </section>
 
@@ -3845,6 +3845,25 @@ async function loadLedger(m){
    totals beneath it. This is the leave-behind a park or a visitor centre is handed,
    so every figure in it is one the sync office can stand behind. ---- */
 var _ledgSheet=null;
+/* THE SERVER CANNOT NAME A CASE. All 35 curated cases live in this file and have never
+   been on the server, so a sheet drawn from /report alone shows a number and "unknown".
+   coldIndex() merges the server's cold:index with BUILTIN_INDEX, which carries title,
+   shelf, town and zip \u2014 so the name is always already on the phone. */
+async function _caseMeta(code){
+  const c=String(code);
+  try{
+    const idx=await coldIndex();
+    for(const e of (idx||[])) if(String(e.code)===c) return e;
+  }catch(_e){}
+  try{ const h=BUILTIN_HUNTS[c]; if(h) return {code:c,title:h.title||"",cat:h.cat||"",place:h.place||""}; }catch(_e){}
+  return null;
+}
+function _metaShelf(meta,fallback){
+  const k=(meta&&meta.cat)?String(meta.cat):"";
+  if(k) return k;
+  if(meta) return "territory";
+  return String(fallback||"unknown");
+}
 async function loadCaseSheet(code,m){
   const sec=document.getElementById("cur-ledger"); if(!sec) return;
   const month=/^[0-9]{4}-[0-9]{2}$/.test(String(m))?String(m):_ledgNow();
@@ -3884,10 +3903,15 @@ async function loadCaseSheet(code,m){
   if(err){ sec.innerHTML='<p class="ladder-eyebrow" style="margin:6px 0 4px">THE CASE SHEET</p>'+back
       +'<div class="empty">'+escapeHtml(err)+'</div>'; wire(); return; }
 
+  const meta=await _caseMeta(code);
+  sh._meta=meta||null;
+  sh._title=(meta&&meta.title)?String(meta.title):"";
+  sh._shelf=_metaShelf(meta,sh.shelf);
   _ledgSheet=sh;
   const T=(sh&&sh.totals)||{}, D=(sh&&sh.days)||[], DT=(sh&&sh.dayTotals)||{}, ST=(sh&&sh.states)||[];
   let h='<p class="ladder-eyebrow" style="margin:6px 0 4px">THE CASE SHEET</p>'+back;
-  h+='<div class="meta" style="margin:0 0 8px">'+escapeHtml(String(sh.shelf||"unknown").toUpperCase())
+  if(sh._title) h+='<div class="cn" style="text-align:center;margin:0 0 2px">'+escapeHtml(sh._title)+'</div>';
+  h+='<div class="meta" style="margin:0 0 8px">'+escapeHtml(String(sh._shelf||"unknown").toUpperCase())
     +' \u00b7 '+escapeHtml(_ledgLabel(month))+'</div>';
 
   h+='<div class="currow" style="flex-direction:column;align-items:stretch;gap:6px">'
@@ -3952,7 +3976,9 @@ function _ledgCsv(){
   const q=function(v){ return '"'+String(v==null?"":v).replace(/"/g,'""')+'"'; };
   const L=[];
   L.push(["Scavenger & Hunt Co."].map(q).join(","));
-  L.push(["Case",sh.code,"Shelf",sh.shelf,"Month",sh.month].map(q).join(","));
+  const _m=sh._meta||{};
+  L.push(["Case",sh.code,"Title",(sh._title||""),"Shelf",(sh._shelf||sh.shelf)].map(q).join(","));
+  L.push(["Town",(_m.city||_m.place||""),"State",(_m.zip?(function(){try{return zipState(_m.zip)||"";}catch(e){return "";}})():""),"Month",sh.month].map(q).join(","));
   L.push(["Compiled",sh.compiledAt].map(q).join(","));
   L.push("");
   const T=sh.totals||{};
@@ -3974,10 +4000,46 @@ function _ledgCsv(){
   try{
     const blob=new Blob([L.join("\r\n")],{type:"text/csv;charset=utf-8"});
     const u=URL.createObjectURL(blob), a=document.createElement("a");
-    a.href=u; a.download="case-"+String(sh.code)+"-"+String(sh.month)+".csv";
+    const _slug=String(sh._title||"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+    a.href=u; a.download="case-"+String(sh.code)+(_slug?"-"+_slug:"")+"-"+String(sh.month)+".csv";
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
     setTimeout(function(){ try{ URL.revokeObjectURL(u); }catch(e){} },2000);
   }catch(e){ toast("The copy could not be made."); }
+}
+var _terrRows=[];
+/* Filed-by-territory cases always carry a valid five-figure precinct \u2014 publishCold()
+   refuses one without it \u2014 so the state is always derivable and this filter is reliable
+   for every row. Matching is on state, zip, town and title, so a typed "GA", "31401" or
+   "Forsyth" all find the same case. */
+function _terrMatch(e,q){
+  if(!q) return true;
+  const t=String(q).trim().toLowerCase(); if(!t) return true;
+  let st=""; try{ st=String(zipState(e.zip)||"").toLowerCase(); }catch(_e){}
+  const hay=[e.title,e.place,e.city,e.zip,st,e.code].map(function(v){ return String(v==null?"":v).toLowerCase(); });
+  if(t.length===2 && st && st===t) return true;
+  return hay.some(function(v){ return v.indexOf(t)>=0; });
+}
+function _terrPaint(q){
+  const box=document.getElementById("terr-list"); if(!box) return;
+  const rows=(_terrRows||[]).filter(function(e){ return _terrMatch(e,q); });
+  if(!rows.length){ box.innerHTML='<div class="empty">'+((_terrRows||[]).length?"No territory case answers to that.":"No cases filed by territory.")+'</div>'; return; }
+  let sh="";
+  rows.forEach(function(e){ const c=String(e.code);
+    let st=""; try{ st=String(zipState(e.zip)||""); }catch(_e){}
+    sh+='<div class="currow" style="flex-direction:column;align-items:stretch;gap:7px"><div style="min-width:0">'
+      +'<b>'+escapeHtml(e.title||("Case No. "+c))+'</b>'
+      +'<div class="meta">CASE No. '+escapeHtml(c)
+      +((e.place||e.city)?' \u00b7 '+escapeHtml([e.place,e.city].filter(Boolean).join(", ")):'')
+      +((e.zip||st)?' \u00b7 '+escapeHtml([st,e.zip].filter(Boolean).join(" ")):'')+'</div>'
+      +'</div><div style="display:flex;gap:6px;flex-wrap:wrap">'
+      +'<button class="btn btn-brass terr-edit" data-code="'+escapeHtml(c)+'" style="flex:1 1 auto">Edit</button>'
+      +'<button class="btn-ghost terr-ret" data-code="'+escapeHtml(c)+'" style="flex:1 1 auto">Retire</button>'
+      +'<button class="btn-ghost cur-del terr-del" data-code="'+escapeHtml(c)+'" style="flex:1 1 auto">Delete</button></div></div>';
+  });
+  box.innerHTML=sh;
+  box.querySelectorAll(".terr-edit").forEach(function(b){ b.onclick=function(){ State._subReview=null; curEditCase(b.getAttribute("data-code")); }; });
+  box.querySelectorAll(".terr-ret").forEach(function(b){ b.onclick=function(){ retireCold(b.getAttribute("data-code")); }; });
+  box.querySelectorAll(".terr-del").forEach(function(b){ b.onclick=function(){ armDel(b.getAttribute("data-code"),b); }; });
 }
 async function renderCurator(){
   closeColdCases();
@@ -4082,24 +4144,16 @@ async function renderCurator(){
     const rows=Object.values(pub).filter(function(e){ return !e.cat; })
       .sort(function(a,b){ return String(a.title||"").localeCompare(String(b.title||"")); });
     const sec=document.createElement("div");
-    let sh='<p class="ladder-eyebrow" style="margin:6px 0 4px">FILED BY TERRITORY</p>';
-    if(!rows.length) sh+='<div class="empty">No cases filed by territory.</div>';
-    rows.forEach(function(e){ const c=String(e.code);
-      sh+='<div class="currow" style="flex-direction:column;align-items:stretch;gap:7px"><div style="min-width:0">'
-        +'<b>'+escapeHtml(e.title||("Case No. "+c))+'</b>'
-        +'<div class="meta">CASE No. '+escapeHtml(c)+((e.place||e.city)?' \u00b7 '+escapeHtml([e.place,e.city].filter(Boolean).join(", ")):'')+'</div>'
-        +'</div><div style="display:flex;gap:6px;flex-wrap:wrap">'
-        +'<button class="btn btn-brass terr-edit" data-code="'+escapeHtml(c)+'" style="flex:1 1 auto">Edit</button>'
-        +'<button class="btn-ghost terr-ret" data-code="'+escapeHtml(c)+'" style="flex:1 1 auto">Retire</button>'
-        +'<button class="btn-ghost cur-del terr-del" data-code="'+escapeHtml(c)+'" style="flex:1 1 auto">Delete</button></div></div>';
-    });
-    sh+='<p class="cur-clear-note">Testing tool &mdash; clears map cases only; the three shelves are left alone.</p>'
-      +'<button class="cur-clear" id="cur-clear-btn" onclick="armClearTerritory(this)">Clear all territory cold cases</button>';
-    sec.innerHTML=sh;
-    sec.querySelectorAll(".terr-edit").forEach(function(b){ b.onclick=function(){ State._subReview=null; curEditCase(b.getAttribute("data-code")); }; });
-    sec.querySelectorAll(".terr-ret").forEach(function(b){ b.onclick=function(){ retireCold(b.getAttribute("data-code")); }; });
-    sec.querySelectorAll(".terr-del").forEach(function(b){ b.onclick=function(){ armDel(b.getAttribute("data-code"),b); }; });
+    _terrRows=rows;
+    sec.innerHTML='<p class="ladder-eyebrow" style="margin:6px 0 4px">FILED BY TERRITORY</p>'
+      +'<div class="ledg-look"><input id="terr-filter" type="text" maxlength="40" autocomplete="off" '
+      +'spellcheck="false" placeholder="STATE, ZIP OR TOWN" aria-label="Filter by state, zip or town"></div>'
+      +'<p class="cold-tag">A CASE FILED BY TERRITORY ALWAYS ANSWERS TO A PRECINCT</p>'
+      +'<div id="terr-list"></div>';
     list.appendChild(sec);
+    _terrPaint("");
+    const fi=document.getElementById("terr-filter");
+    if(fi) fi.oninput=function(){ _terrPaint(fi.value); };
     return;
   }
   if(tab==="ledg"){
@@ -4579,17 +4633,6 @@ async function retireCold(code){
     renderCurator();
   }catch(e){ toast("The archive did not answer \u2014 try again."); }
 }
-var _clrArm=null;
-const CUR_CLEAR_LABEL="Clear all territory cold cases";
-function armClearTerritory(btn){
-  if(_clrArm){ clearTimeout(_clrArm); _clrArm=null;
-    try{ btn.textContent=CUR_CLEAR_LABEL; btn.classList.remove("armed"); }catch(e){}
-    clearTerritoryCold(); return; }
-  btn.textContent="Tap again \u2014 this cannot be undone";
-  btn.classList.add("armed");
-  _clrArm=setTimeout(function(){ _clrArm=null;
-    try{ btn.textContent=CUR_CLEAR_LABEL; btn.classList.remove("armed"); }catch(e){} }, 2800);
-}
 /* Withdraws every case filed by territory (the ones pinned on the map).
    Anything carrying a shelf (almanac/parlour/grounds) is deliberately spared,
    as are the built-in cases, which live in the file and cannot be unfiled. */
@@ -4608,26 +4651,6 @@ async function curEditCase(code){
     go("s-build");
     toast("Amending Case No. "+code+" \u2014 finish to save.", 3400);
   }catch(err){ toast("The case would not open \u2014 "+((err&&err.message)||"try again")+"."); }
-}
-async function clearTerritoryCold(){
-  try{
-    let idx=await coldIndex();
-    try{ (_coldIdx||[]).forEach(function(e){ if(!idx.some(function(x){ return String(x.code)===String(e.code); })) idx.push(e); }); }catch(_e){}
-    const builtin=(typeof BUILTIN_INDEX!=="undefined"? BUILTIN_INDEX:[]).map(function(b){ return String(b.code); });
-    const doomed=idx.filter(function(e){ return !e.cat && builtin.indexOf(String(e.code))<0; });
-    const keep=idx.filter(function(e){ return !!e.cat && builtin.indexOf(String(e.code))<0; });
-    if(!doomed.length){ toast("No territory cases are filed."); return; }
-    await Store.set("cold:index", JSON.stringify(keep), true);
-    for(const e of doomed){
-      try{ await Store.del("coldstat:"+e.code, true); }catch(_e){}
-      try{ const raw=await Store.get("hunt:"+e.code,true);
-        if(raw){ const hh=JSON.parse(raw); delete hh.cold; delete hh.parAuto; delete hh.cat;
-          await Store.set("hunt:"+e.code, JSON.stringify(hh), true); } }catch(_e){}
-    }
-    _coldIdx=await coldIndex();
-    toast(doomed.length+" territory case"+(doomed.length===1?"":"s")+" withdrawn \u2014 the shelves are untouched.", 3800);
-    renderCurator();
-  }catch(err){ toast("The archive did not answer \u2014 "+((err&&err.message)||"try again")+".", 4000); }
 }
 var _delArm={};
 function armDel(code,btn){
