@@ -172,7 +172,7 @@
      #ov-buy (560), which purchaseLicence() opens on top of this screen. */
   #s-licence{z-index:550}
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#7FA33C;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#B4532A;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -1012,7 +1012,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">30g</p>
+      <p id="buildmark" aria-label="test build marker">30h</p>
     </div>
   </section>
 
@@ -3543,7 +3543,15 @@ function openCurator(){
   setTimeout(function(){ try{ (who||inp).focus(); }catch(e){} },60);
 }
 function closeCurPass(){ document.getElementById("curpass-ov").classList.add("hidden"); }
-function tryCurPass(){
+var _curChecking=false;
+/* THE WORD IS TESTED AT THE DESK, NOT THREE SCREENS LATER.
+   The name is a nameplate \u2014 it sits in this file in plain text and always did. The
+   word is the only real credential, and it lives on the Worker, so the only honest way
+   to check it is to ask. One harmless curator-locked read does that. A wrong word is
+   refused HERE, with a reason, instead of admitting the caller to a Desk whose archive
+   tabs will fail later with a message that does not say why. */
+async function tryCurPass(){
+  if(_curChecking) return;
   const who=(document.getElementById("curname-in")||{}).value||"";
   const p=document.getElementById("curpass-in").value||"";
   if(String(who).trim().toUpperCase()!==CURATOR_NAME){ toast("The archivist shakes his head."); return; }
@@ -3551,7 +3559,27 @@ function tryCurPass(){
   CURATOR_WORD=String(p).trim();    /* session only \u2014 never stored, never shipped.
      TRIMMED: the field is compared literally at the Worker, so one trailing space was
      an unexplainable 403 three screens later. */
+  _curChecking=true;
+  let verdict="unchecked";
+  try{
+    const base=Store.base();
+    if(base){
+      const res=await fetch(base+"/list?prefix=cold%3A",{headers:_curHdr()});
+      verdict=(res.status===403)?"wrong":(res.ok?"right":"unchecked");
+    }
+  }catch(e){ verdict="unchecked"; }
+  _curChecking=false;
+  if(verdict==="wrong"){
+    CURATOR_WORD="";
+    const f=document.getElementById("curpass-in"); if(f){ f.value=""; try{ f.focus(); }catch(_e){} }
+    toast("The archivist does not recognise that word.");
+    return;
+  }
   closeCurPass(); renderCurator();
+  /* Offline or the office unreachable: the word could not be tested, so the Desk opens
+     on the caller's word. The local tabs work without the office; the archive tabs will
+     say plainly that they cannot be drawn. */
+  if(verdict==="unchecked") toast2("The office cannot be reached \u2014 your word was not checked.");
 }
 function _ledgNow(){ const n=new Date(); return n.getUTCFullYear()+"-"+String(n.getUTCMonth()+1).padStart(2,"0"); }
 function _ledgShift(m,by){
