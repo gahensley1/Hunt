@@ -172,7 +172,7 @@
      #ov-buy (560), which purchaseLicence() opens on top of this screen. */
   #s-licence{z-index:550}
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#A8478F;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#7FA33C;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -1012,7 +1012,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">30f</p>
+      <p id="buildmark" aria-label="test build marker">30g</p>
     </div>
   </section>
 
@@ -3581,7 +3581,44 @@ function _regRow(e,c){
     +'<div class="cn">'+escapeHtml(e.title||"Untitled")+' \u00b7 No. '+escapeHtml(String(e.code))+'</div>'
     +'<div class="meta">'+(where?where+' \u00b7 ':'')+(e.paid?'Paid':'Free')+'</div>'
     +'<div class="ledg-stats">'+_ledgStat("Looked at",_ledgNum(c.viewed))+_ledgStat("Taken",_ledgNum(c.opened))
-    +_ledgStat("Closed",_ledgNum(c.finished))+_ledgStat("Take-up",_ledgPct(c.takeRatePct))+'</div></div>';
+    +_ledgStat("Closed",_ledgNum(c.finished))+_ledgStat("Take-up",_ledgPct(c.takeRatePct))+'</div>'
+    +'<div><button class="btn-ghost reg-draw" data-code="'+escapeHtml(String(e.code))+'">Draw the case</button></div></div>';
+}
+var _regSnap={label:"",rows:[]};
+/* The Register's figures are ALL-TIME: compile() reads ct:% unfiltered, so only the
+   Ledger's headline varies by month. A case's month-by-month story lives on the case
+   sheet, which is where this button sends you \u2014 arrows and copy already built. */
+async function regDraw(code){
+  State.curTab="ledg";
+  ["desk","msgs","subs","arch","terr","ledg","reg"].forEach(function(t){
+    const b=document.getElementById("curtab-"+t); if(b) b.classList.toggle("on",t==="ledg"); });
+  const list=document.getElementById("curator-list"); if(!list) return;
+  list.innerHTML=""; const sec=document.createElement("div"); sec.id="cur-ledger"; list.appendChild(sec);
+  await loadCaseSheet(String(code), State.ledgMonth||_ledgNow());
+}
+function _regCsv(){
+  const snap=_regSnap; if(!snap||!snap.rows.length){ toast("Nothing on the books to copy."); return; }
+  const q=function(v){ return '"'+String(v==null?"":v).replace(/"/g,'""')+'"'; };
+  const L=[];
+  L.push(["Scavenger & Hunt Co. \u2014 The Estate Register"].map(q).join(","));
+  L.push(["Shelf",snap.label,"Drawn",new Date().toISOString()].map(q).join(","));
+  L.push(["Figures are all-time totals, not one month."].map(q).join(","));
+  L.push("");
+  L.push(["Case","Title","Shelf","Town","State","Paid","Looked at","Taken","Closed","Take-up %","Solved","Typical solve (min)"].map(q).join(","));
+  snap.rows.forEach(function(r){
+    const e=r.e, c=r.c||{};
+    L.push([e.code,e.title||"",_regShelfOf(e),e.city||e.place||"",_regState(e),(e.paid?"Paid":"Free"),
+      _ledgNum(c.viewed),_ledgNum(c.opened),_ledgNum(c.finished),
+      (c.takeRatePct==null?"":c.takeRatePct),_ledgNum(c.solved),
+      (c.meanSolveMinutes==null?"":c.meanSolveMinutes)].map(q).join(","));
+  });
+  try{
+    const blob=new Blob([L.join("\r\n")],{type:"text/csv;charset=utf-8"});
+    const u=URL.createObjectURL(blob), a=document.createElement("a");
+    a.href=u; a.download="register-"+String(snap.label||"all").toLowerCase().replace(/[^a-z0-9]+/g,"-")+".csv";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){ try{ URL.revokeObjectURL(u); }catch(e){} },2000);
+  }catch(e){ toast("The copy could not be made."); }
 }
 function _regSum(list,byCode){
   let v=0,o=0,f=0,sv=0,ms=0;
@@ -3612,13 +3649,18 @@ async function loadRegister(shelf){
   const tabs='<div class="ledg-look" style="flex-wrap:wrap">'+NAMES.map(function(p){
     return '<button class="btn-ghost reg-sh'+(p[0]===sh?' on':'')+'" data-sh="'+p[0]+'">'+p[1]+'</button>';
   }).join('')+'</div>';
-  const head='<p class="ladder-eyebrow" style="margin:6px 0 4px">THE ESTATE REGISTER</p>'+tabs;
+  const head='<p class="ladder-eyebrow" style="margin:6px 0 4px">THE ESTATE REGISTER</p>'+tabs
+    +'<div style="text-align:center;margin:0 0 8px"><button class="btn-ghost" id="reg-csv">Take a copy</button></div>';
   sec.innerHTML=head+'<div class="empty">Drawing the estate\u2026</div>';
   const wire=function(){
     sec.querySelectorAll(".reg-sh").forEach(function(b){
       b.onclick=function(){ loadRegister(b.getAttribute("data-sh")); }; });
     const r=document.getElementById("reg-again");
     if(r) r.onclick=function(){ loadRegister(sh); };
+    const cv=document.getElementById("reg-csv");
+    if(cv) cv.onclick=function(){ _regCsv(); };
+    sec.querySelectorAll(".reg-draw").forEach(function(b){
+      b.onclick=function(){ regDraw(b.getAttribute("data-code")); }; });
   };
   wire();
   let idx=[]; try{ idx=await coldIndex(); }catch(_e){ idx=[]; }
@@ -3636,6 +3678,9 @@ async function loadRegister(shelf){
   }catch(e){ err="The figures could not be drawn. ("+((e&&e.message)||"no reason given")+")"; }
   const byCode={};
   try{ ((rep&&rep.cases)||[]).forEach(function(c){ byCode[String(c.code)]=c; }); }catch(_e){}
+  const inView=(sh==="all")?idx.slice():idx.filter(function(e){ return _regShelfOf(e)===sh; });
+  _regSnap={label:(sh==="all"?"All":(LABEL[sh]||sh)),
+    rows:inView.map(function(e){ return {e:e,c:byCode[String(e.code)]||{}}; })};
   let h=head;
   h+='<div class="meta" style="margin:0 0 8px">'+escapeHtml(String(idx.length))+' cases on the books.'
     +(err?' The figures are missing \u2014 the roll below is complete, the counts are not.':'')+'</div>';
