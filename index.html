@@ -172,7 +172,7 @@
      #ov-buy (560), which purchaseLicence() opens on top of this screen. */
   #s-licence{z-index:550}
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#7A5A98;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#A8478F;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -808,6 +808,7 @@
   .cur-btns{display:flex;gap:8px;margin-top:9px}
   .ledg-nav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 8px}
   .ledg-month{font-family:var(--type);font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:var(--ink)}
+  .reg-sh.on{border-color:var(--brass);color:var(--ink)}
   .ledg-head{font-family:var(--type);font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:var(--ink-soft)}
   .ledg-stats{display:flex;flex-wrap:wrap;gap:4px 14px}
   .ledg-stat{display:flex;align-items:baseline;gap:5px;flex:0 0 auto}
@@ -833,6 +834,7 @@
   }
   #cur-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
   #cur-tabs button{flex:1 1 calc(33.33% - 4px)}
+  #cur-tabs button#curtab-reg{flex:0 1 calc(33.33% - 4px)}
   .cur-subtabs{display:flex;gap:6px;margin:0 0 8px}
   .cur-subtabs button{flex:1 1 0;min-width:0}
   #cur-tabs button,.cur-subtabs button{font-family:var(--type);font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink-soft);background:rgba(255,252,244,.5);border:1.5px solid rgba(184,134,59,.45);border-radius:8px;padding:7px 2px;cursor:pointer}
@@ -943,6 +945,7 @@
   .lic-or::before,.lic-or::after{content:"";flex:1;height:1px;background:rgba(30,28,26,.25)}
   .lic-key{width:100%;box-sizing:border-box;font-family:var(--type);font-size:15px;letter-spacing:2px;text-transform:uppercase;text-align:center;padding:12px;border:1.5px solid rgba(30,28,26,.35);border-radius:8px;background:rgba(255,252,244,.6);color:var(--ink);margin-bottom:10px}
   .lic-key:focus{outline:none;border-color:var(--brass)}
+  .lic-key-plain{text-transform:none;letter-spacing:1px}
   .lic-modal{max-width:360px;width:100%;max-height:86vh;overflow-y:auto;position:relative}
   .lic-close{position:absolute;top:6px;left:6px;z-index:2;color:var(--ink);background:none;border:none;font-size:20px}
   .lic-tiers{display:flex;flex-direction:column;gap:15px;margin-top:4px}
@@ -1009,7 +1012,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">30d</p>
+      <p id="buildmark" aria-label="test build marker">30f</p>
     </div>
   </section>
 
@@ -3557,13 +3560,108 @@ function _ledgShift(m,by){
 }
 function _ledgLabel(m){
   const M=["January","February","March","April","May","June","July","August","September","October","November","December"];
-  const p=String(m).split("-"); return (M[Number(p[1])-1]||"")+" "+p[0];
+  const p=String(m).split("-"); return (M[Number(p[1])-1]||"")+" "+p[0]+" (office time)";
 }
 function _ledgNum(v){ const n=Number(v); return isFinite(n)?n:0; }
 function _ledgPct(v){ return (v===null||v===undefined)?"\u2014":(_ledgNum(v)+"%"); }
 function _ledgMins(v){ return (v===null||v===undefined)?"\u2014":(_ledgNum(v)+" min"); }
 function _ledgStat(label,val){
   return '<div class="ledg-stat"><span class="ledg-k">'+escapeHtml(label)+'</span><span class="ledg-v">'+escapeHtml(String(val))+'</span></div>';
+}
+/* ---- THE ESTATE REGISTER ----
+   Every case the agency holds, named. The list comes from coldIndex(), which merges the
+   server's cold:index with BUILTIN_INDEX, so a baked case, a curator's published case and a
+   territory case all appear. The figures are then laid over it from /report; a case the
+   office has never seen shows zeros rather than vanishing. */
+function _regShelfOf(e){ return (e && e.cat) ? String(e.cat) : "territory"; }
+function _regState(e){ try{ return (e && e.zip) ? (zipState(e.zip)||"") : ""; }catch(_e){ return ""; } }
+function _regRow(e,c){
+  const st=_regState(e), where=(e.city?escapeHtml(e.city)+(st?", "+escapeHtml(st):""):(e.place?escapeHtml(e.place):""));
+  return '<div class="currow" style="flex-direction:column;align-items:stretch;gap:5px">'
+    +'<div class="cn">'+escapeHtml(e.title||"Untitled")+' \u00b7 No. '+escapeHtml(String(e.code))+'</div>'
+    +'<div class="meta">'+(where?where+' \u00b7 ':'')+(e.paid?'Paid':'Free')+'</div>'
+    +'<div class="ledg-stats">'+_ledgStat("Looked at",_ledgNum(c.viewed))+_ledgStat("Taken",_ledgNum(c.opened))
+    +_ledgStat("Closed",_ledgNum(c.finished))+_ledgStat("Take-up",_ledgPct(c.takeRatePct))+'</div></div>';
+}
+function _regSum(list,byCode){
+  let v=0,o=0,f=0,sv=0,ms=0;
+  list.forEach(function(e){ const c=byCode[String(e.code)]||{};
+    v+=_ledgNum(c.viewed); o+=_ledgNum(c.opened); f+=_ledgNum(c.finished);
+    const n=_ledgNum(c.solved); if(n && c.meanSolveMinutes!=null){ sv+=n; ms+=n*_ledgNum(c.meanSolveMinutes); } });
+  return '<div class="ledg-stats">'+_ledgStat("Cases",list.length)+_ledgStat("Looked at",v)
+    +_ledgStat("Taken",o)+_ledgStat("Closed",f)
+    +_ledgStat("Take-up",v?Math.round(o/v*100)+"%":"\u2014")
+    +_ledgStat("Typical solve",sv?Math.round(ms/sv)+" min":"\u2014")+'</div>';
+}
+function _regList(list,byCode){
+  if(!list.length) return '<div class="empty">No cases on this shelf.</div>';
+  const sorted=list.slice().sort(function(a,b){
+    const ca=byCode[String(a.code)]||{}, cb=byCode[String(b.code)]||{};
+    const d=_ledgNum(cb.opened)-_ledgNum(ca.opened); if(d) return d;
+    return String(a.title||"").localeCompare(String(b.title||""));
+  });
+  return sorted.map(function(e){ return _regRow(e,byCode[String(e.code)]||{}); }).join("");
+}
+async function loadRegister(shelf){
+  const sec=document.getElementById("cur-register"); if(!sec) return;
+  const KEYS=["all","almanac","parlour","grounds","territory"];
+  const sh=KEYS.indexOf(String(shelf))>=0?String(shelf):"all";
+  State.regShelf=sh;
+  const LABEL={almanac:"The Almanac",parlour:"The Parlour",grounds:"The Grounds",territory:"Territories"};
+  const NAMES=[["all","All"],["almanac","Almanac"],["parlour","Parlour"],["grounds","Grounds"],["territory","Territories"]];
+  const tabs='<div class="ledg-look" style="flex-wrap:wrap">'+NAMES.map(function(p){
+    return '<button class="btn-ghost reg-sh'+(p[0]===sh?' on':'')+'" data-sh="'+p[0]+'">'+p[1]+'</button>';
+  }).join('')+'</div>';
+  const head='<p class="ladder-eyebrow" style="margin:6px 0 4px">THE ESTATE REGISTER</p>'+tabs;
+  sec.innerHTML=head+'<div class="empty">Drawing the estate\u2026</div>';
+  const wire=function(){
+    sec.querySelectorAll(".reg-sh").forEach(function(b){
+      b.onclick=function(){ loadRegister(b.getAttribute("data-sh")); }; });
+    const r=document.getElementById("reg-again");
+    if(r) r.onclick=function(){ loadRegister(sh); };
+  };
+  wire();
+  let idx=[]; try{ idx=await coldIndex(); }catch(_e){ idx=[]; }
+  let rep=null, err="";
+  try{
+    const base=Store.base();
+    if(!base) err="The sync office cannot be reached.";
+    else if(!CURATOR_WORD) err="You are not signed in at the desk. Close the Desk and sign in again.";
+    else{
+      const res=await fetch(base+"/report?month="+encodeURIComponent(_ledgNow()),{headers:_curHdr()});
+      if(res.status===403) err="The archivist does not recognise your word. Close the Desk and sign in again.";
+      else if(!res.ok) err="The figures could not be drawn (\u2116 "+res.status+").";
+      else rep=await res.json();
+    }
+  }catch(e){ err="The figures could not be drawn. ("+((e&&e.message)||"no reason given")+")"; }
+  const byCode={};
+  try{ ((rep&&rep.cases)||[]).forEach(function(c){ byCode[String(c.code)]=c; }); }catch(_e){}
+  let h=head;
+  h+='<div class="meta" style="margin:0 0 8px">'+escapeHtml(String(idx.length))+' cases on the books.'
+    +(err?' The figures are missing \u2014 the roll below is complete, the counts are not.':'')+'</div>';
+  if(err) h+='<div class="empty">'+escapeHtml(err)+' <button class="btn-ghost" id="reg-again">Try again</button></div>';
+  if(sh==="all"){
+    ["almanac","parlour","grounds","territory"].forEach(function(k){
+      const list=idx.filter(function(e){ return _regShelfOf(e)===k; });
+      h+='<div class="ledg-head" style="margin:12px 0 4px">'+escapeHtml(LABEL[k].toUpperCase())+'</div>';
+      h+=_regSum(list,byCode)+_regList(list,byCode);
+    });
+  } else if(sh==="territory"){
+    const list=idx.filter(function(e){ return _regShelfOf(e)==="territory"; });
+    h+='<div class="ledg-head" style="margin:12px 0 4px">TERRITORIES</div>'+_regSum(list,byCode);
+    const states={};
+    list.forEach(function(e){ const st=_regState(e)||"Elsewhere"; (states[st]=states[st]||[]).push(e); });
+    Object.keys(states).sort().forEach(function(st){
+      h+='<div class="ledg-head" style="margin:10px 0 4px">'+escapeHtml(st)+'</div>'
+        +_regSum(states[st],byCode)+_regList(states[st],byCode);
+    });
+  } else {
+    const list=idx.filter(function(e){ return _regShelfOf(e)===sh; });
+    h+='<div class="ledg-head" style="margin:12px 0 4px">'+escapeHtml(LABEL[sh].toUpperCase())+'</div>'
+      +_regSum(list,byCode)+_regList(list,byCode);
+  }
+  sec.innerHTML=h;
+  wire();
 }
 async function loadLedger(m){
   const sec=document.getElementById("cur-ledger"); if(!sec) return;
@@ -3812,7 +3910,7 @@ async function renderCurator(){
   closeColdCases();
   document.getElementById("curator-ov").classList.remove("hidden");
   const tab=State.curTab||"desk";
-  ["desk","msgs","subs","arch","terr","ledg"].forEach(function(t){ const b=document.getElementById("curtab-"+t); if(b) b.classList.toggle("on",t===tab); });
+  ["desk","msgs","subs","arch","terr","ledg","reg"].forEach(function(t){ const b=document.getElementById("curtab-"+t); if(b) b.classList.toggle("on",t===tab); });
   const list=document.getElementById("curator-list"); list.innerHTML='<div class="empty">Fetching the files\u2026</div>';
   let mine=[]; try{ mine=JSON.parse(await Store.get("mycases")||"[]"); }catch(e){}
   const idx=await coldIndex(); const pub={}; idx.forEach(e=>pub[e.code]=e);
@@ -3935,6 +4033,12 @@ async function renderCurator(){
     const sec=document.createElement("div"); sec.id="cur-ledger";
     list.innerHTML=""; list.appendChild(sec);
     await loadLedger(State.ledgMonth||"");
+    return;
+  }
+  if(tab==="reg"){
+    const sec=document.createElement("div"); sec.id="cur-register";
+    list.innerHTML=""; list.appendChild(sec);
+    await loadRegister(State.regShelf||"all");
     return;
   }
   /* DESK tab \u2014 create + your own cases */
@@ -6308,7 +6412,7 @@ setTimeout(function(){ if(!_deepCase) showCommish(); }, 2600);
     <div class="tov-head"><span class="eyebrow">STAFF ONLY</span><h3>Curator&rsquo;s Entrance</h3></div>
     <p class="curpass-note">The archivist looks up from his ledger.<br>Your name and the word, please.</p>
     <input id="curname-in" class="lic-key" type="text" autocomplete="off" spellcheck="false" placeholder="NAME" onkeydown="if(event.key==='Enter')document.getElementById('curpass-in').focus()">
-    <input id="curpass-in" class="lic-key" type="password" autocomplete="off" spellcheck="false" placeholder="THE WORD" onkeydown="if(event.key==='Enter')tryCurPass()">
+    <input id="curpass-in" class="lic-key lic-key-plain" type="password" autocomplete="off" spellcheck="false" placeholder="THE WORD" onkeydown="if(event.key==='Enter')tryCurPass()">
     <button class="btn btn-primary" onclick="tryCurPass()">Present Credentials</button>
     <button class="btn-ghost" onclick="closeCurPass()">Withdraw</button>
   </div>
@@ -6323,6 +6427,7 @@ setTimeout(function(){ if(!_deepCase) showCommish(); }, 2600);
       <button id="curtab-arch" onclick="curTab('arch')">Archive</button>
       <button id="curtab-terr" onclick="curTab('terr')">Territories</button>
       <button id="curtab-ledg" onclick="curTab('ledg')">Ledger</button>
+      <button id="curtab-reg" onclick="curTab('reg')">Register</button>
     </div>
     <div id="curator-list"></div>
     <button class="btn btn-primary" onclick="closeCurator()">Close the Desk</button>
