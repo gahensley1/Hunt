@@ -198,7 +198,7 @@
   .tg{transition:opacity .5s linear}
   .tg.gone{opacity:0}
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#C88A2E;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#B5566B;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -1050,7 +1050,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">31j</p>
+      <p id="buildmark" aria-label="test build marker">31k</p>
     </div>
   </section>
 
@@ -1563,6 +1563,29 @@ const APP_META=Object.freeze({
    ============================================================ */
 const SYNC = { url: "https://deerstalker.tony-13f.workers.dev" };
 
+/* ---------- request cancellation (§13 item 9) ----------
+   Two faults, one helper. A fetch with no timeout hangs for as long as the radio
+   keeps the socket open — there is no clock on it — and nothing ever cancelled a
+   superseded batch: renderColdList() fires two shared reads PER ROW, so filtering
+   the archive again on a bad signal stacks a second batch on top of the first.
+   _sig() bounds every wait and, given an outer signal, dies with it. It builds on
+   AbortController alone — no AbortSignal.timeout(), no AbortSignal.any(), both of
+   which are far newer than the phones this must run on. Returns undefined only
+   where AbortController itself is missing, and fetch ignores signal:undefined. */
+const NET_MS = 12000;        /* kv reads, writes, deletes, list */
+const NET_SLOW_MS = 20000;   /* /report — the office aggregates before it answers */
+function _sig(ms, outer){
+  let c; try{ c=new AbortController(); }catch(e){ return outer||undefined; }
+  let done=false;
+  const kill=function(){ if(done) return; done=true; try{ c.abort(); }catch(_e){} };
+  try{ setTimeout(kill, ms); }catch(e){}
+  if(outer){ try{
+    if(outer.aborted) kill();
+    else outer.addEventListener("abort", kill, {once:true});
+  }catch(e){} }
+  return c.signal;
+}
+
 /* ---------- tiny storage layer (worker sync → window.storage → memory) ---------- */
 const Store = {
   ok: (typeof window!=="undefined" && window.storage && typeof window.storage.set==="function"),
@@ -1571,10 +1594,10 @@ const Store = {
   mem: new Map(),
   k(key,shared){return (shared?"S::":"P::")+key;},
   base(){ return SYNC.url ? SYNC.url.replace(/\/+$/,"") : ""; },
-  async get(key,shared=false){
+  async get(key,shared=false,sig){
     if(shared && this.base()){
       try{
-        const r=await fetch(this.base()+"/kv/"+encodeURIComponent(key));
+        const r=await fetch(this.base()+"/kv/"+encodeURIComponent(key),{signal:_sig(NET_MS,sig)});
         if(r.status===404) return null;
         if(r.ok) return await r.text();
       }catch(e){ /* offline → fall through to local */ }
@@ -1583,10 +1606,10 @@ const Store = {
     if(!shared && this.ls){ try{ const v=this.ls.getItem(this.lsKey(key)); if(v!==null) return v; }catch(e){} }
     const v=this.mem.get(this.k(key,shared)); return v===undefined?null:v;
   },
-  async set(key,val,shared=false){
+  async set(key,val,shared=false,sig){
     if(shared && this.base()){
       try{
-        const r=await fetch(this.base()+"/kv/"+encodeURIComponent(key),{method:"PUT",body:val,headers:Object.assign({},_curHdr())});
+        const r=await fetch(this.base()+"/kv/"+encodeURIComponent(key),{method:"PUT",body:val,headers:Object.assign({},_curHdr()),signal:_sig(NET_MS,sig)});
         if(r.ok) return true;
       }catch(e){ /* offline → fall through to local */ }
     }
@@ -1594,10 +1617,10 @@ const Store = {
     if(!shared && this.ls){ try{ this.ls.setItem(this.lsKey(key), val); return true; }catch(e){} }
     this.mem.set(this.k(key,shared),val); return true;
   },
-  async list(prefix,shared=false){
+  async list(prefix,shared=false,sig){
     if(shared && this.base()){
       try{
-        const r=await fetch(this.base()+"/list?prefix="+encodeURIComponent(prefix),{headers:Object.assign({},_curHdr())});
+        const r=await fetch(this.base()+"/list?prefix="+encodeURIComponent(prefix),{headers:Object.assign({},_curHdr()),signal:_sig(NET_MS,sig)});
         if(r.ok){ const j=await r.json(); return j.keys||[]; }
       }catch(e){ /* offline → fall through to local */ }
     }
@@ -1615,12 +1638,12 @@ const Store = {
      one — purgeCase relies on this to avoid telling a builder a record was
      destroyed when the Yard refused or was unreachable. Local cleanup still
      happens either way. Local-only deletes return true as before. */
-  async del(key,shared=false){
+  async del(key,shared=false,sig){
     let remote=null;                       // null = no server call attempted
     if(shared && this.base()){
       remote=false;
       try{
-        const r=await fetch(this.base()+"/kv/"+encodeURIComponent(key),{method:"DELETE",headers:Object.assign({},_curHdr())});
+        const r=await fetch(this.base()+"/kv/"+encodeURIComponent(key),{method:"DELETE",headers:Object.assign({},_curHdr()),signal:_sig(NET_MS,sig)});
         remote=!!r.ok;
       }catch(e){ /* offline → local cleanup still runs, verdict stays false */ }
     }
@@ -3449,8 +3472,16 @@ function caseTeaser(e){
     const v=volumeOf(e.code); return !!v && !volumeReady(v);
   }catch(_e){ return false; }
 }
+let _coldGen=0, _coldAbort=null;
 function renderColdList(){
   const list=document.getElementById("cold-list"); if(!list) return;
+  /* Every call supersedes the last. Cancel the previous batch's reads outright,
+     and stamp this one so a straggler that still lands is dropped instead of
+     painted onto a shelf that has moved on. */
+  const _g=++_coldGen;
+  try{ if(_coldAbort) _coldAbort.abort(); }catch(e){}
+  try{ _coldAbort=new AbortController(); }catch(e){ _coldAbort=null; }
+  const _sg=_coldAbort?_coldAbort.signal:undefined;
   list.innerHTML="";
   const shown=coldFilter(_coldIdx).slice().sort(function(a,b){ return volumeRank(a.code)-volumeRank(b.code); });
   renderColdChip(shown.length);
@@ -3478,9 +3509,13 @@ function renderColdList(){
     }catch(_e){}
     list.appendChild(row);
     (async()=>{ try{
+      if(!document.getElementById("coldmeta-"+e.code)) return;
+      const hr=await Store.get("hunt:"+e.code,true,_sg); if(_g!==_coldGen) return;
+      const hh=hr?JSON.parse(hr):null;
+      const sr=await Store.get("coldstat:"+e.code,true,_sg); if(_g!==_coldGen) return;
+      /* Re-read the node AFTER the awaits: the row this closure captured may have
+         been torn down and rebuilt while the office was thinking. */
       const m=document.getElementById("coldmeta-"+e.code); if(!m) return;
-      const hr=await Store.get("hunt:"+e.code,true); const hh=hr?JSON.parse(hr):null;
-      const sr=await Store.get("coldstat:"+e.code,true);
       const bits=["CASE No. "+e.code];
       if(hh&&hh.tiles) bits.push(hh.tiles.length+" clues");
       if(sr){ const s=JSON.parse(sr); if(s&&s.n>0) bits.push("avg solve "+fmtDur(s.totalMs/s.n)+" \u00b7 "+s.n+" solved"); }
@@ -3674,7 +3709,7 @@ async function tryCurPass(){
   try{
     const base=Store.base();
     if(base){
-      const res=await fetch(base+"/list?prefix=cold%3A",{headers:_curHdr()});
+      const res=await fetch(base+"/list?prefix=cold%3A",{headers:_curHdr(),signal:_sig(NET_MS)});
       verdict=(res.status===403)?"wrong":(res.ok?"right":"unchecked");
     }
   }catch(e){ verdict="unchecked"; }
@@ -3808,7 +3843,7 @@ async function loadRegister(shelf){
     if(!base) err="The sync office cannot be reached.";
     else if(!CURATOR_WORD) err="You are not signed in at the desk. Close the Desk and sign in again.";
     else{
-      const res=await fetch(base+"/report?month="+encodeURIComponent(_ledgNow()),{headers:_curHdr()});
+      const res=await fetch(base+"/report?month="+encodeURIComponent(_ledgNow()),{headers:_curHdr(),signal:_sig(NET_SLOW_MS)});
       if(res.status===403) err="The archivist does not recognise your word. Close the Desk and sign in again.";
       else if(!res.ok) err="The figures could not be drawn (\u2116 "+res.status+").";
       else rep=await res.json();
@@ -3879,7 +3914,7 @@ async function loadLedger(m){
     if(!base) err="The sync office cannot be reached.";
     else if(!CURATOR_WORD) err="You are not signed in at the desk. Close the Desk and sign in again.";
     else{
-      const res=await fetch(base+"/report?month="+encodeURIComponent(month),{headers:_curHdr()});
+      const res=await fetch(base+"/report?month="+encodeURIComponent(month),{headers:_curHdr(),signal:_sig(NET_SLOW_MS)});
       if(res.status===403) err="The archivist does not recognise your word. Close the Desk and sign in again.";
       else if(!res.ok) err="The ledger could not be drawn (\u2116 "+res.status+").";
       else rep=await res.json();
@@ -4003,7 +4038,7 @@ async function loadCaseSheet(code,m){
     if(!base) err="The sync office cannot be reached.";
     else if(!CURATOR_WORD) err="You are not signed in at the desk. Close the Desk and sign in again.";
     else{
-      const res=await fetch(base+"/report?code="+encodeURIComponent(code)+"&month="+encodeURIComponent(month),{headers:_curHdr()});
+      const res=await fetch(base+"/report?code="+encodeURIComponent(code)+"&month="+encodeURIComponent(month),{headers:_curHdr(),signal:_sig(NET_SLOW_MS)});
       if(res.status===403) err="The archivist does not recognise your word. Close the Desk and sign in again.";
       else if(res.status===400) err="That is not a case number the office recognises.";
       else if(!res.ok) err="The case could not be drawn (\u2116 "+res.status+").";
