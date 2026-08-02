@@ -1,0 +1,86 @@
+/* Scavenger & Hunt Co. — service worker.
+   Scope: OFFLINE PLAY ONLY. The bandwidth argument is dead — a returning hunter
+   already gets a 304 with zero bytes (SUPERHANDOFF s49 rule 1n). This exists so the
+   app OPENS in a park with no signal, with the hunter's progress already safe in
+   localStorage.
+
+   NON-NEGOTIABLE RULES, in order of how badly they bite:
+
+   1. NETWORK-FIRST FOR THE DOCUMENT. index.html is a single 3.8 MB file. Cache-first
+      would pin every returning hunter to whatever build they last loaded, forever,
+      with no way to push them off it. Network wins; the cache is only the fallback.
+   2. NEVER TOUCH THE WORKER. Anything bound for the sync host is passed straight to
+      the network, uncached. A cached roster is worse than no roster.
+   3. NEVER CACHE A NON-GET, A NON-200, OR AN OPAQUE RESPONSE.
+   4. VERSIONED CACHE. Bump CACHE on every ship that changes an asset; old caches are
+      deleted on activate.
+
+   This worker stores NO hunter data. Finds, status and credentials live in
+   localStorage and on the Worker; losing this cache loses nothing. */
+
+const CACHE = "shco-v1";
+const SHELL = ["./", "./index.html", "./j.html", "./og-card.jpeg", "./award-card.jpeg"];
+
+self.addEventListener("install", function(e){
+  e.waitUntil(caches.open(CACHE).then(function(c){
+    /* addAll is all-or-nothing; a single 404 would fail the whole install. */
+    return Promise.all(SHELL.map(function(u){
+      return c.add(new Request(u, {cache:"reload"})).catch(function(){});
+    }));
+  }));
+  self.skipWaiting();
+});
+
+self.addEventListener("activate", function(e){
+  e.waitUntil(caches.keys().then(function(ks){
+    return Promise.all(ks.map(function(k){ return k===CACHE ? null : caches.delete(k); }));
+  }).then(function(){ return self.clients.claim(); }));
+});
+
+self.addEventListener("message", function(e){
+  if(e.data && e.data.type==="SKIP_WAITING") self.skipWaiting();
+});
+
+self.addEventListener("fetch", function(e){
+  const req = e.request;
+  if(req.method !== "GET") return;
+
+  const url = new URL(req.url);
+
+  /* Rule 2 — the sync host is never intercepted. */
+  if(url.hostname.indexOf("workers.dev") > -1) return;
+  /* Cross-origin (fonts, anything else) is left to the browser. */
+  if(url.origin !== self.location.origin) return;
+
+  const isDoc = req.mode === "navigate" || (req.headers.get("accept")||"").indexOf("text/html") > -1;
+
+  if(isDoc){
+    /* Rule 1 — network-first, cache only as a fallback. */
+    e.respondWith(
+      fetch(req).then(function(r){
+        if(r && r.status===200 && r.type==="basic"){
+          const copy = r.clone();
+          caches.open(CACHE).then(function(c){ c.put(req, copy); }).catch(function(){});
+        }
+        return r;
+      }).catch(function(){
+        return caches.match(req).then(function(m){ return m || caches.match("./index.html"); });
+      })
+    );
+    return;
+  }
+
+  /* Static same-origin assets: cache-first, revalidate in the background. */
+  e.respondWith(
+    caches.match(req).then(function(m){
+      const net = fetch(req).then(function(r){
+        if(r && r.status===200 && r.type==="basic"){
+          const copy = r.clone();
+          caches.open(CACHE).then(function(c){ c.put(req, copy); }).catch(function(){});
+        }
+        return r;
+      }).catch(function(){ return m; });
+      return m || net;
+    })
+  );
+});
