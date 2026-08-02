@@ -1073,7 +1073,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">31z</p>
+      <p id="buildmark" aria-label="test build marker">32b</p>
     </div>
   </section>
 
@@ -2330,6 +2330,34 @@ function redeemLicence(){
 const CRED_KEY="shco:cred";
 function myCred(){ try{ return localStorage.getItem(CRED_KEY)||""; }catch(e){ return ""; } }
 function fmtCred(m){ return "DET-"+m.slice(3,9)+"-"+m.slice(9); }
+/* THE DETECTIVE'S SEAL. Three bits derived from the credential by a one-way hash, so the
+   same detective carries the same mark on every device and every case they ever join, and
+   nothing about the badge travels with it. Eight marks, locked s47 \u2014 the seal need not
+   be unique, because the name already disambiguates ("John 2"). Not for use on a green
+   ground: the disc all but vanishes there and only the brass ring reads. */
+const SEAL_HEX=["#6E2418","#8C7029","#55692F","#22605E","#2B4A63","#3F3B39","#5E3560","#8F4A1C"];
+const SEAL_NAME=["Oxblood","Mustard Seed","Moss","Teal","Prussian","Ink","Plum","Burnt Orange"];
+function sealOf(cred){
+  const m=String(cred||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
+  if(!m) return null;
+  let h=2166136261>>>0;
+  for(let i=0;i<m.length;i++){ h^=m.charCodeAt(i); h=Math.imul(h,16777619)>>>0; }
+  h=Math.imul(h^(h>>>15),2246822507)>>>0; h=Math.imul(h^(h>>>13),3266489909)>>>0;
+  return ((h^(h>>>16))>>>0)%8;
+}
+/* A brass ring in the .lic-cert idiom with a solid disc set inside it. The gap between
+   disc and ring is left transparent on purpose \u2014 the mark takes the surface behind it,
+   which is what makes it read as a seal in a mount rather than as a button. */
+function sealSvg(n,px){
+  /* Number(null) is 0, so a hunter with no seal would otherwise be handed Oxblood. */
+  if(n===null||n===undefined||n==="") return "";
+  n=Number(n); if(!isFinite(n)||n<0||n>7) return "";
+  const p=px||26;
+  return '<svg viewBox="0 0 42 42" width="'+p+'" height="'+p+'" role="img" aria-label="'+SEAL_NAME[n]+' seal" style="flex:0 0 auto;vertical-align:middle">'
+    +'<circle cx="21" cy="21" r="20" fill="none" stroke="#B8863B" stroke-width="1.5"/>'
+    +'<circle cx="21" cy="21" r="16.6" fill="none" stroke="#B8863B" stroke-width="0.6" opacity=".5"/>'
+    +'<circle cx="21" cy="21" r="13" fill="'+SEAL_HEX[n]+'"/></svg>';
+}
 function validCred(key){
   const m=(key||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
   if(m.length!==13||!m.startsWith("DET")) return false;
@@ -2345,7 +2373,7 @@ function validCred(key){
    text/plain is deliberate: it is a CORS-safelisted content type, so this costs no
    preflight and adds no round trip to anything it accompanies. It never blocks, never
    surfaces an error and never retries — offline, the count is simply lost. */
-const EV_NAMES=["badge_issued","case_opened","case_finished","hint_completed","cold_viewed"];
+const EV_NAMES=["badge_issued","case_opened","case_finished","hint_completed","cold_viewed","case_scanned"];
 function ev(name,code,tile,cat){
   try{
     if(EV_NAMES.indexOf(name)<0) return;
@@ -2769,7 +2797,7 @@ async function saveHunterSub(status){
   const found=finds.filter(f=>f.src).length;
   // First submission (any size) stamps the entry time — the tiebreaker (permanent)
   if(!finishedAt && status==="submitted" && found>0) finishedAt=Date.now();
-  const sub={code:hunt.code, hid:State.hid, name:State.hunterName||"Anonymous",
+  const sub={code:hunt.code, hid:State.hid, name:State.hunterName||"Anonymous", seal:sealOf(myCred()),
     status, found, total:hunt.tiles.length, updatedAt:Date.now(), finishedAt, startedAt, finds};
   /* ARCHIVE CASES ARE PLAYED ALONE \u2014 there is no Builder to satisfy, so no photograph
      ever leaves the device. The full board (images and all) is kept in local store so a
@@ -6492,7 +6520,7 @@ async function renderRoster(){
       + (reviewed? ` · ${yes} confirmed ✓` : "")
       + (!rk && when? ` · ${when}` : "");
     const row=document.createElement("div"); row.className="caserow";
-    row.innerHTML=`<div><div class="cn">${escapeHtml(disp)}</div><div class="meta">${meta}</div></div>
+    row.innerHTML=`${sealSvg(s.seal,26)}<div style="min-width:0"><div class="cn">${escapeHtml(disp)}</div><div class="meta">${meta}</div></div>
       <span class="pill ${st.c}">${st.t}</span>`;
     row.onclick=()=>openVerify(code, s.hid);
     body.appendChild(row);
@@ -6642,7 +6670,7 @@ async function openVerify(code, hid){
   const hunt=JSON.parse(hraw);
   const sub= sraw? JSON.parse(sraw):null;
   const res= rraw? (JSON.parse(rraw)||{}):{};
-  document.getElementById("verify-caseno").textContent=(sub&&sub.name?sub.name:"Hunter")+" · No. "+code;
+  document.getElementById("verify-caseno").innerHTML=sealSvg(sub&&sub.seal,22)+'<span style="vertical-align:middle;margin-left:7px">'+escapeHtml((sub&&sub.name?sub.name:"Hunter")+" · No. "+code)+'</span>';
   const body=document.getElementById("verify-body");
   if(!sub){
     document.getElementById("v-count").textContent="0 / 0 confirmed";
@@ -6829,6 +6857,9 @@ try{
 function _runDeepLink(){
   if(!_deepCase) return;
   var code=_deepCase; _deepCase=null;
+  /* THE SCAN. Fired here, before every gate, because case_opened fires only after five
+     refusals and cannot answer how many people a poster actually reached. */
+  try{ ev("case_scanned", code, "", ""); }catch(e){}
   try{ history.replaceState(null,"",location.pathname+location.search); }catch(e){}
   try{ var sh=document.getElementById("scrollhint-ov"); if(sh) sh.classList.add("hidden"); }catch(e){}
   markTourDone();
