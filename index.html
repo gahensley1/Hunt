@@ -216,7 +216,7 @@
   .tg{transition:opacity .5s linear}
   .tg.gone{opacity:0}
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#C88A2E;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#B5566B;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -1070,7 +1070,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">31r</p>
+      <p id="buildmark" aria-label="test build marker">31s</p>
     </div>
   </section>
 
@@ -4210,10 +4210,29 @@ function _terrPaint(q){
       +'</div><div style="display:flex;gap:6px;flex-wrap:wrap">'
       +'<button class="btn btn-brass terr-edit" data-code="'+escapeHtml(c)+'" style="flex:1 1 auto">Edit</button>'
       +'<button class="btn-ghost terr-ret" data-code="'+escapeHtml(c)+'" style="flex:1 1 auto">Retire</button>'
-      +'<button class="btn-ghost cur-del terr-del" data-code="'+escapeHtml(c)+'" style="flex:1 1 auto">Delete</button></div></div>';
+      +'<button class="btn-ghost terr-info" data-code="'+escapeHtml(c)+'" style="flex:1 1 auto">Edit Info</button>'
+      +'<button class="btn-ghost cur-del terr-del" data-code="'+escapeHtml(c)+'" style="flex:1 1 auto">Delete</button></div>'
+      /* THE PARTICULARS, folded away. Same ids as the Desk and Submissions blocks so
+         curGeo() and curDiff() read all three - only one tab renders at a time, so the
+         ids cannot collide. Sec 5w: anchor later edits on the SELECTOR. */
+      +'<div class="cur-part hidden" id="terr-part-'+c+'"><p class="ladder-eyebrow" style="margin:2px 0 0">PARTICULARS</p>'
+      +'<input class="cur-in" id="cplace-'+c+'" maxlength="60" placeholder="The grounds \u2014 park, landmark or venue" value="'+escapeHtml(e.place||"")+'">'
+      +'<div class="cgeo-row"><input class="cur-in" id="cgeo-city-'+c+'" maxlength="40" placeholder="City" value="'+escapeHtml(e.city||"")+'">'
+      +'<input class="cur-in" id="cgeo-state-'+c+'" maxlength="20" placeholder="State" value="'+escapeHtml(e.state||st||"")+'"></div>'
+      +'<div class="cgeo-row"><input class="cur-in" id="cgeo-zip-'+c+'" maxlength="10" inputmode="numeric" placeholder="Zip (required)" value="'+escapeHtml(String(e.zip||""))+'">'
+      +'<input class="cur-in" id="cgeo-ctry-'+c+'" maxlength="30" placeholder="Country" value="'+escapeHtml(e.country||"")+'"></div>'
+      +'<input class="cur-in" id="cblurb-'+c+'" maxlength="120" placeholder="One-line teaser for the shelf" value="'+escapeHtml(e.blurb||"")+'">'
+      +'<div class="cdiff-row"><span class="cdiff-lbl">Difficulty</span>'+starpickHTML("cdiff-"+c,e.diff||0)+'</div>'
+      +'<div class="cgeo-row"><button class="btn-ghost" id="cgeo-pin-'+c+'"'+(e.lat!=null?' data-lat="'+e.lat+'" data-lon="'+e.lon+'"':'')+' onclick="curPick(\''+c+'\')">'+(e.lat!=null?'\u2691 Pin placed \u2014 tap to move':'\u2690 Place on chart')+'</button></div>'
+      +'<button class="btn btn-brass terr-save" data-code="'+escapeHtml(c)+'">File the Amendment</button></div></div>';
   });
   box.innerHTML=sh;
   box.querySelectorAll(".terr-edit").forEach(function(b){ b.onclick=function(){ State._subReview=null; curEditCase(b.getAttribute("data-code")); }; });
+  box.querySelectorAll(".terr-info").forEach(function(b){ b.onclick=function(){
+    var el=document.getElementById("terr-part-"+b.getAttribute("data-code")); if(!el) return;
+    var open=!el.classList.contains("hidden");
+    el.classList.toggle("hidden"); b.textContent=open?"Edit Info":"Hide Info"; }; });
+  box.querySelectorAll(".terr-save").forEach(function(b){ b.onclick=function(){ saveTerrInfo(b.getAttribute("data-code")); }; });
   box.querySelectorAll(".terr-ret").forEach(function(b){ b.onclick=function(){ retireCold(b.getAttribute("data-code")); }; });
   box.querySelectorAll(".terr-del").forEach(function(b){ b.onclick=function(){ armDel(b.getAttribute("data-code"),b); }; });
 }
@@ -4788,6 +4807,51 @@ function curatorCreateHunt(){
   State._curatorBuildFlow=true;
   document.getElementById("curator-ov").classList.add("hidden");
   startBuild();
+}
+/* AMEND A FILED TERRITORY CASE. publishCold() remains the DESK's save path and is
+   left alone - it navigates home on success, which is wrong from the Territories
+   tab. This mirrors its territory branch exactly: cat stays empty, the case stays
+   free, and a case filed by territory must still answer to a precinct. */
+async function saveTerrInfo(code){
+  code=String(code||""); if(!code) return;
+  try{
+    const raw=await Store.get("hunt:"+code,true); if(!raw){ toast("Case not reachable."); return; }
+    const hh=JSON.parse(raw);
+    const geo=curGeo(code); const gz=String(geo.zip||"").trim();
+    if(!/^\d{5}$/.test(gz)||!gazAuto({zip:gz})){
+      const zi=document.getElementById("cgeo-zip-"+code);
+      if(zi){ try{ zi.focus(); zi.select(); }catch(e){} }
+      toast("A case filed by territory must answer to a precinct \u2014 correct the zip and file again.", 4200);
+      return; }
+    const pf=document.getElementById("cplace-"+code), bf=document.getElementById("cblurb-"+code);
+    if(pf) hh.place=String(pf.value||"").trim();
+    if(bf) hh.blurb=String(bf.value||"").trim();
+    await Store.set("hunt:"+code, JSON.stringify(hh), true);
+    let idx=await coldIndex();
+    try{ (_coldIdx||[]).forEach(function(x){ if(!idx.some(function(y){ return String(y.code)===String(x.code); })) idx.push(x); }); }catch(_e){}
+    const i=idx.findIndex(function(x){ return String(x.code)===String(code); });
+    const prev=(i>=0? idx[i] : {});
+    const entry=Object.assign({}, prev,
+      {code:code, title:hh.title||prev.title||"Untitled Case", place:hh.place||"", blurb:hh.blurb||"", diff:curDiff(code)},
+      geo, {cat:"", paid:false, price:"", vol:""});
+    /* A FRESHLY PLACED PIN WINS; A CHANGED ZIP OTHERWISE RE-DERIVES THE COORDS.
+       The pin button is PRE-POPULATED from the stored entry, so "has a pin" cannot
+       tell a pin the curator just dropped from coords the case already carried.
+       Compare against the stored lat instead: if it moved, the curator moved it.
+       Without this, re-zipping a case leaves it pinned to its former precinct,
+       because gazAuto only fires when lat is absent. */
+    const pb=document.getElementById("cgeo-pin-"+code);
+    const pinLat=(pb && pb.dataset && pb.dataset.lat!=null && pb.dataset.lat!=="") ? +pb.dataset.lat : null;
+    const moved=(pinLat!==null) && (prev.lat==null || +prev.lat!==pinLat);
+    const zipMoved=String(prev.zip||"").trim()!==gz;
+    if(!moved && zipMoved){ delete entry.lat; delete entry.lon; }
+    if(entry.lat==null){ const g=gazAuto(entry); if(g){ entry.lat=+(+g[0]).toFixed(4); entry.lon=+(+g[1]).toFixed(4); } }
+    if(i>=0) idx[i]=entry; else idx.push(entry);
+    await Store.set("cold:index", JSON.stringify(idx), true);
+    _coldIdx=idx;
+    toast("The particulars are amended.", 3200);
+    await renderCurator();
+  }catch(e){ toast("The archive did not answer \u2014 try again."); }
 }
 function curGeo(code){
   const g={}, f=id=>{const el=document.getElementById(id+"-"+code); return el?el.value.trim():"";};
