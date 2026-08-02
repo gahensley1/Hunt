@@ -216,7 +216,7 @@
   .tg{transition:opacity .5s linear}
   .tg.gone{opacity:0}
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#C88A2E;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#B5566B;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -999,6 +999,12 @@
   .lic-eyebrow{font-family:var(--serif);font-size:14px;letter-spacing:2px;color:var(--title);font-weight:900}
   .lic-title{font-family:var(--serif);font-weight:900;font-size:27px;color:var(--title);margin:6px 0 0;letter-spacing:.3px}
   .lic-cert .rule-orn{margin:10px 18px 6px}
+  /* THE SEAL ROW. Mark at the left, two lines of text to its right, the mark centred
+     against them. Used on BOTH the Credentials card and the Personnel File - anchor
+     later edits on the SELECTOR, not on the copy (rule 5w). */
+  .cred-seal-row{display:flex;justify-content:flex-start;align-items:center;gap:12px;margin:10px 0 2px;text-align:left;
+    font-family:var(--paper);font-size:13.5px;line-height:1.35;color:var(--ink)}
+  .cred-seal-row .csr-t{max-width:215px}
   .lic-copy{font-size:14px;color:var(--ink-soft);line-height:1.55;margin:8px 0 0}
   .lic-free{font-family:var(--sans);font-size:14px;letter-spacing:1px;color:var(--green);margin-top:14px;font-weight:700;line-height:1.15}
   .lic-small{font-size:11.5px;color:var(--ink-soft);opacity:.85;margin:9px 4px 0;line-height:1.45;text-align:center}
@@ -1073,7 +1079,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">32b</p>
+      <p id="buildmark" aria-label="test build marker">32c</p>
     </div>
   </section>
 
@@ -1448,6 +1454,7 @@
     <div class="rank-stamp" id="cred-rank"></div>
     <div class="dos-top" id="cred-photorow"></div>
     <div class="rank-ladder" id="rank-ladder"></div>
+    <div class="cred-seal-row" id="cred-sealrow"></div>
     <p class="cred-note">This name and badge no. is your only username &amp; password. Credentials can be viewed anytime by tapping the badge on the home page.</p>
     <p class="cc-pulse-cipher" onclick="copyCred()" style="cursor:pointer;color:var(--ink);font-family:var(--type);font-size:15px;letter-spacing:.5px;text-align:center;margin:8px 0">Take a Carbon Copy</p>
     <button class="banner-green" onclick="credFiled()">Filed — I have it safe</button>
@@ -2473,6 +2480,8 @@ function showCredCeremony(name, code){
       '<li><span class="dl">File No.</span><span class="dv cipher">'+(code?escapeHtml(fmtCred(code)):"\u2014 unissued \u2014")+'</span></li>'+
       '<li><span class="dl">Precinct</span><span class="dv">'+pv+'</span></li>'+
     '</ul></div>'; }catch(e){}
+  try{ var _sr=document.getElementById("cred-sealrow"); if(_sr){ var _sn=sealOf(code);
+    _sr.innerHTML = (_sn==null?"":(sealSvg(_sn,30)+'<span class="csr-t">The Register has assigned you the following identifier.</span>')); } }catch(e){}
   row.innerHTML="";
   const disp=fmtCred(code);            // DET-XXXXXX-XXXX
   const cells=[];
@@ -2590,6 +2599,7 @@ async function renderRecord(){
       '<li><span class="dl">Precinct</span><span class="dv">'+pv+'</span></li>'+
       '<li><span class="dl">Standing</span><span class="dv">'+tot+' commendation'+(tot===1?"":"s")+' on file</span></li>'+
     '</ul></div>'+
+    (function(){ var _sn=sealOf(cred); return _sn==null?"":'<div class="cred-seal-row">'+sealSvg(_sn,30)+'<span class="csr-t">The Register has assigned you the following identifier.</span></div>'; })()+
     '<span class="rec-guard">This file number is the only key to your record \u2014 name, licence &amp; coins. Guard it like a case file.</span>'+
     '<div class="dos-sec">'+rankLadderHTML()+'</div>'+
     '<div class="dos-sec"><img class="dos-wm" decoding="async" src="'+SEAL_IMG+'" alt="">'+commendationsHTML()+'</div>'+
