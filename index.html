@@ -216,7 +216,7 @@
   .tg{transition:opacity .5s linear}
   .tg.gone{opacity:0}
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#3B6BA5;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#C88A2E;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -1073,7 +1073,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">31y</p>
+      <p id="buildmark" aria-label="test build marker">31z</p>
     </div>
   </section>
 
@@ -3213,6 +3213,7 @@ function chartTap(cx,cy,target){
     if(btn){ btn.dataset.lat=ll[1].toFixed(4); btn.dataset.lon=ll[0].toFixed(4); btn.innerHTML="\u2691 Pin placed \u2014 tap to move"; }
     chartLocator(c.x,c.y);
     document.getElementById("chart-win").classList.remove("picking");
+    try{ closeColdCases(); }catch(e){}
     const cur=document.getElementById("curator-ov"); if(cur) cur.classList.remove("hidden");
     toast("Coordinates noted \u2014 publish to file them."); _pickCode=null; return; }
   const pin=target&&target.closest?target.closest(".cpin"):null;
@@ -3419,6 +3420,7 @@ function coldSearch(){
 }
 
 function curPick(code){ _pickCode=code;
+  try{ openColdCases(); }catch(e){}
   const cur=document.getElementById("curator-ov"); if(cur) cur.classList.add("hidden");
   const win=document.getElementById("chart-win"); if(win) win.classList.add("picking");
   const sc=document.querySelector(".cold-scroll"); if(sc) sc.scrollTo({top:0,behavior:"smooth"});
@@ -5466,6 +5468,14 @@ async function builderEditCase(code){
   }catch(err){ toast("The case would not open \u2014 "+((err&&err.message)||"try again")+"."); }
 }
 async function finishBuild(){
+  if(State._buildBusy) return;
+  State._buildBusy=true;
+  const _fb=document.getElementById("finish-build"), _fbWas=_fb?_fb.disabled:false;
+  if(_fb) _fb.disabled=true;
+  try{ return await _finishBuild(); }
+  finally{ State._buildBusy=false; if(_fb) _fb.disabled=_fbWas; }
+}
+async function _finishBuild(){
   // A case deserves a name — nudge before minting the number
   const t=(State.build.title||"").trim();
   if(!t || t==="Untitled Case"){
