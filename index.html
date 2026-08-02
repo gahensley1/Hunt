@@ -216,7 +216,7 @@
   .tg{transition:opacity .5s linear}
   .tg.gone{opacity:0}
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#7FA33C;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#3B6BA5;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -1073,7 +1073,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">31w</p>
+      <p id="buildmark" aria-label="test build marker">31y</p>
     </div>
   </section>
 
@@ -1748,6 +1748,10 @@ function _tipClear(scrId,gridId,ignoreToast){
   }catch(e){ return false; }
 }
 function _tipQueue(key,scrId,gridId,msg,cls,delay,ms){
+  /* TEACHING TIPS ARE FOR BUILDERS, NOT FOR THE DESK. A hunter meets the build
+     screen once; a representative works there daily. Builders keep every tip
+     unchanged - this suppresses ONLY the Desk flow (owner, s47). */
+  if(scrId==="s-build" && State._curatorBuildFlow) return;
   let tries=0;
   const fire=function(){
     if(_tipClear(scrId,gridId)){ toast(msg,ms||4600,cls||undefined); return; }
@@ -1810,6 +1814,7 @@ function _movePanArm(delay){
    Reduced motion falls back to the toast this replaced, so the message survives. */
 function _movePanTour(){
   try{ if(localStorage.getItem("shco:movetour")) return; }catch(e){}
+  if(State._curatorBuildFlow) return;   /* the Desk already knows how to rearrange */
   try{
     if(window.matchMedia && matchMedia("(prefers-reduced-motion:reduce)").matches){
       if(_tipClear("s-build","build-grid")) toast(MOVE_TIP,3800,"tip atadd");
@@ -4252,6 +4257,25 @@ function _terrPaint(q){
    "openCurator(); renderCurator();" did once openCurator() learned to render. Same
    generation idiom as renderColdList/_coldGen: the newest run wins, older ones
    return at the next checkpoint. */
+/* THE AGENCY'S OWN SHELF. A case built at the Desk belongs to the Agency, not to a
+   device. "mycases" is deviceLocal by design - it is a builder's private folder - so a
+   second representative signing in elsewhere could not see work in progress. desk:index
+   is the shared companion to cold:index: every Desk-built case, published or pending,
+   listed once. Curators are faceless agency representatives on one collective login, so
+   no case carries an author and none needs one (owner, s47). */
+var _deskIdx=null;
+async function deskIndex(){
+  try{ const r=await Store.get("desk:index",true); const a=r?JSON.parse(r):[];
+    _deskIdx=Array.isArray(a)?a.map(String):[]; }catch(e){ if(!_deskIdx) _deskIdx=[]; }
+  return _deskIdx||[]; }
+async function deskAdd(code){ code=String(code||""); if(!code) return;
+  try{ const a=await deskIndex();
+    if(!a.includes(code)){ a.unshift(code); _deskIdx=a;
+      await Store.set("desk:index", JSON.stringify(a), true); } }catch(e){} }
+async function deskDrop(code){ code=String(code||""); if(!code) return;
+  try{ const a=await deskIndex(); const i=a.indexOf(code);
+    if(i>-1){ a.splice(i,1); _deskIdx=a;
+      await Store.set("desk:index", JSON.stringify(a), true); } }catch(e){} }
 var _curGen=0;
 async function renderCurator(){
   const _g=++_curGen;
@@ -4264,6 +4288,9 @@ async function renderCurator(){
   /* Belt and braces: a code stored once as a number and once as a string would pass
      every !mine.includes() guard and render twice. */
   mine=Array.from(new Set(mine.map(String)));
+  /* ADDITIVE, NEVER SUBTRACTIVE. The shared shelf is merged in; nothing already
+     visible on this device is taken away by the merge. */
+  try{ (await deskIndex()).forEach(function(c){ c=String(c); if(!mine.includes(c)) mine.push(c); }); }catch(_e){}
   const idx=await coldIndex(); const pub={}; idx.forEach(e=>pub[e.code]=e);
   try{ (_coldIdx||[]).forEach(e=>{ if(!pub[e.code]) pub[e.code]=e; }); }catch(_e){}
   let subCodes=new Set();
@@ -4826,6 +4853,7 @@ async function subAccept(code){ code=String(code||""); if(!code) return;
   _coldIdx=idx;
   try{ await Store.del("submission:"+code, true); }catch(e){}
   try{ let mine=JSON.parse(await Store.get("mycases")||"[]"); if(!mine.includes(code)){ mine.unshift(code); await Store.set("mycases", JSON.stringify(mine)); } }catch(e){}
+  try{ await deskAdd(code); }catch(e){}
   toast("Case No. "+code+" filed to the Territories \u2014 it\u2019s on the chart.", 3600);
   await renderCurator(); }
 async function subDismiss(code){ code=String(code||""); if(!code) return;
@@ -5473,6 +5501,7 @@ async function finishBuild(){
   // record in my cases
   let mine=[]; try{mine=JSON.parse(await Store.get("mycases")||"[]");}catch(e){}
   if(!mine.includes(code)){ mine.unshift(code); await Store.set("mycases",JSON.stringify(mine)); }
+  if(State.build && State.build.desk){ try{ await deskAdd(code); }catch(e){} }
   // Cold Case File submission — builder-initiated territorial review queue
   try{ const _chk=document.getElementById("cold-submit-chk");
     if(_chk && _chk.checked && !(State.build&&State.build.fromArchive)){
@@ -6501,6 +6530,7 @@ async function purgeCase(code, opts){
   }
   let mine=[]; try{mine=JSON.parse(await Store.get("mycases")||"[]");}catch(e){}
   const i=mine.indexOf(code); if(i>-1){ mine.splice(i,1); await Store.set("mycases",JSON.stringify(mine)); }
+  try{ await deskDrop(code); }catch(e){}
   try{localStorage.removeItem("finseen:"+code);}catch(e){}
   if(!(opts&&opts.silent)) toast("Case "+code+" struck from the record.", 2600);
   return true;
