@@ -216,7 +216,7 @@
   .tg{transition:opacity .5s linear}
   .tg.gone{opacity:0}
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#B4532A;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#C88A2E;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -812,6 +812,8 @@
   .cold-go{flex:0 0 46px;width:46px;height:46px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:50%;border:1.5px solid #7A5A28;background:radial-gradient(circle at 35% 30%,var(--brass-lt),var(--brass) 65%,#8F6A2E);box-shadow:0 2px 5px rgba(10,7,4,.35),inset 0 1px 2px rgba(255,240,200,.55)}
   .cold-go:active{transform:scale(.94)}
   .cgeo-row{display:flex;gap:6px;margin-top:6px}
+  /* the submission row's editable particulars - same 7px rhythm as the row */
+  .cur-part{display:flex;flex-direction:column;gap:7px;margin-top:2px}
   .cgeo-row .cur-in{flex:1;margin:0}
   .cgeo-row .btn-ghost{flex:1;text-align:center}
   #record-ov .btn-ghost{font-size:18px;font-weight:700;padding:14px 20px}
@@ -1068,7 +1070,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">31p</p>
+      <p id="buildmark" aria-label="test build marker">31r</p>
     </div>
   </section>
 
@@ -1311,7 +1313,7 @@
       <div class="crop-frame"></div>
     </div>
     <div class="zoomrow">🔍<input id="crop-zoom" type="range" min="1" max="3" step="0.01" value="1">🔎</div>
-    <div id="crop-cluerow" class="crop-cluerow" style="display:none"><p class="hint-guide">optional hints/clues can be added later by tapping clues</p><input id="crop-clue" class="field" maxlength="12" placeholder="Visible short clue - 12 characters">
+    <div id="crop-cluerow" class="crop-cluerow" style="display:none"><p id="crop-hint-guide" class="hint-guide">optional hints/clues can be added later by tapping clues</p><input id="crop-clue" class="field" maxlength="12" placeholder="Visible short clue - 12 characters">
       <p class="hint-toggle" id="crop-hint-toggle" onclick="toggleTileHint('crop')">+tap here to add hidden hint &#9662;</p>
       <textarea id="crop-hint" class="field hint-field" maxlength="140" rows="4" placeholder="Add a hidden hint for extreme difficult finds. A hunter can spend collected coins to reveal.&#10;Use sparingly."></textarea></div>
     <div class="row2">
@@ -4269,8 +4271,25 @@ async function renderCurator(){
           sh+='<div class="currow" style="flex-direction:column;align-items:stretch;gap:7px"><div style="min-width:0">'
             +'<b>'+escapeHtml(sb.title||("Case No. "+c))+'</b>'
             +'<div class="meta">CASE No. '+escapeHtml(c)+' \u00b7 '+escapeHtml(sb.byName||"a detective")+(sb.byBadge?' \u00b7 '+escapeHtml(sb.byBadge):'')+'</div>'
-            +((sb.zip||sb.place||sb.city)?'<div class="meta">'+escapeHtml([sb.place,sb.city].filter(Boolean).join(", "))+(sb.zip?(((sb.place||sb.city)?' \u00b7 ':'')+'ZIP '+escapeHtml(String(sb.zip))):'')+'</div>':'')
-            +'</div><div style="display:flex;gap:6px;flex-wrap:wrap">'
+            +'</div>'
+            /* THE PARTICULARS. Everything the builder filed, as live fields rather
+               than read-only text. subAccept reads THESE, not the stored record, so
+               what the curator sees is exactly what gets filed. The ids deliberately
+               match the Desk tab's (cplace-/cgeo-/cblurb-/cdiff-) so curGeo() and
+               curDiff() serve both screens - the tabs return early and are never
+               rendered together, so the ids cannot collide. Sec 5w: anchor any later
+               edit on the SELECTOR, not on this declaration block. */
+            +'<div class="cur-part"><p class="ladder-eyebrow" style="margin:2px 0 0">PARTICULARS</p>'
+            +'<input class="cur-in" id="cplace-'+c+'" maxlength="60" placeholder="The grounds \u2014 park, landmark or venue" value="'+escapeHtml(sb.place||"")+'">'
+            +'<div class="cgeo-row"><input class="cur-in" id="cgeo-city-'+c+'" maxlength="40" placeholder="City" value="'+escapeHtml(sb.city||"")+'">'
+            +'<input class="cur-in" id="cgeo-state-'+c+'" maxlength="20" placeholder="State" value="'+escapeHtml(sb.state||"")+'"></div>'
+            +'<div class="cgeo-row"><input class="cur-in" id="cgeo-zip-'+c+'" maxlength="10" inputmode="numeric" placeholder="Zip (required)" value="'+escapeHtml(String(sb.zip||""))+'">'
+            +'<input class="cur-in" id="cgeo-ctry-'+c+'" maxlength="30" placeholder="Country" value="'+escapeHtml(sb.country||"")+'"></div>'
+            +'<textarea class="cur-in" id="cdesc-'+c+'" maxlength="400" placeholder="The description as filed" style="min-height:56px">'+escapeHtml(sb.desc||"")+'</textarea>'
+            +'<input class="cur-in" id="cblurb-'+c+'" maxlength="120" placeholder="One-line teaser for the shelf" value="'+escapeHtml(sb.blurb||sb.desc||"")+'">'
+            +'<div class="cdiff-row"><span class="cdiff-lbl">Difficulty</span>'+starpickHTML("cdiff-"+c,sb.diff||0)+'</div>'
+            +'<div class="cgeo-row"><button class="btn-ghost" id="cgeo-pin-'+c+'"'+(sb.lat!=null?' data-lat="'+sb.lat+'" data-lon="'+sb.lon+'"':'')+' onclick="curPick(\''+c+'\')">'+(sb.lat!=null?'\u2691 Pin placed \u2014 tap to move':'\u2690 Place on chart')+'</button></div></div>'
+            +'<div style="display:flex;gap:6px;flex-wrap:wrap">'
             +'<button class="btn-ghost sub-review" data-code="'+escapeHtml(c)+'" style="flex:1 1 auto">Review / Edit</button>'
             +'<button class="btn btn-brass sub-accept" data-code="'+escapeHtml(c)+'" style="flex:1 1 auto">Accept &amp; File</button>'
             +'<button class="btn-ghost sub-dismiss" data-code="'+escapeHtml(c)+'" style="flex:1 1 auto">Dismiss</button></div></div>'; });
@@ -4720,17 +4739,32 @@ function subReview(code){ State._subReview=String(code||""); curEditCase(String(
 async function subAccept(code){ code=String(code||""); if(!code) return;
   let rec=null; try{ const r=await Store.get("submission:"+code, true); if(r) rec=JSON.parse(r); }catch(e){}
   if(!rec){ toast("That submission is no longer on the desk."); await renderCurator(); return; }
-  const zip=String(rec.zip||"").trim();
-  if(!/^\d{5}$/.test(zip)||!gazAuto({zip:zip})){ toast("This submission has no precinct \u2014 open Review / Edit to set its territory."); return; }
+  /* THE ROW WINS. The curator may correct anything the builder filed, so read the
+     live fields and fall back to the stored record only where a field is absent. */
+  const _fld=function(id){ const el=document.getElementById(id+"-"+code); return el?String(el.value||"").trim():null; };
+  const _zf=_fld("cgeo-zip");
+  const zip=(_zf!==null?_zf:String(rec.zip||"")).trim();
+  /* A bad zip used to send the curator to Review / Edit, which opens the BODY
+     editor and has never carried a zip field - an instruction that could not be
+     followed, leaving Dismiss as the only move. Land them in the field instead. */
+  if(!/^\d{5}$/.test(zip)||!gazAuto({zip:zip})){
+    const _zi=document.getElementById("cgeo-zip-"+code);
+    if(_zi){ try{ _zi.focus(); _zi.select(); }catch(e){} }
+    toast(_zi? "That zip answers to no precinct \u2014 correct it above and file again."
+             : "This submission has no precinct \u2014 open the Submissions tab to set its territory.", 4200);
+    return; }
   let hh=null; try{ const r=await Store.get("hunt:"+code, true); if(r) hh=JSON.parse(r); }catch(e){}
   if(!hh){ toast("The case body is not reachable."); return; }
   hh.cold=true; hh.parAuto=true; hh.cat=""; hh.paid=false; hh.price="";
-  hh.place=String(rec.place||hh.place||"").trim();
-  if(rec.desc && !hh.blurb) hh.blurb=String(rec.desc).trim();
+  const _pf=_fld("cplace"), _bf=_fld("cblurb"), _df=_fld("cdesc");
+  hh.place=String(_pf!==null?_pf:(rec.place||hh.place||"")).trim();
+  const _blurb=((_bf!==null?_bf:"") || (_df!==null?_df:String(rec.desc||""))).trim();
+  if(_blurb) hh.blurb=_blurb.slice(0,120);
   await Store.set("hunt:"+code, JSON.stringify(hh), true);
   const idx=await coldIndex();
   try{ (_coldIdx||[]).forEach(function(e){ if(!idx.some(function(x){ return String(x.code)===String(e.code); })) idx.push(e); }); }catch(_e){}
-  const geo={zip:zip}; if(rec.city) geo.city=rec.city;
+  const geo=Object.assign({}, curGeo(code)); geo.zip=zip;
+  if(!geo.city && rec.city) geo.city=rec.city;
   const entry={code:code, title:hh.title||"Untitled Case", place:hh.place, blurb:hh.blurb||"", diff:curDiff(code), ...geo, cat:"", paid:false, price:""};
   const a=gazAuto(entry); if(a){ entry.lat=+(+a[0]).toFixed(4); entry.lon=+(+a[1]).toFixed(4); }
   const i=idx.findIndex(function(e){ return String(e.code)===String(code); });
