@@ -216,7 +216,7 @@
   .tg{transition:opacity .5s linear}
   .tg.gone{opacity:0}
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#B5566B;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#7A5A98;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -1070,7 +1070,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">31s</p>
+      <p id="buildmark" aria-label="test build marker">31t</p>
     </div>
   </section>
 
@@ -1502,6 +1502,8 @@
     <label class="subterr-lab" for="st-desc">PARTICULARS &mdash; OPTIONAL</label>
     <textarea id="st-desc" class="field" placeholder="Describe the grounds &mdash; its landmarks, points of interest, and what makes it a fitting scene for a hunt."></textarea>
     <p class="pv-caution">Kindly share no personal particulars &mdash; telephone numbers, home addresses, or others&rsquo; names.</p>
+    <label class="subterr-lab">DIFFICULTY</label>
+    <div class="cdiff-row" id="st-diff-row"></div>
     <label class="st-deed"><input type="checkbox" id="st-deed-chk" onchange="subZipCheck()"><span>A case filed for territory passes into the permanent record of Scavenger &amp; Hunt Co. and may no longer be struck by its author. Your credentials and particulars remain your own.</span></label>
     <button id="st-file" class="btn btn-primary" disabled onclick="subTerrFile()">File for Consideration</button>
   </div>
@@ -3549,6 +3551,7 @@ function renderColdList(){
       const m=document.getElementById("coldmeta-"+e.code); if(!m) return;
       const bits=["CASE No. "+e.code];
       if(hh&&hh.tiles) bits.push(hh.tiles.length+" clues");
+      bits.push(fmtFiled(hh||e));
       if(sr){ const s=JSON.parse(sr); if(s&&s.n>0) bits.push("avg solve "+fmtDur(s.totalMs/s.n)+" \u00b7 "+s.n+" solved"); }
       if(hh&&hh.timerMins) bits.push("\u231A timed");
       m.textContent=bits.join(" \u00b7 ");
@@ -3713,6 +3716,10 @@ function joinColdCase(code){
 }
 /* the curator's desk (staff) */
 function openCurator(){
+  /* ALREADY SIGNED IN THIS SESSION. CURATOR_WORD is memory-only and still dies on
+     reload; re-presenting the gate at every visit tested nothing and cost a word each
+     time. Mirrors tryCurPass's own success path exactly. */
+  if(CURATOR_WORD){ closeCurPass(); renderCurator(); return; }
   document.getElementById("curpass-ov").classList.remove("hidden");
   const who=document.getElementById("curname-in"); if(who) who.value="";
   const inp=document.getElementById("curpass-in"); inp.value="";
@@ -4709,6 +4716,10 @@ function coldSubmitVis(){ try{ const w=document.getElementById("cold-submit-wrap
   const c=document.getElementById("cold-submit-chk"); if(c) c.checked=false; }catch(e){} }
 function openSubTerritory(){
   ["st-zip","st-place","st-city","st-desc"].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=""; });
+  /* The builder rates their own case. It prefills the curator's picker on the
+     Submissions row, which stays editable \u2014 their judgement, your final say. */
+  var _dr=document.getElementById("st-diff-row");
+  if(_dr) _dr.innerHTML='<span class="cdiff-lbl">How difficult?</span>'+starpickHTML("cdiff-st",0);
   var _d=document.getElementById("st-deed-chk"); if(_d) _d.checked=false;
   document.getElementById("st-file").disabled=true;
   document.getElementById("subterr-ov").classList.remove("hidden");
@@ -4733,7 +4744,7 @@ async function subTerrFile(){
   if(!/^\d{5}$/.test(zip)) return;
   var _d=document.getElementById("st-deed-chk");
   if(!_d||!_d.checked){ toast("Kindly accept the terms of filing before the case is entered."); return; }
-  var rec={code:p.code, title:p.title, byName:(await getMyName())||"", byBadge:(myCred()?fmtCred(myCred()):""),
+  var rec={code:p.code, title:p.title, byName:(await getMyName())||"", diff:curDiff("st"),
     zip:zip, place:document.getElementById("st-place").value.trim(),
     city:document.getElementById("st-city").value.trim(),
     desc:document.getElementById("st-desc").value.trim(), ts:Date.now()};
@@ -4826,6 +4837,7 @@ async function saveTerrInfo(code){
     const pf=document.getElementById("cplace-"+code), bf=document.getElementById("cblurb-"+code);
     if(pf) hh.place=String(pf.value||"").trim();
     if(bf) hh.blurb=String(bf.value||"").trim();
+    hh.updatedAt=Date.now();   /* an amended case is filed afresh \u2014 the row shows the new date */
     await Store.set("hunt:"+code, JSON.stringify(hh), true);
     let idx=await coldIndex();
     try{ (_coldIdx||[]).forEach(function(x){ if(!idx.some(function(y){ return String(y.code)===String(x.code); })) idx.push(x); }); }catch(_e){}
@@ -5420,6 +5432,7 @@ async function finishBuild(){
   const code = editing ? String(State.build.code) : await genCode();
   State.build.code=code;
   if(!editing){ State.build.createdAt=Date.now(); State.build.retentionDays=DEFAULT_KEEP_DAYS; }
+  else { State.build.updatedAt=Date.now(); }
   /* A Desk-built case belongs to the archive, never to the builder's own files.
      Stamped on the record so it survives reload and sync; retireCold() must not
      clear it - a retired case stays Desk-only (owner ruling, s38). */
@@ -6309,7 +6322,7 @@ async function openCaseFiles(){
     const dLeft=caseDaysLeft(hunt);
     const expNote=(dLeft!==null&&dLeft<=14)?` · <span style="color:var(--oxblood)">expires in ${dLeft}d</span>`:"";
     row.innerHTML=`<div><div class="cn">Case No. ${code}</div>
-      <div class="meta">${escapeHtml(hunt.title||"Untitled")} · ${hunt.tiles.length} clues · ${subs.length} player${subs.length===1?"":"s"}${expNote}</div></div>
+      <div class="meta">${escapeHtml(hunt.title||"Untitled")} · ${hunt.tiles.length} clues · ${fmtFiled(hunt)} · ${subs.length} player${subs.length===1?"":"s"}${expNote}</div></div>
       <span class="pill ${pill.c}">${pill.t}</span>`;
     row.onclick=()=>openRoster(code);
     const amend=document.createElement("button");
@@ -6429,6 +6442,15 @@ function caseExpired(hunt){ return !!(hunt&&hunt.createdAt) && (Date.now()-hunt.
 function caseDaysLeft(hunt){ return hunt&&hunt.createdAt? Math.ceil((hunt.createdAt+caseKeepDays(hunt)*DAY_MS-Date.now())/86400000) : null; }
 function caseKeptUntil(hunt){ return hunt&&hunt.createdAt? new Date(hunt.createdAt+caseKeepDays(hunt)*DAY_MS) : null; }
 function fmtDate(d){ return d? d.toLocaleDateString([], {month:"short",day:"numeric",year:"numeric"}) : ""; }
+/* THE FILING DATE. Every case built by a hunter or by the Desk stamps createdAt, and
+   an amendment stamps updatedAt, which supersedes it. The 35 curated cases carry
+   neither and never have, so they are minted at the date this rule shipped rather
+   than showing nothing \u2014 a case file without a date is not a case file. */
+var FILED_EPOCH=Date.UTC(2026,7,2);
+var FILED_MON=["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+function caseFiledMs(rec){ try{ return (rec&&(rec.updatedAt||rec.createdAt))||FILED_EPOCH; }catch(e){ return FILED_EPOCH; } }
+function fmtFiled(rec){ try{ var d=new Date(caseFiledMs(rec));
+  return "FILED "+d.getDate()+" "+FILED_MON[d.getMonth()]+" "+d.getFullYear(); }catch(e){ return ""; } }
 /* Returns true only if the record is genuinely gone from the Yard. On failure the
    case is LEFT in "mycases" — it still exists, and the builder is told so. */
 async function purgeCase(code, opts){
