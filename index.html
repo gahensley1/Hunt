@@ -216,7 +216,7 @@
   .tg{transition:opacity .5s linear}
   .tg.gone{opacity:0}
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#7A5A98;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#4E9A87;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -892,7 +892,10 @@
   }
   #cur-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
   #cur-tabs button{flex:1 1 calc(33.33% - 4px)}
-  #cur-tabs button#curtab-reg{flex:0 1 calc(33.33% - 4px)}
+  /* THE LAST ROW IS PINNED, NOT STRETCHED. Register keeps its third (owner ruling,
+     Option A) and Orders must match it \u2014 left to flex it grew to two thirds and
+     read as a banner rather than a tab. Anchored on the SELECTORS (\u00a75w). */
+  #cur-tabs button#curtab-reg,#cur-tabs button#curtab-ordr{flex:0 1 calc(33.33% - 4px)}
   .cur-subtabs{display:flex;gap:6px;margin:0 0 8px}
   .cur-subtabs button{flex:1 1 0;min-width:0}
   #cur-tabs button,.cur-subtabs button{font-family:var(--type);font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink-soft);background:rgba(255,252,244,.5);border:1.5px solid rgba(184,134,59,.45);border-radius:8px;padding:7px 2px;cursor:pointer}
@@ -1070,7 +1073,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">31t</p>
+      <p id="buildmark" aria-label="test build marker">31u</p>
     </div>
   </section>
 
@@ -3801,7 +3804,7 @@ var _regSnap={label:"",rows:[]};
    sheet, which is where this button sends you \u2014 arrows and copy already built. */
 async function regDraw(code){
   State.curTab="ledg";
-  ["desk","msgs","subs","arch","terr","ledg","reg"].forEach(function(t){
+  ["desk","msgs","subs","arch","terr","ledg","reg","ordr"].forEach(function(t){
     const b=document.getElementById("curtab-"+t); if(b) b.classList.toggle("on",t==="ledg"); });
   const list=document.getElementById("curator-list"); if(!list) return;
   list.innerHTML=""; const sec=document.createElement("div"); sec.id="cur-ledger"; list.appendChild(sec);
@@ -4247,7 +4250,7 @@ async function renderCurator(){
   closeColdCases();
   document.getElementById("curator-ov").classList.remove("hidden");
   const tab=State.curTab||"desk";
-  ["desk","msgs","subs","arch","terr","ledg","reg"].forEach(function(t){ const b=document.getElementById("curtab-"+t); if(b) b.classList.toggle("on",t===tab); });
+  ["desk","msgs","subs","arch","terr","ledg","reg","ordr"].forEach(function(t){ const b=document.getElementById("curtab-"+t); if(b) b.classList.toggle("on",t===tab); });
   const list=document.getElementById("curator-list"); list.innerHTML='<div class="empty">Fetching the files\u2026</div>';
   let mine=[]; try{ mine=JSON.parse(await Store.get("mycases")||"[]"); }catch(e){}
   const idx=await coldIndex(); const pub={}; idx.forEach(e=>pub[e.code]=e);
@@ -4387,8 +4390,11 @@ async function renderCurator(){
     await loadRegister(State.regShelf||"all");
     return;
   }
-  /* DESK tab \u2014 create + your own cases */
-  list.innerHTML='<button class="btn btn-brass" onclick="curatorCreateHunt()" style="margin-bottom:10px">+ Create a New Hunt</button>';
+  /* ORDERS tab \u2014 the Commissioner's own paperwork. Moved off the Desk tab in
+     31u: the order and the ten notes are a lot of reading to sit above the case
+     list, and neither is touched while building. */
+  if(tab==="ordr"){
+    list.innerHTML="";
   try{
     let _ord=null; try{ const r=await Store.get("order:current",true); if(r) _ord=JSON.parse(r); }catch(_e){}
     const ob=document.createElement("div"); ob.className="currow"; ob.style.cssText="flex-direction:column;align-items:stretch;gap:7px";
@@ -4419,6 +4425,10 @@ async function renderCurator(){
     jb.querySelectorAll(".joke-edit").forEach(function(b){ b.onclick=function(){ jokeEdit(parseInt(b.getAttribute("data-i"),10)); }; });
     list.appendChild(jb);
   }catch(_e){}
+    return;
+  }
+  /* DESK tab \u2014 create + your own cases */
+  list.innerHTML='<button class="btn btn-brass" onclick="curatorCreateHunt()" style="margin-bottom:10px">+ Create a New Hunt</button>';
   if(!mine.length){ const _em=document.createElement("div"); _em.className="empty"; _em.style.marginTop="8px"; _em.textContent="Build a case above \u2014 then publish it here."; list.appendChild(_em); return; }
   for(const code of mine){
     if(subCodes.has(String(code))) continue;
@@ -4708,7 +4718,7 @@ function setFinishLabel(){ try{ const b=document.getElementById("finish-build");
   else b.innerHTML="Finish &amp; Get Case Number \u2192";
 }catch(e){} }
 function coldSubmitVis(){ try{ const w=document.getElementById("cold-submit-wrap"); if(!w) return;
-  const hide=!!(State.build&&State.build.fromArchive) || !!State._curatorEdit || !!State._builderEdit; w.style.display=hide?"none":"flex";
+  const hide=!!(State.build&&State.build.fromArchive) || !!State._curatorEdit || !!State._builderEdit || !!State._curatorBuildFlow; w.style.display=hide?"none":"flex";
   /* The borrow hint goes with it. On a case that IS a cold case — taken from the
      archive, or amended from the Curator's Desk — offering to fetch one from the
      Cold Case Files is telling the builder to do what he has already done. */
@@ -4975,7 +4985,11 @@ function nudgeStop(nid,iid){
   clearTimeout(_nudgeT[nid]);
 }
 let _titleNudgeAt=0;
-function nudgeTitle(){ _titleNudgeAt=Date.now(); runNudge("title-nudge","build-title-input"); }
+function nudgeTitle(){
+  /* THE GLASS TEACHES. The curator does not need teaching at his own Desk, and the
+     interval would otherwise fly it in every half-minute while he works. */
+  if(State._curatorBuildFlow) return;
+  _titleNudgeAt=Date.now(); runNudge("title-nudge","build-title-input"); }
 /* a forgetful Builder gets the glass again every half-minute until the case is named */
 setInterval(()=>{
   try{
@@ -5411,7 +5425,7 @@ async function finishBuild(){
   // A case deserves a name — nudge before minting the number
   const t=(State.build.title||"").trim();
   if(!t || t==="Untitled Case"){
-    toast("A case deserves a name first \u2014 the glass will show you where.", 3200);
+    toast(State._curatorBuildFlow?"A case deserves a name first.":"A case deserves a name first \u2014 the glass will show you where.", 3200);
     const inp=document.getElementById("build-title-input");
     if(inp){ try{inp.scrollIntoView({behavior:"smooth",block:"center"});}catch(e){} }
     nudgeTitle();
@@ -5422,7 +5436,7 @@ async function finishBuild(){
   {
     const tiles=(State.build&&State.build.tiles)||[];
     let seen=false; try{ seen=localStorage.getItem("shco:hinttip")==="1"; }catch(e){}
-    if(!seen && tiles.length && !tiles.some(function(t){ return t.hint; })){
+    if(!seen && !State._curatorBuildFlow && tiles.length && !tiles.some(function(t){ return t.hint; })){
       try{ localStorage.setItem("shco:hinttip","1"); }catch(e){}
       toast("No hidden hints on this case. You can add one to any clue if a find is especially hard.", 4600);
       return;
@@ -6866,6 +6880,7 @@ setTimeout(function(){ if(!_deepCase) showCommish(); }, 2600);
       <button id="curtab-terr" onclick="curTab('terr')">Territories</button>
       <button id="curtab-ledg" onclick="curTab('ledg')">Ledger</button>
       <button id="curtab-reg" onclick="curTab('reg')">Register</button>
+      <button id="curtab-ordr" onclick="curTab('ordr')">Orders</button>
     </div>
     <div id="curator-list"></div>
     <button class="btn btn-primary" onclick="closeCurator()">Close the Desk</button>
