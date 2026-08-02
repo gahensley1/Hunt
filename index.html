@@ -216,7 +216,7 @@
   .tg{transition:opacity .5s linear}
   .tg.gone{opacity:0}
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#B5566B;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#7A5A98;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -1079,7 +1079,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">32c</p>
+      <p id="buildmark" aria-label="test build marker">32d</p>
     </div>
   </section>
 
@@ -1619,6 +1619,7 @@ function _sig(ms, outer){
 }
 
 /* ---------- tiny storage layer (worker sync → window.storage → memory) ---------- */
+const QUEUE_MAX_AGE = 14*24*60*60*1000;   // a queued write older than a fortnight is dropped, not replayed
 const Store = {
   ok: (typeof window!=="undefined" && window.storage && typeof window.storage.set==="function"),
   ls: (function(){ try{ return typeof localStorage!=="undefined" && localStorage; }catch(e){ return null; } })(),
@@ -1638,12 +1639,57 @@ const Store = {
     if(!shared && this.ls){ try{ const v=this.ls.getItem(this.lsKey(key)); if(v!==null) return v; }catch(e){} }
     const v=this.mem.get(this.k(key,shared)); return v===undefined?null:v;
   },
+  /* THE REPLAY QUEUE. A shared PUT that failed used to fall through to the in-memory
+     Map and still return true - so the hunter was told the find was logged, the
+     device was right, and the Yard never heard about it. The device is already the
+     durable system of record (see saveHunterSub); this closes the other half by
+     remembering the write and replaying it. Keyed, so a replay is a plain overwrite
+     and can never duplicate. Only the LATEST value per key is kept. */
+  qKey: "shco:pendingWrites",
+  qRead(){ try{ return JSON.parse((this.ls&&this.ls.getItem(this.qKey))||"[]")||[]; }catch(e){ return []; } },
+  qWrite(a){ try{ if(this.ls) this.ls.setItem(this.qKey, JSON.stringify(a.slice(-200))); }catch(e){} },
+  qPush(key,val){
+    try{
+      const a=this.qRead().filter(function(x){ return x && x.key!==key; });
+      a.push({key:key, val:val, at:Date.now()});
+      this.qWrite(a);
+    }catch(e){}
+  },
+  qPending(){ return this.qRead().length; },
+  /* Replayed on load, on "online", and after any successful shared write. An entry
+     older than QUEUE_MAX_AGE is dropped rather than replayed - a fortnight-stale
+     value overwriting a fresher server record is worse than losing it. */
+  async flush(){
+    if(this._flushing) return 0;
+    if(!this.base()) return 0;
+    this._flushing=true;
+    let done=0;
+    try{
+      const cutoff=Date.now()-QUEUE_MAX_AGE;
+      const a=this.qRead().filter(function(x){ return x && x.key && x.at>cutoff; });
+      const keep=[];
+      for(const it of a){
+        let ok=false;
+        try{
+          const r=await fetch(this.base()+"/kv/"+encodeURIComponent(it.key),{method:"PUT",body:it.val,headers:Object.assign({},_curHdr()),signal:_sig(NET_MS)});
+          ok=!!r.ok;
+        }catch(e){ ok=false; }
+        if(ok) done++; else keep.push(it);
+      }
+      this.qWrite(keep);
+    }catch(e){}
+    this._flushing=false;
+    return done;
+  },
   async set(key,val,shared=false,sig){
     if(shared && this.base()){
+      let sent=false;
       try{
         const r=await fetch(this.base()+"/kv/"+encodeURIComponent(key),{method:"PUT",body:val,headers:Object.assign({},_curHdr()),signal:_sig(NET_MS,sig)});
-        if(r.ok) return true;
-      }catch(e){ /* offline → fall through to local */ }
+        sent=!!r.ok;
+      }catch(e){ sent=false; }
+      if(sent){ if(this.qPending()) this.flush(); return true; }
+      this.qPush(key,val);
     }
     if(this.ok){ try{await window.storage.set(key,val,shared); return true;}catch(e){/*fallthrough*/} }
     if(!shared && this.ls){ try{ this.ls.setItem(this.lsKey(key), val); return true; }catch(e){} }
@@ -2442,6 +2488,25 @@ async function ensureCred(){
   await pushProfile();
   showCredCeremony(name, code);
 }
+/* THE QUEUE IS REPLAYED whenever the connection could plausibly have returned.
+   Idempotent and keyed, so an extra flush costs one request and changes nothing. */
+try{
+  window.addEventListener("online", function(){ try{ Store.flush(); }catch(e){} });
+  window.addEventListener("load", function(){ setTimeout(function(){ try{ Store.flush(); }catch(e){} }, 1200); });
+  document.addEventListener("visibilitychange", function(){ if(!document.hidden){ try{ Store.flush(); }catch(e){} } });
+}catch(e){}
+
+/* THE SERVICE WORKER exists for OFFLINE PLAY only - so the app opens with no signal.
+   It stores no hunter data. Registered only over https (never file://), and the
+   document is network-first inside sw.js, so a stale build can always be replaced. */
+try{
+  if("serviceWorker" in navigator && location.protocol==="https:"){
+    window.addEventListener("load", function(){
+      navigator.serviceWorker.register("./sw.js").catch(function(){});
+    });
+  }
+}catch(e){}
+
 let _scrollLockY=0,_scrollLocked=false;
 function lockBodyScroll(){
   if(_scrollLocked) return;
