@@ -216,7 +216,7 @@
   .tg{transition:opacity .5s linear}
   .tg.gone{opacity:0}
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#B4532A;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#3B6BA5;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -1079,7 +1079,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">32h</p>
+      <p id="buildmark" aria-label="test build marker">32i</p>
     </div>
   </section>
 
@@ -2119,6 +2119,72 @@ function licCheck(body){
   for(let i=0;i<4;i++){ h=((h*1103515245)+12345)>>>0; out+=LIC_ALPHA[h%LIC_ALPHA.length]; }
   return out;
 }
+/* ===== THE AGENCY LICENCE =====
+   A rare item, minted by hand at the Curator's Desk and redeemed by the venue.
+   Bound to a BADGE, never to a device \u2014 a web app cannot read hardware, and the
+   badge survives a new phone because adoptProfile() restores it.
+   Key shape is the existing SHCO-XXXX-XXXX. The first body character carries the
+   TYPE: "P" is perpetual (a donation), a digit is the year it expires at the end of.
+   The checksum is taken over body+badge, so a key only ever checks out on the badge
+   it was minted for. Legacy validLicence() keys keep working untouched. */
+var AGY_KEY="shco:aglic";
+function agyTargetYear(type,now){
+  if(!/^[0-9]$/.test(type)) return 0;
+  var y=(now||new Date()).getFullYear();
+  var t=Math.floor(y/10)*10+parseInt(type,10);
+  if(y-t>5) t+=10;
+  return t;
+}
+function agyMint(cred,type){
+  var c=String(cred||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
+  if(!c) return "";
+  var h=2166136261>>>0;
+  c.split("").forEach(function(ch){ h^=ch.charCodeAt(0); h=(h*16777619)>>>0; });
+  var body=String(type).charAt(0);
+  for(var k=0;k<3;k++){ h=((h*1103515245)+12345)>>>0; body+=LIC_ALPHA[h%LIC_ALPHA.length]; }
+  return "SHCO-"+body+"-"+licCheck(body+c);
+}
+function agyParse(key){
+  var m=String(key||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
+  if(m.length!==12||m.slice(0,4)!=="SHCO") return null;
+  return { body:m.slice(4,8), chk:m.slice(8), type:m.charAt(4) };
+}
+function agyExpired(type,now){
+  if(type==="P") return false;
+  var t=agyTargetYear(type,now);
+  if(!t) return true;
+  return (now||new Date()).getFullYear()>t;
+}
+function validAgencyKey(key,cred){
+  var p=agyParse(key); if(!p) return false;
+  var c=String(cred||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
+  if(!c) return false;
+  if(licCheck(p.body+c)!==p.chk) return false;
+  return !agyExpired(p.type);
+}
+function agyMintClick(){
+  var cred=(document.getElementById("agy-cred")||{}).value||"";
+  var type=(document.getElementById("agy-type")||{}).value||"P";
+  var c=String(cred).toUpperCase().replace(/[^A-Z0-9]/g,"");
+  if(c.length<8){ toast("Enter the venue\u2019s badge first \u2014 the key is bound to it."); return; }
+  var key=agyMint(c,type);
+  if(!key){ toast("That badge could not be read."); return; }
+  var k=document.getElementById("agy-key"); if(k) k.textContent=key;
+  var note=document.getElementById("agy-note");
+  if(note) note.textContent = (type==="P")
+      ? "A gift. It never expires, and it cannot be withdrawn."
+      : "Expires at the end of "+agyTargetYear(type)+". Record the venue, the badge and this key.";
+  var out=document.getElementById("agy-out"); if(out) out.classList.remove("hidden");
+}
+function agyCopy(){
+  var k=document.getElementById("agy-key"); if(!k) return;
+  try{ navigator.clipboard.writeText(k.textContent); toast("Key copied."); }
+  catch(e){ toast("Copy it by hand \u2014 the clipboard is not available."); }
+}
+function agencyGrantAll(){
+  try{ localStorage.setItem("shco:lic","PREVIEW"); }catch(e){}
+  try{ VOLUMES.forEach(function(v){ (v.codes||[]).forEach(function(c){ grantPack(c); }); }); }catch(e){}
+}
 function validLicence(key){
   const m=(key||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
   if(m.length!==12||!m.startsWith("SHCO")) return false;
@@ -2299,7 +2365,8 @@ async function buyConfirm(){
 function grantPack(code){ try{ const o=ownedPacks(); if(o.indexOf(String(code))<0){ o.push(String(code)); localStorage.setItem("shco:packs", JSON.stringify(o)); } }catch(e){} }
 function isLocked(e){ return !!(e && e.paid && !ownsPack(e.code)); }
 function priceOf(e){ return "$"+String((e&&e.price)||"0.99").replace(/^\$/,""); }
-function hasLicence(){ try{ const v=localStorage.getItem("shco:lic"); return v==="PREVIEW"||v==="SINGLE"||validLicence(v); }catch(e){ return false; } }
+function hasLicence(){ try{ if(validAgencyKey(localStorage.getItem(AGY_KEY), myCred())) return true; }catch(e){}
+  try{ const v=localStorage.getItem("shco:lic"); return v==="PREVIEW"||v==="SINGLE"||validLicence(v); }catch(e){ return false; } }
 function openLicence(after){
   State.afterLic=after||null;
   const k=document.getElementById("lic-key"); if(k) k.value="";
@@ -2371,6 +2438,22 @@ async function restoreConfirm(){
 }
 function redeemLicence(){
   const raw=document.getElementById("lic-key").value;
+  /* An Agency licence is tried first: it is bound to this badge, and it opens the
+     whole archive as well as the Charter. A plain key still behaves exactly as before. */
+  try{
+    if(validAgencyKey(raw, myCred())){
+      const am=raw.toUpperCase().replace(/[^A-Z0-9]/g,"");
+      try{ localStorage.setItem(AGY_KEY,"SHCO-"+am.slice(4,8)+"-"+am.slice(8)); }catch(e){}
+      agencyGrantAll();
+      toast("The Agency licence is recorded. The whole archive is open to you.", 4600);
+      licenceGranted();
+      return;
+    }
+    const p=agyParse(raw);
+    if(p && licCheck(p.body+String(myCred()||"").toUpperCase().replace(/[^A-Z0-9]/g,""))===p.chk && agyExpired(p.type)){
+      toast("That Agency licence has expired. Write to us and we shall renew it.", 5200); return;
+    }
+  }catch(e){}
   if(!validLicence(raw)){ toast("That key doesn\u2019t check out \u2014 mind the dashes and try again."); return; }
   const m=raw.toUpperCase().replace(/[^A-Z0-9]/g,"");
   try{localStorage.setItem("shco:lic","SHCO-"+m.slice(4,8)+"-"+m.slice(8));}catch(e){}
@@ -3914,7 +3997,7 @@ var _regSnap={label:"",rows:[]};
    sheet, which is where this button sends you \u2014 arrows and copy already built. */
 async function regDraw(code){
   State.curTab="ledg";
-  ["desk","msgs","subs","arch","terr","ledg","reg","ordr"].forEach(function(t){
+  ["desk","msgs","subs","arch","terr","ledg","reg","ordr","agy"].forEach(function(t){
     const b=document.getElementById("curtab-"+t); if(b) b.classList.toggle("on",t==="ledg"); });
   const list=document.getElementById("curator-list"); if(!list) return;
   list.innerHTML=""; const sec=document.createElement("div"); sec.id="cur-ledger"; list.appendChild(sec);
@@ -4387,7 +4470,7 @@ async function renderCurator(){
   closeColdCases();
   document.getElementById("curator-ov").classList.remove("hidden");
   const tab=State.curTab||"desk";
-  ["desk","msgs","subs","arch","terr","ledg","reg","ordr"].forEach(function(t){ const b=document.getElementById("curtab-"+t); if(b) b.classList.toggle("on",t===tab); });
+  ["desk","msgs","subs","arch","terr","ledg","reg","ordr","agy"].forEach(function(t){ const b=document.getElementById("curtab-"+t); if(b) b.classList.toggle("on",t===tab); });
   const list=document.getElementById("curator-list"); list.innerHTML='<div class="empty">Fetching the files\u2026</div>';
   let mine=[]; try{ mine=JSON.parse(await Store.get("mycases")||"[]"); }catch(e){}
   /* Belt and braces: a code stored once as a number and once as a string would pass
@@ -4537,6 +4620,29 @@ async function renderCurator(){
   /* ORDERS tab \u2014 the Commissioner's own paperwork. Moved off the Desk tab in
      31u: the order and the ten notes are a lot of reading to sit above the case
      list, and neither is touched while building. */
+  if(tab==="agy"){
+    list.innerHTML=""
+      +'<div style="padding:2px 2px 14px">'
+      +'<div class="eyebrow">THE AGENCY LICENCE</div>'
+      +'<p style="font-family:var(--type);font-size:12px;line-height:1.55;letter-spacing:.4px;color:var(--ink-soft);margin:6px 0 0">A rare item. Mint one key per venue, bound to that venue\u2019s own badge \u2014 not to a member of staff, who may leave and take it with them. Keep your own record of what you issue; there is no register here and no way to revoke.</p>'
+      +'<div class="eyebrow" style="margin-top:12px">THE VENUE\u2019S BADGE</div>'
+      +'<input id="agy-cred" class="lic-key" placeholder="DET-XXXXXX-XXXX" autocapitalize="characters" autocomplete="off" spellcheck="false">'
+      +'<div class="eyebrow" style="margin-top:12px">TERM</div>'
+      +'<select id="agy-type" class="lic-key lic-key-plain">'
+      +'<option value="6">Agency licence \u2014 expires end of 2026</option>'
+      +'<option value="7">Agency licence \u2014 expires end of 2027</option>'
+      +'<option value="8">Agency licence \u2014 expires end of 2028</option>'
+      +'<option value="P">A gift \u2014 never expires</option>'
+      +'</select>'
+      +'<button class="btn btn-brass" style="width:100%;margin-top:10px" onclick="agyMintClick()">Mint the key</button>'
+      +'<div id="agy-out" class="hidden" style="margin-top:12px">'
+      +'<div class="eyebrow">ISSUED</div>'
+      +'<div id="agy-key" style="font-family:var(--type);font-size:20px;letter-spacing:2px;text-align:center;padding:10px 0"></div>'
+      +'<button class="btn-ghost" style="width:100%" onclick="agyCopy()">Take a Carbon Copy</button>'
+      +'<p id="agy-note" style="font-family:var(--type);font-size:12px;line-height:1.55;letter-spacing:.4px;color:var(--ink-soft);margin-top:8px"></p>'
+      +'</div></div>';
+    return;
+  }
   if(tab==="ordr"){
     list.innerHTML="";
   try{
@@ -7042,7 +7148,7 @@ setTimeout(function(){ if(!_deepCase) showCommish(); }, 2600);
       <button id="curtab-terr" onclick="curTab('terr')">Territories</button>
       <button id="curtab-ledg" onclick="curTab('ledg')">Ledger</button>
       <button id="curtab-reg" onclick="curTab('reg')">Register</button>
-      <button id="curtab-ordr" onclick="curTab('ordr')">Orders</button>
+      <button id="curtab-ordr" onclick="curTab('ordr')">Orders</button><button id="curtab-agy" onclick="curTab('agy')">Agency</button>
     </div>
     <div id="curator-list"></div>
     <button class="btn btn-primary" onclick="closeCurator()">Close the Desk</button>
