@@ -216,7 +216,7 @@
   .tg{transition:opacity .5s linear}
   .tg.gone{opacity:0}
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#3B6BA5;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#4E6478;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -1079,7 +1079,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">32i</p>
+      <p id="buildmark" aria-label="test build marker">32j</p>
     </div>
   </section>
 
@@ -2121,60 +2121,227 @@ function licCheck(body){
 }
 /* ===== THE AGENCY LICENCE =====
    A rare item, minted by hand at the Curator's Desk and redeemed by the venue.
-   Bound to a BADGE, never to a device \u2014 a web app cannot read hardware, and the
+   Bound to a BADGE, never to a device — a web app cannot read hardware, and the
    badge survives a new phone because adoptProfile() restores it.
-   Key shape is the existing SHCO-XXXX-XXXX. The first body character carries the
-   TYPE: "P" is perpetual (a donation), a digit is the year it expires at the end of.
+
+   KEY SHAPE (32j — REPLACES THE YEAR-DIGIT SCHEME OF 32i):
+     SHCO-<body>-<chk>, body 4 chars, chk 4 chars.
+     body[0] = "P" perpetual, or "M" dated.
+     For "M", body[1..2] encode the EXPIRY MONTH as a base-31 count of months from
+     January 2026; body[3] is a badge-derived character. For "P" the last three are
+     all badge-derived, as before.
    The checksum is taken over body+badge, so a key only ever checks out on the badge
-   it was minted for. Legacy validLicence() keys keep working untouched. */
+   it was minted for. Legacy validLicence() keys keep working untouched.
+
+   ⚠ THE CLOCK STARTS AT MINTING, NOT AT REDEMPTION (owner's call, s52). The expiry
+   is baked into the key, so the key alone is the whole truth and validation needs no
+   server and no stored activation date. A venue that sits on a 1-month gift for six
+   weeks has a dead key — that is the accepted trade for staying offline-capable.
+
+   ⚠ MIGRATION: THE 32i YEAR-DIGIT KEYS NO LONGER VALIDATE (owner's call, s52). A key
+   minted as "6"/"7"/"8" now fails agyParse's type test and is refused. Anything issued
+   before 32j must be re-minted. Two dozen keys at most existed; the owner accepted this
+   to keep ONE encoding rather than two. Do not "helpfully" re-add the legacy branch.
+
+   ⚠ EXPIRY IS END-OF-MONTH. A 1-month gift minted on the 3rd or the 28th of August
+   both die at the end of September. Month precision is all two characters buy, and a
+   generous boundary is kinder than a stingy one on a gift. */
 var AGY_KEY="shco:aglic";
-function agyTargetYear(type,now){
-  if(!/^[0-9]$/.test(type)) return 0;
-  var y=(now||new Date()).getFullYear();
-  var t=Math.floor(y/10)*10+parseInt(type,10);
-  if(y-t>5) t+=10;
-  return t;
+var AGY_REG_KEY="shco:aglicreg";     /* the curator's own register — see agyRegAll() */
+var AGY_EPOCH_Y=2026;                /* month 0 is January 2026. Never change it: it would
+                                        re-date every key already in the wild. */
+var AGY_MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
+/* THE TERMS THE DESK CAN MINT. `id` is the <option> value and the value recorded in the
+   register; `label` is what the curator reads. Order is the menu order — the perpetual
+   gift sits LAST on purpose, so the easy accidental pick is a timed key and not one that
+   can never be withdrawn. */
+var AGY_TERMS=[
+  {id:"y2026", label:"Agency licence — expires end of 2026", kind:"year",  n:2026},
+  {id:"y2027", label:"Agency licence — expires end of 2027", kind:"year",  n:2027},
+  {id:"y2028", label:"Agency licence — expires end of 2028", kind:"year",  n:2028},
+  {id:"m1",    label:"A gift — 1 month",                     kind:"month", n:1},
+  {id:"m6",    label:"A gift — 6 months",                    kind:"month", n:6},
+  {id:"m12",   label:"A gift — 1 year",                      kind:"month", n:12},
+  {id:"P",     label:"A gift — never expires",               kind:"perp",  n:0}
+];
+function agyTerm(id){ for(var i=0;i<AGY_TERMS.length;i++){ if(AGY_TERMS[i].id===id) return AGY_TERMS[i]; } return null; }
+function agyTermLabel(id){ var t=agyTerm(id); return t?t.label:String(id||"—"); }
+function _agyNorm(v){ return String(v||"").toUpperCase().replace(/[^A-Z0-9]/g,""); }
+/* months since January 2026 */
+function agyMonthIdx(d){ d=d||new Date(); return (d.getFullYear()-AGY_EPOCH_Y)*12+d.getMonth(); }
+function agyMonthName(idx){
+  if(idx<0) return "";
+  return AGY_MONTHS[((idx%12)+12)%12]+" "+(AGY_EPOCH_Y+Math.floor(idx/12));
 }
-function agyMint(cred,type){
-  var c=String(cred||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
-  if(!c) return "";
+var AGY_MAX_IDX=LIC_ALPHA.length*LIC_ALPHA.length-1;   /* 31*31-1 = 960 months ≈ year 2106 */
+function agyEncMonth(idx){
+  if(!(idx>=0)||idx>AGY_MAX_IDX) return "";
+  return LIC_ALPHA[Math.floor(idx/LIC_ALPHA.length)]+LIC_ALPHA[idx%LIC_ALPHA.length];
+}
+function agyDecMonth(a,b){
+  var i=LIC_ALPHA.indexOf(a), j=LIC_ALPHA.indexOf(b);
+  if(i<0||j<0) return -1;
+  return i*LIC_ALPHA.length+j;
+}
+/* WHICH MONTH DOES THIS TERM DIE AT THE END OF? Resolved once, at minting. */
+function agyTermTarget(id,now){
+  var t=agyTerm(id); if(!t) return -1;
+  if(t.kind==="perp") return -1;
+  if(t.kind==="year") return (t.n-AGY_EPOCH_Y)*12+11;          /* end of that December */
+  return agyMonthIdx(now||new Date())+t.n;                      /* end of the month n ahead */
+}
+function agyHash3(c){
   var h=2166136261>>>0;
   c.split("").forEach(function(ch){ h^=ch.charCodeAt(0); h=(h*16777619)>>>0; });
-  var body=String(type).charAt(0);
-  for(var k=0;k<3;k++){ h=((h*1103515245)+12345)>>>0; body+=LIC_ALPHA[h%LIC_ALPHA.length]; }
+  var out="";
+  for(var k=0;k<3;k++){ h=((h*1103515245)+12345)>>>0; out+=LIC_ALPHA[h%LIC_ALPHA.length]; }
+  return out;
+}
+function agyMint(cred,termId,now){
+  var c=_agyNorm(cred); if(!c) return "";
+  var t=agyTerm(termId); if(!t) return "";
+  var h=agyHash3(c), body;
+  if(t.kind==="perp"){ body="P"+h; }
+  else{
+    var idx=agyTermTarget(termId,now);
+    var enc=agyEncMonth(idx); if(!enc) return "";
+    body="M"+enc+h.charAt(2);
+  }
   return "SHCO-"+body+"-"+licCheck(body+c);
 }
 function agyParse(key){
-  var m=String(key||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
+  var m=_agyNorm(key);
   if(m.length!==12||m.slice(0,4)!=="SHCO") return null;
-  return { body:m.slice(4,8), chk:m.slice(8), type:m.charAt(4) };
+  var body=m.slice(4,8), chk=m.slice(8), type=body.charAt(0);
+  if(type!=="P"&&type!=="M") return null;      /* 32i year-digit keys land here and are refused */
+  var target=(type==="M")?agyDecMonth(body.charAt(1),body.charAt(2)):-1;
+  if(type==="M"&&target<0) return null;
+  return { body:body, chk:chk, type:type, target:target };
 }
-function agyExpired(type,now){
-  if(type==="P") return false;
-  var t=agyTargetYear(type,now);
-  if(!t) return true;
-  return (now||new Date()).getFullYear()>t;
+/* TAKES THE PARSED OBJECT, NOT THE TYPE CHARACTER. The 32i signature was agyExpired(type)
+   and every call site moved with it. A stray agyExpired("M") would read as never-expiring —
+   if you see one, it is a bug. */
+function agyExpired(p,now){
+  if(!p) return true;
+  if(p.type==="P") return false;
+  if(p.type!=="M"||!(p.target>=0)) return true;
+  return agyMonthIdx(now||new Date())>p.target;
+}
+function agyExpiryLabel(p){
+  if(!p) return "—";
+  if(p.type==="P") return "Never";
+  return "End of "+agyMonthName(p.target);
 }
 function validAgencyKey(key,cred){
   var p=agyParse(key); if(!p) return false;
-  var c=String(cred||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
-  if(!c) return false;
+  var c=_agyNorm(cred); if(!c) return false;
   if(licCheck(p.body+c)!==p.chk) return false;
-  return !agyExpired(p.type);
+  return !agyExpired(p);
+}
+/* ---------- THE REGISTER ----------
+   32i said plainly: "there is no register here." There is now, because the owner needs to
+   answer who holds what and until when. Two copies, deliberately:
+     1. THE CURATOR'S DEVICE (localStorage AGY_REG_KEY) — the report reads THIS. It is
+        instant, works offline, and is the only copy the Desk can list without the
+        curator word. ⚠ IT IS PER-DEVICE: mint from a second phone and this report will
+        not show those keys.
+     2. THE SYNC OFFICE (shared key "aglic:<key>") — a fire-and-forget PUT so a lost
+        phone does not lose the record. NOT read back yet: listing by prefix needs
+        /list, which is curator-gated, and nobody has verified its shape. See the
+        handoff before wiring the merge.
+   Keyed by the licence key itself, so re-minting the same term for the same badge
+   overwrites rather than duplicating. */
+function agyRegAll(){
+  try{ var a=JSON.parse(localStorage.getItem(AGY_REG_KEY)||"[]"); return Array.isArray(a)?a:[]; }
+  catch(e){ return []; }
+}
+function agyRegSave(a){
+  try{ localStorage.setItem(AGY_REG_KEY, JSON.stringify(a.slice(-500))); }catch(e){}
+}
+function agyRegAdd(rec){
+  try{
+    var a=agyRegAll().filter(function(x){ return x && x.k!==rec.k; });
+    a.push(rec); agyRegSave(a);
+  }catch(e){}
+  /* fire-and-forget; never blocks the mint and never surfaces an error */
+  try{ Store.set("aglic:"+rec.k, JSON.stringify(rec), true); }catch(e){}
+}
+function agyRegRows(){
+  return agyRegAll().slice().sort(function(x,y){ return (y.g||0)-(x.g||0); });
+}
+function _agyDate(ms){
+  if(!ms) return "—";
+  try{ var d=new Date(ms); return AGY_MONTHS[d.getMonth()].slice(0,3)+" "+d.getDate()+" "+d.getFullYear(); }
+  catch(e){ return "—"; }
+}
+function agyRegStatus(r){
+  var p=agyParse(r&&r.k);
+  if(!p) return "unreadable";
+  return agyExpired(p) ? "EXPIRED" : "active";
+}
+function agyRegCsv(){
+  var rows=agyRegRows();
+  var out="Badge,Package,Granted,Expires,Status,Key\n";
+  rows.forEach(function(r){
+    var p=agyParse(r.k);
+    out+=[r.b||"", agyTermLabel(r.t).replace(/,/g," "), _agyDate(r.g),
+          agyExpiryLabel(p).replace(/,/g," "), agyRegStatus(r), r.k||""].join(",")+"\n";
+  });
+  return out;
+}
+function agyRegCopy(){
+  var csv=agyRegCsv();
+  try{ navigator.clipboard.writeText(csv); toast("The register is copied — paste it into a spreadsheet."); }
+  catch(e){ toast("The clipboard is not available — read it off the screen."); }
+}
+function agyRegHtml(){
+  var rows=agyRegRows();
+  if(!rows.length){
+    return '<p style="font-family:var(--type);font-size:12px;line-height:1.55;letter-spacing:.4px;color:var(--ink-soft);margin:6px 0 0">Nothing minted from this device yet. Every key you issue here is recorded below — badge, package, the day you granted it and the day it lapses.</p>';
+  }
+  var h=''
+    +'<p style="font-family:var(--type);font-size:11px;line-height:1.5;letter-spacing:.4px;color:var(--ink-soft);margin:6px 0 8px">'
+    +rows.length+' key'+(rows.length===1?'':'s')+' issued from this device. ⚠ Keys minted on another phone are not listed here.</p>'
+    +'<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-family:var(--type);font-size:11px;letter-spacing:.3px">'
+    +'<tr style="text-align:left;color:var(--ink-soft)">'
+    +'<th style="padding:4px 6px 4px 0;font-weight:normal">BADGE</th>'
+    +'<th style="padding:4px 6px;font-weight:normal">PACKAGE</th>'
+    +'<th style="padding:4px 6px;font-weight:normal">GRANTED</th>'
+    +'<th style="padding:4px 0 4px 6px;font-weight:normal">EXPIRES</th></tr>';
+  rows.forEach(function(r){
+    var p=agyParse(r.k), dead=agyExpired(p);
+    h+='<tr style="border-top:1px solid var(--line)'+(dead?';opacity:.55':'')+'">'
+      +'<td style="padding:6px 6px 6px 0;white-space:nowrap">'+String(r.b||"—")+'</td>'
+      +'<td style="padding:6px">'+agyTermLabel(r.t)+'</td>'
+      +'<td style="padding:6px;white-space:nowrap">'+_agyDate(r.g)+'</td>'
+      +'<td style="padding:6px 0 6px 6px;white-space:nowrap">'+agyExpiryLabel(p)+(dead?' · <strong>LAPSED</strong>':'')+'</td>'
+      +'</tr>';
+  });
+  h+='</table></div>'
+    +'<button class="btn-ghost" style="width:100%;margin-top:10px" onclick="agyRegCopy()">Copy the Register</button>';
+  return h;
+}
+function agyRegRender(){
+  var el=document.getElementById("agy-reg");
+  if(el) el.innerHTML=agyRegHtml();
 }
 function agyMintClick(){
   var cred=(document.getElementById("agy-cred")||{}).value||"";
-  var type=(document.getElementById("agy-type")||{}).value||"P";
-  var c=String(cred).toUpperCase().replace(/[^A-Z0-9]/g,"");
-  if(c.length<8){ toast("Enter the venue\u2019s badge first \u2014 the key is bound to it."); return; }
-  var key=agyMint(c,type);
+  var termId=(document.getElementById("agy-type")||{}).value||"P";
+  var c=_agyNorm(cred);
+  if(c.length<8){ toast("Enter the venue’s badge first — the key is bound to it."); return; }
+  var now=new Date();
+  var key=agyMint(c,termId,now);
   if(!key){ toast("That badge could not be read."); return; }
   var k=document.getElementById("agy-key"); if(k) k.textContent=key;
+  var p=agyParse(key);
   var note=document.getElementById("agy-note");
-  if(note) note.textContent = (type==="P")
+  if(note) note.textContent = (termId==="P")
       ? "A gift. It never expires, and it cannot be withdrawn."
-      : "Expires at the end of "+agyTargetYear(type)+". Record the venue, the badge and this key.";
+      : "Expires at the end of "+agyMonthName(p?p.target:-1)+". Record the venue, the badge and this key.";
   var out=document.getElementById("agy-out"); if(out) out.classList.remove("hidden");
+  agyRegAdd({ k:key, b:c, t:termId, g:now.getTime(), x:(p?p.target:-1) });
+  agyRegRender();
 }
 function agyCopy(){
   var k=document.getElementById("agy-key"); if(!k) return;
@@ -2450,7 +2617,7 @@ function redeemLicence(){
       return;
     }
     const p=agyParse(raw);
-    if(p && licCheck(p.body+String(myCred()||"").toUpperCase().replace(/[^A-Z0-9]/g,""))===p.chk && agyExpired(p.type)){
+    if(p && licCheck(p.body+String(myCred()||"").toUpperCase().replace(/[^A-Z0-9]/g,""))===p.chk && agyExpired(p)){
       toast("That Agency licence has expired. Write to us and we shall renew it.", 5200); return;
     }
   }catch(e){}
@@ -4624,15 +4791,12 @@ async function renderCurator(){
     list.innerHTML=""
       +'<div style="padding:2px 2px 14px">'
       +'<div class="eyebrow">THE AGENCY LICENCE</div>'
-      +'<p style="font-family:var(--type);font-size:12px;line-height:1.55;letter-spacing:.4px;color:var(--ink-soft);margin:6px 0 0">A rare item. Mint one key per venue, bound to that venue\u2019s own badge \u2014 not to a member of staff, who may leave and take it with them. Keep your own record of what you issue; there is no register here and no way to revoke.</p>'
+      +'<p style="font-family:var(--type);font-size:12px;line-height:1.55;letter-spacing:.4px;color:var(--ink-soft);margin:6px 0 0">A rare item. Mint one key per venue, bound to that venue\u2019s own badge \u2014 not to a member of staff, who may leave and take it with them. Every key you mint is written to the register below \u2014 badge, package, granted, expires. \u26a0 The register lives on THIS device; mint from another phone and those keys will not appear here. There is still no way to revoke a key once issued.</p>'
       +'<div class="eyebrow" style="margin-top:12px">THE VENUE\u2019S BADGE</div>'
       +'<input id="agy-cred" class="lic-key" placeholder="DET-XXXXXX-XXXX" autocapitalize="characters" autocomplete="off" spellcheck="false">'
       +'<div class="eyebrow" style="margin-top:12px">TERM</div>'
       +'<select id="agy-type" class="lic-key lic-key-plain">'
-      +'<option value="6">Agency licence \u2014 expires end of 2026</option>'
-      +'<option value="7">Agency licence \u2014 expires end of 2027</option>'
-      +'<option value="8">Agency licence \u2014 expires end of 2028</option>'
-      +'<option value="P">A gift \u2014 never expires</option>'
+      +AGY_TERMS.map(function(t){ return '<option value="'+t.id+'">'+t.label+'</option>'; }).join('')
       +'</select>'
       +'<button class="btn btn-brass" style="width:100%;margin-top:10px" onclick="agyMintClick()">Mint the key</button>'
       +'<div id="agy-out" class="hidden" style="margin-top:12px">'
@@ -4640,7 +4804,11 @@ async function renderCurator(){
       +'<div id="agy-key" style="font-family:var(--type);font-size:20px;letter-spacing:2px;text-align:center;padding:10px 0"></div>'
       +'<button class="btn-ghost" style="width:100%" onclick="agyCopy()">Take a Carbon Copy</button>'
       +'<p id="agy-note" style="font-family:var(--type);font-size:12px;line-height:1.55;letter-spacing:.4px;color:var(--ink-soft);margin-top:8px"></p>'
-      +'</div></div>';
+      +'</div>'
+      +'<div class="eyebrow" style="margin-top:18px">THE REGISTER</div>'
+      +'<div id="agy-reg"></div>'
+      +'</div>';
+    try{ agyRegRender(); }catch(e){}
     return;
   }
   if(tab==="ordr"){
