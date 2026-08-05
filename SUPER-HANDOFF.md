@@ -2644,7 +2644,21 @@ for 'https://github.com'"**. **This is true in BOTH modes. Pushing is the owner'
 - **NO `user.name`/`user.email` WAS CONFIGURED.** Set repo-locally at s52 to
   `gahensley1 <gahensley1@users.noreply.github.com>` to match the existing history.
 
-**🔴 THE DECISION OWED — DEFERRED BY THE OWNER AT s52, CARRY IT FORWARD.**
+**✅ THE DECISION IS MADE — THE OWNER RULED AT THE CLOSE OF s52: OPTION 2, CLAUDE PUSHES.**
+**🔴 FIRST MESSAGE OF THE NEXT SESSION: ASK HIM FOR THE TOKEN. Do not start work without it and do
+not silently fall back to asking him to push — he has explicitly chosen not to be the push route.**
+What to ask for, exactly: **a fine-grained PAT, `gahensley1/Hunt` ONLY, `Contents: read and write`
+ONLY, 30-day expiry.** Nothing else. Then:
+- **Configure it into the sandbox home ONLY** (e.g. a credential file under `$HOME`), **never inside
+  the repo folder.** Verify with `git config --get credential.helper` before the first push.
+- **It must be re-supplied EVERY session — the sandbox keeps nothing.** Expect to ask each time; that
+  is the accepted cost of the choice, not a fault to apologise for.
+- **Still say what is being pushed BEFORE pushing** (GODMODE). The token removes the mechanical
+  blocker, not the courtesy.
+- **⚠ AND IT DOES NOT SOLVE THE TWO-WRITERS PROBLEM.** If the owner web-uploads while Claude commits,
+  the push is still rejected. **One writer per file (§55 above).**
+
+**THE OPTIONS AS THEY WERE PUT TO HIM (kept for the record):**
 The owner wants to drive Cowork from a phone or work machine while the Windows clone stays the core.
 **That does not work without a push route**, because a remote session gets **no folder at all** — only
 whatever is on GitHub. The options, as put to him:
