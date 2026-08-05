@@ -216,7 +216,7 @@
   .tg{transition:opacity .5s linear}
   .tg.gone{opacity:0}
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#4E6478;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#7D4E6B;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -313,6 +313,30 @@
   .brand small{display:block;font-family:var(--type);font-size:clamp(10.5px,3.3vw,16px);letter-spacing:clamp(1.5px,0.85vw,5px);color:var(--title);margin-top:20px;font-weight:400;white-space:nowrap;text-align:center}
   .tagline{font-family:var(--serif);font-style:italic;font-size:clamp(19px,calc((100vw - 64px)/14.5),27px);color:var(--title);margin:12px 10px 0;line-height:1.32}
   #s-home .tagline{font-size:min(5.6vw,22px);line-height:1.35;margin:10px 18px 0;white-space:nowrap}
+  /* ===== THE MASTHEAD ON ANYTHING WIDER THAN THE APP (32k) =====
+     #app is capped at max-width:480px, but .brand and .brand small are sized in vw —
+     and vw tracks the BROWSER WINDOW, not the container. On a phone (390px) 7.6vw is
+     ~30px and fits. On a desktop window 7.6vw runs past the clamp and pins at its 42px
+     ceiling, inside a box whose usable width is only ~424px after the 12px border and
+     16px padding. .brand is white-space:nowrap, so it does not wrap — it is clipped.
+     That is the desktop bug reported at s52, and iPad and phone-landscape had it too.
+
+     THE FIX IS TO FREEZE THE TYPE AT ITS 480px-VIEWPORT VALUES, which is the width the
+     masthead was actually designed against:
+       .brand              7.6vw  of 480 = 36.48px  (was pinning to 42px)
+       .brand small        3.3vw  of 480 = 15.84px  (was pinning to 16px)
+       .brand small l-sp   0.85vw of 480 =  4.08px  (was pinning to 5px)
+
+     ⚠ THE BREAKPOINT IS 481px AND THAT IS DELIBERATE. Every viewport at or below 480px —
+     which is every iPhone in portrait, the widest being 430px — falls outside this block
+     and renders EXACTLY as it did in 32j. iOS was correct and must not be touched.
+     ⚠ DO NOT "SIMPLIFY" THESE TO THE OLD CLAMP CEILINGS. The ceilings ARE the bug.
+     ⚠ If #app's max-width, border or padding ever changes, these three numbers must be
+     recomputed against the new width. */
+  @media (min-width:481px){
+    .brand{font-size:36.4px}
+    .brand small{font-size:15.8px;letter-spacing:4px}
+  }
   .rule{height:0;border:none;border-top:1px solid var(--line);margin:26px 30px}
   .rule.brass{border-top:2px double var(--brass);opacity:.6;margin:16px 30px}
   .rule-orn{margin:6px 28px 14px;line-height:0;filter:drop-shadow(0 1px 1px rgba(20,14,8,.35))}
@@ -573,7 +597,24 @@
   .tb-plain{color:var(--ink-soft);border-color:rgba(90,78,60,.5)}
   #cred-ov{position:fixed;inset:0;background:rgba(18,14,8,.66);z-index:520;display:flex;align-items:center;justify-content:center;padding:18px}
   #cred-ov.hidden{display:none}
-  .cred-card{background:var(--paper);border:2px solid var(--brass-dk);outline:1px solid rgba(184,134,59,.45);outline-offset:3px;border-radius:10px;max-width:400px;width:100%;max-height:94vh;overflow-y:auto;padding:12px 12px 10px;text-align:center;box-shadow:0 12px 40px rgba(10,8,4,.5)}
+  .cred-card{background:var(--paper);border:2px solid var(--brass-dk);outline:1px solid rgba(184,134,59,.45);outline-offset:3px;border-radius:10px;max-width:400px;width:100%;max-height:94vh;overflow-y:auto;overflow-x:hidden;padding:12px 12px 10px;text-align:center;box-shadow:0 12px 40px rgba(10,8,4,.5)}
+  /* ===== THE CREDENTIALS CARD SIDE-SLIDER (32l) =====
+     .cred-card set overflow-y:auto and nothing else. Per CSS, when ONE axis is not
+     `visible` the other computes to `auto` — so overflow-x became auto, and the one
+     element that pokes out sideways, .dos-conf at right:-20px, was enough to raise a
+     horizontal scrollbar across the bottom of the card. Nothing was too wide; a
+     decorative 20px overhang was.
+     TWO PARTS, and the order of reasoning matters:
+       1. #cred-ov .dos-conf is pulled back inside the card (right:4px), so NOTHING
+          overflows and the stamp is fully visible. Clipping alone would have removed
+          the slider by cropping the stamp — which is the fix the owner ruled out.
+       2. overflow-x:hidden is belt-and-braces for anything that overflows here later.
+     ⚠ #record-ov IS UNTOUCHED. There .dos-conf keeps its -20px overhang and .rec-scroll
+       already clips it with overflow-x:hidden — that is the intended stamp-over-the-edge
+       look and it is not a bug. This rule is scoped to #cred-ov for exactly that reason.
+     ⚠ DO NOT "TIDY" THIS INTO A GLOBAL .dos-conf CHANGE. It would flatten the record
+       overlay's stamp against the page edge. */
+  #cred-ov .dos-conf{right:4px}
   .cred-h{font-family:var(--serif);font-size:18px;margin:2px 0 1px;color:var(--ink)}
   .cred-name{font-family:var(--serif);font-style:italic;font-size:14px;color:var(--ink);margin:0 0 6px}
   .cipher-row{display:flex;gap:3px;justify-content:center;margin:2px 0 6px}
@@ -1079,7 +1120,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">32j</p>
+      <p id="buildmark" aria-label="test build marker">32l</p>
     </div>
   </section>
 
