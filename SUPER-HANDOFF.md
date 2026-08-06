@@ -1,5 +1,6 @@
 # SUPER-HANDOFF.md — The Deerstalker / Scavenger & Hunt Co.
-### Session-53 edition (Aug 5 2026) — supersedes the ENTIRE prior chain, including the session-52 edition.
+### Session-53 edition (Aug 6 2026) — supersedes the ENTIRE prior chain, including the session-52 edition.
+### 🔴 **READ §65 FIRST — IT IS THE SESSION-53 CLOSE AND IT RANKS EVERYTHING THAT IS OWED.** §30 below is the s52 ordering and is superseded by it.
 ### 🔎 **SESSION 53 BEGAN AS A REVIEW AND ENDED AS A BUILD.** The review: re-hashed all three surfaces, opened `Hunt-backups` for the first time since s30, fixed three clerk defects (§59), and corrected §0, which had been contradicting §58 inside the s52 edition (§0.2). Then three owner task files arrived and **32m shipped** — photographic seals, the builder's commendation card, four-second cards, the ×1.25 stamp (§60).
 ### ✅ **`index.html` 32m IS LIVE ON PAGES.** **4,024,671 B / `811a118a332a76b2…` / buildmark `32m` / Ochre `#C88A2E`.** Base was 32l `bdfb0222…`. Hash-verified on Pages against the disk copy; raw was still serving 32l at the time, which §0 records as normal.
 ### 🔴 **NEXT MARKER `32q`, Magenta `#A8478F`** — §8i: Ochre 32m · Rose 32n · Amethyst 32o · Verdigris 32p, so `f` Magenta is next.
@@ -2942,6 +2943,74 @@ Run against the exact files staged for `present_files`:
    staging step of session 30.
 
 **All four steps clean. The handoff is complete.**
+
+---
+
+## 🔴 §65 — SESSION 53 CLOSE: WHAT IS OWED, IN ORDER
+
+**LIVE RIGHT NOW:** `index.html` **32q**, 4,010,286 B / `df13a8f7cfcc483a…`, commit `48ccf0b3` —
+verified on disk, raw and Pages. Worker **v2.6.2** *(probe with a cache-buster, §30.3)*.
+`Hunt` and `Hunt-backups` both clean, nothing ahead.
+
+**WHAT s53 SHIPPED:** five builds — **32m** photographic seals + the builder's commendation card
+(§60) · **32n** deerstalker re-cut, boot print pulled, modulus 10 (§61) · **32o** the wax seal's
+envelope (§62) · **32p** the web-app manifest + icon set (§63, **closes §13 item 6**) · **32q** the
+ceremony crest + the darker icon (§64). Plus the archive clerk opened, audited and fixed (§59).
+
+### 🔴 FIRST, AND IT COSTS NOTHING: ASK FOR THE PREVIEW SERVER
+
+```
+powershell -ExecutionPolicy Bypass -File C:\Users\tony\Documents\Hunt-backups\serve.ps1
+```
+
+**§61.3.** Without it every visual decision costs a commit and a push, which is how most of s53 was
+spent. With it, Claude reads the owner's working copy live. **Ask at the top of the session.**
+
+### THE ORDER
+
+**1. 🔴 THE NOTIFICATION CARD — DO THIS BEFORE ANYTHING ELSE TOUCHES NOTIFICATIONS.**
+`openRoster()` fires `Notification.requestPermission()` **cold**, and **a refusal is permanent**.
+Every day that stands, permissions are being burned for nothing — the app cannot deliver in the
+background anyway. Client-only, no Worker needed: kill the cold ask, add the priming card at Case
+Ready, route the two existing notifications through the service worker. Copy and placement drafted
+at `_preview/notify.html`. **Scope is fixed and owner-decided: game play only (§64.3).**
+
+**2. 🔴 GET IT ONTO A PHONE.** Two things ride on this and neither can be checked any other way:
+**the install prompt has never been seen** (the manifest shipped s53 untested, §63.4), and **the
+full loop has never run on hardware** — build → share → join → photograph → verify → coin → rank,
+on two real devices. Carried since s29 while sixteen builds shipped on top of it. **This is the
+highest-risk item in the document and no amount of grepping closes it.**
+
+**3. READ `/report` ONCE.** Sign in at the Desk. Nobody has ever looked at it. It blocks the
+emailed ledger (§64.4) and it is the read half of the instrumentation nobody has verified.
+
+**4. `TASK-live-roster.md`** — Worker side proven ready (`&values=1` answers, old shape unchanged),
+client patch spelled out in the task file. Nothing blocks it.
+
+**5. THE CASE FILES PLAQUE (§13.4 / §46)** — cheap, high value. Fourth `.btn-plaque` **plus the red
+`FIND CURRENT & OLD CASES HERE` stamp as its own element.** Do not simply re-apply 28f; it was
+undone because that stamp went silently missing.
+
+**6. WEB PUSH proper** (§64.3 step 2) and **the emailed ledger** (§64.4). Both need a Worker paste;
+the ledger also needs `scavengerandhunt.com` moved to Cloudflare DNS. **VAPID private key is a
+Cloudflare secret — never in `index.html`, never in this document.**
+
+**7. `first_find`** — the one hole in the funnel; one `ev()` call plus a name the Worker must
+accept, so it rides with a paste. **8. Client export** — `exportAll`/`downloadBackup`/`exportCase`
+still ×0. **9. The Monday cron has never fired** — eleven runs, all manual (§59.3).
+
+**10. THE DECISIONS ONLY THE OWNER CAN MAKE (§14):** the nine volume labels · the app name and
+seller line · clue-tip duration (open since s19) · the clan crest · the Almanac regrouping · a
+non-builder route to a volume · **whether `SUPER-HANDOFF.md` stays in the public repo.**
+
+### ⚠ HOUSEKEEPING CARRIED FORWARD
+
+- **`_preview/` is scratch** — Pages ignores underscored paths and the drift guard skips them.
+  Safe to delete wholesale; it is not a source of record.
+- `art/seals/bootprint.webp` and `art/seals/_excluded/bootprint.webp` both remain; `hunt-icon-v5.png`
+  is now unreferenced. All three are harmless, all three are recorded.
+- **The empty-snapshot gate still passes a one-key file as a good backup** (§59.3).
+- **REPLACE THE PROJECT-KNOWLEDGE HANDOFF** with the current file, or the next session opens stale.
 
 ---
 
