@@ -2553,7 +2553,13 @@ a members' book — not a rename. **If ever changed:** the wordmark is live text
    available, SAY SO AND DO NOT CLAIM A VERIFICATION.**
    **Audit the repo file listing** — it was 5 entries at s30 and 10 at s52 with no doc entry in between.
    **The Worker source must NOT be in it.**
-3. **CONFIRM THE WORKER.** Root must read **v2.6.1**. `/list` and `/report` with no token → **403**.
+3. **CONFIRM THE WORKER. 🔴 THE ROOT PROBE MUST CARRY A CACHE-BUSTER OR IT WILL LIE TO YOU.**
+   Measured s53: the bare root URL returned **`(v2.6.1)`** from the edge cache while
+   `?cb=<anything>` returned the true **`(v2.6.2)`**. The session spent three exchanges believing
+   a deploy had not landed when it had. **Always probe as `https://deerstalker.tony-13f.workers.dev/?cb=<timestamp>`.**
+   A cached banner is indistinguishable from a failed deploy, and this document sends every
+   session to that string first. **Root must now read `(v2.6.2)`.**
+   *(Historic text follows.)* Root must read **v2.6.1**. `/list` and `/report` with no token → **403**.
    **`BAKER221B` must still be 403 — if it ever returns 200 again the rotation was reverted.**
    **Automation must set a User-Agent** or Cloudflare 403s the bare Python UA.
 4. **CHECK THE WEBSITE (§44).** `curl` scavengerandhunt.com and `/privacy.html`.
@@ -3057,10 +3063,13 @@ being perfectly present on raw. That is why the servable copy is named `candidat
   Worker side is now READY: `&values=1` returns `{keys, values, more}` and the old shape still
   returns `{keys, more}` — both probed s53.** The client patch — `listSubsLite()`, a 2s watcher
   scoped to the open roster, 4s abort signal, the never-stack flag, no toast — is not written.
-- **🔴 THE WORKER'S VERSION BANNER LIES.** The root path answers **`(v2.6.1)`** while serving
-  v2.6.2 behaviour. The owner edited the banner in the Cloudflare editor but the deploy had not
-  landed at the time of writing. **§30.3 tells every session to identify the Worker by that string.
-  Re-probe it, and if it still says 2.6.1, believe the behaviour and not the banner.**
+- **✅ THE WORKER IS v2.6.2, CONFIRMED — BUT ONLY WITH A CACHE-BUSTER.** For most of s53 the root
+  path answered `(v2.6.1)` while serving v2.6.2 behaviour, and the session twice concluded the
+  deploy had not landed. **It had.** `?cb=<anything>` returned `(v2.6.2)` immediately. **The bare
+  root URL is served from an edge cache and a stale banner is indistinguishable from a failed
+  deploy.** See §30.3 — the probe now carries a cache-buster and must always.
+  **THE GENERAL LESSON, WHICH IS THE SAME ONE §2f MAKES ABOUT PUSHES: a version string fetched
+  without a cache-buster is a claim, not a measurement.**
 - `art/seals-art/` — the doubled folder the zip produced. `art/seals/` is now the source of record;
   the old folder is empty of purpose and **the sandbox cannot delete, so the owner must.**
 
