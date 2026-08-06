@@ -2,7 +2,8 @@
 ### Session-53 edition (Aug 5 2026) — supersedes the ENTIRE prior chain, including the session-52 edition.
 ### 🔎 **SESSION 53 BEGAN AS A REVIEW AND ENDED AS A BUILD.** The review: re-hashed all three surfaces, opened `Hunt-backups` for the first time since s30, fixed three clerk defects (§59), and corrected §0, which had been contradicting §58 inside the s52 edition (§0.2). Then three owner task files arrived and **32m shipped** — photographic seals, the builder's commendation card, four-second cards, the ×1.25 stamp (§60).
 ### ✅ **`index.html` 32m IS LIVE ON PAGES.** **4,024,671 B / `811a118a332a76b2…` / buildmark `32m` / Ochre `#C88A2E`.** Base was 32l `bdfb0222…`. Hash-verified on Pages against the disk copy; raw was still serving 32l at the time, which §0 records as normal.
-### 🔴 **NEXT MARKER `32o`, Amethyst `#7A5A98`** — §8i resumed at `b` Ochre (32m), `c` Rose (32n), so `d` Amethyst is next.
+### 🔴 **NEXT MARKER `32p`, Verdigris `#4E9A87`** — §8i: `b` Ochre (32m), `c` Rose (32n), `d` Amethyst (32o), so `e` Verdigris is next.
+### 🔴 **`index.html` 32o IS BUILT AND UNPUSHED.** **4,009,148 B / `94d747d244368deb…` / `32o` / Amethyst.** Wax seal keeps its envelope, owner's decision with the pixels in front of him (§62). **Push it, then hash all three surfaces.**
 ### ✅ **`index.html` 32n IS LIVE.** **4,012,600 B / `cd46c7ad766e8ab1…` / buildmark `32n` / Rose `#B5566B`**, commit `050f7220`. Deerstalker re-cut, boot print pulled, **modulus 10** (§61). Verified on disk, raw and Pages — all three identical.
 ### 🔁 **THIS EDITION IS A RE-BASE, NOT A NEW SESSION OF BUILDING.** The s30 edition described the app at 29a/29b. It opened at **32i** and closed with **32j live on Pages** and **32l delivered**. Session 52 re-measured the code and the live services, corrected the header, §0 and §13, and then built §54/§56/§57. **Sections §1–§51 were NOT rewritten** — every standing rule in them is preserved verbatim per the no-compression rule (§4). Where an untouched section's *status claims* conflict with §0 or §13, **§0 and §13 win**; where a *rule* conflicts, the rule stands.
 ### ✅ **`index.html` 32j IS ON GITHUB.** **3,905,589 B / `a29d7438fc002494…` / buildmark `32j` / Slate `#4E6478`.** Base was 32i `a951bf6a…`. The owner uploaded it through the GitHub web page (`30723db`, re-uploaded `48fd903`) — **byte-identical to the local build, hash-verified s52.** See §54.
@@ -132,7 +133,8 @@ is proven and should be reused for every future Worker change.
 
 | File | Size | SHA-256 | Purpose |
 |---|---|---|---|
-| `index.html` **(LIVE — disk == raw == Pages, all three hash-verified s53)** | 4,012,600 B | `cd46c7ad766e8ab1421ef9ee9bc96ffd0b081418e4dddab30aae43c6763e8964` | **32n** — buildmark `32n` Rose `#B5566B`; deerstalker re-cut, boot print pulled, modulus 10 (§61) |
+| `index.html` **(BUILT s53, ON DISK — push and re-hash all three surfaces)** | 4,009,148 B | `94d747d244368debc937396e2a7fc164526966867212797b846c8d1dc636add8` | **32o** — buildmark `32o` Amethyst `#7A5A98`; wax seal keeps its envelope (§62) |
+| *(historical)* `index.html` 32n | 4,012,600 B | `cd46c7ad766e8ab1421ef9ee9bc96ffd0b081418e4dddab30aae43c6763e8964` | deerstalker re-cut, boot print pulled, modulus 10 (§61) |
 | *(historical)* `index.html` 32m | 4,024,671 B | `811a118a332a76b222c4261f95bf53370195941e60daeb87f79fc261e81ae1c3` | photographic seals + the builder's commendation card (§60) |
 | *(historical)* `index.html` 32l | 3,908,422 B | `bdfb02224e5084ef055fb8f871bde21fbfe56aac4d8a05768978667e0081f1bc` | credentials-card side slider (§57) |
 | 🔴 `candidate-32m.html` **AND** `_candidate-32m.html` **— TEMPORARY, DELETE THEM** | 4,024,671 B each | `811a118a…` | Render-check copies pushed so GitHub Pages could serve them (§60.5). **They are byte-identical to the shipped `index.html` and serve no purpose now. The sandbox cannot delete — the owner must.** |
@@ -2545,7 +2547,7 @@ a members' book — not a rename. **If ever changed:** the wordmark is live text
 1. **ESTABLISH THE MODE.** On his computer (the s52 default) or in the cloud? The difference is
    load-bearing — real git and real network vs a no-network bridge that also cannot delete. Say which.
 2. **RE-HASH THE LOCAL CLONE AGAINST LIVE AND SAY THE RESULT OUT LOUD EITHER WAY.**
-   Expect **4,012,600 B / `cd46c7ad…` / buildmark `32n`** on all three of local, GitHub and Pages.
+   Expect **4,009,148 B / `94d747d2…` / buildmark `32o`** on all three of local, GitHub and Pages.
    **🆕 HOW TO HASH WHEN `curl` IS NOT AVAILABLE (s53).** Cowork's sandbox no longer fetches URLs,
    so §0's `curl … | sha256sum` route can fail outright. Two replacements, both proven s53:
    **(a)** the **Claude in Chrome** extension — navigate to the Pages URL and hash in-page with
@@ -2581,7 +2583,7 @@ a members' book — not a rename. **If ever changed:** the wordmark is live text
    it as a second folder.** Three defects found and two fixed; **§59.** What is still owed there:
    confirm the Monday schedule has ever fired, and confirm `repo/SUPER-HANDOFF.md` appears after the
    next run.
-9. **Next marker `32o` / Amethyst `#7A5A98`** — **`32n` / Rose `#B5566B` is spent (§61).**
+9. **Next marker `32p` / Verdigris `#4E9A87`** — **`32o` / Amethyst `#7A5A98` is spent (§62).**
    *(This line previously said `32m` / Cerulean `#2F7D8C`, which conflicted with the s53 task
    file. The owner ruled for **Ochre**, resuming the §8i rotation at `b`: the pre-`32l` marker
    `#7D4E6B` is not on the 8i list at all, so the drift was not reconstructed. Ochre `b` was spent
@@ -2939,6 +2941,42 @@ Run against the exact files staged for `present_files`:
 
 ---
 
+## 🔴 §62 — 32o: THE WAX SEAL KEEPS ITS ENVELOPE (built s53)
+
+**OWNER DECISION, MADE WITH THE PIXELS IN FRONT OF HIM. DO NOT REOPEN IT.**
+
+`art/seals/waxseal.webp` is now the wax seal **on its envelope** — 80×68, **3,098 B**,
+`e908dc4ff3f3a11b` — cut from the owner's four-up source sheet: top-right quadrant, tight-trimmed
+to 333×284, white knocked to alpha on a soft ramp so the cream paper survives, Lanczos to 80px.
+The previous disc-alone crop is preserved at `_preview/wax-shipped.webp` and in git.
+
+**THE COST, MEASURED AND SHOWN TO HIM BEFORE HE CHOSE.** Fitted to the 40px slot the envelope
+draws at **40×34**, and the wax disc inside it lands at roughly **18px across**. The disc-alone
+crop drew at 40×37 with the wax filling the frame — **more than twice the pixels on the seal
+itself.** A container and its contents cannot both be legible at 40px; that is the same wall the
+boot print hit (§61.2) and the four objects excluded before it (§60.1).
+
+**HE SAW IT AND CHOSE IT ANYWAY.** `_preview/seal-40.html` renders both marks into a real 40×40
+slot and magnifies 8× with smoothing off — true pixels, not scaled source art. That page is worth
+keeping: it is the fastest way to settle any future "does this read?" argument.
+
+**⚠ THE STANDING TENSION, WRITTEN DOWN SO IT IS NOT REDISCOVERED AS A BUG.** The seal renders at
+40px in the roster and the credentials rows, 28px in the verify header, **and nowhere larger**.
+The envelope is therefore decoration the hunter will not resolve. **If the envelope is ever to be
+seen properly, the fix is not a crop — it is drawing the mark large somewhere**, and the
+credentials card is the obvious home. Proposed, not built; show a render before building it.
+
+**THE BUILD.** `index.html` **4,009,148 B ·
+`94d747d244368debc937396e2a7fc164526966867212797b846c8d1dc636add8` · buildmark `32o` ·
+Amethyst `#7A5A98`.** Battery: `node --check` PASS · tag delta vs the pristine 32l base unchanged
+(`circle −3, img +2`) · no `console.log`, no CRLF, no `http://` · paid parity 35/27/8 · 10 URIs,
+10 distinct, **all ten byte-identical to `art/seals/*.webp`** · `%10`, no `%11` · `bootprint` ×0.
+Only index 9 changed; the other nine hash exactly as in 32n.
+
+**Next marker `32p` / Verdigris `#4E9A87`.**
+
+---
+
 ## 🔴 §61 — 32n: THE DEERSTALKER RE-CUT, THE BOOT PRINT PULLED, MODULUS 10 (built s53)
 
 Shipped the same session as 32m, after the owner looked at the marks on a real roster.
@@ -2980,14 +3018,69 @@ Any future change to `SEAL_IMGS` must state, out loud, whether that is still tru
 `art/seals/bootprint.webp` remains on disk and in the repo — **the sandbox cannot delete.** A copy
 sits in `art/seals/_excluded/` to mark intent. It is referenced by nothing.
 
-### 61.3 A BATTERY CHECK WORTH KEEPING
+### 61.3 🆕 HOW TO PREVIEW WITHOUT PUSHING — READ THIS BEFORE ANY VISUAL WORK
+
+**Most of s53 was spent pushing candidate builds to GitHub just to look at them.** That is not
+necessary and must not be repeated.
+
+**THE DEAD ENDS, so nobody rediscovers them:** Playwright cannot run in the Cowork sandbox (no
+root, Chromium's `libXdamage` missing, `install-deps` needs a package manager the sandbox will not
+give). The browser tooling **rewrites `file:///…` into `https://file:///…`** and can only see tabs
+in its own group, so a locally-opened file is invisible to Claude however it is opened. And
+**GitHub Pages runs Jekyll, which silently 404s any file whose name begins with an underscore** —
+`_candidate-32m.html` was present on raw and unreachable on Pages for exactly that reason.
+
+**THE ROUTE THAT WORKS — `Hunt-backups\serve.ps1`, written s53.** A static server on .NET's
+`HttpListener`; no Python and no Node on this machine (both checked s53, neither installed), and
+nothing to install. The owner runs:
+
+```
+powershell -ExecutionPolicy Bypass -File C:\Users\tony\Documents\Hunt-backups\serve.ps1
+```
+
+It serves `Documents\Hunt` read-only on **localhost only**, sends `no-store` so the file is always
+as it is on disk, and logs every request. Claude then navigates to
+**`http://localhost:8000/index.html`** and is looking at the WORKING COPY, live — hash it, run
+`sealMark()`, measure geometry, screenshot it. **Verified end to end s53:** 4,012,600 B /
+`cd46c7ad…` / `32n` / ten seals, matching disk exactly.
+
+**Ask the owner to start it at the top of any session with visual work.** It lives in
+`Hunt-backups` on purpose: it is a tool, not part of the app, so it never enters the public repo
+and never touches the clerk's file list.
+
+**🔴 CLEARING THE ENTRY CARDS — DO THIS FIRST OR YOU SCREENSHOT A REGISTRAR FORM.** A fresh load
+raises the Scotland Yard name card and holds the screen. The recipe, verified s53:
+
+```js
+await setMyName('Marguerite Vale');          // mints shco:store:myName
+await ensureCred();                          // mints shco:cred
+document.getElementById('cred-ov').classList.add('hidden');
+document.getElementById('scrollhint-ov').style.display = 'none';   // ⚠ SEE BELOW
+```
+
+**⚠ AND THE TRAP THAT COST THREE SCREENSHOTS: `#scrollhint-ov` IS NOT AN `.overlay`.** It is a
+separate `position:fixed` element at **z-index 530**, so
+`document.querySelectorAll('.overlay.open')` returns EMPTY while it is still covering the screen.
+Claude read that empty result as "the screen is clear", screenshotted a registrar form three times,
+and blamed a stale capture. **The owner had to point it out.**
+
+**WHAT CAUGHT IT — AND IT IS ALREADY A STANDING RULE (§11): `document.elementFromPoint`.** At the
+centre of the viewport it returned `dispatch-name`, an input that by Claude's own reasoning could
+not be there; walking `parentElement` up from it found `#scrollhint-ov` in three steps.
+
+**THE GENERAL LESSON, WHICH IS THE §2i LESSON WEARING A DIFFERENT HAT: A QUERY THAT RETURNS EMPTY
+HAS NOT PROVED ABSENCE — IT HAS PROVED THAT *THAT SELECTOR* MATCHED NOTHING.** Before any
+screenshot, hit-test the pixel. Never conclude "nothing is covering the screen" from a selector
+that only knows about one class of thing.
+
+### 61.4 A BATTERY CHECK WORTH KEEPING
 
 Added this session and it should stay: **decode every `SEAL_IMGS` URI and assert it is
 byte-identical to its file in `art/seals/`.** The art is the source of record and the base64 is
 derived from it, never the reverse — this check is what makes that claim true rather than hopeful.
 It passed on all ten.
 
-### 61.4 THE BUILD
+### 61.5 THE BUILD
 
 **`index.html` 4,012,600 B · `cd46c7ad766e8ab1421ef9ee9bc96ffd0b081418e4dddab30aae43c6763e8964`
 · buildmark `32n` · Rose `#B5566B` · commit `050f7220`.** Verified on **disk, raw AND Pages —
