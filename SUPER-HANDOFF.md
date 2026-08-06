@@ -2,7 +2,8 @@
 ### Session-53 edition (Aug 5 2026) — supersedes the ENTIRE prior chain, including the session-52 edition.
 ### 🔎 **SESSION 53 BEGAN AS A REVIEW AND ENDED AS A BUILD.** The review: re-hashed all three surfaces, opened `Hunt-backups` for the first time since s30, fixed three clerk defects (§59), and corrected §0, which had been contradicting §58 inside the s52 edition (§0.2). Then three owner task files arrived and **32m shipped** — photographic seals, the builder's commendation card, four-second cards, the ×1.25 stamp (§60).
 ### ✅ **`index.html` 32m IS LIVE ON PAGES.** **4,024,671 B / `811a118a332a76b2…` / buildmark `32m` / Ochre `#C88A2E`.** Base was 32l `bdfb0222…`. Hash-verified on Pages against the disk copy; raw was still serving 32l at the time, which §0 records as normal.
-### 🔴 **NEXT MARKER `32p`, Verdigris `#4E9A87`** — §8i: `b` Ochre (32m), `c` Rose (32n), `d` Amethyst (32o), so `e` Verdigris is next.
+### 🔴 **NEXT MARKER `32q`, Magenta `#A8478F`** — §8i: Ochre 32m · Rose 32n · Amethyst 32o · Verdigris 32p, so `f` Magenta is next.
+### ✅ **`index.html` 32p IS LIVE — AND §13 ITEM 6 IS FULLY CLOSED.** **4,009,521 B / `94d3b32dcf0cb09c…` / `32p` / Verdigris**, commit `1bf5b3b9`. **The web-app manifest shipped** with the Bonnie icon set: `short_name` **"S&H Co."**, six icons including a maskable pair (§63). **⚠ NOBODY HAS ACTUALLY INSTALLED IT — that still needs a phone.**
 ### ✅ **`index.html` 32o IS LIVE.** **4,009,148 B / `94d747d244368deb…` / `32o` / Amethyst `#7A5A98`**, commit `9c2b6462`. Wax seal keeps its envelope — owner's decision with the pixels in front of him (§62). Verified on disk, raw and Pages, all three identical.
 ### ✅ **`index.html` 32n IS LIVE.** **4,012,600 B / `cd46c7ad766e8ab1…` / buildmark `32n` / Rose `#B5566B`**, commit `050f7220`. Deerstalker re-cut, boot print pulled, **modulus 10** (§61). Verified on disk, raw and Pages — all three identical.
 ### 🔁 **THIS EDITION IS A RE-BASE, NOT A NEW SESSION OF BUILDING.** The s30 edition described the app at 29a/29b. It opened at **32i** and closed with **32j live on Pages** and **32l delivered**. Session 52 re-measured the code and the live services, corrected the header, §0 and §13, and then built §54/§56/§57. **Sections §1–§51 were NOT rewritten** — every standing rule in them is preserved verbatim per the no-compression rule (§4). Where an untouched section's *status claims* conflict with §0 or §13, **§0 and §13 win**; where a *rule* conflicts, the rule stands.
@@ -133,7 +134,9 @@ is proven and should be reused for every future Worker change.
 
 | File | Size | SHA-256 | Purpose |
 |---|---|---|---|
-| `index.html` **(LIVE — disk == raw == Pages, all three hash-verified s53)** | 4,009,148 B | `94d747d244368debc937396e2a7fc164526966867212797b846c8d1dc636add8` | **32o** — buildmark `32o` Amethyst `#7A5A98`; wax seal keeps its envelope (§62) |
+| `index.html` **(LIVE — disk == Pages, hash-verified s53)** | 4,009,521 B | `94d3b32dcf0cb09cc0529324148a37c857e38e63c5b19bd8a1a8c0539944a67a` | **32p** — buildmark `32p` Verdigris `#4E9A87`; **the web-app manifest + icon set (§63)** |
+| `manifest.webmanifest` **🆕 s53** | 941 B | — | name/short_name/display/theme; **`icons/` holds six PNGs** — 1024·512·192·180 standard, 512·192 maskable (§63) |
+| *(historical)* `index.html` 32o | 4,009,148 B | `94d747d244368debc937396e2a7fc164526966867212797b846c8d1dc636add8` | wax seal keeps its envelope (§62) |
 | *(historical)* `index.html` 32n | 4,012,600 B | `cd46c7ad766e8ab1421ef9ee9bc96ffd0b081418e4dddab30aae43c6763e8964` | deerstalker re-cut, boot print pulled, modulus 10 (§61) |
 | *(historical)* `index.html` 32m | 4,024,671 B | `811a118a332a76b222c4261f95bf53370195941e60daeb87f79fc261e81ae1c3` | photographic seals + the builder's commendation card (§60) |
 | *(historical)* `index.html` 32l | 3,908,422 B | `bdfb02224e5084ef055fb8f871bde21fbfe56aac4d8a05768978667e0081f1bc` | credentials-card side slider (§57) |
@@ -2547,7 +2550,7 @@ a members' book — not a rename. **If ever changed:** the wordmark is live text
 1. **ESTABLISH THE MODE.** On his computer (the s52 default) or in the cloud? The difference is
    load-bearing — real git and real network vs a no-network bridge that also cannot delete. Say which.
 2. **RE-HASH THE LOCAL CLONE AGAINST LIVE AND SAY THE RESULT OUT LOUD EITHER WAY.**
-   Expect **4,009,148 B / `94d747d2…` / buildmark `32o`** on all three of local, GitHub and Pages.
+   Expect **4,009,521 B / `94d3b32d…` / buildmark `32p`** on all three of local, GitHub and Pages.
    **🆕 HOW TO HASH WHEN `curl` IS NOT AVAILABLE (s53).** Cowork's sandbox no longer fetches URLs,
    so §0's `curl … | sha256sum` route can fail outright. Two replacements, both proven s53:
    **(a)** the **Claude in Chrome** extension — navigate to the Pages URL and hash in-page with
@@ -2583,7 +2586,7 @@ a members' book — not a rename. **If ever changed:** the wordmark is live text
    it as a second folder.** Three defects found and two fixed; **§59.** What is still owed there:
    confirm the Monday schedule has ever fired, and confirm `repo/SUPER-HANDOFF.md` appears after the
    next run.
-9. **Next marker `32p` / Verdigris `#4E9A87`** — **`32o` / Amethyst `#7A5A98` is spent (§62).**
+9. **Next marker `32q` / Magenta `#A8478F`** — **`32p` / Verdigris `#4E9A87` is spent (§63).**
    *(This line previously said `32m` / Cerulean `#2F7D8C`, which conflicted with the s53 task
    file. The owner ruled for **Ochre**, resuming the §8i rotation at `b`: the pre-`32l` marker
    `#7D4E6B` is not on the 8i list at all, so the drift was not reconstructed. Ochre `b` was spent
@@ -2938,6 +2941,81 @@ Run against the exact files staged for `present_files`:
    staging step of session 30.
 
 **All four steps clean. The handoff is complete.**
+
+---
+
+## 🔴 §63 — 32p: THE WEB-APP MANIFEST AND THE ICON SET (built s53) — §13 ITEM 6 IS NOW FULLY CLOSED
+
+The service worker shipped s52; **the manifest was its missing half.** Without it there is no
+install prompt and no home-screen identity, and `manifest` was ×0 from the beginning.
+
+### 63.1 WHAT SHIPPED
+
+**`manifest.webmanifest`** (941 B, repo root): `name` **"Scavenger & Hunt Co."**, `short_name`
+**"S&H Co."** — owner's wording, this is the label a phone prints under the icon — `id` `/Hunt/`,
+`start_url` `./index.html`, `scope` `./`, `display` **standalone**, `orientation` **portrait**
+(the app refuses landscape anyway, §63.4), `theme_color` **#332014** matching the pre-existing
+meta, `background_color` **#EDE4D3**, categories games/entertainment.
+
+**Icons — `icons/` at the repo root, six files.** 1024 / 512 / 192 / 180 standard, plus
+**512 and 192 `maskable`**. `<link rel="manifest">` added to the head; `apple-touch-icon` moved
+from `hunt-icon-v5.png` to `icons/icon-180.png` (**`hunt-icon-v5` is now ×0 in the client** —
+the file stays in the repo, unreferenced).
+
+**⚠ THE MASKABLE ENTRIES ARE NOT OPTIONAL.** Android letterboxes any icon not declared maskable,
+and its circle crop **eats the ear tips of the standard cut** — and the ears are Bonnie's
+silhouette. The maskable pair holds the subject inside the safe area so no launcher shape clips it.
+
+### 63.2 THE ICON, AND THE TWO CORRECTIONS THE OWNER MADE
+
+Chosen from four candidates: **B, the option-C Bonnie set.** The deciding fact was not taste —
+**`hunt-icon-v5.png` exists only at 180×180 with no source anywhere**, and a clean 1024 cannot be
+made from a 180px raster. B was the only option that was actually buildable.
+
+**Correction 1 — "she needs to be more sepia."** The first tint mapped shadows to `(58,38,20)`,
+which **reads as black**. **THE FIX WAS NOT MORE SEPIA — IT WAS LIFTING THE SHADOW END.** Tinting
+alone maps black to a very dark brown and the eye still calls it black. Four steps were rendered
+with their darkest-pixel values shown as colour chips; the owner picked **option 3: shadows to
+`(118,74,38)`, highlights to `(244,233,210)`, gamma 0.82** — darkest pixel `113,68,31`.
+**Record the number, not the word: "sepia" was never the variable, the shadow floor was.**
+
+**Correction 2 — "in round she can sit lower so she can be bigger."** Correct, and worth keeping
+as a rule. In a circle mask the corners are discarded, so **anchoring the subject low lets it be
+larger**: the ears use the top of the circle and the collar falls out of the bottom where nothing
+is lost. Chosen fit: **92% scale, dropped 5.5%** — against the naive 80%-centred default.
+
+Source of record is `art/icon-C/icon-1024.png` → tight crop → duotone → the six PNGs. **The crop
+was cut at each target size, not scaled down from 1024** — the §61.1 lesson, applied.
+
+### 63.3 TWO DEFECTS THE BATCH TURNED UP, BOTH FIXED
+
+- **The clerk would have gone red.** `FILES` knew nothing of the manifest or the six icons, so the
+  next backup run would have failed on seven uncovered files. **`FILES` is now 38 paths.** This is
+  the second time a build has outrun the backup list — **add new repo files to `backup.yml` in the
+  same edit that creates them.**
+- **`serve.ps1` served the manifest as `application/octet-stream`**, having no `.webmanifest` MIME
+  type. **Chrome's install prompt silently declines that content type**, so the preview would have
+  shown a manifest that "worked" while the real behaviour differed. Pages gets it right; the local
+  server now does too. **A preview that lies is worse than no preview.**
+
+### 63.4 STILL OWED
+
+- **NOBODY HAS INSTALLED IT.** Every check here is a fetch and a hash. **The install prompt itself
+  is unverified** — that needs a phone, `gahensley1.github.io/Hunt/`, and Add to Home Screen. Until
+  someone does that, "the app installs" is a claim (§2f).
+- The 1024 is generated but **not referenced by the manifest** — it is there for store submission
+  (§12), where Apple requires it.
+- `hunt-icon-v5.png` is now unreferenced. Leave or delete; it is recorded either way.
+
+**THE BUILD.** `index.html` **4,009,521 B ·
+`94d3b32dcf0cb09cc0529324148a37c857e38e63c5b19bd8a1a8c0539944a67a` · buildmark `32p` ·
+Verdigris `#4E9A87` · commit `1bf5b3b9`.** Verified on disk and Pages; manifest and all six icons
+return 200 from Pages at their exact byte counts. Battery: `node --check` PASS · tag delta vs the
+pristine 32l base `link +1` (the manifest link) on top of the seals' `img +2 / circle −3` · no
+`console.log`, no CRLF, no `http://` · paid parity 35/27/8 · ten seal URIs still byte-identical to
+`art/seals/`.
+
+**Next marker `32q` / Magenta `#A8478F`.**
 
 ---
 
