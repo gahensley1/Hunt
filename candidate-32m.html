@@ -635,7 +635,16 @@
        look and it is not a bug. This rule is scoped to #cred-ov for exactly that reason.
      ⚠ DO NOT "TIDY" THIS INTO A GLOBAL .dos-conf CHANGE. It would flatten the record
        overlay's stamp against the page edge. */
-  #cred-ov .dos-conf{right:4px}
+  /* 1.25x, owner instruction 5 Aug 2026, and SCOPED TO #cred-ov for the same reason
+     right:4px is: a global change would blow up the record overlay's stamp too.
+     Base is 11.5px / 1.8px / 3px 8px / 2px border; x1.25 gives the values below.
+     THE NARROW-SCREEN OVERRIDE IS RE-STATED BELOW. The @media (max-width:349px) rule
+     sets a bare .dos-conf{font-size:9.5px}, which LOSES to this id selector on
+     specificity - so without the scoped copy the stamp would stay at full size on a
+     320px phone and walk straight back into the SS-57 slider. */
+  #cred-ov .dos-conf{right:4px;font-size:14.375px;letter-spacing:2.25px;
+    padding:3.75px 10px;border-width:2.5px}
+  @media (max-width:349px){ #cred-ov .dos-conf{font-size:11.875px;letter-spacing:1.5px} }
   .cred-h{font-family:var(--serif);font-size:18px;margin:2px 0 1px;color:var(--ink)}
   .cred-name{font-family:var(--serif);font-style:italic;font-size:14px;color:var(--ink);margin:0 0 6px}
   .cipher-row{display:flex;gap:3px;justify-content:center;margin:2px 0 6px}
@@ -2143,11 +2152,11 @@ function openDispatch(code){
   _tgMark(code);
   _tgArm();
 }
-/* Three seconds, or any tap. The timer PAUSES while the page is hidden \u2014 a dispatch
+/* FOUR seconds, or any tap (was three; the owner raised both cards 5 Aug 2026). The timer PAUSES while the page is hidden \u2014 a dispatch
    must never dismiss itself in a pocket. */
 function _tgArm(){
   _tgClear();
-  _tgTimer=setTimeout(burnDispatch, 3000);
+  _tgTimer=setTimeout(burnDispatch, 4000);
 }
 function _tgClear(){ if(_tgTimer){ clearTimeout(_tgTimer); _tgTimer=null; } }
 document.addEventListener("visibilitychange", function(){
@@ -2214,9 +2223,9 @@ function openPraise(code){
   _prMark(code);
   _prArm();
 }
-/* Three seconds, or any tap. The timer PAUSES while the page is hidden - a card
+/* FOUR seconds, or any tap (was three; the owner raised both cards 5 Aug 2026). The timer PAUSES while the page is hidden - a card
    must never dismiss itself in a pocket. */
-function _prArm(){ _prClear(); _prTimer=setTimeout(burnPraise, 3000); }
+function _prArm(){ _prClear(); _prTimer=setTimeout(burnPraise, 4000); }
 function _prClear(){ if(_prTimer){ clearTimeout(_prTimer); _prTimer=null; } }
 document.addEventListener("visibilitychange", function(){
   var ov=document.getElementById("ov-praise");
