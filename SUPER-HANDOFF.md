@@ -1,9 +1,11 @@
 # SUPER-HANDOFF.md — The Deerstalker / Scavenger & Hunt Co.
-### Session-52 edition (Aug 4 2026) — supersedes the ENTIRE prior chain, including the session-30 edition.
+### Session-53 edition (Aug 5 2026) — supersedes the ENTIRE prior chain, including the session-52 edition.
+### 🔎 **SESSION 53 WAS A REVIEW, NOT A BUILD. NO `index.html` CHANGE — the live build is still `32l` and the next marker is still `32m` / Cerulean `#2F7D8C`.** What it did: re-hashed all three surfaces (they agree), opened `Hunt-backups` for the first time since s30, found and fixed two clerk defects (§59), and corrected §0, which had been contradicting §58 inside the s52 edition (§0.2).
 ### 🔁 **THIS EDITION IS A RE-BASE, NOT A NEW SESSION OF BUILDING.** The s30 edition described the app at 29a/29b. It opened at **32i** and closed with **32j live on Pages** and **32l delivered**. Session 52 re-measured the code and the live services, corrected the header, §0 and §13, and then built §54/§56/§57. **Sections §1–§51 were NOT rewritten** — every standing rule in them is preserved verbatim per the no-compression rule (§4). Where an untouched section's *status claims* conflict with §0 or §13, **§0 and §13 win**; where a *rule* conflicts, the rule stands.
 ### ✅ **`index.html` 32j IS ON GITHUB.** **3,905,589 B / `a29d7438fc002494…` / buildmark `32j` / Slate `#4E6478`.** Base was 32i `a951bf6a…`. The owner uploaded it through the GitHub web page (`30723db`, re-uploaded `48fd903`) — **byte-identical to the local build, hash-verified s52.** See §54.
 ### ✅ **`index.html` 32l IS LIVE ON PAGES.** **3,908,422 B / `bdfb02224e5084ef…` / buildmark `32l` / Plum `#7D4E6B`.** Carries the desktop masthead fix (§56) **and** the credentials-card side-slider fix (§57). Uploaded by the owner (`5c254ff`); **hash-verified against Pages at session close.** 32k was folded into it and never shipped alone.
-### 🔴 **THIS HANDOFF IS THE LAST THING UNPUSHED.** GitHub still serves the **session-30** edition. See §58.
+### ✅ **THE s52 HANDOFF LANDED — §58.2 IS DONE.** Fetched from raw s53: **200, 207,568 B, "Session-52 edition"**. The line here previously said it was "the last thing unpushed" and that GitHub still served the session-30 edition; **both had stopped being true.**
+### 🔴 **THIS s53 EDITION IS AGAIN UNPUSHED.** §0, §0.2, §13.2, §30.2, §30.8, §58 and the new §59 all changed on disk. **Push it, and replace the project-knowledge copy.** Only the owner can do either (§55, §A.1).
 ### ✅ **NOTHING WAS PENDING PUSH AT SESSION OPEN.** Local clone `C:\Users\tony\Documents\Hunt` == GitHub == Pages, hash-verified s52: `index.html` **3,896,676 B / `a951bf6a60335954…`**, buildmark **`32i`**. HEAD `8a89e99`. No drift, for the first recorded session.
 ### ✅ **§13.3 — THE TOP SECURITY ITEM IS CLOSED, BOTH HALVES.** `CURATOR_PASS` ×0 in the client; `CURATOR_WORD` is memory-only and typed at the desk; **and the secret HAS been rotated — `X-Curator-Token: BAKER221B` now returns 403 from the live Worker.** Carried as "top open item" for twenty-plus sessions; it is done.
 ### ✅ **§13.6 — THE SERVICE WORKER SHIPPED.** `sw.js` is in the repo and 200 on Pages; `navigator.serviceWorker.register("./sw.js")` is live, https-gated, network-first for the document.
@@ -127,12 +129,13 @@ is proven and should be reused for every future Worker change.
 
 | File | Size | SHA-256 | Purpose |
 |---|---|---|---|
-| `index.html` **(LIVE — local clone == repo == Pages, hash-verified s52)** | 3,896,676 B | `a951bf6a603359545a7ccb14c42ac8b0bbe4957c832281ffa9e1a995ddd7ef1c` | **32i** — buildmark `32i`; agency licence minting (`8a89e99`) |
+| `index.html` **(LIVE — local clone == raw == Pages, all three hash-verified s53)** | 3,908,422 B | `bdfb02224e5084ef055fb8f871bde21fbfe56aac4d8a05768978667e0081f1bc` | **32l** — buildmark `32l`; credentials-card side slider (§57) |
+| *(historical)* `index.html` 32i | 3,896,676 B | `a951bf6a603359545a7ccb14c42ac8b0bbe4957c832281ffa9e1a995ddd7ef1c` | agency licence minting (`8a89e99`) — **this row said "LIVE" for three builds after it stopped being true. See §0.2.** |
 | `sw.js` **🆕 (LIVE — 200 on Pages)** | 3,435 B | `61a93b05658cad6b2e0488166c6b05fd2161f3e1be73afab42de67c1c447cdf3` | the service worker (§13.6, CLOSED) |
 | `award-card.jpeg` **🆕 in repo** | 180,855 B | `3ef3ac34795c8708…` | commendation card (§8r) |
 | `hunt-icon-v5.png` **🆕 in repo** | 67,899 B | `969262cefd3c431e…` | app icon |
 | `behaviour.py` **🆕 in repo ROOT — ⚠ A STRAY DUPLICATE** | 18,003 B | `473b385d3b122c6e…` | **byte-identical to `test/behaviour.py`.** One of the two should go; the root copy is the accident. |
-| `SUPER-HANDOFF.md` **🔴 NOW IN THE PUBLIC REPO** | 177,589 B (pre-rebase) | — | this document. See the §0 warning below. |
+| `SUPER-HANDOFF.md` **🔴 NOW IN THE PUBLIC REPO** | 177,589 B (pre-rebase) | — | this document. See the §0 warning below. **🆕 s53: it had NO BACKUP until this session — the archive clerk's file list never learned about it (§59.1).** |
 | `art/` **🆕 (6 files)** | — | — | `bonnie-icon-source.png` + `icon-C/` (adaptive-background-432, adaptive-foreground-432, icon-1024, icon-180-appletouch, icon-512) |
 | *(historical)* `index.html` 29a | 3,690,652 B | `26d31f08192fbd47…` | the s30 edition's "live" build — nine builds stale |
 | `privacy.html` **(🆕 REBUILT s30 — for scavengerandhunt.com, NOT the repo)** | 5,364 B | `6298d38db9060f9575619709ffab02951c2b7606c74c7fd49441124e6e94391c` | DRAFT banner; §45.4 language verbatim (§44.2b) |
@@ -161,8 +164,11 @@ is proven and should be reused for every future Worker change.
 
 **🆕 SEPARATE PROPERTY — the marketing site (NOT in the Hunt repo, NOT on GitHub Pages).** See §44.
 
-- **🔴 THE FIRST THING THE NEXT SESSION MUST DO IS CONFIRM 28e WAS PUSHED.** Expect
-  **3,687,318 B / `bcfbf057…` / `>28e<`**. If Pages still reads `f1c7e782…`, the push did not land.
+- **🔴 THE FIRST THING THE NEXT SESSION MUST DO IS RE-HASH ALL THREE SURFACES.** Expect
+  **3,908,422 B / `bdfb0222…` / `32l`** on local, raw and Pages alike. *(The line that stood here
+  demanded confirmation of **28e** — twenty-plus builds dead. A stale instruction is worse than no
+  instruction: it sends the session to verify a fact that stopped mattering. Re-write this line on
+  every ship.)*
 - **🔴 ⚠ VERIFY A PUSH AGAINST `gahensley1.github.io`, NOT `raw.githubusercontent.com`.**
   raw's CDN served the OLD file for over two minutes after a successful push in session 25, and a
   cache-buster query did not defeat it. **Pages is authoritative; raw lagging is normal and harmless.**
@@ -185,6 +191,10 @@ is proven and should be reused for every future Worker change.
   worker, `0386384` Bonnie icon + option-C icon set, `8a89e99` **32i agency licence minting,
   badge-bound keys with expiry**. **Per-build hashes for 30–32h were never recorded and are now only
   recoverable from git.** Recover with `git log --format=%h` + `git show <sha>:index.html | sha256sum`.
+- **🆕 s53 lineage:** 32i 3,896,676 `a951bf6a…` → 32j 3,905,589 (licence terms + register, §54) →
+  32k (desktop masthead clip, §56) → **32l 3,908,422 · `bdfb0222…` · uploaded `5c254ff` (LIVE)**.
+  32k and 32l shipped as one delivery, so **no separate 32k hash exists.** Verified s53 on local,
+  raw and Pages — **all three identical.** Local `HEAD` = `origin/main` = `318503c2`; nothing ahead.
 - **Session-29 lineage:** 28e 3,687,318 `bcfbf057…` (live base, hash-verified on **Pages and raw** at
   session start) → **29a 3,690,652 · `26d31f08…` (DELIVERED)**. One ship; the deed checkbox was added
   to 29a in place rather than cut as 29b, so **only one 29-series hash exists.**
@@ -198,6 +208,24 @@ is proven and should be reused for every future Worker change.
   **3,559,279 · `b9719c66…`**; 19 `d9a6a4cd…`; 18 `a3773d73…`; 17 `f03a7dee…`; 16 `c4527c8a…`;
   15 `200f6c…`; 13 `57cc95bf…`; 12 `eb8fe5cc…`; 11 `362d13eb…`; 10 `a7493aca…`; 9 `25dcd26d…`
   (begun from owner-uploaded `d1fa7777…`, **never diffed** — §13); 8 `747b8963…`.
+
+---
+
+## 🔴 §0.2 — THE `32i` ROW: A DOC THAT CONTRADICTED ITSELF IN ONE EDITION (found s53)
+
+**§0's table said the live build was `32i`. §58, in the same document, said `32l` and gave the
+hash.** Both were written in session 52; §58 was updated at session close and §0 was not. The s53
+review found them disagreeing and re-hashed all three surfaces: **`32l` / 3,908,422 B /
+`bdfb0222…` — local, raw and Pages identical.** §58 was right; §0 was three builds stale.
+
+**This is not the §30.11 staleness class.** That one is a document that stopped being updated. This
+is worse and harder to catch: **a document that was updated in one place and not the other, so it
+carries its own contradiction and still reads as current.** A single stale section inside a fresh
+edition inherits the edition's credibility.
+
+**THE RULE THAT FOLLOWS: §0 IS UPDATED IN THE SAME EDIT AS THE SHIP, NEVER AFTERWARDS.** If a build
+is delivered and §0's table still names the previous one, the ship is not finished. And when two
+sections of this document disagree, **re-measure — do not pick the one that reads more confidently.**
 
 ---
 
@@ -1844,10 +1872,14 @@ deleted, because a closed item that vanishes gets re-opened by the next session.
 2. **🔴 NO BACKUP AND NO CLIENT EXPORT.** `exportAll` ×0 · `downloadBackup` ×0 · `exportCase` ×0 —
    unchanged since s29. Every case, profile and submission sits in one D1 table that `PUT` lets anyone
    overwrite. The mitigation is not auth (item 8 rules that out); it is **a periodic export**.
-   **⚠ THE s30 "ARCHIVE CLERK" (§51.3) — STATUS UNKNOWN.** It was built and live-tested in s30 and
-   handed over as a zip with four owner setup steps. `Hunt-backups` is private and unreachable from any
-   sandbox, so **s52 could not confirm whether those four steps were ever done.**
-   **🔴 ASK THE OWNER FIRST — do not rebuild it before checking.**
+   **✅ THE s30 "ARCHIVE CLERK" (§51.3) — IT IS RUNNING. MEASURED s53, STATUS NO LONGER UNKNOWN.**
+   The owner connected `Hunt-backups` and it was read directly. **All four setup steps were done.**
+   Three snapshots on disk: `archive-2026-07-30.json` (121 B, one key), `archive-2026-08-03.json`
+   (45,325 B, **749 listed keys**), `archive-2026-08-04.json` (45,758 B, **758 listed keys**), each
+   `includesProfiles:true` across ten key families. **The archive half of item 2 is closed. What
+   remains here is the CLIENT export — `exportAll` / `downloadBackup` / `exportCase`, still ×0.**
+   **🔴 THREE DEFECTS FOUND IN THE CLERK, s53 — see §59. One was serious: the clerk was not backing
+   up `SUPER-HANDOFF.md`.**
 3. **🔴 THE FULL LOOP HAS NEVER RUN ON HARDWARE (§50.2).** build → share → join → photograph → verify
    → coin → rank, end to end, on two real phones. Everything verified to date is headless Chromium.
    **This is now the highest-risk item that no amount of grepping can close**, and it has been carried
@@ -2507,7 +2539,14 @@ a members' book — not a rename. **If ever changed:** the wordmark is live text
 1. **ESTABLISH THE MODE.** On his computer (the s52 default) or in the cloud? The difference is
    load-bearing — real git and real network vs a no-network bridge that also cannot delete. Say which.
 2. **RE-HASH THE LOCAL CLONE AGAINST LIVE AND SAY THE RESULT OUT LOUD EITHER WAY.**
-   Expect **3,896,676 B / `a951bf6a…` / buildmark `32i`** on all three of local, GitHub and Pages.
+   Expect **3,908,422 B / `bdfb0222…` / buildmark `32l`** on all three of local, GitHub and Pages.
+   **🆕 HOW TO HASH WHEN `curl` IS NOT AVAILABLE (s53).** Cowork's sandbox no longer fetches URLs,
+   so §0's `curl … | sha256sum` route can fail outright. Two replacements, both proven s53:
+   **(a)** the **Claude in Chrome** extension — navigate to the Pages URL and hash in-page with
+   `fetch` + `crypto.subtle.digest`; returns size, SHA-256 and buildmark without flooding context,
+   and this is the preferred route. **(b)** `python verify.py` in `Hunt-backups`, run by the owner
+   on his own machine, which hashes all three surfaces and probes the Worker. **If neither is
+   available, SAY SO AND DO NOT CLAIM A VERIFICATION.**
    **Audit the repo file listing** — it was 5 entries at s30 and 10 at s52 with no doc entry in between.
    **The Worker source must NOT be in it.**
 3. **CONFIRM THE WORKER.** Root must read **v2.6.1**. `/list` and `/report` with no token → **403**.
@@ -2525,8 +2564,11 @@ a members' book — not a rename. **If ever changed:** the wordmark is live text
    **plus the red `FIND CURRENT & OLD CASES HERE` stamp as its own element.** **Do not simply
    re-apply 28f — it was undone for a reason.** The `manifest` (§13, closed-item 6 remainder) is a
    half-hour and finishes the service-worker story.
-8. **ASK BEFORE REBUILDING THE BACKUP CLERK (§13.2).** It was delivered in s30 with four owner setup
-   steps and `Hunt-backups` is unreachable from any sandbox. **Find out whether it is running first.**
+8. **✅ THE BACKUP CLERK IS RUNNING — ANSWERED s53, DO NOT RE-ASK.** All four setup steps were done;
+   snapshots are real and non-empty (§13 item 2). **`Hunt-backups` IS reachable — the owner connects
+   it as a second folder.** Three defects found and two fixed; **§59.** What is still owed there:
+   confirm the Monday schedule has ever fired, and confirm `repo/SUPER-HANDOFF.md` appears after the
+   next run.
 9. **Next marker `32m` / Cerulean `#2F7D8C`** — **`32l` / Plum `#7D4E6B` is spent (§57).**
    *(`a` Cobalt through `l` Plum are now spent in the 32 series.)*
 10. **Get the decisions owed (§14):** the Almanac regrouping · the nine volume labels · **the app name
@@ -2882,12 +2924,68 @@ Run against the exact files staged for `present_files`:
 
 ---
 
+## 🔴 §59 — THE ARCHIVE CLERK, OPENED UP AND FIXED (s53)
+
+`Hunt-backups` was connected for the first time since it was built. **The clerk is alive** — see
+§13 item 2 for the measured snapshot counts. But reading it turned up three defects, and the first
+one matters more than the rest of this session put together.
+
+### 59.1 🔴 THE CLERK WAS NOT BACKING UP THE HANDOFF — FIXED
+
+`backup.yml`'s `FILES` list was written when the repo held **five** entries plus `test/`. The repo
+now holds **ten**. The list was never updated, so three things had no snapshot at all:
+**`SUPER-HANDOFF.md`**, the root `behaviour.py`, and the six files in `art/`.
+
+**The document that carries every standing rule, every owner decision and the entire incident record
+had no backup.** It is one file, it exists in two places (the repo and the owner's disk), and both
+are the same GitHub account. §1v says an asset that only exists in a chat is lost; the same logic
+applies one level up — **an asset that exists only where you already are is not backed up.**
+
+**FIXED s53:** `FILES` now names all **nineteen** paths explicitly. Because the step already fails
+loudly on any file it cannot fetch, a wrong path is now a red run rather than a silent gap.
+
+### 59.2 🔴 AND THE SAME THING WOULD HAVE HAPPENED AGAIN — DRIFT GUARD ADDED
+
+Fixing the list does not fix the *class*. The list went stale silently once and would have gone
+stale silently again the next time the repo grew. **`drift_guard.py` is new in `Hunt-backups`.**
+It asks GitHub for the repo's actual file tree and fails the run if anything in the repo is not
+covered by `FILES`; a file in `FILES` that has left the repo is a warning, not a failure.
+
+**It was tested s53 against three fabricated trees before being committed** — a clean tree (exit 0),
+a tree with one uncovered file (exit 1, `::error::` naming the file), and a tree missing a listed
+file (exit 0 with a `::warning::`). **§2i: the green tick was not taken on trust.**
+
+### 59.3 ⚠ TWO SMALLER THINGS, NOT FIXED
+
+- **The schedule may never have fired.** `cron` is `0 4 * * 1` — Mondays 04:00 UTC. The two real
+  snapshots are stamped **18:53** and **00:28**, which are manual `workflow_dispatch` runs. The
+  clerk commits on GitHub, so the local clone's reflog cannot settle this. **Open the Actions tab
+  and look at whether the scheduled run has ever completed.** *(GitHub also disables scheduled
+  workflows on repositories with no activity for sixty days — worth knowing for a weekly job.)*
+- **The empty-snapshot gate is weaker than it reads.** It fails only on `keys` being falsy, so
+  `archive-2026-07-30.json` — **121 bytes, a single key** — passed as a good backup. A floor
+  (say, refuse anything under fifty keys, or under half the previous snapshot) would have caught it.
+- **The `repo/` mirror is six builds stale** (`32f`, 3,892,083 B, `24d3162c…`). That is the weekly
+  cadence working as designed, not a fault — **but it means the mirror is not a restore source for
+  the current build.** Say so out loud rather than assuming `repo/index.html` is live.
+- **`_to_delete/` is empty** — a leftover from a cloud-bridge session. Harmless; remove it whenever.
+
+### 59.4 THE HANDOFF-BACKUP RULE
+
+**When the app repo gains a file, add it to `backup.yml` in the same edit.** The drift guard will
+now catch a lapse, but catching it a week later in a red run is the second-best outcome. **And the
+first thing to confirm after the next clerk run is that `repo/SUPER-HANDOFF.md` exists.**
+
+---
+
 ## 🔴 §58 — SESSION 52 CLOSE: WHAT IS OWED, IN ORDER
 
-**LIVE RIGHT NOW:** Pages serves **32j**, 3,905,589 B — re-probed at session close.
+**LIVE RIGHT NOW:** Pages serves **32l**, 3,908,422 B / `bdfb0222…` — *(this line said `32j` and
+3,905,589 B, contradicting item 1 four lines below it; corrected s53 after re-hashing all three
+surfaces. See §0.2.)*
 **ON THE OWNER'S DISK:** **32l**, 3,908,422 B / `bdfb02224e5084ef…`, plus this handoff.
-**LOCAL COMMITS AHEAD OF `origin/main`:** `eb1d0e2` (handoff re-base) · `26fb3f1` (32k) ·
-`dfd7c18` (32l).
+**LOCAL COMMITS AHEAD OF `origin/main`:** ✅ **NONE — cleared.** `HEAD` = `origin/main` =
+`318503c2`, measured s53. The three s52 commits (`eb1d0e2` · `26fb3f1` · `dfd7c18`) all landed.
 
 **1. ✅ DONE — `index.html` 32l IS LIVE.** Uploaded as `5c254ff`, hash-verified on Pages:
    **3,908,422 B / `bdfb0222…` / buildmark `32l`.**
