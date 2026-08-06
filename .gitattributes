@@ -1,0 +1,20 @@
+# Scavenger & Hunt Co. — line-ending policy.
+#
+# WHY THIS EXISTS: the working clone on Windows carries CRLF while every blob in
+# the repo is LF. Without this file `git status` reports all eight tracked text
+# files as fully modified (9829 insertions / 9829 deletions, zero real changes),
+# which has been misread as "the local clone has drifted" in past sessions.
+# `text=auto` tells git to compare against the normalised LF form, so the
+# phantom diff disappears and a REAL change actually stands out.
+
+* text=auto
+
+# Binary — never touch these.
+*.png   binary
+*.jpeg  binary
+*.jpg   binary
+*.gif   binary
+*.webp  binary
+*.ico   binary
+*.woff  binary
+*.woff2 binary

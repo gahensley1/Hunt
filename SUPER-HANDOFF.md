@@ -1,6 +1,8 @@
 # SUPER-HANDOFF.md — The Deerstalker / Scavenger & Hunt Co.
 ### Session-53 edition (Aug 5 2026) — supersedes the ENTIRE prior chain, including the session-52 edition.
-### 🔎 **SESSION 53 WAS A REVIEW, NOT A BUILD. NO `index.html` CHANGE — the live build is still `32l` and the next marker is still `32m` / Cerulean `#2F7D8C`.** What it did: re-hashed all three surfaces (they agree), opened `Hunt-backups` for the first time since s30, found and fixed two clerk defects (§59), and corrected §0, which had been contradicting §58 inside the s52 edition (§0.2).
+### 🔎 **SESSION 53 BEGAN AS A REVIEW AND ENDED AS A BUILD.** The review: re-hashed all three surfaces, opened `Hunt-backups` for the first time since s30, fixed three clerk defects (§59), and corrected §0, which had been contradicting §58 inside the s52 edition (§0.2). Then three owner task files arrived and **32m shipped** — photographic seals, the builder's commendation card, four-second cards, the ×1.25 stamp (§60).
+### ✅ **`index.html` 32m IS LIVE ON PAGES.** **4,024,671 B / `811a118a332a76b2…` / buildmark `32m` / Ochre `#C88A2E`.** Base was 32l `bdfb0222…`. Hash-verified on Pages against the disk copy; raw was still serving 32l at the time, which §0 records as normal.
+### 🔴 **NEXT MARKER `32n`, Rose `#B5566B`** — the §8i rotation resumed at `b` Ochre with 32m, so `c` is next.
 ### 🔁 **THIS EDITION IS A RE-BASE, NOT A NEW SESSION OF BUILDING.** The s30 edition described the app at 29a/29b. It opened at **32i** and closed with **32j live on Pages** and **32l delivered**. Session 52 re-measured the code and the live services, corrected the header, §0 and §13, and then built §54/§56/§57. **Sections §1–§51 were NOT rewritten** — every standing rule in them is preserved verbatim per the no-compression rule (§4). Where an untouched section's *status claims* conflict with §0 or §13, **§0 and §13 win**; where a *rule* conflicts, the rule stands.
 ### ✅ **`index.html` 32j IS ON GITHUB.** **3,905,589 B / `a29d7438fc002494…` / buildmark `32j` / Slate `#4E6478`.** Base was 32i `a951bf6a…`. The owner uploaded it through the GitHub web page (`30723db`, re-uploaded `48fd903`) — **byte-identical to the local build, hash-verified s52.** See §54.
 ### ✅ **`index.html` 32l IS LIVE ON PAGES.** **3,908,422 B / `bdfb02224e5084ef…` / buildmark `32l` / Plum `#7D4E6B`.** Carries the desktop masthead fix (§56) **and** the credentials-card side-slider fix (§57). Uploaded by the owner (`5c254ff`); **hash-verified against Pages at session close.** 32k was folded into it and never shipped alone.
@@ -129,7 +131,9 @@ is proven and should be reused for every future Worker change.
 
 | File | Size | SHA-256 | Purpose |
 |---|---|---|---|
-| `index.html` **(LIVE — local clone == raw == Pages, all three hash-verified s53)** | 3,908,422 B | `bdfb02224e5084ef055fb8f871bde21fbfe56aac4d8a05768978667e0081f1bc` | **32l** — buildmark `32l`; credentials-card side slider (§57) |
+| `index.html` **(LIVE — disk == Pages, hash-verified s53; raw was still lagging at the time and that is normal, §0)** | 4,024,671 B | `811a118a332a76b222c4261f95bf53370195941e60daeb87f79fc261e81ae1c3` | **32m** — buildmark `32m` Ochre `#C88A2E`; photographic seals + the builder's commendation card (§60) |
+| *(historical)* `index.html` 32l | 3,908,422 B | `bdfb02224e5084ef055fb8f871bde21fbfe56aac4d8a05768978667e0081f1bc` | credentials-card side slider (§57) |
+| 🔴 `candidate-32m.html` **AND** `_candidate-32m.html` **— TEMPORARY, DELETE THEM** | 4,024,671 B each | `811a118a…` | Render-check copies pushed so GitHub Pages could serve them (§60.5). **They are byte-identical to the shipped `index.html` and serve no purpose now. The sandbox cannot delete — the owner must.** |
 | *(historical)* `index.html` 32i | 3,896,676 B | `a951bf6a603359545a7ccb14c42ac8b0bbe4957c832281ffa9e1a995ddd7ef1c` | agency licence minting (`8a89e99`) — **this row said "LIVE" for three builds after it stopped being true. See §0.2.** |
 | `sw.js` **🆕 (LIVE — 200 on Pages)** | 3,435 B | `61a93b05658cad6b2e0488166c6b05fd2161f3e1be73afab42de67c1c447cdf3` | the service worker (§13.6, CLOSED) |
 | `award-card.jpeg` **🆕 in repo** | 180,855 B | `3ef3ac34795c8708…` | commendation card (§8r) |
@@ -2539,7 +2543,7 @@ a members' book — not a rename. **If ever changed:** the wordmark is live text
 1. **ESTABLISH THE MODE.** On his computer (the s52 default) or in the cloud? The difference is
    load-bearing — real git and real network vs a no-network bridge that also cannot delete. Say which.
 2. **RE-HASH THE LOCAL CLONE AGAINST LIVE AND SAY THE RESULT OUT LOUD EITHER WAY.**
-   Expect **3,908,422 B / `bdfb0222…` / buildmark `32l`** on all three of local, GitHub and Pages.
+   Expect **4,024,671 B / `811a118a…` / buildmark `32m`** on all three of local, GitHub and Pages.
    **🆕 HOW TO HASH WHEN `curl` IS NOT AVAILABLE (s53).** Cowork's sandbox no longer fetches URLs,
    so §0's `curl … | sha256sum` route can fail outright. Two replacements, both proven s53:
    **(a)** the **Claude in Chrome** extension — navigate to the Pages URL and hash in-page with
@@ -2569,8 +2573,11 @@ a members' book — not a rename. **If ever changed:** the wordmark is live text
    it as a second folder.** Three defects found and two fixed; **§59.** What is still owed there:
    confirm the Monday schedule has ever fired, and confirm `repo/SUPER-HANDOFF.md` appears after the
    next run.
-9. **Next marker `32m` / Cerulean `#2F7D8C`** — **`32l` / Plum `#7D4E6B` is spent (§57).**
-   *(`a` Cobalt through `l` Plum are now spent in the 32 series.)*
+9. **Next marker `32n` / Rose `#B5566B`** — **`32m` / Ochre `#C88A2E` is spent (§60).**
+   *(This line previously said `32m` / Cerulean `#2F7D8C`, which conflicted with the s53 task
+   file. The owner ruled for **Ochre**, resuming the §8i rotation at `b`: the pre-`32l` marker
+   `#7D4E6B` is not on the 8i list at all, so the drift was not reconstructed. Ochre `b` was spent
+   on 32m, so `c` Rose is next and the rotation is authoritative again from here.)*
 10. **Get the decisions owed (§14):** the Almanac regrouping · the nine volume labels · **the app name
     and the seller line** · a non-builder route to a volume · clue-tip duration (open since 19) ·
     git history · **the clan-crest question** · **🆕 whether `SUPER-HANDOFF.md` stays in the public
@@ -2921,6 +2928,141 @@ Run against the exact files staged for `present_files`:
    staging step of session 30.
 
 **All four steps clean. The handoff is complete.**
+
+---
+
+## 🔴 §60 — 32m: THE PHOTOGRAPHIC SEALS AND THE BUILDER'S COMMENDATION (built s53)
+
+Three owner task files arrived from claude.ai mid-session: `TASK-object-seals.md`,
+`TASK-commendation.md`, `TASK-live-roster.md`. Two shipped as 32m. The third is still open.
+
+### 60.1 THE SEALS — eleven photographic marks, modulus 11
+
+The detective's seal was eight coloured discs in a brass ring, drawn as SVG. It is now one of
+**eleven photographic Victorian objects** at 40px, base64 WebP, no ring and no visible label.
+
+- `SEAL_HEX` is **deleted** (×0 verified). `SEAL_IMGS` is eleven distinct `data:image/webp` URIs.
+- **`SEAL_NAME` survives as an ACCESSIBILITY STRING ONLY** — `aria-label`, never rendered visibly.
+- `sealOf()` ends `%11`, not `%8`. **The FNV-1a hash above it is untouched — that is what makes a
+  mark stable per credential.**
+- **WHY THE RESHUFFLE COST NOTHING, AND WHEN IT STOPS BEING FREE.** The owner confirmed 5 Aug 2026
+  that **no live hunter carries a seal** — nobody outside his own devices has one — so re-indexing
+  eight marks into eleven changed nobody's. **Record the reasoning, not just the decision: it stops
+  being true the moment the first real hunter joins.** Any `sub:` record from his own testing keeps
+  its old 0–7 index and now renders whichever of the eleven sits there. **That is correct and
+  expected. It is not data loss and must not be "fixed."**
+- **Four objects were excluded on legibility grounds and must not be reinstated:** microscope,
+  stereoscope, key ring, journal. They do not read at 40px.
+- Corrections already baked into the art — **do not re-apply**: helmet brightness ×1.75 / contrast
+  ×1.12, badge ×1.22, hat ×1.18, wax seal cropped from its envelope with the alpha rebuilt.
+
+**🔴 THE FIXED-WIDTH SLOT IS THE POINT, AND IT IS NOT COSMETIC.** Owner instruction: *"all the
+names to be justified and not random based on the icon width."* The marks run 48×120 (boot print)
+to 120×48 (key), so a bare image is only as wide as its art and every row's name would start at a
+different x. `sealMark()` wraps the art in a fixed p-by-p `.sealslot`. **MEASURED IN CHROME AT
+390px: five rows carrying the widest, narrowest and squarest marks all put `.cn` at exactly 94px.**
+Art renders 40×16, 16×40, 40×40, 34×40, 36.7×40 — every one inside its slot, none distorted.
+**Do not move the fixed width onto the image; that stretches the key and squashes the boot print.**
+
+The upper bound is `>=SEAL_IMGS.length`, never a hard-coded 7 or 10, so it survives a change to the
+set. The guard clauses are load-bearing: `Number(null)` is 0, so a hunter with no seal would
+otherwise be handed index 0. Verified: `null`, `""`, `-1` and `11` all return `""`.
+
+Call sites, all four converted and the shim then removed (`sealSvg(` ×0): roster **40** (owner
+approved from a render), the two credentials rows **40**, the verify header **28**. **The owner
+approved 40px for all of them on 5 Aug after seeing them.**
+
+### 60.2 THE COMMENDATION CARD — and the name collision that nearly ate a feature
+
+**🔴 THE TASK FILE SAID TO BUILD `#ov-commend` / `openCommend()` / `closeCommend()`. ALL THREE
+ALREADY EXISTED.** They belong to the **hunter's** commendation — the METROPOLITAN POLICE
+"A commendation is on file" card with rank, promotion and `shareCommend()`. `#ov-commend` also
+already held `z-index:517`, not the 525 the task assigned. **Building it literally would have
+overwritten three live functions and silently destroyed a shipped feature.**
+
+This is the §53.1 class again: **a task written without the live file in hand, asserting absence.**
+The task was not wrong to be written that way — it was written from claude.ai, which cannot see the
+code. **The lesson is for the receiving end: grep every identifier a task tells you to create,
+before you create it.**
+
+Built instead as **`#ov-praise` / `openPraise()` / `closePraise()` / `burnPraise()` /
+`.pr-art` `.pr-say` `.pr-foot`, z-index 526.** Storage keys stay `shco:cmd:` per the task. The
+hunter's commendation is untouched. **Do not rename it back.**
+
+Everything else is the task's, verbatim: eight rotating lines including **"Crackin'!"** with its
+apostrophe and no g, footer **"Monitor your case from Case Files."**, art used exactly as
+delivered, footer on a paper strip below the drawing because the art leaves ~15px clear at the
+bottom against 82px at the top. Raised from one place only — after `go("s-share")` in
+`_finishBuild()`. The curator flow, curator build flow and builder edit flow all return before it,
+so **an amended case never raises it.**
+
+**⚠ THE "THREE PIXELS OF HEADROOM" DID NOT REPRODUCE.** The task calls this the load-bearing
+number: widest line "Jolly good!" at 261px in a 264px column, and the font size may never rise.
+**Measured in Chrome with Playfair Display confirmed loaded (not a fallback): the widest line is
+"Top-notch!", and the tightest headroom is ~65px at a 282px card — about 70px at 300px.** All
+eight lines render as one rect. **The size was left exactly as specified** — it is owner-approved
+from a render and this session had no mandate to change it — **but do not carry "three pixels"
+forward as fact.** Text bottom sits 56.9px down the art against ink at 76.3px: clear by 19px.
+
+### 60.3 FOUR SECONDS, NOT THREE (owner, 5 Aug 2026)
+
+Both cards now hold for **4000ms** before the 0.5s fade — the dispatch and the commendation
+together. **⚠ THE OBSERVED TIMING WAS NOT TRUSTWORTHY AND WAS NOT RECORDED AS PASSING:** a
+wall-clock measurement returned 5.5s, but the same run showed the 520ms fade taking 2s, which means
+the tab was being throttled in the background. **The constants are verified in source; the
+behaviour is not. If it feels wrong on hardware, re-measure in a foreground tab.**
+
+### 60.4 🔴 THE CONFIDENTIAL STAMP ×1.25 — AND THE SPECIFICITY TRAP UNDER IT
+
+Owner asked for the credentials card's CONFIDENTIAL stamp 1.25× larger: 11.5→**14.375px**,
+letter-spacing 1.8→2.25px, padding 3/8→3.75/10px, border 2→2.5px. **Scoped to `#cred-ov`**, for the
+same reason `right:4px` is — `#record-ov` keeps its own stamp and its deliberate −20px overhang.
+
+**THE TRAP, AND IT WOULD HAVE UNDONE §57.** There is a `@media (max-width:349px)` rule shrinking
+`.dos-conf` to 9.5px on small screens. It is written as a **bare class selector, so it loses on
+specificity to `#cred-ov .dos-conf`.** Enlarging the stamp inside the id-scoped rule would have
+left it at full size on a 320px phone — walking straight back into the side-slider that §57 exists
+to fix. The narrow-screen override is therefore **re-stated inside the scoped rule at 11.875px**
+(the same ×1.25 applied to the small-screen base).
+
+**MEASURED, BOTH WIDTHS.** At 390px: card 354.4px, `scrollWidth` 354 == `clientWidth` 354, no
+horizontal overflow, stamp 155.4×47.8 with its right edge **14.9px inside** the card. At 320px:
+font drops to 11.875px as intended, stamp 128.6px wide, **28.2px clear**, no card overflow and no
+page overflow. **§57 stays fixed.**
+
+**STANDING LESSON: WHEN YOU CHANGE A PROPERTY INSIDE AN ID-SCOPED RULE, GREP FOR EVERY MEDIA QUERY
+THAT SETS THE SAME PROPERTY ON THE BARE CLASS.** Specificity does not care that one of them is
+inside `@media`.
+
+### 60.5 HOW THE RENDER WAS DONE, BECAUSE THE OLD ROUTE IS GONE
+
+**Playwright could not run** — the Cowork sandbox has no root and Chromium's `libXdamage` is
+missing. **`file://` is a dead end too:** the browser tooling rewrites `file:///…` to
+`https://file:///…`, and it can only see tabs in its own group, so a locally-opened file is
+invisible no matter how it is opened.
+
+**What worked:** push the candidate to the repo, fetch it from raw inside a page on the
+`gahensley1.github.io` origin, and run it in a **blob-URL iframe** — same origin, scripts execute,
+and the frame can be resized to 390 and 320 to exercise the media queries. Every measurement in
+§60.1 and §60.4 came from there.
+
+**⚠ AND A PAGES GOTCHA WORTH KEEPING: GITHUB PAGES RUNS JEKYLL, WHICH SILENTLY REFUSES TO SERVE ANY
+FILE WHOSE NAME BEGINS WITH AN UNDERSCORE.** `_candidate-32m.html` returned 404 from Pages while
+being perfectly present on raw. That is why the servable copy is named `candidate-32m.html`.
+`drift_guard.py` skips both forms.
+
+### 60.6 STILL OPEN FROM THE THREE TASKS
+
+- **`TASK-live-roster.md` IS UNBUILT.** Its own §0 blocks it until the Worker is confirmed. **The
+  Worker side is now READY: `&values=1` returns `{keys, values, more}` and the old shape still
+  returns `{keys, more}` — both probed s53.** The client patch — `listSubsLite()`, a 2s watcher
+  scoped to the open roster, 4s abort signal, the never-stack flag, no toast — is not written.
+- **🔴 THE WORKER'S VERSION BANNER LIES.** The root path answers **`(v2.6.1)`** while serving
+  v2.6.2 behaviour. The owner edited the banner in the Cloudflare editor but the deploy had not
+  landed at the time of writing. **§30.3 tells every session to identify the Worker by that string.
+  Re-probe it, and if it still says 2.6.1, believe the behaviour and not the banner.**
+- `art/seals-art/` — the doubled folder the zip produced. `art/seals/` is now the source of record;
+  the old folder is empty of purpose and **the sandbox cannot delete, so the owner must.**
 
 ---
 
