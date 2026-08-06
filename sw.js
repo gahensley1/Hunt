@@ -18,7 +18,7 @@
    This worker stores NO hunter data. Finds, status and credentials live in
    localStorage and on the Worker; losing this cache loses nothing. */
 
-const CACHE = "shco-v1";
+const CACHE = "shco-v2";
 const SHELL = ["./", "./index.html", "./j.html", "./og-card.jpeg", "./award-card.jpeg"];
 
 self.addEventListener("install", function(e){
@@ -39,6 +39,22 @@ self.addEventListener("activate", function(e){
 
 self.addEventListener("message", function(e){
   if(e.data && e.data.type==="SKIP_WAITING") self.skipWaiting();
+});
+
+/* 32r - NOTIFICATION CLICK. The client shows notifications through
+   registration.showNotification(); without this handler a tap does nothing.
+   Focus an open window if there is one, otherwise open the app. */
+self.addEventListener("notificationclick", function(e){
+  e.notification.close();
+  e.waitUntil(
+    self.clients.matchAll({type:"window", includeUncontrolled:true}).then(function(list){
+      for(var i=0;i<list.length;i++){
+        var c=list[i];
+        if(c.url.indexOf(self.location.origin)===0 && "focus" in c) return c.focus();
+      }
+      if(self.clients.openWindow) return self.clients.openWindow("./");
+    })
+  );
 });
 
 self.addEventListener("fetch", function(e){

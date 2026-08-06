@@ -135,7 +135,10 @@ is proven and should be reused for every future Worker change.
 
 | File | Size | SHA-256 | Purpose |
 |---|---|---|---|
-| `index.html` **(LIVE — disk == Pages, hash-verified s53)** | 4,010,286 B | `df13a8f7cfcc483ac10908c2d86d5b942dba02f9c860b6d99bb17a508bca79ab` | **32q** — buildmark `32q` Magenta `#A8478F`; ceremony crest + icon darkened (§64) |
+| `index.html` **🆕 32t (BUILT s54 — ON DISK ONLY, NOT PUSHED; carries 32r + 32s)** | 4,023,779 B | `7d7a0598d49c6ef742956476d0dd1e057136e9ec778d17cdbb5ffdd0ab03a049` | **32t** — the live roster watcher (§68) |
+| *(superseded on disk)* `index.html` 32s | 4,017,670 B | `54385a7bb5fc041e7de244e37fca40ac32fbc29061356ca0b3fcf7e48c31a540` | **32s** — the slim poll against Worker v2.6.3 (§67) |
+| *(superseded on disk)* `index.html` 32r | 4,014,420 B | `21c7d6aa60f1a1a16267b56a8381a39e014aec83626834ec7fdf0c325647712f` | **32r** — notification priming card, cold ask killed, notifications routed through the SW (§66) |
+| *(was LIVE at s53 open)* `index.html` 32q | 4,010,286 B | `df13a8f7cfcc483ac10908c2d86d5b942dba02f9c860b6d99bb17a508bca79ab` | **32q** — buildmark `32q` Magenta `#A8478F`; ceremony crest + icon darkened (§64) |
 | *(historical)* `index.html` 32p | 4,009,521 B | `94d3b32dcf0cb09cc0529324148a37c857e38e63c5b19bd8a1a8c0539944a67a` | the web-app manifest + icon set (§63) |
 | `manifest.webmanifest` **🆕 s53** | 941 B | — | name/short_name/display/theme; **`icons/` holds six PNGs** — 1024·512·192·180 standard, 512·192 maskable (§63) |
 | *(historical)* `index.html` 32o | 4,009,148 B | `94d747d244368debc937396e2a7fc164526966867212797b846c8d1dc636add8` | wax seal keeps its envelope (§62) |
@@ -144,7 +147,8 @@ is proven and should be reused for every future Worker change.
 | *(historical)* `index.html` 32l | 3,908,422 B | `bdfb02224e5084ef055fb8f871bde21fbfe56aac4d8a05768978667e0081f1bc` | credentials-card side slider (§57) |
 | 🔴 `candidate-32m.html` **AND** `_candidate-32m.html` **— TEMPORARY, DELETE THEM** | 4,024,671 B each | `811a118a…` | Render-check copies pushed so GitHub Pages could serve them (§60.5). **They are byte-identical to the shipped `index.html` and serve no purpose now. The sandbox cannot delete — the owner must.** |
 | *(historical)* `index.html` 32i | 3,896,676 B | `a951bf6a603359545a7ccb14c42ac8b0bbe4957c832281ffa9e1a995ddd7ef1c` | agency licence minting (`8a89e99`) — **this row said "LIVE" for three builds after it stopped being true. See §0.2.** |
-| `sw.js` **🆕 (LIVE — 200 on Pages)** | 3,435 B | `61a93b05658cad6b2e0488166c6b05fd2161f3e1be73afab42de67c1c447cdf3` | the service worker (§13.6, CLOSED) |
+| `sw.js` **🆕 32r ON DISK, NOT PUSHED** | 3,993 B | `8a4bc7867efb5928831d978146436519beb3c828978caab442673160cc2139c2` | `notificationclick` handler; `CACHE` → `shco-v2` (§66) |
+| *(was LIVE at s53 open)* `sw.js` — **🔴 §0 HAD THIS WRONG: it said 3,435 B / `61a93b05…`. MEASURED s54: disk == raw == Pages at 3,349 B / `54127008f4ff0bdb…`.** A fourth inherited doc error (§0.1). | 3,349 B | `54127008f4ff0bdbc057…` | the service worker (§13.6, CLOSED) |
 | `award-card.jpeg` **🆕 in repo** | 180,855 B | `3ef3ac34795c8708…` | commendation card (§8r) |
 | `hunt-icon-v5.png` **🆕 in repo** | 67,899 B | `969262cefd3c431e…` | app icon |
 | `behaviour.py` **🆕 in repo ROOT — ⚠ A STRAY DUPLICATE** | 18,003 B | `473b385d3b122c6e…` | **byte-identical to `test/behaviour.py`.** One of the two should go; the root copy is the accident. |
@@ -156,7 +160,8 @@ is proven and should be reused for every future Worker change.
 | `Hunt-backups-starter.zip` **(🆕 s30 — for the NEW private repo)** | ~4.3 KB | `backup.py 218f390e…` · `backup.yml f90d9df6…` · `README 09782b3c…` | the archive clerk (§51.3) |
 | `test/run.py` ✅ PUSHED | 698 B | — | battery runner (§48) |
 | `test/agents.py` `behaviour.py` `baseline.json` `README.md` ✅ ALL PUSHED (verified 200 on raw, s30) | — | — | (§48) |
-| `worker-v2.6.1` **(DEPLOYED — not a repo file, source NOT in Claude's hands)** | — | — | **live root string: `Scavenger & Hunt Co. — case-file sync is OPERATIONAL. (v2.6.1)` / `The game is afoot.`** Host: **`deerstalker.tony-13f.workers.dev`**. `worker-v2.3.js` is history (§A). |
+| `worker-v2.6.3` **(DEPLOYED s54 — verified from outside; source NOT in Claude's hands)** | — | — | adds `slim=1` on values listings (§67.1). Root: `... (v2.6.3)` |
+| *(historical)* `worker-v2.6.1` | — | — | **live root string: `Scavenger & Hunt Co. — case-file sync is OPERATIONAL. (v2.6.1)` / `The game is afoot.`** Host: **`deerstalker.tony-13f.workers.dev`**. `worker-v2.3.js` is history (§A). |
 | `j.html` **(CHANGED since s30)** | 1,419 B | `bbf057e1f3225a0f…` | invitation landing page (§8n/§8o) |
 | `og-card.jpeg` | 246,070 B | `0067960541bec0ac…` | link-preview card |
 
@@ -2943,6 +2948,284 @@ Run against the exact files staged for `present_files`:
    staging step of session 30.
 
 **All four steps clean. The handoff is complete.**
+
+---
+
+## 🔴 §69 — THE FORWARD PACKAGE, AND WHERE IT DISAGREES WITH THIS DOCUMENT (s54)
+
+Eight briefs arrived from claude.ai, evening 6 Aug. **They are now on disk at
+`Documents\Hunt\claude\`** — 00-README · PLAN-push · TASK-scale-fix · NOTE-scale-fix-addendum ·
+TASK-live-roster · TASK-live-roster-AMENDMENT · SCALE-READINESS · FIELD-TEST-PROTOCOL. §1v: a
+brief that exists only in a chat is lost. **`claude/` IS NOT IN GIT — the laptop disk and
+`Hunt-backups` are the only durable copies.**
+
+### 69.1 THE ADDENDUM'S THREE FACTS, LOGGED
+
+- **Worker v2.6.3 deployed and verified 6 Aug** (§67.1, verified independently here).
+- **CLOUDFLARE PLAN = WORKERS FREE, confirmed in the owner's dashboard 6 Aug.** Owner decision
+  s54: stay free now, **upgrade to Paid ($5/mo) before launch — a pre-event blocker.**
+- **🔴 THE FREE TIER CAPS CPU AT 10 ms/REQUEST**, and `slim=1` parses every record server-side, so
+  **a slim call MAY error on a large case until the upgrade.**
+- **🔴 STANDING RULE FOR ALL FUTURE READERS: A SLIM FAILURE NEVER FALLS BACK TO FAT `values=1`.**
+  That would silently resurrect the 7.5 MB payload the whole fix exists to kill. Failure = skipped
+  tick, last known state held. **Verified in 32t: `listSubsSlim` returns `null` on non-OK, timeout
+  or malformed; `checkFinishes` does `if(subs===null) continue`; `_rosterTick` returns. There is no
+  fat fallback anywhere in the code.** (`rankSlim` does fall back to per-hunter `res:` reads if
+  `listResAll` fails — those records carry no photographs and are not the fat path.)
+- Failure-injection pass ran clean, read-only: 403 on broad/malformed/injection prefixes, 404 on
+  oversized keys, PUT without token refused AND verified unwritten, CORS sane, 12 parallel reads
+  200, no 500s. **Open, owner's hands only: no rate-limit ceiling** — one free WAF rate rule on the
+  Worker route (A.1, Claude never touches the dashboard).
+
+### 69.2 🔴 THE PACKAGE IS ONE BUILD BEHIND — PHASE 1 IS ALREADY DONE
+
+PLAN-push Phase 1 items 1–2 name the scale patch and the watcher as work still to do, and assume
+they land as a single build **32r**. **Three builds now exist on disk:** 32r (notification card,
+§66) · 32s (the slim poll, §67) · 32t (the live roster watcher, §68). **All unpushed.** Phase 1
+item 4's logging is §67, §68 and this section. **PLAN-push should be re-read as starting at
+Phase 2.**
+
+### 69.3 ⚠ THE BUILDMARK CONFLICT — DO NOT RENUMBER TO MATCH THE PACKAGE
+
+00-README and PLAN-push both say *"next is 32r = Ochre #C88A2E, then s Rose, t Amethyst."*
+**That restarts the §8i rotation at `b` and contradicts §65 of this document**, which records the
+chain actually shipped: 32m Ochre(b) · 32n Rose(c) · 32o Amethyst(d) · 32p Verdigris(e) ·
+32q Magenta(f). Continuing it gives **32r Lime(g) · 32s Rust(h) · 32t Cobalt(a)** — which is what
+was built. **§4: this document outranks the briefs.** The marker is temporary and removed before
+filing (PLAN-push Phase 4 item 13), so nothing rides on it but consistency. **Owner may overrule.**
+
+### 69.4 WHAT THE PACKAGE STILL OWES
+
+- **`worker-v2_6_3.js` was listed as item 8 of the read order and did NOT arrive.** The Worker is
+  deployed and verified, but **there is no source of record on disk for the version now running.**
+  §A already carries a stale v2.3 description. Ask for the file.
+- **FIELD-TEST-PROTOCOL's prerequisites are not met yet**: it wants the build shipped and
+  Cloudflare Paid active. Nothing is pushed and the plan is still free.
+
+---
+
+## 🔴 §68 — 32t: THE LIVE ROSTER WATCHER (built s54)
+
+**BUILT, NOT PUSHED.** `index.html` **4,023,779 B / `7d7a0598d49c6ef7…` / buildmark `32t`
+Cobalt `#3B6BA5`** (the §8i rotation wrapped). Carries 32r and 32s underneath —
+**one push delivers all three builds, plus `sw.js`.** Closes §65 item 4.
+
+Owner instruction, verbatim, 5 Aug 2026: **"only when the case is opened and roster is viewed it
+will update in real time"**. That is the whole boundary.
+
+### 68.1 WHAT SHIPPED
+
+`startRosterWatch(code)` / `stopRosterWatch()` / `_rosterTick(code)`. 2 s tick, 4 s timeout (NOT
+`NET_MS`'s 12 s), in-flight guard cleared in a `finally`, signature comparison on
+`hid:found:status` so an unchanged tick does nothing, silent while `document.hidden`, one
+immediate refresh on `visibilitychange`. Started at the end of `openRoster()`. **Cleared at the
+single choke point in `go()`: `if(id!=="s-roster") stopRosterWatch();`** — a leaked interval is a
+permanent two-second poll on a user's phone. **NO TOAST on a progress change; the row redraws
+silently.** The 12 s `_finTimer` is untouched.
+
+### 68.2 🔴 THE HOLE IN TASK-live-roster.md §5b — IT WOULD HAVE MOVED THE BOMB, NOT DEFUSED IT
+
+The brief has the watcher fetch a light list and then call `await renderRoster()`.
+**`renderRoster()` calls `listSubs(code)` itself** — the FAT path. It would have thrown the slim
+records away and re-downloaded all 25 photo-laden ones plus a `res:` GET per hunter, **every 2
+seconds**, which is the exact bomb §67 was written to defuse, relocated one function along.
+
+**Fix: `renderRoster(pre, resMap, light)`.** Called with NO arguments it behaves precisely as it
+always has — `openRoster`, `refreshRoster` and the complement path are unchanged. The watcher
+passes what it already holds. **Nothing the roster renders comes from `finds[].src`** (name,
+found, total, status, finishedAt, startedAt, updatedAt, seal, hid — all survive `slim=1`).
+**Re-verify that before adding any field to a roster row.**
+
+### 68.3 THE OTHER TWO ECONOMIES
+
+- **`listResAll(code)`** — every `res:` record for a case in ONE request (`res:` records are
+  `{marks,note,closedAt,returned}`, no photographs, so no slim needed). Replaces one GET per
+  hunter in **two** places: the ranking and the roster rows. Returns `null` on failure and both
+  callers fall back to their old per-hunter reads — the feature degrades, it does not break.
+  `rankSlim(code, subs, resMap)` now takes the map so a redraw does not fetch it twice.
+- **`_rosterMeta`, the complement cache (30 s, WATCHER PATH ONLY).** The seats/turned-away block
+  costs three more requests per redraw (hunt record, `seats:`, `turn:`). Measured: a changed tick
+  cost **five** requests before this, i.e. 150/min at a busy case — five times the brief's number.
+  Those figures move only when somebody joins or is turned away. Cleared on `startRosterWatch`.
+
+### 68.4 VERIFICATION — MEASURED IN A HEADLESS BROWSER AGAINST THE LIVE WORKER
+
+| check | result |
+|---|---|
+| unchanged tick | **1 request** (the slim list), nothing else |
+| changed tick, steady state | **2 requests** — slim list + res map — **flat, at any hunter count** |
+| first redraw of a watch | 5 (adds the three complement reads, then cached 30 s) |
+| `base64` on any poll path | **absent** (§5.1 of TASK-scale-fix) |
+| leaving the roster (`go("s-home")`) | **0 requests in 6.5 s**, `_rosterWatch===null` (§6.6) |
+| failed poll (`listSubsSlim` → null) | **rows stayed on screen**, nothing rendered as zero (§6.8) |
+| page errors across all of it | none |
+
+Battery: behaviour **59/59 PASS**, Agent A 1 block 0 failed, Agent B 109 handlers 0 unresolved,
+all 54 base64 blobs byte-identical to 32s. **Agent D's seven-name drift is still the inherited
+`baseline.json` staleness — unchanged since 32q. REGENERATE IT.**
+
+### 68.5 WHAT THE SANDBOX CANNOT PROVE — §7 AND TWO BATTERY ITEMS
+
+**Not done, and not doable here:** the two-device test (§7 of the brief — B photographs, A's count
+moves within ~3 s, five more in quick succession do not skip or reorder, background/foreground,
+airplane mode causes no regression); §6.7 no-stacking under a throttled slow-3G connection; §6.10
+no toast fires on a progress change, observed by a human. **These ride with §65 item 2, the phone,
+which now carries five things to check in one sitting: the install prompt, push, the notification
+card, the live roster and the two-device loop.**
+
+---
+
+## 🔴 §67 — 32s: THE SLIM POLL. WORKER v2.6.3 DEPLOYED (built s54)
+
+**BUILT, NOT PUSHED.** `index.html` **4,017,670 B / `54385a7bb5fc041e…` / buildmark `32s`
+Rust `#B4532A`**. Carries 32r (§66) underneath it — **one push delivers both builds.**
+
+### 67.1 WORKER v2.6.3 IS LIVE — VERIFIED FROM OUTSIDE, FOUR CHECKS
+
+Root says **`(v2.6.3)`** · `/list?prefix=sub:999999:` unchanged · `&values=1` still fat
+(`base64` present) · **`&values=1&slim=1` returns `finds:[{t1,src:1},{t2,src:null}]` with NO
+`base64`**, `finishedAt`/`found`/`status`/`name` untouched · `/list?prefix=hunt:&values=1&slim=1`
+without a token is refused ("the archivist shakes his head"). Claude never had Worker access (A.1).
+
+### 67.2 WHY THIS WAS URGENT, IN ONE NUMBER
+
+A builder-hunt `sub:` record carries every photograph. `checkFinishes` → `listSubs()` was **51
+requests / ~7.5 MB every 12 s** per owned case at 25 hunters — 2.2 GB/hour of the builder's mobile
+data. **OWNER CONFIRMED s54: THE CLOUDFLARE ACCOUNT IS ON THE FREE PLAN** — 100k requests/day,
+100k D1 rows written/day, and **exceeding it makes D1 return ERRORS for everyone until 00:00 UTC**.
+At the old cost, **≈6.5 builder-hours in one day killed the account.** Reachable at the next real
+event, not at some future scale. Now **1 request / ~7 KB per tick** — measured 329 B against the
+live Worker.
+
+**OWNER DECISION, s54: stay on free for now, upgrade before launch.** At the 500-hunts/day target,
+12,500 hunters × ~13 writes ≈ **162k writes/day**, over the cap on writes alone —
+**Workers Paid ($5/mo) is mandatory before any marketing push** and no client change avoids it.
+
+### 67.3 🔴 THE TRAP TASK-scale-fix §3 DID NOT SEE — READ BEFORE TOUCHING THIS AGAIN
+
+The brief said `checkFinishes` needs "status/finishedAt and nothing else". **It also calls
+`rankMap(subs)`** for the *"currently 3rd!"* in the toast and the notification — and `rankMap`
+ranks by **the ORDER of the array handed to it**, an order `listSubs()` earns by fetching every
+`res:` record and sorting on `_score`, i.e. CONFIRMED finds. **A slim list is unsorted and has no
+`_score`.** A verbatim swap would print an arbitrary placing — no error, green battery, and the
+toast disagreeing with the roster in front of the builder.
+
+**BUILT AS OPTION B (owner-chosen):** poll slim every tick; call the new **`rankSlim(code,subs)`**
+— which fetches `res:` and applies the identical standing rule — **only on a tick that has a fresh
+finish**, which is rare. Steady state stays 1 request. **`rankSlim` duplicates `listSubs()`'s sort
+comparator; if one changes, change both.**
+
+### 67.4 WHAT WAS TOUCHED, AND WHAT WAS NOT
+
+- **NEW `listSubsSlim(code,sig)`** — one `&values=1&slim=1` call, 4 s timeout. Returns **`null`**
+  on any failure and `checkFinishes` **skips the tick**. Never treat a failed fetch as "nobody
+  finished" — `markFins` would swallow the real ones.
+- **NEW `rankSlim(code,subs)`** — see 67.3.
+- **`listSubs()` IS UNTOUCHED**, deliberately. 9 call sites, and `checkFinishes` is no longer one
+  of them. The verify screen and the standings need the photographs.
+- 🔴 **STRUCTURAL FACT FOR THE RECORD: builder-hunt `sub:` records carry photographs. ANY NEW
+  READER THAT POLLS THEM MUST USE `slim=1` OR FETCH KEYS ONLY.** Photo-splitting the schema
+  (`sub:` + `subph:`) is the long-term fix — backlogged, its own chat.
+
+### 67.5 VERIFICATION — MEASURED, NOT ASSERTED
+
+- **One tick against the LIVE Worker: 1 request, 329 bytes, `base64` absent from every response.**
+  (Was 51 requests / ~7.5 MB.) Battery addition §5.1 satisfied objectively.
+- `listSubs("999999")` still returns `base64` — the verify screen keeps its photographs (§5.2).
+- `rankSlim` proven on two finishers where the LATER finisher had FEWER raw finds but MORE
+  confirmed ones: ranked **1st**, matching `listSubs()`'s rule (§5.3, §5.4).
+- Behaviour battery **59/59 PASS**; Agent A 1 block 0 failed; Agent B 109 handlers 0 unresolved.
+  All 54 base64 blobs byte-identical to 32r.
+- **⚠ Agent D still reports the same seven-name drift it reports on 32q — `test/baseline.json` is
+  STALE and the battery's red verdict is inherited, not caused. Regenerate it deliberately.**
+
+### 67.6 TWO ERRORS IN THE UPLOADED BRIEFS, AND ONE IN THIS DOCUMENT
+
+- **SCALE-READINESS.md P2 is wrong:** it probed `manifest.json`. The file is
+  **`manifest.webmanifest` — 200, 941 B on Pages**, shipped 32p with all six icons. The PWA did not
+  half-land. What is untested is the install prompt on hardware (§65 item 2).
+- **SCALE-READINESS was right about `sw.js` and §0 was wrong** — see the §0 row. 3,349 B, not 3,435.
+- Both briefs were probed against **32q**, which is no longer the working file.
+
+### 67.7 STILL OPEN ON THIS THREAD
+
+`TASK-live-roster.md` **is not in the connected folder** — §4 of TASK-scale-fix has nothing to run
+against. When it appears: use `listSubsSlim` for both callers, 2 s tick, 4 s timeout, in-flight
+guard, cleared on leaving the roster, no toast. Its section 0 steps 1–4 are already satisfied.
+Also open: **P0-3, GitHub Pages bandwidth** (~900 GB/month projected against a 100 GB soft limit
+at target scale) — move hosting to Cloudflare Pages, its own chat, before any marketing push.
+
+---
+
+## 🔴 §66 — 32r: THE NOTIFICATION PRIMING CARD, AND THE COLD ASK KILLED (built s54)
+
+**BUILT, NOT YET PUSHED.** `index.html` **4,014,420 B / `21c7d6aa60f1a1a1…` / buildmark `32r`
+Lime `#7FA33C`**. `sw.js` **3,993 B / `8a4bc7867efb5928…`**, `CACHE` bumped `shco-v1` → `shco-v2`.
+Closes §65 item 1. Client only — no Worker paste, no key, nothing owed by Cloudflare.
+
+### 66.1 WHAT CHANGED, ALL FOUR PARTS
+
+1. **The cold ask is gone.** `openRoster()` no longer calls `Notification.requestPermission()`.
+   `requestPermission` now appears **×1** in the file, inside `notifyAsk()`, reachable only from a
+   tap. A comment stands where the old call was so nobody restores it by reflex.
+2. **The priming card at Case Ready** — `#notify-card` in `#s-share`, below **Share via Message**.
+   Shows only when `Notification` exists AND `permission==="default"` AND the snooze has expired.
+3. **"NOT JUST NOW" spends nothing** — writes `shco:notify-asked` to localStorage and re-offers
+   after **seven days**. Only the top button raises the OS prompt.
+4. **One delivery path.** Both notification sites now call `notifyAgency(msg)`, which prefers
+   `registration.showNotification()` and keeps `new Notification()` as fallback. `sw.js` gained a
+   **`notificationclick`** handler (focus an open window, else `openWindow("./")`) — without it a
+   tap did nothing.
+
+### 66.2 THE COPY, AND WHY IT IS THE SOFTENED ONE
+
+> FROM THE AGENCY · **Shall we send word?** · *The Agency can tell you the moment a detective files
+> a find, while the case is open on your desk. Without it, you must check the file yourself.*
+
+The drafted copy in `_preview/notify.html` said *"even while your case sits closed in your pocket."*
+**That is false today** and stays false until Web Push ships. Owner chose the softened line.
+**WHEN PUSH LANDS, REWRITE THIS COPY** — it is deliberately under-promising and will then be wrong
+in the other direction.
+
+### 66.3 🔴 iPHONE STILL FIRES NOTHING. MEASURED, NOT ASSUMED.
+
+`new Notification()` does not exist on iOS. `showNotification()` on iOS requires **Web Push AND the
+app installed to the home screen** (iOS 16.4+; unavailable in the EU under iOS 17.4+). So today:
+Android/desktop while-open only, iPhone nothing. **The card is honest about this; the app is not
+yet capable of more.** §65 item 6 (Web Push) is what makes iPhone work at all.
+
+### 66.4 ⚠ THE INCIDENT — A THREE-CHARACTER REPLACE THAT CORRUPTED SIXTEEN IMAGES
+
+Bumping the build marker with a bare `s.replace("32q","32r")` hit **10 occurrences, only ONE of
+which was the marker.** The other nine were **inside the base64 image blobs** — sixteen embedded
+assets silently corrupted, exit code 0, battery not yet run. Caught by reading the match contexts,
+reverted from a pre-edit copy, redone with the full exact string
+`<p id="buildmark" aria-label="test build marker">32q</p>`.
+
+**NEW STANDING RULE, alongside §5i:** **never replace a short token in `index.html`.** Any string
+under ~20 characters occurs inside the base64. Match the whole surrounding element, assert the
+count is 1 before writing, and **always copy the file first**. Verified after the redo by hashing
+all **54** `data:…;base64,…` blobs against the pre-edit copy — **identical**.
+
+### 66.5 VERIFICATION
+
+- Battery: **behaviour 59/59 PASS**, Agent A 1 block 0 failed, Agent B 109 handlers 0 unresolved.
+- **⚠ THE BATTERY EXITS RED, AND IT DID SO ON 32q TOO.** Agent D reports the same seven-name drift
+  (`body this chk option AGY_TERMS key m`) on the unmodified 32q file. **`test/baseline.json` is
+  stale — the red is inherited, not new.** Regenerate it deliberately (`--write-baseline`) or the
+  battery's verdict is worthless from here on. **Nothing in 32r added drift.**
+- Rendered at 390×844 and 320×568; card measures 322×310 and 260×315, no page errors. On `file://`
+  `Notification.permission` is `denied`, so the card correctly stays hidden — the show/hide gate was
+  exercised by forcing the class.
+- **Playwright needs libs the sandbox has no root for.** `apt-get download` of `libxdamage1` + 15
+  others, `dpkg-deb -x`, then `LD_LIBRARY_PATH`. Repeat this next session; it is not persistent.
+
+### 66.6 WHAT IS OWED NEXT ON THIS ITEM
+
+Push 32r + `sw.js`, then **§65 item 6, Web Push**: `pushManager.subscribe`, a VAPID keypair
+(**generated on the owner's machine, private key into Cloudflare as a secret, never here and never
+to Claude**), a `push` listener in `sw.js` and a send route on the Worker. Then §65 item 2 — a
+phone — which now has three things to check in one sitting: install prompt, push, and the card.
 
 ---
 

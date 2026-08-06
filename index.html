@@ -241,8 +241,22 @@
   /* No burn. It leaves the way it arrived \u2014 by fading. */
   .tg{transition:opacity .5s linear}
   .tg.gone{opacity:0}
+  /* ===== 32r - the notification priming card (Case Ready) ===== */
+  #notify-card{display:none;background:var(--paper);border:2px solid var(--brass);
+    outline:1.5px solid rgba(184,134,59,.9);outline-offset:4px;border-radius:6px;
+    padding:16px 15px 14px;text-align:center;margin:18px 6px 6px;box-shadow:var(--shadow)}
+  #notify-card.show{display:block}
+  #notify-card .nc-eyebrow{font-family:var(--type);font-size:9.5px;letter-spacing:2px;
+    color:var(--ink-soft);opacity:.8;margin-bottom:8px}
+  #notify-card h3{font-family:var(--serif);font-size:19px;margin:0 0 8px;color:var(--ink);line-height:1.25}
+  #notify-card p{font-family:var(--serif);font-size:13px;line-height:1.5;color:var(--ink-soft);margin:0 0 13px}
+  @media (max-width:349px){
+    #notify-card{padding:13px 12px 11px;margin:14px 2px 4px}
+    #notify-card h3{font-size:17px}
+    #notify-card p{font-size:12px}
+  }
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#A8478F;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#3B6BA5;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -1164,7 +1178,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">32q</p>
+      <p id="buildmark" aria-label="test build marker">32t</p>
     </div>
   </section>
 
@@ -1233,6 +1247,15 @@
       </div>
       <div class="stack" style="padding:16px 0 0">
         <button class="btn btn-primary" onclick="shareCase()"><span class="em">✉️</span> Share via Message</button>
+      </div>
+      <div id="notify-card">
+        <div class="nc-eyebrow">FROM THE AGENCY</div>
+        <h3>Shall we send word?</h3>
+        <p>The Agency can tell you the moment a detective files a find, while the case is open on your desk. Without it, you must check the file yourself.</p>
+        <div class="stack">
+          <button class="btn btn-primary" onclick="notifyAsk()">YES, SEND WORD</button>
+          <button class="btn btn-ghost" onclick="notifyLater()">NOT JUST NOW</button>
+        </div>
       </div>
       <div class="note arch-note">
         Review each sleuth&#39;s solved cases in the <b>CASE FILE RECORD</b> archive on the home page.
@@ -1864,6 +1887,9 @@ function go(id){
   const el=document.getElementById(id); el.classList.add("active");
   document.getElementById("app").scrollTop=0; window.scrollTo(0,0);
   if(id==="s-home") refreshHomeBadge();
+  if(id==="s-share") maybeShowNotifyCard();   /* 32r */
+  if(id!=="s-roster") stopRosterWatch();   /* 32t - THE choke point. A leaked interval is a
+                                              permanent two-second poll on a user's phone. */
   clearTimeout(window._clueTipT); clearTimeout(window._moveTipT); clearTimeout(window._huntTipT);
   if(id==="s-build"){ try{ coldSubmitVis(); setFinishLabel(); }catch(e){}
     _tipQueue("_clueTipT","s-build","build-grid","Tap (+) to start adding clues.\nEdit your clue and text by tapping your clue tile","atadd",400,5200);
@@ -6974,28 +7000,105 @@ async function recoverCase(){
   toast("Case "+code+" restored to your files.", 2600);
 }
 
+/* ===== 32r - NOTIFICATIONS =====
+   Rules, in the order they bite:
+   1. NEVER ASK COLD. A refusal is permanent and only the hunter can undo it, buried in
+      site settings. The OS prompt is raised ONLY from a tap on the card's top button.
+   2. "NOT JUST NOW" SPENDS NOTHING. It records a date and we may ask again in a week.
+   3. DELIVERY TODAY IS WHILE-OPEN ONLY. registration.showNotification() is preferred
+      because it is the only path Web Push can ever use, and the only one iOS knows;
+      new Notification() remains as the fallback for older Android/desktop.
+      iPhone fires NOTHING until Web Push ships AND the app is installed to the home
+      screen. The card copy is written to be true of that, not of the future. When push
+      lands, rewrite the copy. */
+const NOTIFY_SNOOZE_KEY="shco:notify-asked";
+function notifySupported(){
+  try{ return typeof Notification!=="undefined"; }catch(e){ return false; }
+}
+function maybeShowNotifyCard(){
+  try{
+    const card=document.getElementById("notify-card");
+    if(!card) return;
+    card.classList.remove("show");
+    if(!notifySupported()) return;                  /* iPhone-in-Safari lands here */
+    if(Notification.permission!=="default") return; /* granted, or permanently blocked */
+    const last=Number(localStorage.getItem(NOTIFY_SNOOZE_KEY)||0);
+    if(last && Date.now()-last < 7*24*60*60*1000) return;
+    card.classList.add("show");
+  }catch(e){}
+}
+function notifyAsk(){
+  try{
+    const card=document.getElementById("notify-card");
+    if(card) card.classList.remove("show");
+    if(!notifySupported()) return;
+    /* MUST stay inside this tap - a prompt raised without a gesture is rejected. */
+    Notification.requestPermission().then(function(p){
+      try{ localStorage.setItem(NOTIFY_SNOOZE_KEY,String(Date.now())); }catch(e){}
+      toast(p==="granted" ? "The Agency will send word." : "Very good \u2014 no word will be sent.", 3000);
+    }).catch(function(){});
+  }catch(e){}
+}
+function notifyLater(){
+  try{ localStorage.setItem(NOTIFY_SNOOZE_KEY,String(Date.now())); }catch(e){}
+  try{ const card=document.getElementById("notify-card"); if(card) card.classList.remove("show"); }catch(e){}
+}
+/* The single delivery path. Both call sites go through here. */
+function notifyAgency(msg){
+  try{
+    if(!notifySupported() || Notification.permission!=="granted") return;
+    const opts={body:msg, icon:"./icons/icon-192.png", badge:"./icons/icon-192.png", tag:"shco"};
+    if("serviceWorker" in navigator && navigator.serviceWorker.ready){
+      navigator.serviceWorker.ready.then(function(reg){
+        if(reg && reg.showNotification) reg.showNotification("Scavenger & Hunt Co.",opts);
+        else new Notification("Scavenger & Hunt Co.",opts);
+      }).catch(function(){
+        try{ new Notification("Scavenger & Hunt Co.",opts); }catch(e){}
+      });
+    } else {
+      new Notification("Scavenger & Hunt Co.",opts);
+    }
+  }catch(e){}
+}
 async function openRoster(code){
   State.roster=code;
-  try{ if(typeof Notification!=="undefined" && Notification.permission==="default") Notification.requestPermission(); }catch(e){}
+  /* 32r: the cold Notification.requestPermission() that stood here is GONE.
+     A refusal is permanent; the ask now lives behind the priming card at Case Ready. */
   const raw=await Store.get("hunt:"+code,true); const hunt=raw?JSON.parse(raw):null;
   document.getElementById("roster-title").firstChild.textContent = (hunt&&hunt.title)||"Case File";
   document.getElementById("roster-caseno").textContent="No. "+code;
   renderKeepLine(hunt);
   await renderRoster();
+  startRosterWatch(code);   /* 32t */
   go("s-roster");
 }
-async function renderRoster(){
+/* 32t - `pre` and `resMap` are the LIVE WATCHER'S doing (§68). Called with NO arguments this
+   function behaves exactly as it always has: the fat `listSubs()` read, one `res:` GET per row.
+   The watcher, which already holds slim records and the res map, passes them in so a redraw
+   costs nothing extra. NOTHING THIS FUNCTION RENDERS COMES FROM `finds[].src` - it reads name,
+   found, total, status, finishedAt, startedAt, updatedAt, seal and hid, all of which survive
+   `slim=1` untouched. Verify that again before adding any field to a roster row. */
+async function renderRoster(pre, resMap, light){
   const code=State.roster;
-  const subs=await listSubs(code);
-  let tmins=0; try{ const hr=await Store.get("hunt:"+code,true); tmins=hr?(JSON.parse(hr).timerMins||0):0; }catch(e){}
+  const subs=pre||await listSubs(code);
+  /* `light` is the watcher's: reuse the cached complement figures when they are fresh. */
+  const cached = light ? _rosterMetaGet(code) : null;
+  let tmins=0;
+  if(cached){ tmins = cached.v.tmins; }
+  else { try{ const hr=await Store.get("hunt:"+code,true); tmins=hr?(JSON.parse(hr).timerMins||0):0; }catch(e){} }
   const submitted=subs.filter(s=>s.status!=="playing").length;
   document.getElementById("roster-tally").textContent=`${subs.length} player${subs.length===1?"":"s"} · ${submitted} submitted`;
   /* THE COMPLEMENT \u2014 the builder sees the seats, who was turned away, and how to seat them */
   try{
     const rt=document.getElementById("roster-tally");
     const oldNote=document.getElementById("roster-cap"); if(oldNote) oldNote.remove();
-    const seats=await caseSeats(code);
-    let turned=0; try{ turned=(await Store.list("turn:"+code+":", true)).length; }catch(e){}
+    let seats, turned=0;
+    if(cached){ seats=cached.v.seats; turned=cached.v.turned; }
+    else{
+      seats=await caseSeats(code);
+      try{ turned=(await Store.list("turn:"+code+":", true)).length; }catch(e){}
+      if(light) _rosterMetaPut(code, {seats:seats, turned:turned, tmins:tmins});
+    }
     if(subs.length>=seats || turned){
       const n=document.createElement("div"); n.id="roster-cap"; n.className="meta"; n.style.marginTop="4px";
       let msg = subs.length>=seats ? ("Full complement \u2014 this case seats "+seats+" detectives.") : (seats+" seats on this case.");
@@ -7026,15 +7129,18 @@ async function renderRoster(){
     e.innerHTML='<span class="em">🕵️</span>No hunters on the board yet.<br>Share the case number and they\u2019ll appear here as they play.';
     body.appendChild(e); return;
   }
-  const ranks=rankMap(subs);
+  const ranks=rankMap(subs);   /* `pre` arrives ALREADY RANKED by rankSlim - see §68.3 */
   const seen={};
   for(const s of subs){
     const base=s.name||"Anonymous"; seen[base]=(seen[base]||0)+1;
     const disp = seen[base]>1 ? base+" · #"+seen[base] : base;
     const when = s.updatedAt ? new Date(s.updatedAt).toLocaleTimeString([], {hour:"numeric",minute:"2-digit"}) : "";
     let reviewed=false, yes=null;
-    const res=await Store.get("res:"+code+":"+s.hid,true);
-    if(res){ try{ const r=JSON.parse(res); reviewed=true; yes=Object.values(r.marks||{}).filter(v=>v===1).length; }catch(e){} }
+    let rObj=null;
+    if(resMap){ rObj = resMap[s.hid] || null; }
+    else { const res=await Store.get("res:"+code+":"+s.hid,true);
+           if(res){ try{ rObj=JSON.parse(res); }catch(e){} } }
+    if(rObj){ reviewed=true; yes=Object.values(rObj.marks||{}).filter(v=>v===1).length; }
     const rk=ranks[s.hid];
     const finAt = s.finishedAt ? new Date(s.finishedAt).toLocaleTimeString([], {hour:"numeric",minute:"2-digit"}) : null;
     const st = rk ? {t:ordinal(rk).toUpperCase(),c:"rank"+(rk===1?" rank1":"")}
@@ -7143,23 +7249,173 @@ function renderKeepLine(hunt){
 /* ---------- finish notifications (setter) ---------- */
 function seenFins(code){ try{return JSON.parse(localStorage.getItem("finseen:"+code)||"[]");}catch(e){return[];} }
 function markFins(code,hids){ localStorage.setItem("finseen:"+code, JSON.stringify(hids)); }
+/* ===== 32t - THE LIVE ROSTER WATCHER (TASK-live-roster.md) =====
+   SCOPE, owner instruction verbatim, 5 Aug 2026:
+   "only when the case is opened and roster is viewed it will update in real time"
+   ONE case - the one on screen. Started in openRoster(), CLEARED (not paused) on leaving
+   #s-roster, silent while document.hidden, and it NEVER runs for a case the builder is not
+   looking at. The 12-second _finTimer that sweeps every owned case is DELIBERATELY UNTOUCHED -
+   do not fold this into it and do not raise its frequency.
+
+   TICK 2000 ms: below this buys nothing, since the hunter's own shutter/write/PUT chain is
+   0.5-1.5 s. TIMEOUT 4000 ms, not NET_MS (12000): an answer arriving ten seconds late has been
+   superseded by four ticks. Let a slow tick miss.
+
+   🔴 NO TOAST ON A PROGRESS CHANGE. The row redraws, silently. Toasts belong to finishes, which
+   checkFinishes() already owns. A builder watching six hunters would otherwise be pinged every
+   time somebody photographs a mailbox. */
+let _rosterWatch = null, _rosterSig = "", _rosterBusy = false;
+/* 32t - THE COMPLEMENT CACHE. renderRoster()'s seats/turned-away block costs three more
+   requests (the hunt record, seats:, turn:) on EVERY redraw. On a busy case nearly every
+   2 s tick redraws, which would make a changed tick cost five requests instead of two -
+   150/min at exactly the event this feature exists for. Those three values move only when
+   somebody joins or is turned away, so on the WATCHER PATH ONLY they are cached for 30 s.
+   The no-argument path (openRoster, refreshRoster) is untouched and always reads fresh. */
+let _rosterMeta = null;
+function _rosterMetaGet(code){
+  if(_rosterMeta && _rosterMeta.code===code && (Date.now()-_rosterMeta.at)<30000) return _rosterMeta;
+  return null;
+}
+function _rosterMetaPut(code, v){ _rosterMeta = {code:code, at:Date.now(), v:v}; }
+
+async function _rosterTick(code){
+  if(document.hidden) return;
+  if(_rosterBusy) return;                                   /* Guard 1 - never stack */
+  if(State.roster !== code) return;
+  const el = document.getElementById("s-roster");
+  if(!el || !el.classList.contains("active")) return;
+  _rosterBusy = true;
+  try{
+    const subs = await listSubsSlim(code);
+    if(!subs) return;      /* 🔴 SKIPPED TICK, NEVER AN EMPTY ROSTER. Rendering zero hunters
+                              because a poll timed out is far worse than a stale count. */
+    const sig = subs.map(s => s.hid + ":" + (s.found||0) + ":" + (s.status||"")).sort().join("|");
+    if(sig === _rosterSig) return;                          /* nothing moved; no churn */
+    _rosterSig = sig;
+    /* Two requests, flat, however many hunters: the slim list above and the res map here.
+       renderRoster() would otherwise re-read the FAT records and one res: GET per row. */
+    const resMap = await listResAll(code);
+    await renderRoster(await rankSlim(code, subs, resMap), resMap, true);
+  }catch(e){ /* a missed tick is not an error the builder needs to see */ }
+  finally{ _rosterBusy = false; }
+}
+
+function startRosterWatch(code){
+  stopRosterWatch();
+  _rosterSig = "";
+  _rosterMeta = null;
+  _rosterWatch = setInterval(function(){ _rosterTick(code); }, 2000);
+}
+function stopRosterWatch(){
+  if(_rosterWatch){ clearInterval(_rosterWatch); _rosterWatch = null; }
+  _rosterBusy = false;
+}
+/* Unlocking the phone refreshes at once rather than waiting out the tick. */
+document.addEventListener("visibilitychange", function(){
+  if(!document.hidden && _rosterWatch && State.roster) _rosterTick(State.roster);
+});
+
+/* ===== 32s - THE SLIM POLL (Worker v2.6.3, `slim=1`) =====
+   WHY THIS EXISTS: a builder-hunt `sub:` record carries EVERY photograph inside it
+   (~300 KB at 12 finds). `listSubs()` is 1 list + N sub GETs + N res GETs of FULL
+   payloads. At 25 hunters that is 51 requests and ~7.5 MB EVERY 12 SECONDS - about
+   2.2 GB/hour of the builder's mobile data, and on the free Cloudflare plan roughly
+   6.5 builder-hours exhausts the 100k/day request cap, after which D1 returns ERRORS
+   for everyone until 00:00 UTC. This call is 1 request and ~7 KB.
+
+   `slim=1` strips `finds[].src` to 1/null server-side. Everything checkFinishes reads
+   - status, found, total, finishedAt, updatedAt, name, hid - survives untouched.
+
+   🔴 ANY NEW READER THAT POLLS `sub:` RECORDS MUST USE THIS OR FETCH KEYS ONLY.
+   🔴 `listSubs()` IS DELIBERATELY UNTOUCHED. The verify screen and the standings need
+      the photographs; they are the verify screen's entire point. */
+async function listSubsSlim(code, sig){
+  const base = Store.base && Store.base();
+  if(!base) return null;
+  try{
+    const r = await fetch(base + "/list?prefix=" + encodeURIComponent("sub:"+code+":")
+                          + "&values=1&slim=1",
+                          { headers: Object.assign({}, _curHdr()), signal: _sig(4000, sig) });
+    if(!r.ok) return null;
+    const j = await r.json();
+    const vals = (j && j.values) || {};
+    const out = [];
+    for(const k of Object.keys(vals)){ try{ out.push(JSON.parse(vals[k])); }catch(e){} }
+    return out;
+  }catch(e){ return null; }   /* offline / timeout -> null -> the tick is SKIPPED, never zeroed */
+}
+
+/* 32t - EVERY `res:` RECORD FOR A CASE IN ONE REQUEST.
+   `res:` records are {marks, note, closedAt, returned} - no photographs, so no slim needed.
+   This replaces one GET per hunter in two places at once (the ranking and the roster rows).
+   Returns a hid -> parsed-record map, or null on any failure, in which case the callers fall
+   back to their old per-hunter reads and the feature degrades instead of breaking. */
+async function listResAll(code, sig){
+  const base = Store.base && Store.base();
+  if(!base) return null;
+  try{
+    const r = await fetch(base + "/list?prefix=" + encodeURIComponent("res:"+code+":")
+                          + "&values=1",
+                          { headers: Object.assign({}, _curHdr()), signal: _sig(4000, sig) });
+    if(!r.ok) return null;
+    const j = await r.json();
+    const vals = (j && j.values) || {};
+    const map = {};
+    for(const k of Object.keys(vals)){
+      const hid = k.slice(("res:"+code+":").length);
+      try{ map[hid] = JSON.parse(vals[k]); }catch(e){}
+    }
+    return map;
+  }catch(e){ return null; }
+}
+
+/* Confirmed-score ranking, fetched ONLY on a tick that has a fresh finish.
+   THE TRAP THIS AVOIDS: `rankMap()` ranks by the ORDER of the array it is handed, and
+   `listSubs()` earns that order by fetching every `res:` record and sorting on _score
+   (CONFIRMED finds). A raw slim list is unsorted and has no _score, so handing it
+   straight to rankMap() prints an arbitrary number as the hunter's placing - silently,
+   with a green battery. The roster and the toast would then disagree in front of the
+   builder. So: poll slim every tick, and pay for `res:` only on the rare tick where
+   somebody has actually finished. */
+async function rankSlim(code, subs, resMap){
+  const out = subs.slice();
+  const map = (resMap!==undefined) ? resMap : await listResAll(code);
+  for(const s of out){
+    s._score = s.found || 0;
+    try{
+      let r = null;
+      if(map){ r = map[s.hid] || null; }
+      else { const rr = await Store.get("res:"+code+":"+s.hid, true); if(rr) r = JSON.parse(rr); }
+      if(r && r.marks && !r.returned) s._score = Object.values(r.marks).filter(v=>v===1).length;
+    }catch(e){}
+  }
+  /* THE STANDING RULE - identical to listSubs(). Keep the two in step. */
+  out.sort((a,b)=>{
+    if(a.finishedAt&&b.finishedAt) return (b._score-a._score) || (a.finishedAt-b.finishedAt);
+    if(a.finishedAt) return -1;
+    if(b.finishedAt) return 1;
+    return (b.found-a.found) || ((a.updatedAt||0)-(b.updatedAt||0));
+  });
+  return out;
+}
 async function checkFinishes(announce){
   let mine=[]; try{mine=JSON.parse(await Store.get("mycases")||"[]");}catch(e){}
   for(const code of mine){
-    let subs; try{ subs=await listSubs(code); }catch(e){ continue; }
-    const ranks=rankMap(subs);
+    /* 32s: slim poll. null = offline or timed out -> SKIP the tick. Never treat a
+       failed fetch as "nobody has finished"; markFins would swallow the real ones. */
+    let subs; try{ subs=await listSubsSlim(code); }catch(e){ continue; }
+    if(subs===null) continue;
     const finished=subs.filter(s=>s.finishedAt);
     const seen=seenFins(code);
     const fresh=finished.filter(s=>!seen.includes(s.hid));
     if(fresh.length){
+      /* Only now is the confirmed-score order worth paying for. */
+      const ranks=rankMap(await rankSlim(code, subs));
       if(announce){
         for(const s of fresh){
           const msg=`🏁 ${s.name||"A hunter"} submitted ${s.found}/${s.total} — currently ${ordinal(ranks[s.hid])}! (Case ${code})`;
           toast(msg, 4200);
-          try{
-            if(typeof Notification!=="undefined" && Notification.permission==="granted")
-              new Notification("Scavenger & Hunt Co.",{body:msg});
-          }catch(e){}
+          notifyAgency(msg);
         }
         // live-update roster if the setter is looking at this case
         try{
@@ -7180,7 +7436,7 @@ async function pulseReturn(){
     if(onBoard) renderHunt();
     const msg="\uD83E\uDDD0 Returned by the Builder \u2014 "+State.returnedCount+" find"+(State.returnedCount===1?" didn\u2019t":"s didn\u2019t")+" pass muster. "+(onBoard?"Retake and resubmit.":"Reopen your case to retake.");
     toast(msg, 5600);
-    try{ if(typeof Notification!=="undefined"&&Notification.permission==="granted") new Notification("Scavenger & Hunt Co.",{body:msg}); }catch(e){}
+    notifyAgency(msg);
   }catch(e){}
 }
 function startFinishWatch(){
