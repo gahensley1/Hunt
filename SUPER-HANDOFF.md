@@ -2,7 +2,8 @@
 ### Session-53 edition (Aug 5 2026) — supersedes the ENTIRE prior chain, including the session-52 edition.
 ### 🔎 **SESSION 53 BEGAN AS A REVIEW AND ENDED AS A BUILD.** The review: re-hashed all three surfaces, opened `Hunt-backups` for the first time since s30, fixed three clerk defects (§59), and corrected §0, which had been contradicting §58 inside the s52 edition (§0.2). Then three owner task files arrived and **32m shipped** — photographic seals, the builder's commendation card, four-second cards, the ×1.25 stamp (§60).
 ### ✅ **`index.html` 32m IS LIVE ON PAGES.** **4,024,671 B / `811a118a332a76b2…` / buildmark `32m` / Ochre `#C88A2E`.** Base was 32l `bdfb0222…`. Hash-verified on Pages against the disk copy; raw was still serving 32l at the time, which §0 records as normal.
-### 🔴 **NEXT MARKER `32n`, Rose `#B5566B`** — the §8i rotation resumed at `b` Ochre with 32m, so `c` is next.
+### 🔴 **NEXT MARKER `32o`, Amethyst `#7A5A98`** — §8i resumed at `b` Ochre (32m), `c` Rose (32n), so `d` Amethyst is next.
+### ✅ **`index.html` 32n IS LIVE.** **4,012,600 B / `cd46c7ad766e8ab1…` / buildmark `32n` / Rose `#B5566B`**, commit `050f7220`. Deerstalker re-cut, boot print pulled, **modulus 10** (§61). Verified on disk, raw and Pages — all three identical.
 ### 🔁 **THIS EDITION IS A RE-BASE, NOT A NEW SESSION OF BUILDING.** The s30 edition described the app at 29a/29b. It opened at **32i** and closed with **32j live on Pages** and **32l delivered**. Session 52 re-measured the code and the live services, corrected the header, §0 and §13, and then built §54/§56/§57. **Sections §1–§51 were NOT rewritten** — every standing rule in them is preserved verbatim per the no-compression rule (§4). Where an untouched section's *status claims* conflict with §0 or §13, **§0 and §13 win**; where a *rule* conflicts, the rule stands.
 ### ✅ **`index.html` 32j IS ON GITHUB.** **3,905,589 B / `a29d7438fc002494…` / buildmark `32j` / Slate `#4E6478`.** Base was 32i `a951bf6a…`. The owner uploaded it through the GitHub web page (`30723db`, re-uploaded `48fd903`) — **byte-identical to the local build, hash-verified s52.** See §54.
 ### ✅ **`index.html` 32l IS LIVE ON PAGES.** **3,908,422 B / `bdfb02224e5084ef…` / buildmark `32l` / Plum `#7D4E6B`.** Carries the desktop masthead fix (§56) **and** the credentials-card side-slider fix (§57). Uploaded by the owner (`5c254ff`); **hash-verified against Pages at session close.** 32k was folded into it and never shipped alone.
@@ -131,7 +132,8 @@ is proven and should be reused for every future Worker change.
 
 | File | Size | SHA-256 | Purpose |
 |---|---|---|---|
-| `index.html` **(LIVE — disk == Pages, hash-verified s53; raw was still lagging at the time and that is normal, §0)** | 4,024,671 B | `811a118a332a76b222c4261f95bf53370195941e60daeb87f79fc261e81ae1c3` | **32m** — buildmark `32m` Ochre `#C88A2E`; photographic seals + the builder's commendation card (§60) |
+| `index.html` **(LIVE — disk == raw == Pages, all three hash-verified s53)** | 4,012,600 B | `cd46c7ad766e8ab1421ef9ee9bc96ffd0b081418e4dddab30aae43c6763e8964` | **32n** — buildmark `32n` Rose `#B5566B`; deerstalker re-cut, boot print pulled, modulus 10 (§61) |
+| *(historical)* `index.html` 32m | 4,024,671 B | `811a118a332a76b222c4261f95bf53370195941e60daeb87f79fc261e81ae1c3` | photographic seals + the builder's commendation card (§60) |
 | *(historical)* `index.html` 32l | 3,908,422 B | `bdfb02224e5084ef055fb8f871bde21fbfe56aac4d8a05768978667e0081f1bc` | credentials-card side slider (§57) |
 | 🔴 `candidate-32m.html` **AND** `_candidate-32m.html` **— TEMPORARY, DELETE THEM** | 4,024,671 B each | `811a118a…` | Render-check copies pushed so GitHub Pages could serve them (§60.5). **They are byte-identical to the shipped `index.html` and serve no purpose now. The sandbox cannot delete — the owner must.** |
 | *(historical)* `index.html` 32i | 3,896,676 B | `a951bf6a603359545a7ccb14c42ac8b0bbe4957c832281ffa9e1a995ddd7ef1c` | agency licence minting (`8a89e99`) — **this row said "LIVE" for three builds after it stopped being true. See §0.2.** |
@@ -2543,7 +2545,7 @@ a members' book — not a rename. **If ever changed:** the wordmark is live text
 1. **ESTABLISH THE MODE.** On his computer (the s52 default) or in the cloud? The difference is
    load-bearing — real git and real network vs a no-network bridge that also cannot delete. Say which.
 2. **RE-HASH THE LOCAL CLONE AGAINST LIVE AND SAY THE RESULT OUT LOUD EITHER WAY.**
-   Expect **4,024,671 B / `811a118a…` / buildmark `32m`** on all three of local, GitHub and Pages.
+   Expect **4,012,600 B / `cd46c7ad…` / buildmark `32n`** on all three of local, GitHub and Pages.
    **🆕 HOW TO HASH WHEN `curl` IS NOT AVAILABLE (s53).** Cowork's sandbox no longer fetches URLs,
    so §0's `curl … | sha256sum` route can fail outright. Two replacements, both proven s53:
    **(a)** the **Claude in Chrome** extension — navigate to the Pages URL and hash in-page with
@@ -2579,7 +2581,7 @@ a members' book — not a rename. **If ever changed:** the wordmark is live text
    it as a second folder.** Three defects found and two fixed; **§59.** What is still owed there:
    confirm the Monday schedule has ever fired, and confirm `repo/SUPER-HANDOFF.md` appears after the
    next run.
-9. **Next marker `32n` / Rose `#B5566B`** — **`32m` / Ochre `#C88A2E` is spent (§60).**
+9. **Next marker `32o` / Amethyst `#7A5A98`** — **`32n` / Rose `#B5566B` is spent (§61).**
    *(This line previously said `32m` / Cerulean `#2F7D8C`, which conflicted with the s53 task
    file. The owner ruled for **Ochre**, resuming the §8i rotation at `b`: the pre-`32l` marker
    `#7D4E6B` is not on the 8i list at all, so the drift was not reconstructed. Ochre `b` was spent
@@ -2934,6 +2936,71 @@ Run against the exact files staged for `present_files`:
    staging step of session 30.
 
 **All four steps clean. The handoff is complete.**
+
+---
+
+## 🔴 §61 — 32n: THE DEERSTALKER RE-CUT, THE BOOT PRINT PULLED, MODULUS 10 (built s53)
+
+Shipped the same session as 32m, after the owner looked at the marks on a real roster.
+
+### 61.1 🔴 THE FINDING THAT MATTERS MORE THAN THE BUILD
+
+**The deerstalker did not read at 40px** — it collapsed into a brown lozenge, the check turning to
+noise and the ear flaps merging into the crown. The task file had already applied brightness ×1.18
+and it had not helped.
+
+**THE CAUSE WAS NOT TONE. IT WAS THE DOWNSCALE.** The art is 120px wide and renders at 40 — the
+browser throws away two thirds of it, and fine detail goes first. Four treatments were rendered
+side by side at 40px: as-shipped, gentle contrast, strong contrast, and **strong contrast applied
+to art pre-scaled to 80px.** Only the pre-scaled one read as a hat. Contrast alone made it sooty.
+
+**THE RULE: SHIP ART NEAR THE SIZE IT RENDERS AT.** Pre-scaling to 80px did more than any
+brightness or contrast change, and it made the file *smaller* — 5,852 B → **3,412 B**.
+**⚠ THIS APPLIES TO THE WHOLE SET, NOT JUST THE HAT.** The helmet, the badge and the compass are
+losing detail the same way, just less visibly. **The owner explicitly chose NOT to re-cut them
+this session** — he was happy with the others as shipped. Do not re-cut them without asking.
+
+Recipe, for when it is wanted: PIL, brightness ×1.15 → contrast ×1.45 → Lanczos to 80px wide →
+`UnsharpMask(radius=1.1, percent=60, threshold=2)`, save WebP q93 method 6.
+
+### 61.2 THE BOOT PRINT IS OUT — TEN MARKS, MODULUS 10
+
+Owner call, on the same grounds as the original four exclusions: **it does not read at 40px.**
+`sealOf()` now ends **`%10`**, and `bootprint` is ×0 in the file.
+
+**THE EXCLUDED LIST IS NOW FIVE: microscope, stereoscope, key ring, journal, boot print.**
+Do not reinstate any of them.
+
+**🔴 THE RESHUFFLE WAS FREE FOR THE SECOND AND LAST TIME.** Removing index 7 shifted the hat, the
+badge and the wax seal down one. That costs nothing **only because no live hunter carries a seal**
+— the same reasoning that made 8→11 free on 5 Aug (§60.1). **It has now been spent twice. The
+moment one real hunter holds a mark, changing the size of this set rewrites their identity.**
+Any future change to `SEAL_IMGS` must state, out loud, whether that is still true.
+
+`art/seals/bootprint.webp` remains on disk and in the repo — **the sandbox cannot delete.** A copy
+sits in `art/seals/_excluded/` to mark intent. It is referenced by nothing.
+
+### 61.3 A BATTERY CHECK WORTH KEEPING
+
+Added this session and it should stay: **decode every `SEAL_IMGS` URI and assert it is
+byte-identical to its file in `art/seals/`.** The art is the source of record and the base64 is
+derived from it, never the reverse — this check is what makes that claim true rather than hopeful.
+It passed on all ten.
+
+### 61.4 THE BUILD
+
+**`index.html` 4,012,600 B · `cd46c7ad766e8ab1421ef9ee9bc96ffd0b081418e4dddab30aae43c6763e8964`
+· buildmark `32n` · Rose `#B5566B` · commit `050f7220`.** Verified on **disk, raw AND Pages —
+all three identical**. 11,822 B smaller than 32m.
+
+Battery: `node --check` PASS · tag delta vs the pristine 32l base unchanged (`circle −3, img +2`)
+· no `console.log`, no CRLF, no `http://` · paid parity 35/27/8 · 10 URIs, 10 distinct, all
+matching disk · `SEAL_HEX` ×0 · `sealSvg(` ×0 · `%11` ×0.
+
+**Next marker `32o` / Ink `#3F3B39`.** *(§8i: `a` Cobalt … `b` Ochre 32m, `c` Rose 32n, so `d` is
+next — but the 8i list runs Cobalt·Ochre·Rose·Amethyst·Verdigris·Magenta·Lime·Rust. **`d` is
+Amethyst `#7A5A98`.** Take Amethyst, not Ink; this parenthesis exists because the rotation has
+already drifted once.)*
 
 ---
 
