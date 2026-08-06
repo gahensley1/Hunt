@@ -134,7 +134,8 @@ is proven and should be reused for every future Worker change.
 
 | File | Size | SHA-256 | Purpose |
 |---|---|---|---|
-| `index.html` **(LIVE — disk == Pages, hash-verified s53)** | 4,009,521 B | `94d3b32dcf0cb09cc0529324148a37c857e38e63c5b19bd8a1a8c0539944a67a` | **32p** — buildmark `32p` Verdigris `#4E9A87`; **the web-app manifest + icon set (§63)** |
+| `index.html` **(LIVE — disk == Pages, hash-verified s53)** | 4,010,286 B | `df13a8f7cfcc483ac10908c2d86d5b942dba02f9c860b6d99bb17a508bca79ab` | **32q** — buildmark `32q` Magenta `#A8478F`; ceremony crest + icon darkened (§64) |
+| *(historical)* `index.html` 32p | 4,009,521 B | `94d3b32dcf0cb09cc0529324148a37c857e38e63c5b19bd8a1a8c0539944a67a` | the web-app manifest + icon set (§63) |
 | `manifest.webmanifest` **🆕 s53** | 941 B | — | name/short_name/display/theme; **`icons/` holds six PNGs** — 1024·512·192·180 standard, 512·192 maskable (§63) |
 | *(historical)* `index.html` 32o | 4,009,148 B | `94d747d244368debc937396e2a7fc164526966867212797b846c8d1dc636add8` | wax seal keeps its envelope (§62) |
 | *(historical)* `index.html` 32n | 4,012,600 B | `cd46c7ad766e8ab1421ef9ee9bc96ffd0b081418e4dddab30aae43c6763e8964` | deerstalker re-cut, boot print pulled, modulus 10 (§61) |
@@ -2550,7 +2551,7 @@ a members' book — not a rename. **If ever changed:** the wordmark is live text
 1. **ESTABLISH THE MODE.** On his computer (the s52 default) or in the cloud? The difference is
    load-bearing — real git and real network vs a no-network bridge that also cannot delete. Say which.
 2. **RE-HASH THE LOCAL CLONE AGAINST LIVE AND SAY THE RESULT OUT LOUD EITHER WAY.**
-   Expect **4,009,521 B / `94d3b32d…` / buildmark `32p`** on all three of local, GitHub and Pages.
+   Expect **4,010,286 B / `df13a8f7…` / buildmark `32q`** on all three of local, GitHub and Pages.
    **🆕 HOW TO HASH WHEN `curl` IS NOT AVAILABLE (s53).** Cowork's sandbox no longer fetches URLs,
    so §0's `curl … | sha256sum` route can fail outright. Two replacements, both proven s53:
    **(a)** the **Claude in Chrome** extension — navigate to the Pages URL and hash in-page with
@@ -2586,7 +2587,7 @@ a members' book — not a rename. **If ever changed:** the wordmark is live text
    it as a second folder.** Three defects found and two fixed; **§59.** What is still owed there:
    confirm the Monday schedule has ever fired, and confirm `repo/SUPER-HANDOFF.md` appears after the
    next run.
-9. **Next marker `32q` / Magenta `#A8478F`** — **`32p` / Verdigris `#4E9A87` is spent (§63).**
+9. **Next marker `32r` / Lime `#7FA33C`** — **`32q` / Magenta `#A8478F` is spent (§64).**
    *(This line previously said `32m` / Cerulean `#2F7D8C`, which conflicted with the s53 task
    file. The owner ruled for **Ochre**, resuming the §8i rotation at `b`: the pre-`32l` marker
    `#7D4E6B` is not on the 8i list at all, so the drift was not reconstructed. Ochre `b` was spent
@@ -2941,6 +2942,77 @@ Run against the exact files staged for `present_files`:
    staging step of session 30.
 
 **All four steps clean. The handoff is complete.**
+
+---
+
+## 🔴 §64 — 32q: THE CEREMONY CREST, THE ICON DARKENED, AND THE PUSH BOUNDARY (built s53)
+
+### 64.1 THE CREST ON THE BADGE CEREMONY
+
+Owner instruction: straighten it and make it 1.25× larger. `.dos-seal` was
+`width:100px; transform:rotate(-6deg)`. Now **`#cred-ov .dos-seal{width:125px;transform:none}`**.
+
+**⚠ SCOPED TO `#cred-ov`, AND THE SCOPE IS THE POINT.** `.dos-seal` is *also* the dossier crest in
+**`#record-ov`**, where the −6° tilt is the intended stamped-by-hand look. **A global change would
+straighten both.** Same reasoning as `#cred-ov .dos-conf` (§60.4) — and the same trap underneath
+it: `@media (max-width:349px)` sets a bare `.dos-seal{width:78px}` which **loses on specificity to
+the id selector**, so the narrow rule is restated as `#cred-ov .dos-seal{width:97.5px}` (78 × 1.25).
+Without that the crest stays 125px on a 320px phone and bursts the card.
+
+**THIS IS THE THIRD TIME THIS EXACT TRAP HAS APPEARED** (§60.4 stamp, §61 media queries, now the
+crest). **When you change a property inside an id-scoped rule, grep every `@media` that sets the
+same property on the bare class.** Treat it as part of the edit, not a review step.
+
+### 64.2 THE ICON, DARKENED — AND WHY THE NUMBER MATTERS MORE THAN THE WORD
+
+Owner moved the Bonnie icon from option 3 to **option 2, the darker brown**: shadows
+**`(92,58,30)`, gamma 0.90**, highlights unchanged at `(244,233,210)`.
+
+| | darkest pixel | shadow mean |
+|---|---|---|
+| 3 — brown *(32p shipped this)* | 113,68,31 | 121,78,42 |
+| **2 — warmer** *(32q ships this)* | **80,45,16** | **101,68,41** |
+
+**RECORD THE FIGURES, NOT "DARKER".** §63.2 already makes this point about "more sepia"; it is the
+same failure mode. "Make it darker" with no number sent one round trip already, because the first
+duotone at `(58,38,20)` was *also* "darker" and read as black. **The floor is the variable.**
+All six PNGs regenerated. Circle fit unchanged at **92% scale, dropped 5.5%**.
+
+### 64.3 🔴 THE PUSH BOUNDARY — WRITTEN DOWN BEFORE ANY CODE EXISTS
+
+Owner decision, s53: **"we need a push but only for game play."** Record it now, because a boundary
+is easy to hold while the channel does not exist and hard once it does.
+
+**PUSH IS FOR THREE EVENTS AND NOTHING ELSE:** a find is filed · finds are returned by the builder ·
+a case is finished. **NO re-engagement nudges. NO "come back and play". NO marketing of any kind.**
+
+**WHAT IS ACTUALLY THERE TODAY, MEASURED s53 — it is less than it looks.**
+`Notification.requestPermission()` fires **cold inside `openRoster()`** with no explanation, and
+both notification sites use **`new Notification(…)`**, which only fires **while the app is open on
+screen**. `pushManager` ×0, `showNotification` ×0, no VAPID, **no background delivery at all**. On
+iPhone `new Notification()` is **not supported**, so the feature is Android-and-desktop-only and
+only while watching.
+
+**🔴 AND A COLD ASK IS THE ONE MISTAKE THAT CANNOT BE UNDONE. A refusal is permanent** — the app can
+never ask again on that device. **Remove the cold ask from `openRoster()` before doing anything
+else**, and put a card of our own in front of the OS prompt so a decline costs nothing.
+
+**THE BUILD ORDER, AGREED:** (1) client-only — kill the cold ask, add the priming card at Case
+Ready, route the two existing notifications through the service worker. (2) Web Push proper —
+subscription, VAPID pair, send route on the Worker. **Step 2 needs a Worker paste (§A.1).**
+**⚠ THE VAPID PRIVATE KEY IS A SECRET: Cloudflare secret only. NEVER in `index.html`, NEVER in this
+document — it is world-readable (§0).**
+Options and copy are drafted at `_preview/notify.html`.
+
+**THE BUILD.** `index.html` **4,010,286 B ·
+`df13a8f7cfcc483ac10908c2d86d5b942dba02f9c860b6d99bb17a508bca79ab` · buildmark `32q` ·
+Magenta `#A8478F` · commit `48ccf0b3`.** Verified on disk and Pages, byte-identical, with the
+scoped crest rule and its narrow override both present live. Battery: `node --check` PASS · tag
+delta vs the pristine 32l base unchanged from 32p (`circle −3, img +2, link +1`) · no
+`console.log`, no CRLF, no `http://` · paid parity 35/27/8 · ten seal URIs byte-identical to
+`art/seals/` · manifest parses, four icons at declared sizes, all hashes matching disk.
+
+**Next marker `32r` / Lime `#7FA33C`.**
 
 ---
 
