@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Notifications — where and how to ask</title>
+<style>
+:root{--paper:#EDE4D3;--row:#fff8ec;--ink:#2b2119;--soft:#7a6a55;--green:#2E4739;--brass:#B8863B;
+--oxblood:#8a3324;--serif:Georgia,"Times New Roman",serif;--type:ui-monospace,Consolas,monospace}
+*{box-sizing:border-box}
+body{margin:0;background:#cfc4ae;font-family:var(--type);padding:20px;color:var(--ink)}
+.sheet{max-width:480px;margin:0 auto 18px;background:var(--paper);border-radius:16px;padding:18px;
+  box-shadow:0 10px 30px rgba(30,28,26,.22)}
+h1{font-family:var(--serif);font-size:19px;margin:0 0 2px}
+h2{font-family:var(--serif);font-size:15px;margin:0 0 6px;color:var(--green)}
+p{font-size:11.5px;line-height:1.65;color:var(--soft);margin:0 0 12px}
+.warn{background:#f7e9e4;border:1px solid rgba(138,51,36,.35);border-radius:12px;padding:13px;margin-bottom:14px}
+.warn b{color:var(--oxblood)}
+.warn p{color:#6b3a2c;margin:0 0 8px}
+.warn p:last-child{margin:0}
+table{width:100%;border-collapse:collapse;font-size:11px;margin:6px 0 10px}
+td,th{text-align:left;padding:6px 8px;border-bottom:1px solid rgba(30,28,26,.12);vertical-align:top}
+th{font-size:10px;letter-spacing:.5px;color:var(--soft);text-transform:uppercase}
+.no{color:var(--oxblood);font-weight:700}.yes{color:#2E6B4F;font-weight:700}
+/* the card mock */
+.phone{background:linear-gradient(160deg,#2b241c,#171310);border-radius:20px;padding:26px 16px;margin-top:8px}
+.card{background:var(--paper);border:2px solid var(--brass);outline:1.5px solid rgba(184,134,59,.9);
+  outline-offset:4px;border-radius:6px;padding:16px 15px 14px;text-align:center;max-width:290px;margin:0 auto;
+  box-shadow:0 6px 18px rgba(0,0,0,.32)}
+.eyebrow{font-family:var(--type);font-size:9.5px;letter-spacing:2px;color:var(--soft);margin-bottom:8px}
+.card h3{font-family:var(--serif);font-size:19px;margin:0 0 8px;color:var(--ink);line-height:1.25}
+.card p{font-family:var(--serif);font-size:13px;line-height:1.5;color:#4A4239;margin:0 0 13px}
+.btn{display:block;width:100%;background:var(--green);color:#F3EAD8;border:none;border-radius:6px;
+  padding:11px;font-family:var(--type);font-size:12px;letter-spacing:1.5px;margin-bottom:7px}
+.btn.ghost{background:none;color:var(--soft);border:1px solid rgba(30,28,26,.25)}
+.opt{background:var(--row);border:1px solid rgba(30,28,26,.14);border-radius:12px;padding:14px;margin-bottom:11px}
+.opt .t{font-family:var(--serif);font-size:14px;color:var(--green);margin-bottom:3px}
+.opt .d{font-size:11px;color:var(--soft);line-height:1.6}
+code{background:rgba(30,28,26,.07);padding:1px 5px;border-radius:4px}
+</style></head><body>
+
+<div class="sheet">
+  <h1>Notifications</h1>
+  <p>You asked to move the request earlier and explain what it buys. Two problems to settle first,
+  then three places to put it.</p>
+
+  <div class="warn">
+    <p><b>1. The app already asks &mdash; cold, with no explanation.</b>
+    <code>openRoster()</code> fires <code>Notification.requestPermission()</code> the moment a
+    builder opens any roster. No card, no reason given, just the browser&rsquo;s grey box.</p>
+    <p><b>A refusal is permanent.</b> Once someone taps Block, the app can never ask again on that
+    device &mdash; only they can undo it, buried in site settings. Asking cold is the single most
+    reliable way to lose the permission forever.</p>
+  </div>
+
+  <div class="warn">
+    <p><b>2. Right now the permission buys almost nothing.</b> Both notifications use
+    <code>new Notification(&hellip;)</code>, which <b>only fires while the app is open on screen</b>.
+    There is no <code>pushManager</code>, no subscription, no VAPID key &mdash;
+    <b>no background delivery of any kind.</b></p>
+    <p>So a builder who closes the app is told nothing. And on iPhone
+    <code>new Notification()</code> is <span class="no">not supported at all</span> &mdash; today
+    the feature is Android-and-desktop-only, and only while watching.</p>
+  </div>
+
+  <table>
+    <tr><th>&nbsp;</th><th>Android / desktop</th><th>iPhone</th></tr>
+    <tr><td>App open, on screen</td><td class="yes">works now</td><td class="no">never</td></tr>
+    <tr><td>App backgrounded</td><td class="no">no</td><td class="no">no</td></tr>
+    <tr><td>App closed</td><td class="no">no</td><td class="no">no</td></tr>
+    <tr><td><i>With Web Push added</i></td><td class="yes">all three</td><td class="yes">all three, if installed</td></tr>
+  </table>
+  <p>Web Push needs a subscription in the client, a VAPID key pair, and a send route on the Worker.
+  <b>iPhone additionally requires the app be installed to the home screen</b> &mdash; which is
+  exactly what the manifest just made possible.</p>
+</div>
+
+<div class="sheet">
+  <h2>The card, if we ask properly</h2>
+  <p>A card of our own, in our voice, <i>before</i> the browser&rsquo;s box. If they decline this
+  one, nothing is spent &mdash; we can ask again another day. Only a tap on the top button raises
+  the real prompt.</p>
+  <div class="phone">
+    <div class="card">
+      <div class="eyebrow">FROM THE AGENCY</div>
+      <h3>Shall we send word?</h3>
+      <p>The Agency can tell you the moment a detective files a find &mdash; even while your case
+      sits closed in your pocket. Without it, you must open the file to see.</p>
+      <button class="btn">YES, SEND WORD</button>
+      <button class="btn ghost">NOT JUST NOW</button>
+    </div>
+  </div>
+</div>
+
+<div class="sheet">
+  <h2>Where to ask</h2>
+  <div class="opt"><div class="t">A &mdash; at Case Ready, just after they file a case</div>
+    <div class="d">The moment they have something to watch, and the moment they care most.
+    <b>My pick.</b> Rides beside the commendation card, which already fires there.</div></div>
+  <div class="opt"><div class="t">B &mdash; when the first detective joins</div>
+    <div class="d">Strongest reason of all &mdash; somebody is on the board <i>now</i>. But it can
+    arrive when the builder isn&rsquo;t looking, and a card raised to nobody is a card spent.</div></div>
+  <div class="opt"><div class="t">C &mdash; during the credentials ceremony</div>
+    <div class="d">Earliest, as you asked. But they have built nothing and joined nothing, so the
+    reason is abstract &mdash; the weakest ask of the three, and the one most likely refused.</div></div>
+  <div class="opt"><div class="t">D &mdash; keep the cold ask, just move it</div>
+    <div class="d">Cheapest. Still no explanation, still no background delivery. Not recommended.</div></div>
+</div>
+
+<div class="sheet">
+  <h2>What I would build</h2>
+  <p><b>Step one, client only:</b> remove the cold ask from <code>openRoster()</code>, add the card
+  above at <b>A</b>, and only then raise the OS prompt. Route the existing two notifications through
+  the service worker so they behave properly. <i>One build, no Worker paste.</i></p>
+  <p><b>Step two, the real prize:</b> Web Push &mdash; subscription in the client, VAPID keys, a send
+  route on the Worker. That is what makes the copy above <i>true</i> on both platforms, and it needs
+  a Worker paste from you.</p>
+  <p>Tell me a letter, and whether you want step two in the same run or held for a later session.</p>
+</div>
+
+</body></html>

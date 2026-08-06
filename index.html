@@ -242,7 +242,7 @@
   .tg{transition:opacity .5s linear}
   .tg.gone{opacity:0}
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#4E9A87;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#A8478F;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -647,6 +647,15 @@
      sets a bare .dos-conf{font-size:9.5px}, which LOSES to this id selector on
      specificity - so without the scoped copy the stamp would stay at full size on a
      320px phone and walk straight back into the SS-57 slider. */
+  /* THE CREST ON THE BADGE CEREMONY: straightened and 1.25x, owner instruction 5 Aug 2026.
+     SCOPED TO #cred-ov — .dos-seal is ALSO the dossier's crest in #record-ov, where the -6deg
+     tilt is the intended stamped-by-hand look. A global change would straighten both.
+     Base is 100px / rotate(-6deg); x1.25 gives 125px, and transform:none removes the tilt.
+     ⚠ THE NARROW OVERRIDE IS RE-STATED, same trap as the stamp below: @media (max-width:349px)
+     sets a bare .dos-seal{width:78px}, which LOSES to this id selector on specificity — without
+     the scoped copy the crest would stay 125px on a 320px phone and burst the card. */
+  #cred-ov .dos-seal{width:125px;transform:none}
+  @media (max-width:349px){ #cred-ov .dos-seal{width:97.5px} }
   #cred-ov .dos-conf{right:4px;font-size:14.375px;letter-spacing:2.25px;
     padding:3.75px 10px;border-width:2.5px}
   @media (max-width:349px){ #cred-ov .dos-conf{font-size:11.875px;letter-spacing:1.5px} }
@@ -1155,7 +1164,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">32p</p>
+      <p id="buildmark" aria-label="test build marker">32q</p>
     </div>
   </section>
 
