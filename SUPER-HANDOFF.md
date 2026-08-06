@@ -3,7 +3,7 @@
 ### 🔎 **SESSION 53 BEGAN AS A REVIEW AND ENDED AS A BUILD.** The review: re-hashed all three surfaces, opened `Hunt-backups` for the first time since s30, fixed three clerk defects (§59), and corrected §0, which had been contradicting §58 inside the s52 edition (§0.2). Then three owner task files arrived and **32m shipped** — photographic seals, the builder's commendation card, four-second cards, the ×1.25 stamp (§60).
 ### ✅ **`index.html` 32m IS LIVE ON PAGES.** **4,024,671 B / `811a118a332a76b2…` / buildmark `32m` / Ochre `#C88A2E`.** Base was 32l `bdfb0222…`. Hash-verified on Pages against the disk copy; raw was still serving 32l at the time, which §0 records as normal.
 ### 🔴 **NEXT MARKER `32p`, Verdigris `#4E9A87`** — §8i: `b` Ochre (32m), `c` Rose (32n), `d` Amethyst (32o), so `e` Verdigris is next.
-### 🔴 **`index.html` 32o IS BUILT AND UNPUSHED.** **4,009,148 B / `94d747d244368deb…` / `32o` / Amethyst.** Wax seal keeps its envelope, owner's decision with the pixels in front of him (§62). **Push it, then hash all three surfaces.**
+### ✅ **`index.html` 32o IS LIVE.** **4,009,148 B / `94d747d244368deb…` / `32o` / Amethyst `#7A5A98`**, commit `9c2b6462`. Wax seal keeps its envelope — owner's decision with the pixels in front of him (§62). Verified on disk, raw and Pages, all three identical.
 ### ✅ **`index.html` 32n IS LIVE.** **4,012,600 B / `cd46c7ad766e8ab1…` / buildmark `32n` / Rose `#B5566B`**, commit `050f7220`. Deerstalker re-cut, boot print pulled, **modulus 10** (§61). Verified on disk, raw and Pages — all three identical.
 ### 🔁 **THIS EDITION IS A RE-BASE, NOT A NEW SESSION OF BUILDING.** The s30 edition described the app at 29a/29b. It opened at **32i** and closed with **32j live on Pages** and **32l delivered**. Session 52 re-measured the code and the live services, corrected the header, §0 and §13, and then built §54/§56/§57. **Sections §1–§51 were NOT rewritten** — every standing rule in them is preserved verbatim per the no-compression rule (§4). Where an untouched section's *status claims* conflict with §0 or §13, **§0 and §13 win**; where a *rule* conflicts, the rule stands.
 ### ✅ **`index.html` 32j IS ON GITHUB.** **3,905,589 B / `a29d7438fc002494…` / buildmark `32j` / Slate `#4E6478`.** Base was 32i `a951bf6a…`. The owner uploaded it through the GitHub web page (`30723db`, re-uploaded `48fd903`) — **byte-identical to the local build, hash-verified s52.** See §54.
@@ -133,7 +133,7 @@ is proven and should be reused for every future Worker change.
 
 | File | Size | SHA-256 | Purpose |
 |---|---|---|---|
-| `index.html` **(BUILT s53, ON DISK — push and re-hash all three surfaces)** | 4,009,148 B | `94d747d244368debc937396e2a7fc164526966867212797b846c8d1dc636add8` | **32o** — buildmark `32o` Amethyst `#7A5A98`; wax seal keeps its envelope (§62) |
+| `index.html` **(LIVE — disk == raw == Pages, all three hash-verified s53)** | 4,009,148 B | `94d747d244368debc937396e2a7fc164526966867212797b846c8d1dc636add8` | **32o** — buildmark `32o` Amethyst `#7A5A98`; wax seal keeps its envelope (§62) |
 | *(historical)* `index.html` 32n | 4,012,600 B | `cd46c7ad766e8ab1421ef9ee9bc96ffd0b081418e4dddab30aae43c6763e8964` | deerstalker re-cut, boot print pulled, modulus 10 (§61) |
 | *(historical)* `index.html` 32m | 4,024,671 B | `811a118a332a76b222c4261f95bf53370195941e60daeb87f79fc261e81ae1c3` | photographic seals + the builder's commendation card (§60) |
 | *(historical)* `index.html` 32l | 3,908,422 B | `bdfb02224e5084ef055fb8f871bde21fbfe56aac4d8a05768978667e0081f1bc` | credentials-card side slider (§57) |
@@ -2966,7 +2966,7 @@ The envelope is therefore decoration the hunter will not resolve. **If the envel
 seen properly, the fix is not a crop — it is drawing the mark large somewhere**, and the
 credentials card is the obvious home. Proposed, not built; show a render before building it.
 
-**THE BUILD.** `index.html` **4,009,148 B ·
+**THE BUILD — LIVE, commit `9c2b6462`, all three surfaces hash-verified.** `index.html` **4,009,148 B ·
 `94d747d244368debc937396e2a7fc164526966867212797b846c8d1dc636add8` · buildmark `32o` ·
 Amethyst `#7A5A98`.** Battery: `node --check` PASS · tag delta vs the pristine 32l base unchanged
 (`circle −3, img +2`) · no `console.log`, no CRLF, no `http://` · paid parity 35/27/8 · 10 URIs,
