@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bonnie icon — small sizes and masks</title>
+<style>
+:root{--paper:#EDE4D3;--row:#fff8ec;--ink:#2b2119;--soft:#7a6a55;--green:#2E4739}
+*{box-sizing:border-box}
+body{margin:0;background:#cfc4ae;font-family:ui-monospace,Consolas,monospace;padding:20px;color:var(--ink)}
+.sheet{max-width:470px;margin:0 auto 18px;background:var(--paper);border-radius:16px;padding:18px;
+  box-shadow:0 10px 30px rgba(30,28,26,.22)}
+h1{font-family:Georgia,serif;font-size:19px;margin:0 0 2px}
+h2{font-family:Georgia,serif;font-size:14px;margin:0 0 8px;color:var(--green)}
+p{font-size:11.5px;line-height:1.6;color:var(--soft);margin:0 0 12px}
+.shelf{display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap;
+  background:var(--row);border:1px solid rgba(30,28,26,.14);border-radius:12px;padding:14px}
+figure{margin:0;text-align:center}
+figure img{display:block;background:#fff}
+figcaption{font-size:9px;color:var(--soft);margin-top:5px;line-height:1.4}
+.sq{border-radius:22%;object-fit:cover}
+.ci{border-radius:50%;object-fit:cover}
+.s76{width:76px;height:76px}.s40{width:40px;height:40px}.s32{width:32px;height:32px}.s24{width:24px;height:24px}
+.home{background:linear-gradient(160deg,#3a4a3f,#1e2a24);border-radius:14px;padding:18px;margin-top:12px}
+.grid{display:flex;gap:22px;justify-content:center}
+.app{text-align:center;width:80px}
+.lbl{font-family:-apple-system,system-ui,sans-serif;font-size:11px;color:#fff;margin-top:7px;
+  text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.note{font-size:10.5px;color:var(--soft);line-height:1.6;margin-top:10px}
+b{color:#8a3324}
+code{background:rgba(30,28,26,.07);padding:1px 5px;border-radius:4px}
+</style></head><body>
+
+<div class="sheet">
+  <h1>Bonnie, cut for small sizes</h1>
+  <p>Tighter crop so the ears sit inside the frame, contrast lifted so the face survives the
+  downscale. <b>These are the real pixels at each size</b> &mdash; not a big icon shrunk by CSS.</p>
+</div>
+
+<div class="sheet">
+  <h2>Standard icon &mdash; iOS rounds it</h2>
+  <div class="shelf">
+    <figure><img class="sq s76" src="icons/b/tight-192.png"><figcaption>76px<br>home screen</figcaption></figure>
+    <figure><img class="sq s40" src="icons/b/tight-180.png"><figcaption>40px<br>spotlight</figcaption></figure>
+    <figure><img class="sq s32" src="icons/b/tight-180.png"><figcaption>32px<br>settings</figcaption></figure>
+    <figure><img class="sq s24" src="icons/b/tight-180.png"><figcaption>24px<br>notification</figcaption></figure>
+  </div>
+</div>
+
+<div class="sheet">
+  <h2>Play crops to a circle &mdash; watch the ears</h2>
+  <div class="shelf">
+    <figure><img class="ci s76" src="icons/b/tight-192.png"><figcaption>standard<br>in a circle</figcaption></figure>
+    <figure><img class="ci s76" src="icons/b/maskable-192.png"><figcaption><b>maskable</b><br>safe area</figcaption></figure>
+    <figure><img class="sq s76" src="icons/b/maskable-192.png"><figcaption>maskable<br>squircle</figcaption></figure>
+    <figure><img class="ci s40" src="icons/b/maskable-180.png"><figcaption>40px<br>circle</figcaption></figure>
+  </div>
+  <div class="note">The standard crop loses ear tips to the circle. The <b>maskable</b> version
+  holds the subject inside the middle 80% so no launcher shape can clip it &mdash; that is what the
+  manifest&rsquo;s <code>purpose:"maskable"</code> entry is for.</div>
+</div>
+
+<div class="sheet">
+  <h2>On a home screen, with the name</h2>
+  <div class="home">
+    <div class="grid">
+      <div class="app"><img class="sq s76" src="icons/b/tight-192.png"><div class="lbl">S&amp;H Co.</div></div>
+      <div class="app"><img class="ci s76" src="icons/b/maskable-192.png"><div class="lbl">S&amp;H Co.</div></div>
+    </div>
+  </div>
+  <div class="note">Left: iOS. Right: Play, circle-masked, maskable crop.
+  Label is the manifest&rsquo;s <code>short_name</code> &mdash; <b>&ldquo;S&amp;H Co.&rdquo;</b> &mdash;
+  which is what a phone shows under the icon. The full <code>name</code> stays
+  &ldquo;Scavenger &amp; Hunt Co.&rdquo; for the install prompt and the store.</div>
+</div>
+
+</body></html>

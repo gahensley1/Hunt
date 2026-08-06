@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bonnie — how brown?</title>
+<style>
+:root{--paper:#EDE4D3;--row:#fff8ec;--ink:#2b2119;--soft:#7a6a55;--green:#2E4739}
+*{box-sizing:border-box}
+body{margin:0;background:#cfc4ae;font-family:ui-monospace,Consolas,monospace;padding:20px;color:var(--ink)}
+.sheet{max-width:480px;margin:0 auto 18px;background:var(--paper);border-radius:16px;padding:18px;
+  box-shadow:0 10px 30px rgba(30,28,26,.22)}
+h1{font-family:Georgia,serif;font-size:19px;margin:0 0 2px}
+h2{font-family:Georgia,serif;font-size:14px;margin:0 0 3px;color:var(--green)}
+p{font-size:11.5px;line-height:1.6;color:var(--soft);margin:0 0 12px}
+.shelf{display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap;
+  background:var(--row);border:1px solid rgba(30,28,26,.14);border-radius:12px;padding:14px}
+figure{margin:0;text-align:center}
+figure img{display:block;background:#fff}
+figcaption{font-size:9px;color:var(--soft);margin-top:5px;line-height:1.45}
+.ci{border-radius:50%;object-fit:cover}.sq{border-radius:22%;object-fit:cover}
+.s90{width:90px;height:90px}.s76{width:76px;height:76px}.s40{width:40px;height:40px}
+.sw{display:flex;gap:0;border-radius:8px;overflow:hidden;margin-top:6px}
+.sw i{display:block;width:22px;height:14px}
+.home{background:linear-gradient(160deg,#3a4a3f,#1e2a24);border-radius:14px;padding:18px;margin-top:12px}
+.grid{display:flex;gap:20px;justify-content:center}
+.app{text-align:center;width:90px}
+.lbl{font-family:-apple-system,system-ui,sans-serif;font-size:11px;color:#fff;margin-top:7px;
+  text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.note{font-size:10.5px;color:var(--soft);line-height:1.6;margin-top:10px}
+b{color:#8a3324}
+</style></head><body>
+
+<div class="sheet">
+  <h1>How brown?</h1>
+  <p>You were right &mdash; the darks were crushing to near-black. Each step below lifts the
+  <b>shadow colour</b> and the midtones with it, so the line work reads as ink on paper rather
+  than black on cream. All four are circle-fit <b>B</b>, as you chose.</p>
+</div>
+
+<div class="sheet">
+  <h2>Circle &mdash; how Play will show it</h2>
+  <div class="shelf">
+    <figure><img class="ci s90" src="icons/b3/1-current-mask-192.png">
+      <figcaption><b>1</b> what you saw<br>darkest 51,31,13</figcaption>
+      <div class="sw"><i style="background:#33200D"></i><i style="background:#503D2A"></i></div></figure>
+    <figure><img class="ci s90" src="icons/b3/2-warmer-mask-192.png">
+      <figcaption><b>2</b> warmer<br>darkest 86,51,23</figcaption>
+      <div class="sw"><i style="background:#563317"></i><i style="background:#66462A"></i></div></figure>
+    <figure><img class="ci s90" src="icons/b3/3-brown-mask-192.png">
+      <figcaption><b>3</b> brown<br>darkest 113,68,31</figcaption>
+      <div class="sw"><i style="background:#71441F"></i><i style="background:#794E2A"></i></div></figure>
+    <figure><img class="ci s90" src="icons/b3/4-tea-mask-192.png">
+      <figcaption><b>4</b> tea<br>darkest 136,87,44</figcaption>
+      <div class="sw"><i style="background:#885730"></i><i style="background:#8B572D"></i></div></figure>
+  </div>
+  <div class="note">The two chips under each are its darkest pixel and its average shadow.
+  <b>3 is where it stops reading as black.</b> 4 is warmer still but starts to lose the drawing.</div>
+</div>
+
+<div class="sheet">
+  <h2>Squircle, and small</h2>
+  <div class="shelf">
+    <figure><img class="sq s76" src="icons/b3/2-warmer-std-192.png"><figcaption>2 &mdash; 76px</figcaption></figure>
+    <figure><img class="sq s76" src="icons/b3/3-brown-std-192.png"><figcaption>3 &mdash; 76px</figcaption></figure>
+    <figure><img class="ci s40" src="icons/b3/3-brown-mask-180.png"><figcaption>3 circle<br>40px</figcaption></figure>
+    <figure><img class="sq s40" src="icons/b3/4-tea-std-180.png"><figcaption>4 &mdash; 40px</figcaption></figure>
+  </div>
+</div>
+
+<div class="sheet">
+  <h2>On a home screen</h2>
+  <div class="home">
+    <div class="grid">
+      <div class="app"><img class="sq s90" src="icons/b3/3-brown-std-192.png"><div class="lbl">S&amp;H Co.</div></div>
+      <div class="app"><img class="ci s90" src="icons/b3/3-brown-mask-192.png"><div class="lbl">S&amp;H Co.</div></div>
+    </div>
+  </div>
+  <div class="note">Shown at <b>3 &mdash; brown</b>. Say a number and the manifest gets built on it.</div>
+</div>
+
+</body></html>
