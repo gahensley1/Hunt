@@ -2955,13 +2955,29 @@ covered by `FILES`; a file in `FILES` that has left the repo is a warning, not a
 a tree with one uncovered file (exit 1, `::error::` naming the file), and a tree missing a listed
 file (exit 0 with a `::warning::`). **§2i: the green tick was not taken on trust.**
 
-### 59.3 ⚠ TWO SMALLER THINGS, NOT FIXED
+### 59.3 ⚠ WHAT ELSE CAME OUT OF IT
 
-- **The schedule may never have fired.** `cron` is `0 4 * * 1` — Mondays 04:00 UTC. The two real
-  snapshots are stamped **18:53** and **00:28**, which are manual `workflow_dispatch` runs. The
-  clerk commits on GitHub, so the local clone's reflog cannot settle this. **Open the Actions tab
-  and look at whether the scheduled run has ever completed.** *(GitHub also disables scheduled
-  workflows on repositories with no activity for sixty days — worth knowing for a weekly job.)*
+- **🔴 THE SCHEDULE HAS NEVER FIRED. MEASURED s53, NOT INFERRED.** The Actions tab shows **eleven
+  runs and all eleven read "Manually run by gahensley1."** `cron` is `0 4 * * 1` — Mondays 04:00
+  UTC — and it has produced nothing since the clerk was built in s30. **Every snapshot in the
+  archive exists because the owner pressed a button.** So the archive is not on a schedule; it is
+  on the owner's memory, and the gap between snapshots is however long he goes without thinking
+  about it. *(Run #8, Aug 3, is red. Its log was not opened.)*
+  **This is the open item that matters most in §59.** Until it is settled, "weekly backup" is a
+  name, not a fact. Suspect ordering: a cron on a repo with no other activity, GitHub's sixty-day
+  idle disable, or the workflow file never having existed on the default branch at a scheduled
+  moment. **Do not write "runs weekly" in any document until a run appears that nobody triggered.**
+- **🔴 THE MIRROR WAS NOT BYTE-IDENTICAL TO LIVE — FIXED s53.** `repo/index.html` held the correct
+  build (`32l`) but carried **7,399 CRLFs** and measured **3,915,821 B against live's 3,908,422**.
+  Cause: `Hunt` carries a `.gitattributes` line-ending policy and **`Hunt-backups` had none**, so
+  the mirror was converted on the Windows checkout. **⚠ BE PRECISE ABOUT WHAT WAS MEASURED: the
+  WORKING COPY on the owner's disk, not the stored blob.** The clerk fetches with `curl` on Linux
+  and commits LF, so the blob on GitHub is probably clean and only the checkout is converted —
+  **that was NOT verified and must not be assumed.** Either way, the file a human opens is not the
+  file that is live, which is enough to make a restore go wrong. `Hunt-backups/.gitattributes` now
+  pins `repo/** -text` so the two cannot diverge again. **Verify after the next run: fetch
+  `repo/index.html` from GitHub and hash it — it must equal live EXACTLY. If it already did, the
+  defect was checkout-only and the fix is still correct.**
 - **The empty-snapshot gate is weaker than it reads.** It fails only on `keys` being falsy, so
   `archive-2026-07-30.json` — **121 bytes, a single key** — passed as a good backup. A floor
   (say, refuse anything under fifty keys, or under half the previous snapshot) would have caught it.
