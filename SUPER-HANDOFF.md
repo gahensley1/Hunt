@@ -3004,6 +3004,36 @@ subscription, VAPID pair, send route on the Worker. **Step 2 needs a Worker past
 document — it is world-readable (§0).**
 Options and copy are drafted at `_preview/notify.html`.
 
+### 64.4 🆕 THE EMAILED LEDGER — DECIDED s53, NOT YET BUILT
+
+Owner wants `/report` delivered by email. **Cloudflare can do it natively:** Workers have a
+`send_email` binding, and **sending to a verified destination address in your own account is free
+on all plans** — general outbound needs Workers Paid, self-delivery does not.
+
+**OWNER'S ADDRESSES, recorded s53:** he holds `info@` and `agency@scavengerandhunt.com`.
+**DESTINATION: `info@scavengerandhunt.com`. SENDER: `agency@`.** *(He raised
+`report@scavengerandhunt.com` as a dedicated address and it is the better long-term answer — the
+ledger never competes with real mail and can be filtered on its own — but he settled on **`info@`
+for now**. If `report@` is created later, changing the destination is one line in the binding.)*
+
+**⚠ THREE PREREQUISITES, NONE OF THEM CLAUDE'S TO DO (§A.1).**
+1. **`scavengerandhunt.com` must be on Cloudflare DNS.** Email Routing needs the zone in the
+   account; the domain sat at GoDaddy as of §44. **Nothing works until this moves.**
+2. **The destination must be VERIFIED** — a confirmation link, clicked once.
+   **⚠ AND `info@` MAY NOT BE A MAILBOX.** If it is an Email Routing rule it *forwards* somewhere;
+   the thing that gets verified is the real inbox behind it. **Establish which before building, or
+   the send fails silently into a forwarding loop.**
+3. The Worker source must be pasted in so the whole file can be handed back.
+
+**PLANNED SHAPE:** a `/report/email` route, curator-gated exactly like `/report` (same word, same
+403), rendering the month's ledger as plain text; plus a **Cron Trigger on the 1st**, keyed to the
+previous month, since `/report` is already month-shaped. Render whatever `/report` returns rather
+than assuming a shape, and fail quietly on a send error rather than taking the route down.
+
+**🔴 AND THE THING TO DO FIRST: NOBODY HAS EVER LOOKED AT `/report`.** It is carried in §13 as
+unverified. **Sign in at the Desk and read one month before automating delivery** — otherwise an
+emailed report just delivers unverified numbers on a schedule.
+
 **THE BUILD.** `index.html` **4,010,286 B ·
 `df13a8f7cfcc483ac10908c2d86d5b942dba02f9c860b6d99bb17a508bca79ab` · buildmark `32q` ·
 Magenta `#A8478F` · commit `48ccf0b3`.** Verified on disk and Pages, byte-identical, with the
