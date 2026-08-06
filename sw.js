@@ -41,6 +41,29 @@ self.addEventListener("message", function(e){
   if(e.data && e.data.type==="SKIP_WAITING") self.skipWaiting();
 });
 
+/* 32u - WEB PUSH RECEIVE. Fires with the app CLOSED, which is the entire point:
+   new Notification() and a page-context showNotification() only work while the app is on
+   screen, and on iOS neither works at all. This handler plus a subscription is the ONLY
+   path that reaches an iPhone - and there, only once the app is installed to the home
+   screen (iOS 16.4+; unavailable in the EU under 17.4+).
+
+   🔴 SCOPE, owner decision recorded at §64.3: GAME PLAY ONLY. A find is filed - finds are
+   returned by the builder - a case is finished. NO re-engagement nudges, NO "come back and
+   play", NO marketing of any kind. The boundary is easy to hold now and hard later. */
+self.addEventListener("push", function(e){
+  let d = {};
+  try{ d = e.data ? e.data.json() : {}; }catch(_e){ try{ d = {body: e.data.text()}; }catch(__e){} }
+  const title = d.title || "Scavenger & Hunt Co.";
+  const opts = {
+    body:  d.body || "",
+    icon:  "./icons/icon-192.png",
+    badge: "./icons/icon-192.png",
+    tag:   d.tag || "shco",
+    data:  {url: d.url || "./"}
+  };
+  e.waitUntil(self.registration.showNotification(title, opts));
+});
+
 /* 32r - NOTIFICATION CLICK. The client shows notifications through
    registration.showNotification(); without this handler a tap does nothing.
    Focus an open window if there is one, otherwise open the app. */
@@ -52,7 +75,8 @@ self.addEventListener("notificationclick", function(e){
         var c=list[i];
         if(c.url.indexOf(self.location.origin)===0 && "focus" in c) return c.focus();
       }
-      if(self.clients.openWindow) return self.clients.openWindow("./");
+      var u = (e.notification.data && e.notification.data.url) || "./";
+      if(self.clients.openWindow) return self.clients.openWindow(u);
     })
   );
 });
