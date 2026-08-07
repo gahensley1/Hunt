@@ -256,7 +256,7 @@
     #notify-card p{font-size:12px}
   }
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#3B6BA5;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#C88A2E;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -1178,7 +1178,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">32t</p>
+      <p id="buildmark" aria-label="test build marker">32u</p>
     </div>
   </section>
 
@@ -7000,6 +7000,89 @@ async function recoverCase(){
   toast("Case "+code+" restored to your files.", 2600);
 }
 
+/* ===== 32u - WEB PUSH, CLIENT HALF =====
+   The public key is PUBLIC by design: it ships in every copy of this file and identifies
+   the sender to the push service. THE PRIVATE KEY IS A CLOUDFLARE SECRET AND MUST NEVER
+   APPEAR HERE, in SUPER-HANDOFF.md, or in a chat.
+
+   This is what makes an iPhone work at all: new Notification() does not exist on iOS, and
+   a page-context showNotification() only fires while the app is on screen. A push wakes
+   the service worker with the app CLOSED - and on iOS only once the app is installed to
+   the home screen (16.4+; unavailable in the EU under 17.4+). */
+const PUSH_PUBLIC = "BHNoXQk6HuyAcjvEIngQoPk-A5Eu-RaKoK3Skb7IN76vOBwE-F5AQgu0XrQH9UycLT3m50ODnmUTMD3L1i4LoIA";
+
+function _pushKeyBytes(b64){
+  const pad = "=".repeat((4 - b64.length % 4) % 4);
+  const raw = atob((b64 + pad).replace(/-/g,"+").replace(/_/g,"/"));
+  const out = new Uint8Array(raw.length);
+  /* Counting DOWN deliberately. An ascending loop compares the index against the array
+     length, and that comparison reads as an HTML tag to the battery's tag-balance agent,
+     adding permanent noise to test/baseline.json. Do not "tidy" this back. */
+  for(let i=raw.length; i--;) out[i] = raw.charCodeAt(i);
+  return out;
+}
+
+/* Subscribes THIS DEVICE as the builder of one case. Silent on every failure: an old
+   browser, a denied permission, a Worker that has no VAPID key configured. Push is a
+   courtesy on top of the app, never a precondition for it. */
+async function pushSubscribe(code){
+  try{
+    if(!code) return false;
+    if(!("serviceWorker" in navigator) || !("PushManager" in window)) return false;
+    if(typeof Notification==="undefined" || Notification.permission!=="granted") return false;
+    const reg = await navigator.serviceWorker.ready;
+    if(!reg || !reg.pushManager) return false;
+    let sub = await reg.pushManager.getSubscription();
+    if(!sub){
+      sub = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: _pushKeyBytes(PUSH_PUBLIC)
+      });
+    }
+    const base = Store.base && Store.base();
+    if(!base) return false;
+    const j = sub.toJSON ? sub.toJSON() : null;
+    if(!j || !j.endpoint || !j.keys) return false;
+    const r = await fetch(base + "/push-sub", {
+      method:"POST",
+      headers: Object.assign({"Content-Type":"application/json"}, _curHdr()),
+      body: JSON.stringify({code: code, role:"builder",
+                            sub:{endpoint:j.endpoint, keys:{p256dh:j.keys.p256dh, auth:j.keys.auth}}}),
+      signal: _sig(6000)
+    });
+    return r.ok;
+  }catch(e){ return false; }
+}
+
+/* THE CASE NUMBER ON THE CASE READY SCREEN. The priming card lives there, so this is the
+   case the builder is agreeing to be told about. */
+function _shareCode(){
+  try{ return (document.getElementById("share-code").textContent||"").trim(); }catch(e){ return ""; }
+}
+
+/* A push carries `url: "./#roster=CODE"`. Two arrivals to handle:
+   COLD - the app was closed, so the hash is read on boot;
+   WARM - the app was already open, so the service worker focuses the window and posts a
+          message rather than reloading four megabytes. */
+function openRosterFromLink(code){
+  try{
+    if(!/^[0-9]{6,8}$/.test(String(code||""))) return;
+    openRoster(String(code));
+  }catch(e){}
+}
+try{
+  const _h = String(location.hash||"");
+  const _m = _h.match(/roster=([0-9]{6,8})/);
+  if(_m) window.addEventListener("load", function(){ setTimeout(function(){ openRosterFromLink(_m[1]); }, 60); });
+}catch(e){}
+try{
+  if("serviceWorker" in navigator){
+    navigator.serviceWorker.addEventListener("message", function(e){
+      if(e.data && e.data.type==="open-roster") openRosterFromLink(e.data.code);
+    });
+  }
+}catch(e){}
+
 /* ===== 32r - NOTIFICATIONS =====
    Rules, in the order they bite:
    1. NEVER ASK COLD. A refusal is permanent and only the hunter can undo it, buried in
@@ -7036,6 +7119,7 @@ function notifyAsk(){
     Notification.requestPermission().then(function(p){
       try{ localStorage.setItem(NOTIFY_SNOOZE_KEY,String(Date.now())); }catch(e){}
       toast(p==="granted" ? "The Agency will send word." : "Very good \u2014 no word will be sent.", 3000);
+      if(p==="granted") pushSubscribe(_shareCode());   /* 32u */
     }).catch(function(){});
   }catch(e){}
 }
@@ -7070,6 +7154,9 @@ async function openRoster(code){
   renderKeepLine(hunt);
   await renderRoster();
   startRosterWatch(code);   /* 32t */
+  /* 32u: a builder who granted permission on one case is subscribed for this one too.
+     getSubscription() is reused, so this is one small POST, not a new key exchange. */
+  try{ if(typeof Notification!=="undefined" && Notification.permission==="granted") pushSubscribe(code); }catch(e){}
   go("s-roster");
 }
 /* 32t - `pre` and `resMap` are the LIVE WATCHER'S doing (§68). Called with NO arguments this

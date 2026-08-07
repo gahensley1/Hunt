@@ -71,11 +71,17 @@ self.addEventListener("notificationclick", function(e){
   e.notification.close();
   e.waitUntil(
     self.clients.matchAll({type:"window", includeUncontrolled:true}).then(function(list){
+      var u = (e.notification.data && e.notification.data.url) || "./";
       for(var i=0;i<list.length;i++){
         var c=list[i];
-        if(c.url.indexOf(self.location.origin)===0 && "focus" in c) return c.focus();
+        if(c.url.indexOf(self.location.origin)===0 && "focus" in c){
+          /* 32u - WARM ARRIVAL. The app is already open, so tell the page to open the
+             roster in place. Reloading would re-download four megabytes to show a screen
+             it is already holding. */
+          try{ c.postMessage({type:"open-roster", code:(u.split("roster=")[1]||"")}); }catch(_e){}
+          return c.focus();
+        }
       }
-      var u = (e.notification.data && e.notification.data.url) || "./";
       if(self.clients.openWindow) return self.clients.openWindow(u);
     })
   );

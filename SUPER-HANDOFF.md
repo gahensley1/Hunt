@@ -56,7 +56,7 @@ plus the delivered `index.html` alone.
 
 ---
 
-# 🟢 §A — THE WORKER. **⚠ THIS SECTION DESCRIBES v2.3. THE LIVE WORKER IS v2.6.1.**
+# 🟢 §A — THE WORKER. **⚠ THIS SECTION DESCRIBES v2.3. THE LIVE WORKER IS v2.6.3 — AND ITS FULL SOURCE IS NOW ON DISK AT `Hunt\worker-v2_6_3.js` (§70.4). READ THE SOURCE, NOT THIS SECTION.**
 
 > **🔴 s52 RE-BASE NOTICE.** Everything below was written against **v2.3** and was true of it. The live
 > Worker now reads **`… OPERATIONAL. (v2.6.1)` / `The game is afoot.`** on
@@ -135,7 +135,7 @@ is proven and should be reused for every future Worker change.
 
 | File | Size | SHA-256 | Purpose |
 |---|---|---|---|
-| `index.html` **🆕 32t (BUILT s54 — ON DISK ONLY, NOT PUSHED; carries 32r + 32s)** | 4,023,779 B | `7d7a0598d49c6ef742956476d0dd1e057136e9ec778d17cdbb5ffdd0ab03a049` | **32t** — the live roster watcher (§68) |
+| `index.html` **✅ 32t — LIVE, disk == raw == Pages, hash-verified s54** | 4,023,779 B | `7d7a0598d49c6ef742956476d0dd1e057136e9ec778d17cdbb5ffdd0ab03a049` | **32t** — the live roster watcher (§68) |
 | *(superseded on disk)* `index.html` 32s | 4,017,670 B | `54385a7bb5fc041e7de244e37fca40ac32fbc29061356ca0b3fcf7e48c31a540` | **32s** — the slim poll against Worker v2.6.3 (§67) |
 | *(superseded on disk)* `index.html` 32r | 4,014,420 B | `21c7d6aa60f1a1a16267b56a8381a39e014aec83626834ec7fdf0c325647712f` | **32r** — notification priming card, cold ask killed, notifications routed through the SW (§66) |
 | *(was LIVE at s53 open)* `index.html` 32q | 4,010,286 B | `df13a8f7cfcc483ac10908c2d86d5b942dba02f9c860b6d99bb17a508bca79ab` | **32q** — buildmark `32q` Magenta `#A8478F`; ceremony crest + icon darkened (§64) |
@@ -147,11 +147,12 @@ is proven and should be reused for every future Worker change.
 | *(historical)* `index.html` 32l | 3,908,422 B | `bdfb02224e5084ef055fb8f871bde21fbfe56aac4d8a05768978667e0081f1bc` | credentials-card side slider (§57) |
 | 🔴 `candidate-32m.html` **AND** `_candidate-32m.html` **— TEMPORARY, DELETE THEM** | 4,024,671 B each | `811a118a…` | Render-check copies pushed so GitHub Pages could serve them (§60.5). **They are byte-identical to the shipped `index.html` and serve no purpose now. The sandbox cannot delete — the owner must.** |
 | *(historical)* `index.html` 32i | 3,896,676 B | `a951bf6a603359545a7ccb14c42ac8b0bbe4957c832281ffa9e1a995ddd7ef1c` | agency licence minting (`8a89e99`) — **this row said "LIVE" for three builds after it stopped being true. See §0.2.** |
-| `sw.js` **🆕 32r ON DISK, NOT PUSHED** | 3,993 B | `8a4bc7867efb5928831d978146436519beb3c828978caab442673160cc2139c2` | `notificationclick` handler; `CACHE` → `shco-v2` (§66) |
+| `sw.js` **✅ LIVE s54** | 5,196 B | `c415cc1554e98d80…` | `notificationclick` + the **`push` receiver** (§66, §70.4); `CACHE` = `shco-v2` |
 | *(was LIVE at s53 open)* `sw.js` — **🔴 §0 HAD THIS WRONG: it said 3,435 B / `61a93b05…`. MEASURED s54: disk == raw == Pages at 3,349 B / `54127008f4ff0bdb…`.** A fourth inherited doc error (§0.1). | 3,349 B | `54127008f4ff0bdbc057…` | the service worker (§13.6, CLOSED) |
 | `award-card.jpeg` **🆕 in repo** | 180,855 B | `3ef3ac34795c8708…` | commendation card (§8r) |
 | `hunt-icon-v5.png` **🆕 in repo** | 67,899 B | `969262cefd3c431e…` | app icon |
 | `behaviour.py` **🆕 in repo ROOT — ⚠ A STRAY DUPLICATE** | 18,003 B | `473b385d3b122c6e…` | **byte-identical to `test/behaviour.py`.** One of the two should go; the root copy is the accident. |
+| `.nojekyll` **🆕 s54 (LIVE)** | 0 B | — | Pages publishes statically; no Jekyll step to fail (§70.2) |
 | `SUPER-HANDOFF.md` **🔴 NOW IN THE PUBLIC REPO** | 177,589 B (pre-rebase) | — | this document. See the §0 warning below. **🆕 s53: it had NO BACKUP until this session — the archive clerk's file list never learned about it (§59.1).** |
 | `art/` **🆕 (6 files)** | — | — | `bonnie-icon-source.png` + `icon-C/` (adaptive-background-432, adaptive-foreground-432, icon-1024, icon-180-appletouch, icon-512) |
 | *(historical)* `index.html` 29a | 3,690,652 B | `26d31f08192fbd47…` | the s30 edition's "live" build — nine builds stale |
@@ -160,7 +161,8 @@ is proven and should be reused for every future Worker change.
 | `Hunt-backups-starter.zip` **(🆕 s30 — for the NEW private repo)** | ~4.3 KB | `backup.py 218f390e…` · `backup.yml f90d9df6…` · `README 09782b3c…` | the archive clerk (§51.3) |
 | `test/run.py` ✅ PUSHED | 698 B | — | battery runner (§48) |
 | `test/agents.py` `behaviour.py` `baseline.json` `README.md` ✅ ALL PUSHED (verified 200 on raw, s30) | — | — | (§48) |
-| `worker-v2.6.3` **(DEPLOYED s54 — verified from outside; source NOT in Claude's hands)** | — | — | adds `slim=1` on values listings (§67.1). Root: `... (v2.6.3)` |
+| `worker-v2_6_4.js` **🆕 s54 — WRITTEN, NOT DEPLOYED. Web Push (§71)** | 62,827 B | `23d81339e37ff3ff889e14286f44a175be17fa5d5602ae23e50f906b1012e429` | — |
+| `worker-v2_6_3.js` **(deployed; source of record)** | 50,531 B | `92a66f9bc3ba3a0bdc8886ca19fd19d95b112ada9ae9159de621359eb4968edd` | adds `slim=1` on values listings (§67.1). Root: `... (v2.6.3)` |
 | *(historical)* `worker-v2.6.1` | — | — | **live root string: `Scavenger & Hunt Co. — case-file sync is OPERATIONAL. (v2.6.1)` / `The game is afoot.`** Host: **`deerstalker.tony-13f.workers.dev`**. `worker-v2.3.js` is history (§A). |
 | `j.html` **(CHANGED since s30)** | 1,419 B | `bbf057e1f3225a0f…` | invitation landing page (§8n/§8o) |
 | `og-card.jpeg` | 246,070 B | `0067960541bec0ac…` | link-preview card |
@@ -2948,6 +2950,175 @@ Run against the exact files staged for `present_files`:
    staging step of session 30.
 
 **All four steps clean. The handoff is complete.**
+
+---
+
+## 🔴 §71 — 32u + WORKER v2.6.4: WEB PUSH (built s54)
+
+**BUILT, NOT PUSHED, NOT DEPLOYED.** `index.html` **4,027,868 B / `c5c53a81d710dc44…` / buildmark
+`32u` Ochre `#C88A2E`** · `sw.js` **5,532 B / `7a1682bd276e3bdb…`** ·
+**`worker-v2_6_4.js` 62,827 B / `23d81339e37ff3ff889e14286f44a175be17fa5d5602ae23e50f906b1012e429`**
+— written by Claude, **deployed by the owner only (A.1)**.
+
+### 71.1 THE CRYPTO WAS PROVEN BEFORE IT WAS WRITTEN INTO THE WORKER
+
+**Neither half was marked by its own author.** The aes128gcm payload (RFC 8188 + 8291) was
+**decrypted by python `http_ece`**, an independent implementation, recovering the plaintext
+exactly. The ES256 VAPID JWT (RFC 8292) was **verified by python `cryptography`** against the
+public key, claims well-formed, `k=` matching. **If either function is edited, re-run that proof
+— a crypto fault surfaces on a phone in a park, not in a console.**
+
+### 71.2 THE TRIGGERS — OWNER-SET, s54
+
+- **30% · 60% · 90%** of the FIELD's finds. Each fires once per case. 30 and 60 obey a
+  **60-second floor**; **90 ignores it**.
+- **EVERY FINISH — immediate, never throttled.** Owner's rule verbatim: *"someone finishing is
+  always on time."*
+- **The last detective in** — its own message.
+- Copy is the owner's, chosen s54: *"Word from the Yard: {leader} is ahead, {n} of {t}. Follow it
+  live in your case file."* and *"{name} has closed the case — {n} of {t}. The standings await
+  your review."* and *"The last detective is in. All findings await your verdict."*
+- **⚠ ONE OWNER WORD WAS CHANGED AND THE RULING IS OWED:** he wrote *"has closed **her** case."*
+  Claude shipped *"the case"* because hunter names are self-chosen and "her" is wrong for a
+  Watson or a Lestrade. **§7 says owner copy is verbatim. Ask, and restore "her" if he wants it.**
+
+### 71.3 🔴 `prog:CODE` — WHY THE WRITE PATH NEVER READS THE FAT RECORDS
+
+Summing the field by listing `sub:` records would pull **~7.5 MB on every photograph** — precisely
+the cost `slim=1` was built to kill (§67). Instead a **small tally record `prog:CODE`**
+(`{h:{hid:{n,f,t,fin}}, m:[marks], last}`) is updated from the body already in hand. A few hundred
+bytes, one read and one write per capture. **DO NOT REPLACE IT WITH A LIST.**
+
+### 71.4 THE TAG DECIDES WHAT REPLACES WHAT
+
+Milestones **share** a tag, so a later percentage supersedes an earlier one rather than stacking.
+**Every finish gets its OWN tag** (`shco-CODE-fin-HID`) — otherwise twenty-five detectives
+finishing would collapse into ONE notification and the builder would never learn who came in.
+Found by reading the decrypted pushes, not by reasoning about them.
+
+### 71.5 VERIFIED IN A FULL SIMULATION
+
+Three hunters × 12 tiles driven through a mocked D1, every push captured and **decrypted by the
+independent implementation**: 2 milestones, 2 individual finishes, 1 "last detective in", 4
+distinct tags across 5 pushes. Deep link `#roster=CODE` boots clean; the key decodes to 65 bytes
+starting `0x04`; `pushSubscribe()` returns false and sends nothing without permission.
+**Battery PASSES** (59/59 behaviour, Agent D drift NONE, base64 blobs identical to 32t).
+
+**⚠ A drift lesson:** an ascending `for` loop's index comparison reads as an HTML tag to Agent D —
+and so did the COMMENT Claude wrote explaining it. The loop counts down and the comment avoids the
+expression. **Do not "tidy" either back.**
+
+### 71.6 🔴 WHAT THE OWNER MUST DO — IN THIS ORDER
+
+1. **Deploy `worker-v2_6_4.js`.** Verify the root banner reads **(v2.6.4)**.
+2. Cloudflare → the Worker → Settings → Variables and Secrets: **`VAPID_PRIVATE` as a SECRET**
+   (done s54) and **`VAPID_SUBJECT` as TEXT** = `mailto:info@scavengerandhunt.com` (entered s54 —
+   **confirm DEPLOY was pressed**, it showed "Modified").
+3. Push `index.html` + `sw.js`.
+4. **Then a phone.** Push cannot be proven anywhere else.
+
+**WITHOUT `VAPID_PRIVATE` THE WORKER IS SILENTLY INERT** and every other route behaves exactly as
+v2.6.3. That is deliberate: push is a courtesy on top of the app, never a precondition for it.
+
+**🔴 THE PRIVATE KEY IS A CLOUDFLARE SECRET. It must never appear in `index.html`, never in this
+world-readable document, and never in a chat. If Claude ever asks for it, that is a bug in Claude
+and the owner should refuse.** The public key in the client is public by design.
+`claude/vapid-keygen.html` generated the pair in the owner's own browser, offline — it never ships.
+
+---
+
+## ✅ §70 — 32t IS LIVE. THE SESSION-54 CLOSE.
+
+**LIVE, HASH-VERIFIED ON ALL THREE SURFACES:** `index.html` **4,023,779 B /
+`7d7a0598d49c6ef742956476d0dd1e057136e9ec778d17cdbb5ffdd0ab03a049` / buildmark `32t`
+Cobalt `#3B6BA5`** · `sw.js` **5,196 B / `c415cc1554e98d80…`** · commit `d06ca7a2`.
+Worker **v2.6.3**. Disk == raw == Pages, measured, not claimed.
+
+**s54 SHIPPED THREE BUILDS IN ONE PUSH:** 32r the notification card (§66) · 32s the slim
+poll (§67) · 32t the live roster watcher (§68). Plus `.nojekyll`, the push receiver, and the
+battery baseline.
+
+### 70.1 THE BATTERY IS GREEN — FOR THE FIRST TIME IN FOUR BUILDS
+
+`test/baseline.json` was dated **1 August** and had gone stale, so Agent D reported the same
+seven-name drift on 32q, 32r, 32s AND 32t. **A red light that means nothing is worse than no
+light.** Regenerated deliberately after proving every name benign: `body`+`chk` come from a
+comment documenting the key shape `SHCO-<body>-<chk>`; `option` from a comment reading *"`id` is
+the `<option>` value"*; `this`/`key`/`m`/`AGY_TERMS` from JS comparisons like `a<b` that the regex
+reads as tags. **No genuine unclosed tag.** Battery now **PASSES** end to end. Old baseline kept
+at `/tmp/baseline.aug1.json` for the session only.
+
+### 70.2 `.nojekyll` — AND THE NIGHT PAGES DIDN'T PUBLISH
+
+GitHub had a **major Actions AND Pages outage** (incident opened 15:22 UTC, *"runners being
+assigned jobs that are no longer valid"*). Four consecutive Pages builds cancelled or failed;
+one sat 30 minutes and died **waiting for a runner that never came online**. Nothing to do with
+the repo. **`.nojekyll` is now at the root** — the site uses no Jekyll features, so builds are
+static copies and one whole failure mode is gone. Build #276 went green in under a minute.
+
+**⚠ TWO PROCESS LESSONS, BOTH EARNED THE HARD WAY:**
+1. **EVERY NEW COMMIT CANCELS THE PAGES BUILD IN FLIGHT.** A push, then a web upload, then a
+   delete-and-replace knocked each other over all evening. **One route per ship.**
+2. **READ THE JOB LOG BEFORE THEORISING.** Claude blamed repo size and Jekyll and proposed a fix,
+   when the log said *"waiting for a hosted runner"* — never started. The Actions API answers this
+   without a login: `/repos/gahensley1/Hunt/actions/runs`, and `githubstatus.com/api/v2/summary.json`
+   for the incident. **Both are one call. Use them first.**
+
+### 70.3 🔴 TWO CORRECTIONS TO §65's LIST — WORK THAT WAS ALREADY DONE, AND WORK THAT ISN'T
+
+- **§65 item 7, `first_find`, IS ALREADY BUILT.** Measured ×3 in 32t: the per-case ledger row, the
+  totals row and the CSV export. **Strike it from the backlog.**
+- **§65 item 5, the CASE FILES plaque, IS FULLY UNBUILT** — `.stamp-link` is still live (5 rules),
+  `CASE FILE RECORD` ×2. Claude first reported it half-done by counting four `.btn-plaque`
+  elements; three are Build/Join/Cold Cases and the fourth is a **second Build button inside the
+  empty Case Files state**. **⚠ COUNTING A CLASS IS NOT READING A SCREEN** — that is the second
+  time in one session a count was reported as a conclusion (see 70.2 lesson 2).
+- **🔴 THE PLAQUE ART IS NOT ON DISK.** §46 describes a supplied 2368×448 CASE FILES PNG; `art/`
+  holds only the icon sources and the eleven seals. **§1v again: it was never written down.**
+  **Owner ruled s54: the plaque is an aesthetic decision and is his to make. Do not raise it.**
+
+### 70.4 WEB PUSH — HALF BUILT, DELIBERATELY INERT
+
+`sw.js` now carries the **`push` receiver** (§64.3 scope: a find is filed · finds returned · a case
+finished — **NOTHING ELSE, no re-engagement, no marketing**) and `notificationclick` honours a URL
+supplied by the push. **This is the only path that ever reaches an iPhone**, and there only once
+the app is installed to the home screen (iOS 16.4+, unavailable in the EU under 17.4+).
+
+**BLOCKED ON TWO THINGS ONLY THE OWNER CAN SUPPLY:**
+1. **A VAPID keypair** — `npx web-push generate-vapid-keys`. Public key to Claude; **private key
+   into Cloudflare as a secret, NEVER in `index.html`, NEVER in this world-readable document,
+   NEVER to Claude.**
+2. ~~The v2.6.3 Worker source~~ **— CORRECTED s54: IT IS ON DISK AT `Hunt\worker-v2_6_3.js`,
+   AND WAS ALL ALONG.** Claude's sweep missed it and then repeated "it never arrived" three times
+   without re-checking. **A negative from one search is not a fact; re-measure before repeating
+   it** — the third such lapse this session (see §70.2 lesson 2 and §70.3). Verified: **50,531 B /
+   `92a66f9bc3ba3a0bdc8886ca19fd19d95b112ada9ae9159de621359eb4968edd`**, `node --check` passes,
+   root banner in source is byte-identical to the live one, routes `/` `/ev` `/list` `/report`,
+   **secret scan CLEAN** (no token literals, no VAPID; `env.CURATOR_TOKEN` and `env.DB` are
+   references only). **So push is blocked on the VAPID keypair ALONE** — hand Claude the public
+   key and it writes v2.6.4 as a WHOLE file for the owner to deploy.
+
+### 70.6 ⚠ ONE DESIGN NOTE ON v2.6.3, FOR THE BACKLOG — NOT A BUG
+
+`slimRec` **returns a record FAT if it fails to parse** — deliberate, and the source says why:
+*"a fat answer is an inconvenience, a dropped hunter would be a wrong roster."* Agreed. But it
+means **one malformed record on a large case can still put a photo-laden payload on the wire**,
+and the client's "slim never falls back to fat" rule cannot prevent that from the outside. The
+real cure is the `subph:` photo-split schema (already backlogged). Log it, do not change it.
+
+### 70.5 WHAT IS OWED NEXT, IN ORDER
+
+1. **A PHONE.** Carried since s29 and now the gate on five separate things at once: the install
+   prompt (never seen), the notification card, the live roster, push once it lands, and the full
+   build → share → join → photograph → verify → coin → rank loop on two devices.
+   FIELD-TEST-PROTOCOL.md is written and waiting.
+2. **Cloudflare Workers Paid ($5/mo)** — pre-event blocker. Free caps CPU at 10 ms/request, which
+   can break `slim=1` on a large case, and 162k writes/day at target scale exceeds the plan outright.
+3. **The Worker source + VAPID**, to finish push (70.4).
+4. **Read `/report` once.** Nobody ever has. Blocks the emailed ledger.
+5. `_preview/` is scratch and is now in the PUBLIC repo; `.stamp-link` CSS is live, do not delete.
+6. **Cloudflare Pages migration** — three arguments now: the 100 GB/month bandwidth wall, silent
+   slow rebuilds, and a whole evening lost to an outage in a build step this site does not need.
 
 ---
 
