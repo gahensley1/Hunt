@@ -241,22 +241,48 @@
   /* No burn. It leaves the way it arrived \u2014 by fading. */
   .tg{transition:opacity .5s linear}
   .tg.gone{opacity:0}
-  /* ===== 32r - the notification priming card (Case Ready) ===== */
-  #notify-card{display:none;background:var(--paper);border:2px solid var(--brass);
-    outline:1.5px solid rgba(184,134,59,.9);outline-offset:4px;border-radius:6px;
-    padding:16px 15px 14px;text-align:center;margin:18px 6px 6px;box-shadow:var(--shadow)}
-  #notify-card.show{display:block}
-  #notify-card .nc-eyebrow{font-family:var(--type);font-size:9.5px;letter-spacing:2px;
-    color:var(--ink-soft);opacity:.8;margin-bottom:8px}
-  #notify-card h3{font-family:var(--serif);font-size:19px;margin:0 0 8px;color:var(--ink);line-height:1.25}
-  #notify-card p{font-family:var(--serif);font-size:13px;line-height:1.5;color:var(--ink-soft);margin:0 0 13px}
+  /* ===== 32v - THE NOTIFICATION ASK, AS A TOAST (was the brass card, 32r) =====
+     Owner, s54: it should ask the way every other app asks. Same ink pill as the app's
+     own toasts, but SQUARER (16px, not 30px) so the dismiss circle seats on a corner
+     instead of on a curve, and TAPPABLE — .toast is pointer-events:none and self-
+     dismissing, neither of which a permission ask can afford.
+
+     🔴 THE PROMPT MUST BE RAISED FROM A TAP. A toast that merely appears cannot ask;
+     iOS and Safari reject requestPermission() outside a gesture. So this stays until
+     it is answered.
+     🔴 THE ✕ COSTS NOTHING — it snoozes seven days. ONLY "YES" RAISES THE REAL PROMPT,
+     and a refusal there is permanent. That asymmetry is why YES sits well clear of the
+     dismiss circle: a mis-tap should cost a week, never the permission. */
+  /* Floating, above the tab bar, like the app's own toasts — but SQUARER (16px, not the
+     30px pill) so the dismiss circle seats on a corner rather than a curve, and TAPPABLE,
+     which .toast is not: it is pointer-events:none and self-dismissing, and a permission
+     ask can afford neither. */
+  #notify-card{display:none;position:fixed;left:50%;transform:translateX(-50%);
+    bottom:calc(90px + var(--safe-b));width:calc(100% - 24px);max-width:390px;z-index:640;
+    background:var(--ink);color:var(--paper);border-radius:16px;padding:13px 16px 11px;
+    box-shadow:var(--shadow);flex-direction:column;justify-content:center}
+  #notify-card.show{display:flex}
+  /* 32w — THE SERIF, AND 1.2×. Owner, s54. The typewriter face is the app's UI voice —
+     labels, buttons, meta. This is the Agency SPEAKING, so it takes the serif the
+     dispatch card and the ceremony use. 12.5px × 1.2 = 15px. */
+  #notify-card .nc-txt{font-family:var(--serif);font-size:15px;line-height:1.45;
+    color:rgba(237,228,211,.94);padding-right:30px;margin:0 0 10px}
+  #notify-card .nc-acts{display:flex;justify-content:flex-end}
+  #notify-card .nc-yes{background:var(--brass-lt);color:#231A10;border:0;border-radius:20px;
+    padding:8px 20px;font-family:var(--type);font-size:11.5px;letter-spacing:1.2px}
+  #notify-card .nc-yes:active{background:var(--brass)}
+  /* The dismiss circle. 34px drawn, but the hit area is padded out to 44px. */
+  #notify-card .nc-x{position:absolute;top:8px;right:8px;width:34px;height:34px;
+    border-radius:50%;border:1px solid rgba(237,228,211,.35);background:none;
+    color:rgba(237,228,211,.72);font-family:var(--type);font-size:14px;line-height:1;
+    display:flex;align-items:center;justify-content:center;padding:0}
+  #notify-card .nc-x:active{background:rgba(237,228,211,.12)}
   @media (max-width:349px){
-    #notify-card{padding:13px 12px 11px;margin:14px 2px 4px}
-    #notify-card h3{font-size:17px}
-    #notify-card p{font-size:12px}
+    #notify-card{padding:12px 13px 10px}
+    #notify-card .nc-txt{font-size:14px}
   }
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#C88A2E;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#7A5A98;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -1178,7 +1204,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">32u</p>
+      <p id="buildmark" aria-label="test build marker">32w</p>
     </div>
   </section>
 
@@ -1247,15 +1273,6 @@
       </div>
       <div class="stack" style="padding:16px 0 0">
         <button class="btn btn-primary" onclick="shareCase()"><span class="em">✉️</span> Share via Message</button>
-      </div>
-      <div id="notify-card">
-        <div class="nc-eyebrow">FROM THE AGENCY</div>
-        <h3>Shall we send word?</h3>
-        <p>The Agency can tell you the moment a detective files a find, while the case is open on your desk. Without it, you must check the file yourself.</p>
-        <div class="stack">
-          <button class="btn btn-primary" onclick="notifyAsk()">YES, SEND WORD</button>
-          <button class="btn btn-ghost" onclick="notifyLater()">NOT JUST NOW</button>
-        </div>
       </div>
       <div class="note arch-note">
         Review each sleuth&#39;s solved cases in the <b>CASE FILE RECORD</b> archive on the home page.
@@ -1639,6 +1656,13 @@
     <button id="st-file" class="btn btn-primary" disabled onclick="subTerrFile()">File for Consideration</button>
   </div>
 </div>
+<!-- 32w — THE NOTIFICATION ASK. Floating, so it can be raised on ANY screen: it is an
+     announcement now ("a sleuth has joined"), not furniture belonging to Case Ready. -->
+<div id="notify-card">
+  <button class="nc-x" onclick="notifyLater()" aria-label="Not now">✕</button>
+  <p class="nc-txt">Your first Sleuth joined the case! Stay in the loop, know when they close it!</p>
+  <div class="nc-acts"><button class="nc-yes" onclick="notifyAsk()">YES</button></div>
+</div>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 <div id="toast2" class="toast" role="status" aria-live="polite"></div>
 
@@ -1887,7 +1911,7 @@ function go(id){
   const el=document.getElementById(id); el.classList.add("active");
   document.getElementById("app").scrollTop=0; window.scrollTo(0,0);
   if(id==="s-home") refreshHomeBadge();
-  if(id==="s-share") maybeShowNotifyCard();   /* 32r */
+  maybeShowNotifyCard();   /* 32w — any screen; it is an announcement, not furniture */
   if(id!=="s-roster") stopRosterWatch();   /* 32t - THE choke point. A leaked interval is a
                                               permanent two-second poll on a user's phone. */
   clearTimeout(window._clueTipT); clearTimeout(window._moveTipT); clearTimeout(window._huntTipT);
@@ -7095,18 +7119,44 @@ try{
       screen. The card copy is written to be true of that, not of the future. When push
       lands, rewrite the copy. */
 const NOTIFY_SNOOZE_KEY="shco:notify-asked";
+/* 32w — THE ASK NOW RIDES ON A REAL EVENT: THE FIRST SLEUTH JOINING.
+   Owner, s54. The reason is concrete — somebody is on the board — and a concrete reason is
+   what keeps a permission from being refused forever.
+
+   🔴 AN ASK RAISED TO AN EMPTY ROOM IS AN ASK SPENT. The join is DETECTED by the 12-second
+   sweep, which runs whether or not the builder is looking. So detection only RECORDS the
+   moment; the toast is raised at the next instant the builder is actually in the app —
+   any screen, or on returning to the tab. The pending flag survives a reload. */
+const NOTIFY_PENDING_KEY="shco:notify-pending";
 function notifySupported(){
   try{ return typeof Notification!=="undefined"; }catch(e){ return false; }
+}
+function notifyEligible(){
+  try{
+    if(!notifySupported()) return false;                  /* iPhone-in-Safari lands here */
+    if(Notification.permission!=="default") return false; /* granted, or permanently blocked */
+    const last=Number(localStorage.getItem(NOTIFY_SNOOZE_KEY)||0);
+    if(last && Date.now()-last < 7*24*60*60*1000) return false;
+    return true;
+  }catch(e){ return false; }
+}
+/* Called by the sweep the moment a case first has somebody on it. Records and tries; if
+   the builder is not looking, the record keeps and the next maybeShowNotifyCard() raises it. */
+function notifyRaise(code){
+  try{
+    if(!notifyEligible()) return;
+    if(!localStorage.getItem(NOTIFY_PENDING_KEY)) localStorage.setItem(NOTIFY_PENDING_KEY,String(code||""));
+    maybeShowNotifyCard();
+  }catch(e){}
 }
 function maybeShowNotifyCard(){
   try{
     const card=document.getElementById("notify-card");
     if(!card) return;
     card.classList.remove("show");
-    if(!notifySupported()) return;                  /* iPhone-in-Safari lands here */
-    if(Notification.permission!=="default") return; /* granted, or permanently blocked */
-    const last=Number(localStorage.getItem(NOTIFY_SNOOZE_KEY)||0);
-    if(last && Date.now()-last < 7*24*60*60*1000) return;
+    if(document.hidden) return;                 /* raised to nobody is raised for nothing */
+    if(!localStorage.getItem(NOTIFY_PENDING_KEY)) return;
+    if(!notifyEligible()) return;
     card.classList.add("show");
   }catch(e){}
 }
@@ -7116,15 +7166,19 @@ function notifyAsk(){
     if(card) card.classList.remove("show");
     if(!notifySupported()) return;
     /* MUST stay inside this tap - a prompt raised without a gesture is rejected. */
+    const pending=(function(){ try{ return localStorage.getItem(NOTIFY_PENDING_KEY)||""; }catch(e){ return ""; } })();
     Notification.requestPermission().then(function(p){
       try{ localStorage.setItem(NOTIFY_SNOOZE_KEY,String(Date.now())); }catch(e){}
+      try{ localStorage.removeItem(NOTIFY_PENDING_KEY); }catch(e){}
       toast(p==="granted" ? "The Agency will send word." : "Very good \u2014 no word will be sent.", 3000);
-      if(p==="granted") pushSubscribe(_shareCode());   /* 32u */
+      /* 32w: the case that raised the ask, not whatever screen happens to be open. */
+      if(p==="granted") pushSubscribe(pending || _shareCode());
     }).catch(function(){});
   }catch(e){}
 }
 function notifyLater(){
   try{ localStorage.setItem(NOTIFY_SNOOZE_KEY,String(Date.now())); }catch(e){}
+  try{ localStorage.removeItem(NOTIFY_PENDING_KEY); }catch(e){}
   try{ const card=document.getElementById("notify-card"); if(card) card.classList.remove("show"); }catch(e){}
 }
 /* The single delivery path. Both call sites go through here. */
@@ -7400,6 +7454,7 @@ function stopRosterWatch(){
 /* Unlocking the phone refreshes at once rather than waiting out the tick. */
 document.addEventListener("visibilitychange", function(){
   if(!document.hidden && _rosterWatch && State.roster) _rosterTick(State.roster);
+  if(!document.hidden) { try{ maybeShowNotifyCard(); }catch(e){} }   /* 32w */
 });
 
 /* ===== 32s - THE SLIM POLL (Worker v2.6.3, `slim=1`) =====
@@ -7492,6 +7547,8 @@ async function checkFinishes(announce){
        failed fetch as "nobody has finished"; markFins would swallow the real ones. */
     let subs; try{ subs=await listSubsSlim(code); }catch(e){ continue; }
     if(subs===null) continue;
+    /* 32w — THE FIRST SLEUTH. The sweep already holds the roster, so this costs nothing. */
+    if(subs.length) notifyRaise(code);
     const finished=subs.filter(s=>s.finishedAt);
     const seen=seenFins(code);
     const fresh=finished.filter(s=>!seen.includes(s.hid));

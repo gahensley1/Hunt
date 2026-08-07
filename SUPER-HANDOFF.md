@@ -135,7 +135,8 @@ is proven and should be reused for every future Worker change.
 
 | File | Size | SHA-256 | Purpose |
 |---|---|---|---|
-| `index.html` **✅ 32t — LIVE, disk == raw == Pages, hash-verified s54** | 4,023,779 B | `7d7a0598d49c6ef742956476d0dd1e057136e9ec778d17cdbb5ffdd0ab03a049` | **32t** — the live roster watcher (§68) |
+| `index.html` **🆕 32w — BUILT s54, ON DISK ONLY** | 4,031,642 B | `7fa2a89c406de3f7b34b1ce1ef24a94467126e792cfcfc54bc903905ad9350d8` | the first-sleuth ask (§74); carries 32u web push + 32v |
+| `index.html` *(LIVE on Pages: 32u)* | 4,023,779 B | `7d7a0598d49c6ef742956476d0dd1e057136e9ec778d17cdbb5ffdd0ab03a049` | **32t** — the live roster watcher (§68) |
 | *(superseded on disk)* `index.html` 32s | 4,017,670 B | `54385a7bb5fc041e7de244e37fca40ac32fbc29061356ca0b3fcf7e48c31a540` | **32s** — the slim poll against Worker v2.6.3 (§67) |
 | *(superseded on disk)* `index.html` 32r | 4,014,420 B | `21c7d6aa60f1a1a16267b56a8381a39e014aec83626834ec7fdf0c325647712f` | **32r** — notification priming card, cold ask killed, notifications routed through the SW (§66) |
 | *(was LIVE at s53 open)* `index.html` 32q | 4,010,286 B | `df13a8f7cfcc483ac10908c2d86d5b942dba02f9c860b6d99bb17a508bca79ab` | **32q** — buildmark `32q` Magenta `#A8478F`; ceremony crest + icon darkened (§64) |
@@ -161,7 +162,9 @@ is proven and should be reused for every future Worker change.
 | `Hunt-backups-starter.zip` **(🆕 s30 — for the NEW private repo)** | ~4.3 KB | `backup.py 218f390e…` · `backup.yml f90d9df6…` · `README 09782b3c…` | the archive clerk (§51.3) |
 | `test/run.py` ✅ PUSHED | 698 B | — | battery runner (§48) |
 | `test/agents.py` `behaviour.py` `baseline.json` `README.md` ✅ ALL PUSHED (verified 200 on raw, s30) | — | — | (§48) |
-| `worker-v2_6_4.js` **🆕 s54 — WRITTEN, NOT DEPLOYED. Web Push (§71)** | 62,827 B | `23d81339e37ff3ff889e14286f44a175be17fa5d5602ae23e50f906b1012e429` | — |
+| `worker-v2_6_6.js` **🆕 s54 — WRITTEN, NOT DEPLOYED. Fixes the take rate (§73)** | 66,001 B | `c959cb36ec463b93d87621ce461122ae56976b13f047b93b9128445b5d37ffc5` | — |
+| `worker-v2_6_5.js` **(deployed s54; superseded by 2.6.6)** | 64,222 B | `04ca5309e6d9e7fe17f83b605a87e2164e170103f11f2d06fc5e6edd01ef90a1` | — |
+| `worker-v2_6_4.js` **(DEPLOYED s54 — ⚠ CARRIES THE §72 HOLE, SUPERSEDE IT)** | 62,827 B | `23d81339e37ff3ff889e14286f44a175be17fa5d5602ae23e50f906b1012e429` | — |
 | `worker-v2_6_3.js` **(deployed; source of record)** | 50,531 B | `92a66f9bc3ba3a0bdc8886ca19fd19d95b112ada9ae9159de621359eb4968edd` | adds `slim=1` on values listings (§67.1). Root: `... (v2.6.3)` |
 | *(historical)* `worker-v2.6.1` | — | — | **live root string: `Scavenger & Hunt Co. — case-file sync is OPERATIONAL. (v2.6.1)` / `The game is afoot.`** Host: **`deerstalker.tony-13f.workers.dev`**. `worker-v2.3.js` is history (§A). |
 | `j.html` **(CHANGED since s30)** | 1,419 B | `bbf057e1f3225a0f…` | invitation landing page (§8n/§8o) |
@@ -282,6 +285,30 @@ moving it would have unpainted every buy stamp. **Read the rule, don't trust the
 ---
 
 ## §1 — HOW THE OWNER WORKS (read first)
+
+### 🔴 §1w — A CORRECTION IS NOT DONE UNTIL EVERY COPY OF THE ERROR IS DEAD (owner rule, s54)
+
+**Owner's instruction, verbatim: "as rule one you find a mistake correct all associated materials
+i should [not] have to ask you."**
+
+When Claude finds an error — in this document, in a brief, in a delivered file, in its own earlier
+message — **the fix is not the correction, it is the SWEEP.** Before reporting anything:
+
+1. **Grep for the claim, not the sentence.** The same wrong fact is usually phrased three ways in
+   three sections. Search the idea (`DNS`, `manifest`, `first_find`), not the wording.
+2. **Correct every instance, in every file** — handoff, `claude/` briefs, delivered documents,
+   project knowledge. A brief that contradicts the handoff will be believed by whoever reads it
+   first.
+3. **Say what was wrong and where it was**, not just what is now right. A silent correction cannot
+   be audited, and the next session cannot tell a fix from a drift.
+4. **Ask what ELSE rested on it.** §64.4's DNS "blocker" existed only because the section was
+   planned on Email Routing, which cannot send — **the wrong premise had been sitting upstream of
+   the wrong conclusion for a whole session.** One correction exposed a bigger one.
+
+**THE OWNER SHOULD NEVER BE THE ONE TO ASK "should you revise the document?"** If he asks, the
+sweep was already owed and already missed.
+
+
 
 - **Spend the fewest tokens and the least battery.** Batch related questions and edits into a single
   operation and a single verification pass. Skip redundant work. Minimize narration.
@@ -1856,7 +1883,9 @@ deleted, because a closed item that vanishes gets re-opened by the next session.
   (**×1 in the whole file**); wrong word clears it and toasts "The archivist does not recognise that
   word" — **it fails closed, as specified.** Worker: **the rotation happened** — `BAKER221B` → 403.
   **The load-bearing order in the old item was followed. Nothing here is left to do.**
-- **✅ 6. THE SERVICE WORKER. CLOSED.** `sw.js` in repo, 200 on Pages, `61a93b05…`. Registered
+- **✅ 6. THE SERVICE WORKER. CLOSED.** `sw.js` in repo, 200 on Pages. **⚠ THE HASH THAT STOOD HERE
+  (`61a93b05…`, 3,435 B) WAS NEVER CORRECT — see the §0 row. It measured 3,349 B / `54127008…`, and
+  as of s54 it is 5,532 B / `7a1682bd…` with the push receiver (§71).** Registered
   https-only inside a `try`, on `load`, with a swallowed `.catch()`. Its own header states the
   non-negotiables: **network-first for the document** (a 3.8 MB cache-first would pin hunters to a
   dead build), never cache the Worker, never cache a non-GET/non-200/opaque response, versioned cache.
@@ -1880,7 +1909,10 @@ deleted, because a closed item that vanishes gets re-opened by the next session.
    `markHintSeen()` → hint_completed · the deep-link handler → **case_scanned, deliberately fired
    before every gate, because `case_opened` only fires after five refusals and cannot answer how many
    people a poster actually reached.**
-   **🔴 THE REMAINING GAP IS `first_find`.** The §49.3 funnel was opened / joined / first-find /
+   **~~THE REMAINING GAP IS `first_find`~~ — ✅ BUILT AND LIVE, corrected s54 (§70.3, §73.4). It is
+   in `EV_NAMES`, in the per-case ledger row, the totals row and the CSV. What follows is history;
+   the gap it describes was closed and nobody noticed because the MONTH view never shows the
+   figure — only the per-case sheet does.** The §49.3 funnel was opened / joined / first-find /
    finished. Scanned, opened and finished are covered; **there is no event on a hunter's first
    confirmed find**, so the drop-off between taking a case and getting one photograph — the single
    most diagnostic step — is invisible. **Adding it is a one-line `ev()` call plus a name in
@@ -2346,7 +2378,9 @@ plan.** Returning users re-download 3.7 MB every visit.
 - **Riskiest edit class in the project: a wrong cache rule pins users to a stale build, silently and
   near-permanently.** That is why it was refused in the heavy session 30 — do it FIRST in a fresh
   chat, nothing stacked on.
-- **Design:** two new repo files (`manifest.json`, `sw.js`). **Network-first on `index.html`** with a
+- **Design:** two new repo files (**shipped as `manifest.webmanifest`, NOT `manifest.json` — the
+  wrong name in this line is what later made a diagnostic probe 404 and call the PWA half-landed,
+  §67.6**, and `sw.js`). **Network-first on `index.html`** with a
   cached fallback (never cache-first on the app shell); the `#buildmark` is the human freshness check.
   `j.html`/`og-card` may be cache-first. **Write the kill-switch pattern BEFORE any cache code** —
   a versioned cache name + an activate handler that deletes old caches, so a bad cache can always be
@@ -2582,10 +2616,9 @@ a members' book — not a rename. **If ever changed:** the wordmark is live text
 5. **Run the §32 bootstrap**, including the **§41.2 numeral-consistency parse**. **Playwright is not
    preinstalled; budget a minute.** **Read `BUILTIN_INDEX` by parsing, not grepping.**
 6. **🔴 THE MAIN BUILD IS NOT INSTRUMENTATION — THAT IS ALREADY BUILT (§13.1, §53.1).** **Read §53.1
-   before you measure anything.** The real work here is narrow: **add `first_find` to `EV_NAMES` and
-   fire it at the first confirmed find**, which needs the Worker to accept the name, so it rides with
-   the paste in item 8. **First, sign in at the Desk and read what `/report` actually returns** — the
-   read side has never been verified and may already answer the DMO question.
+   before you measure anything.** ~~add `first_find` to `EV_NAMES`~~ **— ✅ DONE, corrected s54: it
+   is live in three places (§70.3).** ~~sign in at the Desk and read `/report`~~ **— ✅ DONE s54, and
+   it found the take-rate defect (§73). The read side IS now verified.**
 7. **The cheap high-value second item is the CASE FILES plaque (§13.4 / §46)** — fourth `.btn-plaque`
    **plus the red `FIND CURRENT & OLD CASES HERE` stamp as its own element.** **Do not simply
    re-apply 28f — it was undone for a reason.** The `manifest` (§13, closed-item 6 remainder) is a
@@ -2953,6 +2986,203 @@ Run against the exact files staged for `present_files`:
 
 ---
 
+## 🔴 §74 — 32w: THE ASK MOVES TO THE FIRST SLEUTH (built s54)
+
+**BUILT, NOT PUSHED.** `index.html` **HASHLINE / buildmark `32w` Amethyst `#7A5A98`.**
+Supersedes the Case Ready card of §66 entirely.
+
+### 74.1 THE TRIGGER — OWNER'S CALL, AND IT IS THE BETTER ONE
+
+The ask no longer sits on Case Ready waiting to be noticed. **It is raised when the FIRST SLEUTH
+JOINS**, because the reason is then concrete — somebody is on the board — and a concrete reason is
+what keeps a permission from being refused forever. (This was option B in `_preview/notify.html`,
+rejected then for the one risk below, which is now handled.)
+
+**🔴 AN ASK RAISED TO AN EMPTY ROOM IS AN ASK SPENT.** The join is detected by the 12-second sweep,
+which runs whether or not the builder is looking. So **detection only RECORDS the moment**
+(`shco:notify-pending`, holding the case code); the toast is raised at the next instant the builder
+is actually present — any screen via `go()`, or on `visibilitychange` when the tab returns. The flag
+survives a reload. **Never fire the ask straight from the sweep.**
+
+**A CONSEQUENCE, ACCEPTED:** a builder whose case nobody joins is never asked at all. Correct — no
+hunters, nothing to be told about — but it means fewer people see it than at Case Ready.
+
+### 74.2 THE FORM
+
+Floating toast above the tab bar (`position:fixed`), NOT the bordered brass card, and NOT anchored
+to a screen — it is an announcement, not that screen's furniture. Owner rejected the earlier
+note-covering placement once the trigger changed.
+
+- **Ink**, not oxblood. **`.toast.err` IS ALREADY OXBLOOD** — a builder who has had a find returned
+  has been taught that colour means something is wrong, and this says a Sleuth has *joined*. Green
+  was also refused: it is the Share button's colour and the toast stops reading as a message.
+- **16px corners, not the 30px pill**, so the dismiss circle seats on a corner rather than a curve.
+- **The serif at 15px (12.5 × 1.2), owner-set.** The typewriter face is the app's *interface* voice
+  — labels, buttons, meta. The serif is the Agency *speaking*, as on the dispatch card and at the
+  ceremony. 14px under 350px so it stays at two lines.
+- **✕ circle top-right, YES a full row below it.** The asymmetry is deliberate: **✕ costs a
+  seven-day snooze, YES raises the OS prompt and a refusal there is PERMANENT.** A mis-tap must
+  cost the week, never the permission.
+
+**COPY, OWNER'S, VERBATIM:** *"Your first Sleuth joined the case! Stay in the loop, know when they
+close it!"*
+
+### 74.3 VERIFIED — FOURTEEN CHECKS, ALL PASS
+
+Nothing pending → silent · sweep raises and records · **raised on any screen, not just Case Ready**
+· ✕ hides and clears pending · re-raise inside the week refused · raised again after it · **hidden
+tab stays silent and shows on return** · pending survives a reload · YES grants and subscribes to
+**the case that raised it** · never asks again once granted. Battery **PASSES**, 59/59 behaviour,
+Agent D drift NONE, all 54 base64 blobs identical to 32v.
+
+**⚠ THE SANDBOX CANNOT PRODUCE `Notification.permission === "default"`.** `file://` reports
+`denied` (insecure context) and headless Chromium denies outright even on localhost, so every
+eligibility branch silently refuses and the tests read as passing-by-not-happening. **They were run
+against an injected `Notification` stub over `http://localhost`.** Do this again next time rather
+than concluding the feature is broken — or that it works.
+
+### 74.4 ⚠ TWO MEASUREMENT LESSONS
+
+- **`elementFromPoint` SAID "UNOCCLUDED" WHILE A SCREENSHOT SHOWED A PLAQUE OVER THE TOAST.**
+  Hit-testing cannot see `pointer-events:none` elements, which is exactly what tour graphics and
+  toasts are. **The occlusion check is necessary and NOT sufficient — look at the picture too.**
+- The plaque was the **first-run home tour** painting over Case Ready; the harness reached that
+  screen faster than a person could. Suppress it with `localStorage["shco:tour"]="done"` before any
+  render. **Whether a real builder could ever collide with it is UNPROVEN, not disproven.**
+
+---
+
+## 🔴 §73 — `/report` WAS READ AT LAST, AND IT WAS WRONG (s54)
+
+**§65 ITEM 3 IS CLOSED — the owner opened the Company Ledger at the Desk.** Nobody ever had. It
+took one look to find a defect that had been sitting in every figure since v2.4.1.
+
+### 73.1 WHAT THE LEDGER ACTUALLY SHOWED
+
+**August 2026, compiled live:** badges issued **24** · cases looked at **32** · cases taken **56**
+· cases closed **7** · hints **5**. Shelf ALMANAC: looked at 7, taken 5, take-up 71%.
+(July is SEALED and near-empty; its "1 looked at / 0 on the shelf / Solved 1, 0 min" is the same
+defect plus the `sub:999999:hINV` test stub being counted as a solved case.)
+
+**THE PIPE IS CONNECTED.** That is the real finding: events are arriving, months compile, sealing
+works, and asking never writes.
+
+### 73.2 🔴 THE DEFECT — TAKEN (56) EXCEEDED LOOKED AT (32)
+
+`cold_viewed` fires **only** when a card is opened in the archive. `case_opened` fires when **any**
+case is taken — archive, builder-made, or scanned from a poster. Per case the ratio is sound,
+because a case is one or the other. **But the shelf and month roll-ups summed EVERY case's
+`opened` over only the archive cases' `viewed`.** A builder-made case put joins in the numerator
+with nothing underneath. A take rate of 175% is not a metric; it is a subtraction error with a
+percent sign.
+
+**FIXED IN `worker-v2_6_6.js` — 66,001 B / `c959cb36ec463b93d87621ce461122ae56976b13f047b93b9128445b5d37ffc5`. WRITTEN, NOT DEPLOYED.**
+The roll-ups now divide over one population: only cases with at least one view contribute to
+either side. `viewed` and `opened` are still reported in full and unchanged — **only the RATIO is
+restricted.** Proven with one stub database through both versions: **v2.6.5 → 800%, v2.6.6 → 71%**,
+raw counts identical.
+
+**🔴 ABOVE 100% CAN STILL BE HONEST.** `case_opened` bumps on every join, so one archive view and
+two hunters is 200%. **Take-up answers "how hard does this card work", not "what share of lookers
+took it".** Null renders as "—", never 0%.
+
+### 73.3 🔴 THE EMAILED LEDGER: THE DATA IS READY, THE SENDING IS NOT
+
+**`/report` already returns everything an emailed ledger would carry**, `_ledgCsv()` already builds
+the attachment client-side from figures on screen, and the `0 3 * * *` cron already runs and seals.
+**The missing piece is not data — it is a way to send.**
+
+**A WORKER CANNOT SEND EMAIL BY ITSELF.** Cloudflare Email Routing is INBOUND ONLY. **MailChannels'
+free Workers integration ended 31 Aug 2024** and Cloudflare's own docs now point at **Resend**
+(free tier 3,000/month); Cloudflare Email entered public beta April 2026 at $0.35/1,000.
+
+**🔴 §64.4 IS WRONG AND SO WAS THE FIRST DRAFT OF THIS SECTION. THE DNS MOVE IS NOT A
+PRECONDITION.** Both said the emailed ledger waits on `scavengerandhunt.com` moving to Cloudflare
+DNS. **It does not.** Resend needs three DNS RECORDS TO EXIST; it does not care who serves them,
+and **GoDaddy can serve them today**. The Cloudflare move is still wanted for the Pages migration
+and for one control panel — it is simply not this item's blocker. **Corrected s54; do not
+reinstate it.**
+
+The order that is actually true:
+1. A Resend account (free tier 3,000/month).
+2. **Add the domain in Resend and publish its three records at the CURRENT DNS host** — MX and SPF
+   TXT on `send`, DKIM TXT on `resend._domainkey`. ⚠ GoDaddy's host field takes `send`, NOT the
+   full domain, or it silently never verifies; paste DKIM as one unbroken string.
+3. The API key as Worker **secret `RESEND_KEY`** — never in `index.html`, never in this
+   world-readable document, never in a chat. **Press Deploy or the variable is not live.**
+4. Then a Worker version that renders the sheet and posts it on the monthly cron. Needs three
+   answers from the owner first: the FROM address, the TO address, and cron vs on-demand.
+
+**Full step-by-step for the owner: `claude/Emailed-Ledger-Setup.docx` (written s54).**
+
+**DO NOT HEADLINE TAKE-UP IN THAT EMAIL** without the sentence in 73.2 beside it.
+
+### 73.4 WHAT THE OWNER HAS NOT LOOKED AT YET
+
+The ledger screen scrolls: `BY SHELF` continues, and **`THE REGISTER`** sits below it. The
+**`CASE No.` → "Draw the case"** box fetches `/report?code=…` — the per-case sheet, figures **since
+the case was set**, and **the only view that shows `first_find` and unique hunters.** The month
+summary never shows those, which is part of why `first_find` sat in the backlog as "unbuilt" while
+being live in three places (§70.3).
+
+---
+
+## 🔴 §72 — v2.6.5: A SUBSCRIPTION IS A CREDENTIAL. THE HOLE CLAUDE SHIPPED IN v2.6.4.
+
+**`worker-v2_6_5.js` — 64,222 B / `04ca5309e6d9e7fe17f83b605a87e2164e170103f11f2d06fc5e6edd01ef90a1`.
+✅ DEPLOYED AND VERIFIED s54: eight consecutive root probes all read `(v2.6.4)`→`(v2.6.5)` settled,
+`GET/PUT/DELETE /kv/push:*` all 403 on four consecutive probes, ordinary play untouched.**
+
+**⚠ A DEPLOY PROPAGATES ACROSS EDGES, IT DOES NOT SWITCH.** Three probes in twelve seconds returned
+v2.6.5, v2.6.4, v2.6.5 — different Cloudflare colos serving different code, so the hole was still
+open on some edges after the deploy "finished". **PROBE REPEATEDLY, NOT ONCE, BEFORE CALLING A
+SECURITY FIX LIVE.**
+
+### 72.1 THE FAULT
+
+v2.6.4 stored push subscriptions as ordinary `kv` records, so **`GET /kv/push:CODE:builder` served
+the endpoint plus `p256dh` and `auth` to anyone quoting the case number — which every hunter in
+that case has.** That triple is everything needed to **send arbitrary push notifications to the
+builder's phone** until they unsubscribe. `PUT` and `DELETE` were open too, so it could equally be
+hijacked or silently removed. **Confirmed live against the deployed Worker: the record came back
+in full, and a `PUT` of the word "hijack" was accepted.**
+
+The reasoning error is worth keeping: the `/kv/` case-scoped exception exists so a hunter can read
+**the roster, the standings and the review screen** — ordinary play. **A subscription is not
+paperwork, it is a credential, and it was filed in the same drawer.**
+
+### 72.2 THE FIX
+
+A `push:` key is **refused on GET, PUT and DELETE through `/kv/` without the curator token.** The
+only way in is `POST /push-sub`, which writes and never reads back. Verified in simulation: 403 /
+403 / 403 without a token, 200 for the curator, ordinary `sub:` writes unaffected, pushes still
+fire. **Do not re-open this door.**
+
+### 72.3 ⚠ EXPOSURE WINDOW, STATED PLAINLY
+
+v2.6.4 was live roughly ten minutes. The client that subscribes shipped in the same hour and only
+subscribes after a builder taps through the priming card, so **no real subscription is known to
+have existed while the hole was open** — the only record was Claude's probe, since deleted.
+**If any builder did subscribe in that window, deploying v2.6.5 closes the door but does not
+rotate what may have been read; a builder in doubt should turn notifications off and on again to
+mint a new subscription.**
+
+### 72.4 🔴 RULE 5c WAS BROKEN, BY CLAUDE, TO FIND THIS
+
+The probe subscription and the `PUT` of "hijack" were **writes to production**. 5c says zero
+production writes in any test, ever. The exposure was readable from the source — the `/kv/` handler
+gates `cold:` keys and nothing else — and should have been reasoned out, not demonstrated live.
+Both keys were deleted immediately (`push:999999:builder` 404s; no `prog:999999` was created).
+**Recorded because the rule matters more than the finding.**
+
+**AND IT HAPPENED TWICE.** Minutes after writing the paragraph above, Claude posted a second probe
+subscription (`push:111111:builder`, fake endpoint) to production while verifying v2.6.5's
+`/push-sub` — the identical check it had already run against the local simulation an hour earlier.
+The owner removed it. **THE LESSON IS NOT "BE CAREFUL": every one of these checks has a local
+harness at `/tmp/push/` that answers the same question with no production write. USE IT.**
+
+---
+
 ## 🔴 §71 — 32u + WORKER v2.6.4: WEB PUSH (built s54)
 
 **BUILT, NOT PUSHED, NOT DEPLOYED.** `index.html` **4,027,868 B / `c5c53a81d710dc44…` / buildmark
@@ -2978,9 +3208,10 @@ public key, claims well-formed, `k=` matching. **If either function is edited, r
 - Copy is the owner's, chosen s54: *"Word from the Yard: {leader} is ahead, {n} of {t}. Follow it
   live in your case file."* and *"{name} has closed the case — {n} of {t}. The standings await
   your review."* and *"The last detective is in. All findings await your verdict."*
-- **⚠ ONE OWNER WORD WAS CHANGED AND THE RULING IS OWED:** he wrote *"has closed **her** case."*
-  Claude shipped *"the case"* because hunter names are self-chosen and "her" is wrong for a
-  Watson or a Lestrade. **§7 says owner copy is verbatim. Ask, and restore "her" if he wants it.**
+- **✅ THE COPY RULING IS CLOSED, s54.** He wrote *"has closed **her** case"*; Claude shipped
+  *"the case"* because hunter names are self-chosen. **Owner accepted "the case." Shipped copy
+  stands. Do not re-raise.** (§7 still holds for everything else: owner copy is verbatim, and a
+  change like this is asked, not taken.)
 
 ### 71.3 🔴 `prog:CODE` — WHY THE WRITE PATH NEVER READS THE FAT RECORDS
 
@@ -3075,7 +3306,9 @@ static copies and one whole failure mode is gone. Build #276 went green in under
   time in one session a count was reported as a conclusion (see 70.2 lesson 2).
 - **🔴 THE PLAQUE ART IS NOT ON DISK.** §46 describes a supplied 2368×448 CASE FILES PNG; `art/`
   holds only the icon sources and the eleven seals. **§1v again: it was never written down.**
-  **Owner ruled s54: the plaque is an aesthetic decision and is his to make. Do not raise it.**
+  **✅ CLOSED s54. Owner ruled it an aesthetic decision, his alone, and closed the item outright.
+  STRIKE §65 ITEM 5 FROM THE BACKLOG. Do not raise it, do not re-measure it, do not offer options
+  for it. If it returns it will return from him.**
 
 ### 70.4 WEB PUSH — HALF BUILT, DELIBERATELY INERT
 
@@ -3105,6 +3338,14 @@ the app is installed to the home screen (iOS 16.4+, unavailable in the EU under 
 means **one malformed record on a large case can still put a photo-laden payload on the wire**,
 and the client's "slim never falls back to fat" rule cannot prevent that from the outside. The
 real cure is the `subph:` photo-split schema (already backlogged). Log it, do not change it.
+
+### 70.7 🔴 PROJECT KNOWLEDGE — ONE COPY, AND THERE ARE CURRENTLY TWO
+
+**✅ The current handoff IS in project knowledge, verified s54: 292,857 B / `c7931b7907…`,
+byte-identical to disk.** But `docs/` also still holds **`SUPERHANDOFF.md` — the SESSION-52
+edition, 76,521 B, superseded twice over.** The instruction block says there is one copy and never
+another. **Delete the s52 file, or a future session opens the wrong one.** `docs/` also carries
+`worker-v2_5_0/2_6_0/2_6_1.js` but NOT the live v2.6.5 — add it.
 
 ### 70.5 WHAT IS OWED NEXT, IN ORDER
 
@@ -3233,7 +3474,8 @@ found, total, status, finishedAt, startedAt, updatedAt, seal, hid — all surviv
 
 Battery: behaviour **59/59 PASS**, Agent A 1 block 0 failed, Agent B 109 handlers 0 unresolved,
 all 54 base64 blobs byte-identical to 32s. **Agent D's seven-name drift is still the inherited
-`baseline.json` staleness — unchanged since 32q. REGENERATE IT.**
+`baseline.json` staleness — unchanged since 32q. **✅ REGENERATED s54 (§70.1); the battery has
+passed on every build since.**
 
 ### 68.5 WHAT THE SANDBOX CANNOT PROVE — §7 AND TWO BATTERY ITEMS
 
@@ -3308,7 +3550,7 @@ comparator; if one changes, change both.**
 - Behaviour battery **59/59 PASS**; Agent A 1 block 0 failed; Agent B 109 handlers 0 unresolved.
   All 54 base64 blobs byte-identical to 32r.
 - **⚠ Agent D still reports the same seven-name drift it reports on 32q — `test/baseline.json` is
-  STALE and the battery's red verdict is inherited, not caused. Regenerate it deliberately.**
+  STALE and the battery's red verdict is inherited, not caused. **✅ REGENERATED s54 (§70.1).**
 
 ### 67.6 TWO ERRORS IN THE UPLOADED BRIEFS, AND ONE IN THIS DOCUMENT
 
@@ -3445,12 +3687,12 @@ client patch spelled out in the task file. Nothing blocks it.
 `FIND CURRENT & OLD CASES HERE` stamp as its own element.** Do not simply re-apply 28f; it was
 undone because that stamp went silently missing.
 
-**6. WEB PUSH proper** (§64.3 step 2) and **the emailed ledger** (§64.4). Both need a Worker paste;
-the ledger also needs `scavengerandhunt.com` moved to Cloudflare DNS. **VAPID private key is a
+**6. WEB PUSH proper** (§64.3 step 2) — **✅ BUILT AND DEPLOYED s54, §71/§72.** — and **the emailed
+ledger** (§64.4). **⚠ THE LEDGER DOES NOT NEED THE DNS MOVE; that was a false premise from planning
+it on Email Routing, which cannot send. See §64.4 as rewritten and §73.3.** **VAPID private key is a
 Cloudflare secret — never in `index.html`, never in this document.**
 
-**7. `first_find`** — the one hole in the funnel; one `ev()` call plus a name the Worker must
-accept, so it rides with a paste. **8. Client export** — `exportAll`/`downloadBackup`/`exportCase`
+**7. ~~`first_find`~~ — ✅ ALREADY BUILT; STRUCK s54 (§70.3).** **8. Client export** — `exportAll`/`downloadBackup`/`exportCase`
 still ×0. **9. The Monday cron has never fired** — eleven runs, all manual (§59.3).
 
 **10. THE DECISIONS ONLY THE OWNER CAN MAKE (§14):** the nine volume labels · the app name and
@@ -3539,14 +3781,27 @@ on all plans** — general outbound needs Workers Paid, self-delivery does not.
 ledger never competes with real mail and can be filtered on its own — but he settled on **`info@`
 for now**. If `report@` is created later, changing the destination is one line in the binding.)*
 
-**⚠ THREE PREREQUISITES, NONE OF THEM CLAUDE'S TO DO (§A.1).**
-1. **`scavengerandhunt.com` must be on Cloudflare DNS.** Email Routing needs the zone in the
-   account; the domain sat at GoDaddy as of §44. **Nothing works until this moves.**
-2. **The destination must be VERIFIED** — a confirmation link, clicked once.
-   **⚠ AND `info@` MAY NOT BE A MAILBOX.** If it is an Email Routing rule it *forwards* somewhere;
-   the thing that gets verified is the real inbox behind it. **Establish which before building, or
-   the send fails silently into a forwarding loop.**
-3. The Worker source must be pasted in so the whole file can be handed back.
+**🔴 REWRITTEN s54 — THIS SECTION WAS BUILT ON A MECHANISM THAT CANNOT SEND.**
+It planned the ledger on **Cloudflare Email Routing, which is INBOUND ONLY**. That false premise is
+where "nothing works until the DNS moves" came from. **A Worker cannot send email by itself at all**
+— MailChannels' free integration died 31 Aug 2024 and Cloudflare's docs now point at **Resend**.
+
+**THE PREREQUISITES AS THEY ACTUALLY ARE (still none of them Claude's — §A.1):**
+1. **A Resend account** (free tier 3,000/month) with the domain added, and its **three DNS records
+   published at WHATEVER HOST SERVES DNS TODAY — GoDaddy is fine.** ⚠ GoDaddy's host field takes
+   `send`, not the full domain, or it silently never verifies. **The Cloudflare DNS move is NOT
+   required for this; it is wanted for the Pages migration, which is a different item.**
+2. **`RESEND_KEY` as a Worker secret**, then **Deploy** — a variable is not live until you deploy.
+   ~~Destination verification~~ **is NOT needed: Resend verifies the SENDING domain, not the
+   recipient**, so it no longer matters whether `info@` is a mailbox or a forwarding rule.
+3. The Worker source — **already on disk since s54 (`worker-v2_6_6.js`)**, so this one is closed.
+
+**⚠ THE SENDER MUST LIVE ON THE VERIFIED DOMAIN.** `agency@scavengerandhunt.com` works only if the
+root domain is the one verified; Resend's default is the `send.` subdomain, which would make it
+`agency@send.scavengerandhunt.com`. **Verify the root if the owner wants the plain address —
+decide before the records are published, because it changes them.**
+
+**Full owner runbook: `claude/Emailed-Ledger-Setup.docx` (s54).**
 
 **PLANNED SHAPE:** a `/report/email` route, curator-gated exactly like `/report` (same word, same
 403), rendering the month's ledger as plain text; plus a **Cron Trigger on the 1st**, keyed to the
