@@ -1,0 +1,1445 @@
+# HANDOFF.md — LIVE STATE, RULES AND WHAT IS OPEN
+
+### 🔴🔴 **s55: THIS DOCUMENT WAS SPLIT IN THREE. `SUPER-HANDOFF.md` IS DEAD — do not resurrect it, do not look for it, and if the project-instruction block still names it, paste the revised block from `claude/PROJECT-INSTRUCTIONS-s55.md`.** The set is: **`HANDOFF.md`** (this file — live state, the rules, what is open; **READ IT IN FULL**) · **`HANDOFF-SPEC.md`** (how the app works; read the section you are touching) · **`HANDOFF-HISTORY.md`** (the build record; grep it, never read it whole). **NOTHING WAS COMPRESSED OR REWRITTEN — 5,250 lines went in and 5,250 came out, all 72 sections landed in exactly one file, verified by reconciliation, and the old file is preserved at `_to_delete\SUPER-HANDOFF.md.SPLIT-AT-s55` until the owner deletes it.** **🔴 A RULE LIVES IN EXACTLY ONE FILE; a rule found in two means one is a copy, and copies drift (§0.2, §1w).**
+### 🔴 THIS IS ONE OF THREE FILES. THE SET IS THE DOCUMENT; NO ONE FILE IS.
+### **READ THIS FILE IN FULL, EVERY SESSION.** It is the state of the world, the rules that bite, and the work that is owed.
+### The others: `HANDOFF-SPEC.md` (how the app works) · `HANDOFF-HISTORY.md` (what happened, build by build).
+### **SPLIT FROM `SUPER-HANDOFF.md` AT s55 CLOSE. NOTHING WAS COMPRESSED, SHORTENED OR**
+### **REWRITTEN — every line was MOVED, and the line count was reconciled to prove it (§4).**
+### 🔴 **A RULE LIVES IN EXACTLY ONE FILE. If you find the same rule in two, one is a copy**
+### **and copies drift (§0.2, §1w). Delete the copy; do not update both.**
+
+──────────────────────────────────────────────────────────────────────────────
+
+# SUPER-HANDOFF.md — The Deerstalker / Scavenger & Hunt Co.
+### Session-53 edition (Aug 6 2026) — supersedes the ENTIRE prior chain, including the session-52 edition.
+### 🔴🔴 **READ §77 BEFORE YOU MEASURE, RENDER, HASH, RUN THE BATTERY OR TOUCH GIT.** It is the tooling-facts section, written s55 on the owner's explicit instruction to record what was relearned. It holds: **the local server at `http://localhost:8000` (`Hunt-backups\serve.ps1`) — the primary measurement route, and it serves the real current build**; the three things that CANNOT work and must never be re-attempted (no browser in the sandbox, so **the §48 battery cannot be run there**; `file:///` is silently rewritten by the Chrome extension; `resize_window` does not change `innerWidth`); the **zero-rect trap** on hidden containers; the curator overlay's measured widths (**322px content at a 390px phone**); **the owner's shell is `cmd`, not PowerShell**; and **why git's messages must never be read in place of `.git/refs`**. Every item was learned by wasting time on the alternative.
+### 🔴🔴 **SESSION 55 CLOSE — READ §80 FOR WHAT IS OPEN, §84 FOR WHAT IS HALF-BUILT, §77 BEFORE TOUCHING A TOOL.** **LIVE NOW: `index.html` `33e` 4,037,814 B / `e1fffd5e…` (commit `37ec0128`, disk == raw == Pages) · Worker **v2.6.11** · `local == origin`.** s55 shipped **33a → 33e** and Worker **2.6.8 → 2.6.11**: the ledger nav levelled, `(office time)` struck, `email report` on the Ledger AND the case sheets, the emailed ledger FIXED and sending, per-case email, a professional CSV, and the YEAR routes. **THE ONE HALF-FINISHED THING: the year has no Desk UI (§84.6).** **THE BATTERY IS GREEN ON 33d, NOT 33e (§82).** **NEXT MARKER `33f` / Magenta `#A8478F`.**
+### ✅ **s55: `32z` IS LIVE — 4,034,407 B / `3300b442940c72fd…` / buildmark `32z` / Lime `#7FA33C`, commit `abc819d2`.** Disk == raw == Pages, hash-verified, and the fetched bytes were checked for both changes, not just the hash. **This push also carried the unpushed 32x and 32y.** Ledger nav levelled (§85.1); the Email button relabelled on the owner's verbatim call. **⚠ §85.2 is still owed — the button still sits below the sentence, and that is a known state.** **NEXT MARKER `33a` / Rust `#B4532A` — the letters ran out at `32z`.**
+### 🔴 **READ §65 FIRST — IT IS THE SESSION-53 CLOSE AND IT RANKS EVERYTHING THAT IS OWED.** §30 below is the s52 ordering and is superseded by it.
+### 🔎 **SESSION 53 BEGAN AS A REVIEW AND ENDED AS A BUILD.** The review: re-hashed all three surfaces, opened `Hunt-backups` for the first time since s30, fixed three clerk defects (§59), and corrected §0, which had been contradicting §58 inside the s52 edition (§0.2). Then three owner task files arrived and **32m shipped** — photographic seals, the builder's commendation card, four-second cards, the ×1.25 stamp (§60).
+### ✅ **`index.html` 32m IS LIVE ON PAGES.** **4,024,671 B / `811a118a332a76b2…` / buildmark `32m` / Ochre `#C88A2E`.** Base was 32l `bdfb0222…`. Hash-verified on Pages against the disk copy; raw was still serving 32l at the time, which §0 records as normal.
+### 🔴 **NEXT MARKER `32q`, Magenta `#A8478F`** — §8i: Ochre 32m · Rose 32n · Amethyst 32o · Verdigris 32p, so `f` Magenta is next.
+### ✅ **`index.html` 32p IS LIVE — AND §13 ITEM 6 IS FULLY CLOSED.** **4,009,521 B / `94d3b32dcf0cb09c…` / `32p` / Verdigris**, commit `1bf5b3b9`. **The web-app manifest shipped** with the Bonnie icon set: `short_name` **"S&H Co."**, six icons including a maskable pair (§63). **⚠ NOBODY HAS ACTUALLY INSTALLED IT — that still needs a phone.**
+### ✅ **`index.html` 32o IS LIVE.** **4,009,148 B / `94d747d244368deb…` / `32o` / Amethyst `#7A5A98`**, commit `9c2b6462`. Wax seal keeps its envelope — owner's decision with the pixels in front of him (§62). Verified on disk, raw and Pages, all three identical.
+### ✅ **`index.html` 32n IS LIVE.** **4,012,600 B / `cd46c7ad766e8ab1…` / buildmark `32n` / Rose `#B5566B`**, commit `050f7220`. Deerstalker re-cut, boot print pulled, **modulus 10** (§61). Verified on disk, raw and Pages — all three identical.
+### 🔁 **THIS EDITION IS A RE-BASE, NOT A NEW SESSION OF BUILDING.** The s30 edition described the app at 29a/29b. It opened at **32i** and closed with **32j live on Pages** and **32l delivered**. Session 52 re-measured the code and the live services, corrected the header, §0 and §13, and then built §54/§56/§57. **Sections §1–§51 were NOT rewritten** — every standing rule in them is preserved verbatim per the no-compression rule (§4). Where an untouched section's *status claims* conflict with §0 or §13, **§0 and §13 win**; where a *rule* conflicts, the rule stands.
+### ✅ **`index.html` 32j IS ON GITHUB.** **3,905,589 B / `a29d7438fc002494…` / buildmark `32j` / Slate `#4E6478`.** Base was 32i `a951bf6a…`. The owner uploaded it through the GitHub web page (`30723db`, re-uploaded `48fd903`) — **byte-identical to the local build, hash-verified s52.** See §54.
+### ✅ **`index.html` 32l IS LIVE ON PAGES.** **3,908,422 B / `bdfb02224e5084ef…` / buildmark `32l` / Plum `#7D4E6B`.** Carries the desktop masthead fix (§56) **and** the credentials-card side-slider fix (§57). Uploaded by the owner (`5c254ff`); **hash-verified against Pages at session close.** 32k was folded into it and never shipped alone.
+### ✅ **THE s52 HANDOFF LANDED — §58.2 IS DONE.** Fetched from raw s53: **200, 207,568 B, "Session-52 edition"**. The line here previously said it was "the last thing unpushed" and that GitHub still served the session-30 edition; **both had stopped being true.**
+### 🔴 **THIS s53 EDITION IS AGAIN UNPUSHED.** §0, §0.2, §13.2, §30.2, §30.8, §58 and the new §59 all changed on disk. **Push it, and replace the project-knowledge copy.** Only the owner can do either (§55, §A.1).
+### ✅ **NOTHING WAS PENDING PUSH AT SESSION OPEN.** Local clone `C:\Users\tony\Documents\Hunt` == GitHub == Pages, hash-verified s52: `index.html` **3,896,676 B / `a951bf6a60335954…`**, buildmark **`32i`**. HEAD `8a89e99`. No drift, for the first recorded session.
+### ✅ **§13.3 — THE TOP SECURITY ITEM IS CLOSED, BOTH HALVES.** `CURATOR_PASS` ×0 in the client; `CURATOR_WORD` is memory-only and typed at the desk; **and the secret HAS been rotated — `X-Curator-Token: BAKER221B` now returns 403 from the live Worker.** Carried as "top open item" for twenty-plus sessions; it is done.
+### ✅ **§13.6 — THE SERVICE WORKER SHIPPED.** `sw.js` is in the repo and 200 on Pages; `navigator.serviceWorker.register("./sw.js")` is live, https-gated, network-first for the document.
+### 🔴 **THE WORKER IS v2.6.1, NOT v2.3.** §A below still describes v2.3 and its version-specific claims are STALE. The v2.3 *history* and the standing rules in §A/§A.1 remain correct and are untouched. **A `/report` route now exists** (the ledger) that no prior edition documents.
+### 🔴 **THE REPO IS NO LONGER FIVE FILES — IT IS TEN ENTRIES, AND `SUPER-HANDOFF.md` IS NOW IN IT.** The s30 rule "the repo is FIVE files / the handoff is NOT in the repo" is factually dead. See §0. **The handoff is now public. Nothing secret may be written into it.**
+### ✅ **INSTRUMENTATION SHIPPED TOO — `ev()` / the Company Ledger.** Six event names, a `/ev` POST on the Worker, `keepalive`, `text/plain` to dodge preflight, fire-and-forget. **§13.6c/§49.3 is substantially CLOSED.** See §13 for the one real gap left (first-find).
+### 🔴 **STILL ABSENT, RE-VERIFIED s52:** client export (`exportAll`/`downloadBackup`/`exportCase` ×0) and a web-app **manifest** (`manifest` ×0 — the SW shipped without one).
+### 🔴🔴 **READ §53.1 BEFORE TRUSTING ANY ABSENCE CLAIM IN THIS DOCUMENT — INCLUDING THE ONES ADDED THIS SESSION.** The s52 re-base itself asserted "no instrumentation" on the strength of four greps and was WRONG. The feature was there under a name nobody grepped for.
+### Delete the session-30 file from project knowledge; everything in it is carried here.
+
+---
+
+# 📌 OWNER ACTION — DO THIS WHEN YOU SEE A NEW EDITION
+
+**Claude can now fully manage this file on disk: overwrite it AND delete it.** Deletion was enabled
+for the `Hunt` folder at s52, so **there will only ever be one handoff at the repo root** and no
+session needs to ask you to tidy up stray copies. **You do not have to do anything about the file
+in the folder.**
+
+**THE ONE THING ONLY YOU CAN DO — REPLACE THE PROJECT-KNOWLEDGE COPY.**
+The copy attached to the Claude.ai project is **outside the folder and read-only to Claude.** If it
+is not replaced, the next session opens a stale edition, believes it, and the whole re-base is
+wasted — which is exactly how the s30 edition survived nine builds past its expiry.
+
+**When a session hands you a new edition it will say so in one line, in this form:**
+
+> **🔁 REPLACE THE PROJECT-KNOWLEDGE HANDOFF.** Remove the *session-NN* edition, upload the new
+> `SUPER-HANDOFF.md` from `C:\Users\tony\Documents\Hunt`. Takes about a minute.
+
+**If a session does NOT say that line, it did not change the handoff and you need do nothing.**
+**A session must never ask you to delete a file from the folder itself** — if one does, it has hit
+something it should have handled, and §53.2 is the rule it broke.
+
+**🔁 THIS EDITION (s52) NEEDS THAT REPLACEMENT.** Remove the **session-30** edition from project
+knowledge and upload this one.
+
+---
+
+Canonical orientation + rules registry. Restates **every standing rule in full** (never compressed to
+pointers — rules were lost once that way). A fresh session should work correctly from this document
+plus the delivered `index.html` alone.
+
+---
+
+# 🟢 §A — THE WORKER. **⚠ THIS SECTION DESCRIBES v2.3. THE LIVE WORKER IS v2.6.3 — AND ITS FULL SOURCE IS NOW ON DISK AT `Hunt\worker-v2_6_3.js` (§70.4). READ THE SOURCE, NOT THIS SECTION.**
+
+> **🔴 s52 RE-BASE NOTICE.** Everything below was written against **v2.3** and was true of it. The live
+> Worker now reads **`… OPERATIONAL. (v2.6.1)` / `The game is afoot.`** on
+> **`deerstalker.tony-13f.workers.dev`**. Three things measured live at s52, unauthenticated:
+> `GET /list` no token → **403** · `GET /list` with `X-Curator-Token: BAKER221B` → **403 (THE SECRET IS
+> ROTATED)** · `GET /report?month=…` no token → **403**. **The `/report` route is new and undocumented
+> in any prior edition** — it backs the Curator's Desk ledger (three call sites in the client, all
+> gated on `CURATOR_WORD`). **Nobody has told Claude what else changed between v2.3 and v2.6.1.**
+> Treat every version-numbered claim below as history. **The RULES in §A and §A.1 are unaffected and
+> still stand**, including: `PUT` is still assumed unauthenticated (§13.8), automation must set a
+> User-Agent, and Claude must never be given Worker access.
+> **Claude does not know the new curator word and must never be told it** (§A.1).
+
+
+──────────────────────────────────────────────────────────────────────────────
+
+## §A (v2.3 history — preserved verbatim)
+### 🟢 THE WORKER WAS SECURE AT v2.3. RE-VERIFIED AT SESSION-29 OPEN.
+
+**Session-29 probe (live, unauthenticated):** root returns
+`Scavenger & Hunt Co. — case-file sync is OPERATIONAL. (v2.3)` · `GET /list` with no token → **403**.
+**Session 29 made ZERO production writes** — every test stubs `Store` structurally (§48).
+
+- Worker root reads **`Scavenger & Hunt Co. — case-file sync is OPERATIONAL. (v2.3)`**
+- `GET /list` **with no token → 403**
+- `GET /list` **with `X-Curator-Token: BAKER221B` → 200, 400 keys** (session-30 probe):
+  `hunt:` 138 · `profile:` 133 · `sub:` 97 · `res:` 21 · `reply:` 8 · `msg:` 2 · `coldstat:` 1.
+- **Session 30: `profile:` 131→133, +2 — organic play, zero writes made by Claude** (backup script and all probes were read-only; Playwright tests aborted every Worker route).
+- **🆕 (30) CLOUDFLARE BLOCKS THE BARE PYTHON USER-AGENT** — `urllib` with no UA → 403 on `/list`; any UA string (e.g. `hunt-archive-clerk/1.0`) → 200. **Any future automation against the Worker must set a User-Agent.**
+- **🆕 (30) `cold:index` DOES NOT EXIST YET** (`GET` → not found). It is first written on territory acceptance; none has been accepted. `coldstat:144127` is the lone archive key.
+- **+1 on session 27's 397** (`sub` 96→97). **Session 28 made ZERO production writes** — `Store` was
+  stubbed on every probe (§11b). Organic play. **Recorded so the next session does not read it as pollution.**
+
+### What v2.3 fixed (history — do not re-litigate)
+1. **`/list` requires `X-Curator-Token`.** Fails closed if the secret is unset.
+2. **`DELETE` requires it on EVERY key** (v2.2 scoped the check to `cold:index` alone).
+3. **`KEEP_DAYS` 90 → 60.**
+4. **`scheduled()` honours each case's own `retentionDays`/`createdAt`.**
+5. **`scheduled()` keeps a case alive while its hunters are active.**
+- **The asserted safety property: the sweep rules only ever EXTEND a record's life against the flat
+  cutoff.** Nothing is deleted sooner than the 60-day rule alone would delete it.
+
+### 🔴 THE REMAINING HOLES — RANKED, AND STILL OPEN
+
+**1. ⚠ `PUT` IS UNAUTHENTICATED AND DELIBERATELY SO.** Anyone can overwrite any case or profile.
+v2.3 does **not** fix this, because hunters, builders and curator all write through the same door and
+there is no per-user auth model. **Do not "quickly fix" it — it will break the app.**
+
+**2. 🔴 THE CURATOR TOKEN IS PUBLIC.** `CURATOR_PASS="BAKER221B"` ships in a **public repo**
+(`BAKER221B` ×1, `CURATOR_PASS` ×4 — re-verified in 28e). **v2.3 stops scanners, not readers.**
+§13.7 is what finishes the job.
+- **`CURATOR_TOKEN` IS PROVEN TO EQUAL `BAKER221B`** — established empirically in session 25 using
+  the response code as an oracle, re-confirmed at sessions 27 and 28.
+  **⚠ CLOUDFLARE SECRETS ARE WRITE-ONLY AND CANNOT BE REVEALED. Never ask the owner to "look at" a
+  secret again.**
+- **🔴 🆕 (28) AND THE FIX IS NO LONGER A CLEAN SWAP — SEE §13.7 AND §45.** `Store.del()` sends
+  `X-Curator-Token: CURATOR_PASS` (×2 sites). **Ordinary users can delete their own cases ONLY
+  because the curator secret ships in the public client.** Removing the constant breaks user-facing
+  deletion. **This was discovered in session 28 and changes the shape of the job.**
+
+### 🔴 §A.1 — CLAUDE HAS NEVER HAD, AND MUST NEVER BE GIVEN, WORKER ACCESS
+
+**The owner has twice framed Claude as having Worker/webmaster access. Claude does not.** An earlier
+session *wrote* the source and handed it over as text to paste. **Claude starts every session in an
+empty sandbox: no Cloudflare login, no `wrangler` credentials, no memory of earlier output.** Claude
+can probe the deployed Worker from outside but cannot read or deploy it. **§14 forbids giving access
+and that rule stands.** The working protocol — **owner pastes source in, Claude hands source back** —
+is proven and should be reused for every future Worker change.
+- **⚠ 🆕 (28) SAY SO PLAINLY WHEN ASKED.** In session 28 the owner asked *"you were in the webmaster?"*
+  The correct answer is a one-line correction followed by **what Claude CAN verify** — in that case,
+  reading the client delete path, which found two real defects (§45).
+
+**Worker edit path:** dash.cloudflare.com → **Compute (Workers)** → **Workers & Pages** →
+**deerstalker** → **Edit Code** → select all → paste → **Deploy**.
+
+---
+
+## §0 — CANONICAL FILE STATE (ground truth)
+
+| File | Size | SHA-256 | Purpose |
+|---|---|---|---|
+| `index.html` **🆕 33e — ✅ LIVE s55, commit `37ec0128`. A case sheet emails its own case (§83). ⚠ BATTERY NOT RUN ON THIS BUILD.** | 4,037,814 B | `e1fffd5e9fc6be3ed23b26ef061a53fc78d67bfcda1fdfc8ae4fa9a8f8d900af` | needs Worker **v2.6.9**, which is deployed |
+| `worker-v2_6_11.js` **✅ THE LIVE WORKER, DEPLOYED AND VERIFIED s55 — root reads `(v2.6.11)`** | 97,885 B | `7dacce07977efdc466af0fbf5b59b04e02e678204403024a5ba38bdf890fce74` | **THE YEAR** — `?year=` for the company and per case, by GET and by post (§84). Carries v2.6.10's CSV header + `Aug 1` labels |
+| *(superseded)* `worker-v2_6_10.js` | 82,800 B | `b6d5dfe2da7715736c3ca06b24c968bd8addb20a1d22f31d2e061a1450478244` | the case CSV became a document; fixed the empty `day` column (§84.4) |
+| *(superseded)* `worker-v2_6_9.js` — was deployed s55 | 79,906 B | `5c48441c54e377b7a3ed15fa470c1855807b2131accd1948de36dfdfe0b78c83` | `/report-email?…&code=` sends ONE case sheet + its day CSV (§83) |
+| *(superseded)* `index.html` 33d — was live s55 | 4,037,229 B | `6f3d5f62779d1bd4ebdc912ed295967fef1fc45a65007866a6c4192fab3d08e2` | `(office time)` struck; the nav row fits one line (§79.5) |
+| *(superseded on disk)* 33c | 4,036,625 B | `91bf9fcca34126ba5b9525b929f893f532582f1edc74eb9df788fb6ff1600a15` | nav buttons `nowrap` — the real "later is up" fix (§79.4) |
+| *(superseded on disk)* 33b | 4,036,031 B | `6ee4f535e4cb6e280828d97df7d3d1da378b715cca17e073ae8c68787dd0e052` | `email report` on the CASE SHEETS via one shared handler (§79) |
+| *(superseded)* `index.html` 33a — LIVE, hash-verified s55, commit `fd9f2eb1` | 4,034,680 B | `a9cba68133408851e20745a3b61b004dbbc9c37858c2dc196008517d4683d260` | `email report` under the month; the compiled/sealed sentence STRUCK; `.ledg-meta-row` CSS deleted (§78). **§85.2 CLOSED.** |
+| *(superseded)* `index.html` 32z — LIVE earlier in s55, commit `abc819d2` | 4,034,407 B | `3300b442940c72fddf1b0bf3b510401687e2eca6e3eaec3522ac2ae54aa4fbbc` | ledger nav levelled + button relabelled `Email` (§85) |
+| *(superseded on disk, committed as `9b10257` but NEVER pushed)* `index.html` 32y | 4,034,030 B | `a5a4a801890747287346285de6b83e1014103edb899087ba046778dab85a2771` | the ledger button + paired tips |
+| *(superseded on disk)* `index.html` 32w | 4,031,642 B | `7fa2a89c406de3f7b34b1ce1ef24a94467126e792cfcfc54bc903905ad9350d8` | the first-sleuth ask (§74); carries 32u web push + 32v |
+| `index.html` *(LIVE on Pages: 32u)* | 4,023,779 B | `7d7a0598d49c6ef742956476d0dd1e057136e9ec778d17cdbb5ffdd0ab03a049` | **32t** — the live roster watcher (§68) |
+| *(superseded on disk)* `index.html` 32s | 4,017,670 B | `54385a7bb5fc041e7de244e37fca40ac32fbc29061356ca0b3fcf7e48c31a540` | **32s** — the slim poll against Worker v2.6.3 (§67) |
+| *(superseded on disk)* `index.html` 32r | 4,014,420 B | `21c7d6aa60f1a1a16267b56a8381a39e014aec83626834ec7fdf0c325647712f` | **32r** — notification priming card, cold ask killed, notifications routed through the SW (§66) |
+| *(was LIVE at s53 open)* `index.html` 32q | 4,010,286 B | `df13a8f7cfcc483ac10908c2d86d5b942dba02f9c860b6d99bb17a508bca79ab` | **32q** — buildmark `32q` Magenta `#A8478F`; ceremony crest + icon darkened (§64) |
+| *(historical)* `index.html` 32p | 4,009,521 B | `94d3b32dcf0cb09cc0529324148a37c857e38e63c5b19bd8a1a8c0539944a67a` | the web-app manifest + icon set (§63) |
+| `manifest.webmanifest` **🆕 s53** | 941 B | — | name/short_name/display/theme; **`icons/` holds six PNGs** — 1024·512·192·180 standard, 512·192 maskable (§63) |
+| *(historical)* `index.html` 32o | 4,009,148 B | `94d747d244368debc937396e2a7fc164526966867212797b846c8d1dc636add8` | wax seal keeps its envelope (§62) |
+| *(historical)* `index.html` 32n | 4,012,600 B | `cd46c7ad766e8ab1421ef9ee9bc96ffd0b081418e4dddab30aae43c6763e8964` | deerstalker re-cut, boot print pulled, modulus 10 (§61) |
+| *(historical)* `index.html` 32m | 4,024,671 B | `811a118a332a76b222c4261f95bf53370195941e60daeb87f79fc261e81ae1c3` | photographic seals + the builder's commendation card (§60) |
+| *(historical)* `index.html` 32l | 3,908,422 B | `bdfb02224e5084ef055fb8f871bde21fbfe56aac4d8a05768978667e0081f1bc` | credentials-card side slider (§57) |
+| 🔴 `candidate-32m.html` **AND** `_candidate-32m.html` **— TEMPORARY, DELETE THEM** | 4,024,671 B each | `811a118a…` | Render-check copies pushed so GitHub Pages could serve them (§60.5). **They are byte-identical to the shipped `index.html` and serve no purpose now. The sandbox cannot delete — the owner must.** |
+| *(historical)* `index.html` 32i | 3,896,676 B | `a951bf6a603359545a7ccb14c42ac8b0bbe4957c832281ffa9e1a995ddd7ef1c` | agency licence minting (`8a89e99`) — **this row said "LIVE" for three builds after it stopped being true. See §0.2.** |
+| `sw.js` **✅ LIVE s54** | 5,196 B | `c415cc1554e98d80…` | `notificationclick` + the **`push` receiver** (§66, §70.4); `CACHE` = `shco-v2` |
+| *(was LIVE at s53 open)* `sw.js` — **🔴 §0 HAD THIS WRONG: it said 3,435 B / `61a93b05…`. MEASURED s54: disk == raw == Pages at 3,349 B / `54127008f4ff0bdb…`.** A fourth inherited doc error (§0.1). | 3,349 B | `54127008f4ff0bdbc057…` | the service worker (§13.6, CLOSED) |
+| `award-card.jpeg` **🆕 in repo** | 180,855 B | `3ef3ac34795c8708…` | commendation card (§8r) |
+| `hunt-icon-v5.png` **🆕 in repo** | 67,899 B | `969262cefd3c431e…` | app icon |
+| `behaviour.py` **🆕 in repo ROOT — ⚠ A STRAY DUPLICATE** | 18,003 B | `473b385d3b122c6e…` | **byte-identical to `test/behaviour.py`.** One of the two should go; the root copy is the accident. |
+| `.nojekyll` **🆕 s54 (LIVE)** | 0 B | — | Pages publishes statically; no Jekyll step to fail (§70.2) |
+| `SUPER-HANDOFF.md` **🔴 NOW IN THE PUBLIC REPO** | 177,589 B (pre-rebase) | — | this document. See the §0 warning below. **🆕 s53: it had NO BACKUP until this session — the archive clerk's file list never learned about it (§59.1).** |
+| `art/` **🆕 (6 files)** | — | — | `bonnie-icon-source.png` + `icon-C/` (adaptive-background-432, adaptive-foreground-432, icon-1024, icon-180-appletouch, icon-512) |
+| *(historical)* `index.html` 29a | 3,690,652 B | `26d31f08192fbd47…` | the s30 edition's "live" build — nine builds stale |
+| `privacy.html` **(🆕 REBUILT s30 — for scavengerandhunt.com, NOT the repo)** | 5,364 B | `6298d38db9060f9575619709ffab02951c2b7606c74c7fd49441124e6e94391c` | DRAFT banner; §45.4 language verbatim (§44.2b) |
+| `parch.jpg` **(🆕 RE-EXTRACTED s30 — byte-identical to s28's)** | 49,029 B | `118d98d0b52f27b5aa746a94ecb3f7ad0ff707e9a153ec41d0d8e43ac77d011d` | site background texture |
+| `Hunt-backups-starter.zip` **(🆕 s30 — for the NEW private repo)** | ~4.3 KB | `backup.py 218f390e…` · `backup.yml f90d9df6…` · `README 09782b3c…` | the archive clerk (§51.3) |
+| `test/run.py` ✅ PUSHED | 698 B | — | battery runner (§48) |
+| `test/agents.py` `behaviour.py` `baseline.json` `README.md` ✅ ALL PUSHED (verified 200 on raw, s30) | — | — | (§48) |
+| `worker-v2_6_8.js` **🆕 ✅ DEPLOYED AND VERIFIED s55 — root reads `(v2.6.8)`. THE EMAILED LEDGER SENDS (§81).** | 75,522 B | `afd9b47751d836b307c4d5dc11e0a86baaa15ff6d3403cda9b570fc6076577bb` | `LEDGER_FROM` moved to the ROOT domain — the one-line fix |
+| `worker-v2_6_7.js` **(deployed s55, superseded within the session)** | 74,802 B | — | the emailed ledger, sending as an unverified identity |
+| `worker-v2_6_6.js` **🆕 s54 — WRITTEN, NOT DEPLOYED. Fixes the take rate (§73)** | 66,001 B | `c959cb36ec463b93d87621ce461122ae56976b13f047b93b9128445b5d37ffc5` | — |
+| `worker-v2_6_5.js` **(deployed s54; superseded by 2.6.6)** | 64,222 B | `04ca5309e6d9e7fe17f83b605a87e2164e170103f11f2d06fc5e6edd01ef90a1` | — |
+| `worker-v2_6_4.js` **(DEPLOYED s54 — ⚠ CARRIES THE §72 HOLE, SUPERSEDE IT)** | 62,827 B | `23d81339e37ff3ff889e14286f44a175be17fa5d5602ae23e50f906b1012e429` | — |
+| `worker-v2_6_3.js` **(deployed; source of record)** | 50,531 B | `92a66f9bc3ba3a0bdc8886ca19fd19d95b112ada9ae9159de621359eb4968edd` | adds `slim=1` on values listings (§67.1). Root: `... (v2.6.3)` |
+| *(historical)* `worker-v2.6.1` | — | — | **live root string: `Scavenger & Hunt Co. — case-file sync is OPERATIONAL. (v2.6.1)` / `The game is afoot.`** Host: **`deerstalker.tony-13f.workers.dev`**. `worker-v2.3.js` is history (§A). |
+| `j.html` **(CHANGED since s30)** | 1,419 B | `bbf057e1f3225a0f…` | invitation landing page (§8n/§8o) |
+| `og-card.jpeg` | 246,070 B | `0067960541bec0ac…` | link-preview card |
+
+- **🔴 THE REPO IS TEN TOP-LEVEL ENTRIES, MEASURED s52:** `index.html` · `j.html` · `sw.js` ·
+  `og-card.jpeg` · `award-card.jpeg` · `hunt-icon-v5.png` · `behaviour.py` · `SUPER-HANDOFF.md` ·
+  `art/` · `test/`. **The "five files" rule is dead — do not re-assert it.**
+- **🔴 `SUPER-HANDOFF.md` IS IN THE PUBLIC REPO.** Every prior edition said it was not. It is.
+  **Consequence: this document is world-readable. Never write a secret, a token, a curator word or a
+  personal detail into it.** (The old `BAKER221B` references throughout are harmless — that word is
+  now rotated and dead as a token; it survives in the client only as `CURATOR_NAME`, the public
+  nameplate on the desk door.) **Owner decision owed: keep it public, or move it to `Hunt-backups`.**
+- **⚠ `behaviour.py` EXISTS TWICE** — repo root and `test/`, byte-identical (`473b385d…`). Harmless
+  today, a divergence trap tomorrow. Delete the root copy on the next push that touches anything.
+- **Push queue for the owner:** (1) `index.html` 29b → repo → replace project-knowledge copy is N/A
+  (project knowledge holds only this handoff — correct state). (2) `privacy.html` + `parch.jpg` →
+  **GoDaddy, scavengerandhunt.com** — a DIFFERENT destination from the repo. (3) The backup zip →
+  the new **private** `Hunt-backups` repo (§51.3 setup steps).
+
+**🆕 SEPARATE PROPERTY — the marketing site (NOT in the Hunt repo, NOT on GitHub Pages).** See §44.
+
+- **🔴 THE FIRST THING THE NEXT SESSION MUST DO IS RE-HASH ALL THREE SURFACES.** Expect
+  **3,908,422 B / `bdfb0222…` / `32l`** on local, raw and Pages alike. *(The line that stood here
+  demanded confirmation of **28e** — twenty-plus builds dead. A stale instruction is worse than no
+  instruction: it sends the session to verify a fact that stopped mattering. Re-write this line on
+  every ship.)*
+- **🔴 ⚠ VERIFY A PUSH AGAINST `gahensley1.github.io`, NOT `raw.githubusercontent.com`.**
+  raw's CDN served the OLD file for over two minutes after a successful push in session 25, and a
+  cache-buster query did not defeat it. **Pages is authoritative; raw lagging is normal and harmless.**
+- **⚠ THE WORKER SOURCE IS NOT A REPO FILE.** Pasted into the Cloudflare dashboard, never pushed.
+  **Do not add it to the repo — the repo is public.** This rule survives the file-count change intact.
+- **⚠ AUDIT THE FILE LIST EVERY SESSION — the count changes without ceremony.** It went 5 → 10 between s30 and s52 with no doc entry. Use the `api.github.com/repos/gahensley1/Hunt/contents/` listing in-sandbox; it worked s52.
+- **⚠ `index.html` AND `og-card.jpeg` ARE A MATCHED PAIR AND MUST BE PUSHED TOGETHER** (§8q). Same for
+  `index.html` + `award-card.jpeg` (§8r). **After any card ship, `curl` every repo file and compare
+  HASHES, not just sizes.** *(28e changed neither card, so 28e ships alone.)*
+- **⚠ `index.html` is TOO LARGE for project knowledge (~3.7 MB) — by design NOT stored there.**
+- **The live `index.html` is ground truth.** When any doc and the code disagree, **the code wins.**
+- **✅ FILE-IN-HAND:** `curl -sSL https://gahensley1.github.io/Hunt/index.html`. Egress to
+  raw.githubusercontent.com, github.com, gahensley1.github.io, scavengerandhunt.com, the Worker and
+  developers.cloudflare.com all work in-sandbox. `api.github.com` is rate-limited (403). Repo listing:
+  `curl -sSL https://github.com/gahensley1/Hunt | grep -o '"name":"[^"]*"' | sort -u`.
+  **Older commits by SHA:** the atom feed `https://github.com/gahensley1/Hunt/commits/main.atom` gives
+  SHAs; `https://raw.githubusercontent.com/gahensley1/Hunt/<sha>/index.html` fetches that revision.
+- **🆕 s52 lineage note:** builds **30 → 32i** were shipped without handoff entries. Git records them
+  as fourteen-plus `Add files via upload` commits (Aug 1–4) plus three named ones: `07f6bef` service
+  worker, `0386384` Bonnie icon + option-C icon set, `8a89e99` **32i agency licence minting,
+  badge-bound keys with expiry**. **Per-build hashes for 30–32h were never recorded and are now only
+  recoverable from git.** Recover with `git log --format=%h` + `git show <sha>:index.html | sha256sum`.
+- **🆕 s53 lineage:** 32i 3,896,676 `a951bf6a…` → 32j 3,905,589 (licence terms + register, §54) →
+  32k (desktop masthead clip, §56) → **32l 3,908,422 · `bdfb0222…` · uploaded `5c254ff` (LIVE)**.
+  32k and 32l shipped as one delivery, so **no separate 32k hash exists.** Verified s53 on local,
+  raw and Pages — **all three identical.** Local `HEAD` = `origin/main` = `318503c2`; nothing ahead.
+- **Session-29 lineage:** 28e 3,687,318 `bcfbf057…` (live base, hash-verified on **Pages and raw** at
+  session start) → **29a 3,690,652 · `26d31f08…` (DELIVERED)**. One ship; the deed checkbox was added
+  to 29a in place rather than cut as 29b, so **only one 29-series hash exists.**
+- **Session-28 lineage:** 27c 3,684,488 `f1c7e782…` (live base, hash-verified at session start) →
+  **28a 3,684,837 `83a1c9f1…`** → **28b 3,686,974** → **28c 3,687,291 `651b09a3…`** →
+  **28d 3,687,307 `f2cc3f10…`** → **28e 3,687,318 · `bcfbf057…` (DELIVERED)** →
+  *28f 3,689,128 `8784e335…` — **BUILT THEN UNDONE BY THE OWNER**, see §46.*
+- **Older lineage:** 26h 3,681,807 `0573e763…`; 25c 3,682,380 `c0637d66…`; 24d 3,680,871 `3bf5ded3…`;
+  23d `d78955f8…`; 23c `1d9a0dcb…`; **pre-volume commit `f667edc9` 3,671,858 `e439c3f2…`**;
+  22b **3,670,397 · `9575527a…`**; 21u **3,663,852 · `e13dfd34…`**; 20h `787d7299…`; session-20 final
+  **3,559,279 · `b9719c66…`**; 19 `d9a6a4cd…`; 18 `a3773d73…`; 17 `f03a7dee…`; 16 `c4527c8a…`;
+  15 `200f6c…`; 13 `57cc95bf…`; 12 `eb8fe5cc…`; 11 `362d13eb…`; 10 `a7493aca…`; 9 `25dcd26d…`
+  (begun from owner-uploaded `d1fa7777…`, **never diffed** — §13); 8 `747b8963…`.
+
+---
+
+## 🔴 §0.2 — THE `32i` ROW: A DOC THAT CONTRADICTED ITSELF IN ONE EDITION (found s53)
+
+**§0's table said the live build was `32i`. §58, in the same document, said `32l` and gave the
+hash.** Both were written in session 52; §58 was updated at session close and §0 was not. The s53
+review found them disagreeing and re-hashed all three surfaces: **`32l` / 3,908,422 B /
+`bdfb0222…` — local, raw and Pages identical.** §58 was right; §0 was three builds stale.
+
+**This is not the §30.11 staleness class.** That one is a document that stopped being updated. This
+is worse and harder to catch: **a document that was updated in one place and not the other, so it
+carries its own contradiction and still reads as current.** A single stale section inside a fresh
+edition inherits the edition's credibility.
+
+**THE RULE THAT FOLLOWS: §0 IS UPDATED IN THE SAME EDIT AS THE SHIP, NEVER AFTERWARDS.** If a build
+is delivered and §0's table still names the previous one, the ship is not finished. And when two
+sections of this document disagree, **re-measure — do not pick the one that reads more confidently.**
+
+---
+
+## 🔴 §0.1 — INHERITED DOC ERRORS. THREE FOUND IN 24–25; ALL RE-VERIFIED CLEAN IN 26, 27 AND 28.
+
+**Inherited doc claims are exactly as unverified as your own.**
+
+### (a) The `paid:true` error — found session 24
+The s22/s23 handoffs claimed "no built-in hunt carries `paid:true`," so §8v called the paywall gate
+"dormant." **Both false — 27 of 30 shelf cases were already flagged paid.**
+**Root cause:** `BUILTIN_INDEX` is a **JSON blob** using `"paid": true` — quoted key, space after the
+colon. Grepping for `paid:` (the object-literal form) returns only the two entry *constructors*.
+
+### (b) "the retention period appears NOWHERE in the client" — FALSE (found 25)
+**The client has a full retention UI:** `renderKeepLine()` prints **"Kept until \<date\>"**, turns
+oxblood at **≤14 days**, and offers an **"Archive +1 year"** button.
+
+### (c) And the client's promise was never honoured (found 25)
+**The v2.2 Worker never read `retentionDays`.** Fixed in v2.3, now deployed.
+
+**⚠ STANDING LESSON — grep the DATA SHAPE, not the code shape.** `BUILTIN_INDEX` is JSON; query it by
+parsing, never by grepping:
+```python
+i=t.find('BUILTIN_INDEX='); j=t.find('];',i)
+arr=json.loads(t[i+len('BUILTIN_INDEX='):j+1])
+```
+**And when a doc makes a claim about absence ("X appears nowhere"), re-grep it yourself.** Absence
+claims are the most fragile kind and two of the three errors above were absence claims.
+
+**🆕 (28) A FOURTH CLASS: A DOC CLAIM ABOUT *WHICH FILE* A RULE LIVES IN.** §8x quoted three CSS rules
+as "the dim." One of the three (`.coldstamp.locked`) is the buy stamp's background, not a dim, and
+moving it would have unpainted every buy stamp. **Read the rule, don't trust the grouping.**
+
+---
+
+## §1 — HOW THE OWNER WORKS (read first)
+
+### 🔴 §1w — A CORRECTION IS NOT DONE UNTIL EVERY COPY OF THE ERROR IS DEAD (owner rule, s54)
+
+**Owner's instruction, verbatim: "as rule one you find a mistake correct all associated materials
+i should [not] have to ask you."**
+
+When Claude finds an error — in this document, in a brief, in a delivered file, in its own earlier
+message — **the fix is not the correction, it is the SWEEP.** Before reporting anything:
+
+1. **Grep for the claim, not the sentence.** The same wrong fact is usually phrased three ways in
+   three sections. Search the idea (`DNS`, `manifest`, `first_find`), not the wording.
+2. **Correct every instance, in every file** — handoff, `claude/` briefs, delivered documents,
+   project knowledge. A brief that contradicts the handoff will be believed by whoever reads it
+   first.
+3. **Say what was wrong and where it was**, not just what is now right. A silent correction cannot
+   be audited, and the next session cannot tell a fix from a drift.
+4. **Ask what ELSE rested on it.** §64.4's DNS "blocker" existed only because the section was
+   planned on Email Routing, which cannot send — **the wrong premise had been sitting upstream of
+   the wrong conclusion for a whole session.** One correction exposed a bigger one.
+
+**THE OWNER SHOULD NEVER BE THE ONE TO ASK "should you revise the document?"** If he asks, the
+sweep was already owed and already missed.
+
+
+
+- **Spend the fewest tokens and the least battery.** Batch related questions and edits into a single
+  operation and a single verification pass. Skip redundant work. Minimize narration.
+- **⚠ THE CHAT IS THE COST, NOT THE FILE.** Re-reading `index.html` is cheap — one `curl`, then
+  `grep`/offsets. What grows is the transcript, resent every turn. **The single biggest efficiency
+  lever is ending a chat with a handoff and starting fresh.**
+- **⚠ DO NOT SEQUENCE WORK INTO SEPARATE SHIPS THE OWNER MUST PUSH ONE AT A TIME.** Batch independent
+  work into one delivered file and one push. **Session 28 produced six builds; only 28e needs pushing.**
+- **⚠ THE OWNER ITERATES IN SINGLE INSTRUCTIONS AND WILL REVERSE HIMSELF WITHIN THE SAME HOUR.**
+  **Flag the reversal in one or two sentences, then build what he asks.**
+  **🆕 (28) AND HE WILL SOMETIMES REVERSE A WHOLE SHIP WITH ONE WORD — "Undo."** The correct response
+  is to re-deliver the previous file **byte-identically**, confirm the hash matches what was given
+  before, and state plainly what came back with it. **Do not rebuild it; do not bump the marker.**
+  See §46.
+- **⚠ BUT DO NOT OVER-WARN. WHEN HE PUSHES BACK ON A CAUTION, RE-EXAMINE IT HONESTLY AND CONCEDE IF
+  HE IS RIGHT.** **A caution repeated after it has been answered is noise.**
+- **⚠ WHEN HE CORRECTS A FACTUAL CLAIM, CHECK IT AND CONCEDE IN ONE LINE — THE CORRECTION IS
+  USUALLY LOAD-BEARING.**
+- **⚠ 🆕 (28) BUT WHEN HE STATES A FACT ABOUT THE CODE THAT IS WRONG, GO AND READ THE CODE AND SAY SO.**
+  He asked *"if they transmit this to be submitted for territories, they cannot delete it correct"* —
+  the code does the **opposite**, with no guard at all (§45.3). **Agreeing would have shipped a false
+  privacy claim.** Verify, then correct with evidence.
+- **⚠ THE OWNER ITERATES ON PRODUCT ONE INSTRUCTION AT A TIME, AND CONSTRAINTS COLLIDE.** When a
+  request cannot coexist with an earlier one, **state the arithmetic and offer the options in the same
+  message** — do not silently pick one, do not just execute the newest instruction.
+  *(Session 28: the companion rows vs. the small-screen green-button rule. Options were tabled with
+  measurements; the owner chose neither and gave a third instruction, which is normal.)*
+- **⚠ WHEN THE OWNER SAYS "THIS IS A DISCUSSION," STOP BUILDING AND STOP PROPOSING BUILDS.**
+- **⚠ WHEN HE SAYS "I AM TRYING TO FIGURE OUT HOW TO MAKE THIS WORK EASY," THE ANSWER IS TO REMOVE A
+  MECHANISM, NOT TO TUNE ONE.** **Complexity he is fighting is usually something Claude added.**
+- **⚠ AND HE WILL SAY SO DIRECTLY: *"I realize I'm complicating things."*** When he does,
+  **measure, name the single real constraint, and fix only that.**
+- **⚠ HE ASKS "WILL THAT FIT?" AND MEANS IT LITERALLY — ANSWER WITH A MEASUREMENT.** Never answer a
+  fit question with an opinion.
+- **⚠ HE VERIFIES CLAUDE'S CONSISTENCY AND IS RIGHT TO.** The correct response is to **run the check**,
+  not to reassure.
+  **🆕 (28) AND HE RE-ASKS ABOUT SETTLED DECISIONS TO TEST THEM: *"We discussed removing the gray out
+  … remember."*** The right answer is **a census, not a yes.** Session 28 answered with 30 rows,
+  0 dimmed, minimum opacity 1.00 — which is worth far more than agreement.
+- **≥3 changes before rendering HTML / running the full Playwright battery**, unless the owner says
+  "render now." `node --check` still runs after every edit. **Match verification depth to risk.**
+- **Discuss before executing multi-part or consequential changes.** Surface findings and a plan first.
+- **⚠ WHEN A FINDING CHANGES AN AGREED PLAN, STOP AND SAY SO BEFORE BUILDING.**
+- **⚠ ⚠ 🆕 (28) SCOPE-EXTEND WHEN A HALF-BUILT FEATURE WOULD CREATE A DEAD END, AND SAY THAT IS WHY.**
+  The teaser flag without a matching detail-card guard would have recreated the 27a "locked row with
+  nothing to buy" hazard. Claude extended scope by one branch and named the reason. **That is correct
+  and should be repeated.**
+- **Never flood on base64 or any large data blob.** `grep -n` for landmarks; preview with
+  `sed -n 'A,Bp' | cut -c1-300`; cap every grep with `cut -c1-200` + `head`. In Python strip blobs:
+  `re.sub(r'[A-Za-z0-9+/=]{100,}','<BLOB>',seg)`. **Always pipe `sed` through `cut`.**
+  **🆕 (28) AND WHEN A DATA URI SITS INSIDE THE REGION YOU ARE READING, STRIP `data:image/...;base64,...`
+  FIRST** — otherwise the blob regex eats the surrounding markup and you see nothing.
+- **⚠ WATCH FOR CATASTROPHIC REGEX.** **Use `str.find()` loops for landmark hunting; keep regex
+  anchored and bounded. Put `timeout N` on every long python heredoc.**
+- **`grep -c` every literal before writing a `str.replace`/`rep()` edit.**
+  **⚠ 🆕 (28) AND REMEMBER `grep -c` COUNTS LINES, NOT OCCURRENCES.** Two hits on one line report as 1.
+  Use `grep -o … | wc -l` when the count matters.
+- **Developer-facing writing is plain and instructional.** Only *in-product UI copy* is Victorian.
+- **⚠ COPY IS APPLIED VERBATIM.** Owner wording, casing, punctuation and unconventional spelling are
+  never altered. House spelling is British "licence."
+  - **⚠ INCLUDING PUNCTUATION THAT LOOKS LIKE A MISTAKE.** Apply verbatim, flag once, let him decide.
+  - **⚠ AND HE USES PLAIN HYPHENS WHERE THE HOUSE STYLE USES EM-DASHES.** *"Visible short clue -
+    12 characters"*. **Do not "fix" it to `—`.**
+  - **⚠ AND LOWERCASE WITH A REAL ELLIPSIS.** The teaser label is **`coming soon…`** — his words,
+    lowercase, U+2026. `&hellip;` in markup, `\u2026` in a script string.
+  - **⚠ AND CLAUDE DOES NOT INVENT UI COPY UNASKED.** When a new string is genuinely needed,
+    **propose it, label it as Claude's, and let the owner replace it.**
+  - **⚠ A GLYPH REQUESTED IN SHORTHAND IS NOT INVENTED COPY, BUT FLAG IT ANYWAY.**
+- **⚠ THE OWNER WILL TELL YOU WHEN COPY IS TOO ORNATE — BELIEVE THEM IMMEDIATELY.** Offer numbered
+  plain-language alternatives and apply the chosen one verbatim. **Victorian is never obscure.**
+- **For any visual/design change, deliver a self-contained preview.** **The reliable format is a
+  PNG/JPEG via `present_files`** — standalone HTML previews do not render for the owner.
+- **⚠ SHOW, DON'T DESCRIBE.** Render a real sample and deliver it. **⚠ AND SEE §11.R — A CAPTURE THAT
+  HAS NOT PASSED THE LAYER AUDIT IS NOT A DELIVERABLE.**
+- **⚠ DELIVER THE FILE NAMED `index.html`.** **🆕 (28) EXCEPT WHEN TWO DIFFERENT `index.html` FILES ARE
+  IN PLAY** — the app and the website. Then name the website one distinctly and **tell him to rename
+  it on upload.**
+- **The owner marks up screenshots to specify UI changes.** Red arrow A→B means "move A to B."
+  Yellow highlighter marks the element discussed. **Red X means delete this.** Red scribble/circle
+  marks where something should go. **A red box around a group means the whole group.** Read the image
+  before asking clarifying questions.
+- **⚠ WHEN HE SENDS A BEFORE/AFTER PAIR OF SCREENSHOTS, THE WHOLE LAYOUT IS THE SPEC.**
+- **⚠ HE ALSO SENDS SCREENSHOTS OF THE APP TO ASK A QUESTION, NOT ONLY TO SPECIFY A CHANGE.**
+  **Measure the computed styles and answer; do not assume a change was requested.**
+- **⚠ THE OWNER PUSHES BY HAND AND PUSHES CAN SILENTLY FAIL OR RENAME.** Five historical incidents.
+  **After ANY ship, `curl` every file and confirm 200 + expected byte size AND hash.**
+- **⚠ THE OWNER ASKS PRODUCT / PRICING / ETHICS QUESTIONS MID-BUILD AND EXPECTS A STRAIGHT ANSWER,
+  INCLUDING "DON'T BUILD THAT."**
+- **⚠ THE OWNER PUSHES BACK ON MONETISATION SMELL AND IS USUALLY RIGHT.** *"I don't want it to all look
+  like a money trap."* Any feature justified by "this creates demand for coins" is suspect.
+  Discovery-by-need beats advertising.
+  - **⚠ AND HE APPLIES THE SAME TEST TO PLACEMENT, NOT JUST TO FEATURES.** **An offer belongs where
+    the buyer already has the thing in front of them.**
+- **⚠ THE OWNER ASKS DIRECTLY WHETHER HE IS BEING GREEDY. ANSWER WITH EVIDENCE, NOT COMFORT.**
+  Hunters never pay, the territory map is free, no subscription, no ads, no energy timers, no paywall
+  on the social side.
+- **⚠ HE ALSO ASKS "DOES THIS SCALE FOR YEARS?" — ANSWER THE BUSINESS QUESTION, NOT THE CODE ONE.**
+  **Rotation is not production — content authored once can resurface every year, because the audience
+  turns over. Never design anything that obliges him to ship new material on a calendar.**
+  **HE APPLIES THIS RULE TO HIMSELF UNPROMPTED:** *"really we will have to be responsible for
+  publishing them live."* **That is why teasers carry no volume number and no count (§8x).**
+
+---
+
+## §2 — SESSION LENGTH & HANDOFF PROTOCOL
+
+- **Warn before the chat gets too heavy.** Judge by activity load: a full `index.html` read, several
+  large docs, repeated battery/Playwright runs, multiple multi-part edit cycles, or a compaction.
+  Flag *before* quality degrades.
+- **Trigger a handoff at cutover.** Also flag when the next task itself demands a fresh chat.
+- **The handoff is the canonical rules registry.** Every standing rule — including this one — must be
+  carried into each handoff and each Project-Instructions revision, restated **in full**.
+- **⚠ A CHAT THAT SHIPS MUST PRODUCE A HANDOFF.** Sessions 18–28 all produced one — keep the streak.
+- **⚠ WHEN THE OWNER DECLINES A HANDOFF AND KEEPS GOING, KEEP WORKING BUT RESTATE THE EXPOSURE ONCE
+  PER SHIP, BRIEFLY.** State the risk in one clause on the ship line and move on; do not lecture,
+  do not refuse. *(Session 27 flagged cutover five times — too many. Session 28 kept it to a clause.)*
+- **⚠ ONE MASTER DOCUMENT, NOT A CHAIN OF AMENDMENTS.** Every handoff supersedes the whole chain.
+  Tell the owner explicitly which files to delete from project knowledge.
+- **§2b — HANDOFF VERIFICATION PASS (mandatory).** Every handoff must end with a pass proving it
+  matches the final `index.html`: (1) `wc -c` equals the §0 size; (2) SHA-256 recorded in §0;
+  (3) grep-verify every code-factual claim; (4) hash the exact file passed to `present_files`.
+  - **⚠ AND VERIFY INHERITED CLAIMS, NOT ONLY NEW ONES.** See §0.1.
+
+---
+
+## §3 — SESSION PROTOCOL
+
+- **Start of session:** **`curl` Pages, `sha256sum`, compare to §0** — first action of any session
+  that will touch code. **`curl` EVERY repo file — the list is ten entries as of s52 and it changes
+  without ceremony.** Audit the repo file list. **`curl` the Worker root (must read **v2.6.1**) and
+  `/list` with no token (must be 403); also confirm `BAKER221B` is 403.** Then run the §32 bootstrap.
+  Cross-verify docs against the live file; surface contradictions; rank open items.
+  **🆕 (28) ALSO `curl` scavengerandhunt.com and its `/privacy.html` (§44).**
+- **"review"** → full cross-verification, then prioritized fixes and start work.
+- **"write handoff" / "handoff"** → single master handoff superseding all prior, restating all
+  standing rules, delivering the current `index.html` via `present_files` (named `index.html`),
+  ending with the §2b pass.
+- **When Claude can't fetch something itself**, give step-by-step owner instructions plus a direct
+  link ("homework" protocol). **The paste-in protocol is proven — see §A.1.**
+
+---
+
+## §4 — SOURCE-OF-TRUTH HIERARCHY
+1. **The live `index.html` is ground truth.** Code wins over docs, always.
+2. **This SUPER-HANDOFF.md.**
+3. **`Marketing-Brief.md`** (session 28) — canonical for store listing, positioning, channels and the
+   constraints on outward-facing copy. **`Monetization-Brief.md`** (session 27) — canonical for pricing
+   mechanics. Both defer to code.
+4. Superseded handoffs — history only. **⚠ They contain at least four error classes (§0.1) — treat
+   their factual claims as unverified.**
+5. **The Project-Instructions doc is materially stale** on file size, the map/clustering rule, the
+   single-file claim (**the repo is ten entries, not five — s52**), and the **entire pricing model**
+   (§9). Ignore those.
+
+---
+
+## §5 — FILE ACCESS & EDIT SAFETY
+
+- Read-only sources: copy to `/home/claude/work/`, edit there, run the battery, output via
+  `present_files` (named `index.html`).
+- **Exact-literal edits:** Python `rep(old,new,label)` = `str.replace` with `assert count==1`.
+  **Always edit in binary mode** — text mode silently normalizes CRLF→LF.
+  - **⚠ `rep()` SHOULD TAKE AN EXPECTED-COUNT ARGUMENT.** `rep(old,new,label,n=2)` with
+    `assert count==n` is safer than looping or than dropping the assert.
+  - **🔴 EVERY REPLACEMENT NEEDS AN ASSERT, INCLUDING SUB-REPLACEMENTS INSIDE A BLOCK.**
+    **`assert NEW!=OLD` after every sub-replacement.**
+  - **⚠ 🆕 (28) A BYTE LITERAL CANNOT CONTAIN NON-ASCII.** `b'… §9 …'` is a `SyntaxError`. Keep
+    section marks and em-dashes out of Python byte literals; use the escape or plain ASCII.
+- **🔴 PYTHON ESCAPING FOR JS ESCAPE SOURCE — GET THIS RIGHT OR THE EDIT LANDS CORRUPT.**
+  The file stores unicode as **literal `\uXXXX` escape source inside `<script>`**, but as **real
+  characters in markup**. To land `\u2014` in the file the Python literal is `'\\u2014'` — **not**
+  `'\\\\u2014'`, which lands `\\u2014` and breaks the string.
+  **THE SAVING GRACE: a failed assert mid-script leaves the on-disk file untouched.**
+  **Never write incrementally; write once, after every assert passes.**
+  **AND THE SAFEST TECHNIQUE: byte-surgery on the ORIGINAL block** — extract the exact bytes, do
+  targeted sub-replacements on them, splice back.
+- **⚠ ALWAYS `repr()` THE INJECTED REGION AFTERWARDS** and compare it against the surrounding code's
+  escaping style.
+- **⚠ ANCHOR UNIQUENESS IS NOT ENOUGH — THE ANCHOR MUST NOT BE A SUFFIX OF SOMETHING LARGER.**
+  An insertion anchored on `function stampedCard(code){` also matched the tail of
+  **`async function stampedCard(code){`**. **Before inserting before a function, grep for `async ` +
+  the anchor.**
+- **⚠ AND AN ANCHOR CAN OCCUR TWICE IN DIFFERENT FUNCTIONS.** Anchor on a unique nearby literal and
+  `rfind` backwards from it.
+- **⚠ 🆕 (28) WHEN THE TARGET CONTAINS A HUGE DATA URI, SPLICE BY INDEX, NOT BY LITERAL.**
+  Find the opening tag, find the closing tag, assert on a short unique substring inside the span,
+  then replace `t[i:j]`. **This is how the 40 KB stamp button was swapped in 28f.**
+- **⚠ WHEN AN EDIT LANDS WRONG, `rm` THE WORKING COPY AND REBUILD FROM THE VERIFIED BASE.**
+  Do not patch a patch.
+- **`re.sub` replacement-string gotcha:** literal replacements containing `\` or `$` must be inserted
+  by slicing (`txt[:a]+NEW+txt[b:]`), not via `re.sub(...,NEW,...)`.
+- **⚠ NEVER BUILD A LITERAL VIA `sed -i` WITH A BASE64/DATA-URL PAYLOAD.** **Use a heredoc.**
+- **⚠ 🆕 (28) NEVER `pkill -f <pattern>` WHERE THE PATTERN MATCHES YOUR OWN COMMAND LINE.**
+  `pkill -f "http.server 890"` killed the shell running it and lost the whole step, including an
+  un-written heredoc. **Restart servers by starting a new one; do not mass-kill.**
+- **⚠ DON'T BE CLEVER IN SHIPPED CODE.** Shipped code must read plainly.
+- **⚠ LEAVE DEAD CSS/JS RATHER THAN MAKE AN UNREQUESTED CHANGE.** Flag it for a cleanup pass; don't
+  freelance. **Current dead items are listed in §13.10.**
+  - **⚠ BUT PREFER REPURPOSING A DEAD RULE TO ADDING A NEW ONE.**
+- **Publishing link:** https://github.com/gahensley1/Hunt/upload/main → live at
+  `gahensley1.github.io/Hunt`. **Deleting a file:** open the file's page → trash icon → scroll down
+  and commit. On mobile Safari use ᴀA → Request Desktop Website.
+- **⚠ THE REPO IS PUBLIC.** Session 20 found a brokerage statement publicly downloadable. Deleted from
+  `main`, **still in git history** (§13).
+
+---
+
+## §7 — BRAND & VOICE (fixed — draw from, don't invent)
+
+- **Palette (verified from `:root`):** `--paper #EDE4D3`, `--paper-2 #E3D7C0`, `--ink #1E1C1A`,
+  `--ink-soft #4A4239`, `--tweed #7A5C3E`, `--tweed-dk #5E4630`, `--green #2E4739`,
+  `--green-dk #22362B`, `--brass #B8863B`, `--brass-lt #D8AF63`, `--oxblood #8A3324`,
+  `--title #20140C`, `--line rgba(30,28,26,.14)`. **⚠ THERE IS NO `--brass-dk`.**
+  No pure `#FFF`/`#000`. Green is the field; brass is accent/border, never large fills. Map tones:
+  sepia `#8A7148`, deeper `#6B5233`; land `#D6C08D`; hunt-pin red `#8A3324`/`#4A1508` + `#D8AF63` dot.
+  **⚠ PREFER AN EXISTING VAR OVER A NEW HEX — AND CONFIRM THE VAR EXISTS BEFORE USING IT.**
+  - **⚠ `--brass` ON `--paper` IS A SOFT CONTRAST AT SMALL SIZES.** The hint toggle uses it at
+    12.5 px; `.volband` uses it at 8.5 px. **Both are owner choices.**
+    **🆕 (28) THE LOCKED-ROW DIM THAT MADE IT WORSE IS GONE — SEE §8x.**
+- **Type:** `--serif` = Playfair Display (agency voice) + `--type` = Special Elite (paperwork voice).
+  **Never a third face.** Five embedded woff2. The baked stamp uses a condensed face — pixels.
+  - **⚠ THE EMBEDDED FONTS CAN BE EXTRACTED FOR OFF-APP ART.**
+    `re.search(r"font-family:...Playfair Display...src:url\(data:font/woff2;base64,([A-Za-z0-9+/=]{200,})\)")`
+    → `fontTools.ttLib.TTFont(BytesIO(b64decode(...)))`, `flavor=None`, `.save('pf.ttf')`.
+    **Four Playfair weights extract: 500, 700, 900, 600.** `pip install fonttools brotli
+    --break-system-packages`. **Always typeset brand art in the real embedded face.**
+- **Copy lexicon:** Credentials not Account · Cipher not Password · Case Files not Levels ·
+  Minted/Issued not Unlocked · Hunter/Detective not User · **"Undercover Agent" not Guest.**
+  No emoji/slang in-product (the share message's 🔍 is the one exception).
+  - **⚠ 🔴 "CASE" AND "PACK" ARE BOTH BEING RETIRED IN FAVOUR OF "VOLUME."** Single-case purchase no
+    longer exists (§9). `buyPack()`'s toasts still say "pack" but the function has **zero callers**.
+    **The §8v turn-away message still says "pack" and IS live — that one needs a sweep.**
+  - **⚠ BUILDER-FACING COPY IS PLAINER THAN THE REST OF THE APP AND THAT IS DELIBERATE.**
+    Current builder strings are the owner's own words: *"Visible short clue - 12 characters"*,
+    *"optional hints/clues can be added later by tapping clues"*, *"+tap here to add hidden hint"*,
+    and the hint placeholder. **Lower-case, hyphens, no ornament. Do not Victorianise them.**
+  - **⚠ CURATOR-FACING COPY IS PLAINER STILL.** The volume selector's free option reads
+    **`Free case — no volume, plays free forever`** (Claude's copy, flagged, replaceable).
+- **⚠ VICTORIAN IS NOT OBSCURE.** In-product copy must parse on first read.
+- **Motion = ceremony:** period machinery. No confetti, bounce, or modern easing. House easing
+  `cubic-bezier(.45,.05,.35,1)`. Exception: the `pinBoost` hard step (§8b) is deliberate.
+- **Reserved SVG IDs — never repurpose:** `wax`, `disc`, `brass`, `arcTop`, `arcBot`, `emblem`.
+  Water ID `gWater`. **`gWaterLbl` was REMOVED — the map renders no text layer.**
+- **Icon rules:** no conifer silhouettes outside Christmas art — `.spark`/`.npark` map glyphs are the
+  deliberate exception. Overlay ✕ goes top-left.
+- **⚠ NEVER USE A REAL-WORLD TRADEMARK OR POLICE INSIGNIA.** The Metropolitan Police crest was asked
+  for and **declined, and must stay declined.** **The WORDS "Dispatch from Scotland Yard" and "from
+  the Metropolitan Police" are fine.** Cards use the app's own stag crest.
+  - **⚠ 🆕 (28) OPEN QUESTION, RAISED AND NOT ANSWERED: the credentials badge art carries the motto
+    `'S RIOGHAL MO DHREAM`, a real Scottish clan crest badge.** Claude cannot verify its provenance
+    or licensing from the sandbox. **Flagged to the owner; no decision taken. Worth checking before
+    store submission.**
+- **The nudge / highlight vocabulary:** a 44×44 `.nudge` magnifier that flies in, acts on a target
+  with a brass `.nudge-ripple`, and flies out. Live: `#title-nudge`, `#join-nudge`, `#move-nudge`.
+  - **`huntEdge`** — brass box-shadow glow + border-colour pulse via `.huntspot`, 820 ms. **Uses
+    box-shadow, NOT border-width, so there is no layout shift.**
+  - **`clueRoll` / `.clue-zoom.rollhi`** — a `::before` band at `z-index:-1` travelling **behind** the
+    words (§8i).
+
+---
+
+## §10 — OWNER DECISIONS — do NOT revisit
+- Baked brass plates stay; the blank-bar + live-text redesign is permanently dead.
+- One `index.html` for the app (plus the four siblings).
+- Don't re-run WebP on brass/leather **textures**.
+- "Build One Case" $0.99 tier is retired; Charter-only.
+- Builders do not get an undercover mode. **Owned packs never re-lock.**
+- **Bonnie B. Baker of 221B Baker Street is the main character** — the Holmes; her portrait anchors the
+  main page; all other characters are Chihuahuas spawned from her. **She is also the owner/proprietor
+  of Scavenger & Hunt Co.** Cast is naturally gender-balanced without announcing it.
+- **The name stays "Scavenger & Hunt Co."** (§33). **`shco:` storage prefix must never change.**
+- **Home page = 3 plaques: Build / Join / Cold Cases.** Case Files & Players via the **stamp link.**
+  **⚠ 🆕 (28) A FOURTH PLAQUE WAS BUILT AND UNDONE — §46.**
+- **Water bodies (shapes) are wanted on the map**, muted sepia. **Water LABELS are NOT wanted.**
+- **Cold-case page has NO footer.** Staff reach the Curator's Desk via a **hidden ~600 ms long-press on
+  the home © line.**
+- **The GA/SC state line follows the Savannah River geometry** by design.
+- **Park tap filters by SURROUNDING AREA, 25-mile radius.**
+- **The clue line appears UNDER the tile on BOTH grids**, capped at **12 characters**.
+- **NO extra magnification level. Hunt pins take a HARD STEP to 2.0× at maximum zoom only.
+  NEVER CLUSTER map pins.**
+- **The build move tour retires only after a completed reorder**; the hunt tour retires on first find.
+- **Hunter finds save device-local FIRST**, then sync; the toast tells the truth (§8j).
+- **The build marker changes EVERY delivered `index.html`** (§8k) — **except on an Undo (§46).**
+- **The home stamp reads "FIND CURRENT & OLD CASES HERE."**
+- **The hunt tour's oxblood tip OVERLAPS the black tip by 500 ms and then STAYS PUT.**
+- **Toasts fire fast — ~450 ms, just clear of the 280 ms screen fade.**
+- **On Case Ready: Copy Case Number lives INSIDE the dashed case card.**
+- **In the build-screen hint, ONLY the phrase "Take a case from the Cold Case Files" is the link.**
+- **The enlarge glow travels BEHIND the caption**, first photo clue opened in EACH hunt.
+- **The invitation link's origin is DERIVED from `location`, not hardcoded.**
+- **The invitation message keeps its explanatory text**, and **ends on the case number.**
+- **`j.html` carries NO `og:image`.**
+- **No real-world trademark or police insignia in the art.**
+- **Cases cap at 50 clues.**
+- **The shared case number carries a thin space**; `#join-code` is `maxlength="8"`.
+- **The commendation card renders on the HUNTER's device.**
+- **The commendation coin is `COIN_HERO` (ratio 1.058), not `COIN_P` (0.963).**
+- **Hint coins are the SAME trophy coins.** **RANK IS A HIGH-WATER MARK.**
+- **NO SEPARATE COIN FAUCET.** Earn by solving, or buy 5 for $0.99.
+- **A REVEALED HINT STAYS REVEALED. THE HIDDEN HINT IS A CHEAT, NOT A REQUIREMENT.**
+- **NO required hint per case.** **THE CLUE FIELD IS NOT A "DESCRIPTION."**
+- **NO IN-APP PURCHASE GATE. NO INSTALL AGE CHECK. PURCHASING STAYS.** See §37.1.
+- **ALL CURATED CASES MIGRATE TO 8 DIGITS.** See §38.
+- **EVERY PURCHASE GOES THROUGH `requirePurchase()`. NO NATIVE `confirm()` ON A PRICED ACTION.**
+- **THE CHARTER IS UNLIMITED BUILDS, NOT A QUOTA.** **Never introduce a per-case build charge.**
+- **CLAUDE DOES NOT INVENT UI COPY.** **RETENTION IS 60 DAYS.**
+- **THE HIDDEN-HINT FIELD IS FOLDED, BEHIND A GOLD "+tap here to add hidden hint ▾" LINE.**
+- **THE PRIMARY GREEN BUTTON MUST BE VISIBLE WITHOUT SCROLLING ON EVERY SUPPORTED PHONE (§8g.1).**
+- **THE CHARTER SCREEN SELLS ONLY THE CHARTER (§41.1).**
+- **THE CLUE PLACEHOLDER READS "Visible short clue - 12 characters" — plain hyphen, owner copy.**
+- **A VOLUME IS THREE CASES, $1.49, FOREVER. SHELF-PURE, NEVER MIXED.**
+- **SINGLE CASES ARE NOT SOLD. THERE IS NO INDIVIDUAL PRICING.**
+- **ONE FREE CASE PER SHELF IS STANDARD; EXTRA FREEBIES ARE ALLOWED AND UNCAPPED — AND FREE IS PERMANENT.**
+- **APPEND-ONLY: BUILD VOLUMES AND ADD TO THEM. NEVER EDIT OR UNPUBLISH A VOLUME.**
+- **A VOLUME IS NOT SELLABLE UNTIL ALL THREE OF ITS CASES ARE LIVE.** ✅ built.
+- **TEASERS CARRY NO VOLUME AND NO COUNT. THE LABEL IS `coming soon…` (lowercase, U+2026).** ✅ built.
+- **THE SHELF STAMP READS `BUY VOL n` IN ARABIC; THE EYEBROW STAYS ROMAN.**
+- **THE SHELF IS SORTED FREE → VOL 1 → VOL 2 → VOL 3.**
+- **THE VOLUME REGISTRY MOVES TO D1 SO THE DESK CAN MINT VOLUMES (§43.3).**
+- **🆕 (28) THE DIM BELONGS TO TEASERS ONLY. PAID ROWS RENDER AT FULL OPACITY.**
+- **🆕 (28) THE DETAIL CARD LISTS THE VOLUME'S OTHER TWO CASES, WITH THE CURRENT CASE'S OWN
+  `View sample` PILL INSIDE ITS DESCRIPTION BOX (§8y).**
+- **🆕 (28) THE HOME CREDENTIALS BLOCK IS AT 75 % (§8z).**
+- **🆕 (28) THE SITE BACKGROUND IS THE APP'S REAL PARCHMENT TEXTURE — the owner kept it after being
+  told it measures darker than the flat colour.**
+- **🆕 (28) THE PUBLIC CONTACT ADDRESS IS `info@scavengerandhunt.com`.**
+
+---
+
+## §11 — EDIT-SAFETY & BATTERY PROTOCOL
+- **Battery before every ship** (recreate the ~20-line agents; suites vanish between sessions — §32):
+  - **Agent A** — `node --check` on the extracted largest `<script>` block.
+  - **Agent B** — every `on*=` handler resolves. **Known false positives:**
+    `if`/`for`/`while`/`setTimeout`/`setInterval`/`return`/`switch`/`catch`/`event`/**`function`**,
+    and the four method hits **`blur`, `replace`, `scrollTo`, `stopPropagation`**.
+  - **Agent D** — tag balance. **🔴 MEASURE THE DELTA AGAINST THE PREVIOUS BUILD, NOT AGAINST A
+    RECORDED ABSOLUTE BASELINE.** The old baseline (`button −1`, `span −1`) **does not reproduce**
+    with a plain `<tag\b` / `</tag>` regex, which gives 0/0. **Every delta must be explainable.**
+    *(Session 28: ALL ZERO on every build, including the plaque swap in 28f.)*
+  - **Hygiene** — zero `console.log`, zero duplicate base64, `http://` audit.
+- **Render check:** headless Playwright at **390×844 and 320×568**, deviceScaleFactor 2.
+  **FOR ANYTHING THAT CHANGES MODAL HEIGHT, ADD 375×667 AND 430×932 — see §8g.1.**
+  **Playwright is NOT preinstalled — `npm i -g playwright && npx playwright install chromium`, ~1 min.**
+  Import by full path: `/home/claude/.npm-global/lib/node_modules/playwright/index.mjs`.
+- **⚠ SERVE OVER HTTP, AND RESTART THE SERVER EACH TURN.**
+  `(setsid python3 -m http.server 8901 --directory serve >/tmp/s1.log 2>&1 </dev/null &)` then `sleep 4`.
+  **`ERR_CONNECTION_REFUSED` means the server died, not that the code broke.** *(Hit three times in 26,
+  three in 27, **five in 28**.)* **Guard with `pgrep -f 8901 >/dev/null || (start it)` — and see §5 on
+  never `pkill`-ing a pattern that matches your own shell.**
+  **`file://` cannot test the cards** — copy `og-card.jpeg` and `award-card.jpeg` into the serve dir.
+  **TIP: run a SECOND server on another port pointed at the previous build** to answer "did I cause
+  this?" with data rather than memory. **Used to great effect in 28e (§8z).**
+
+### 🔴 §11.R — **NO SHUTTER WITHOUT A CLEAN AUDIT**
+
+**THE FAILURE THAT FORCED THIS.** Session 27 delivered a Curator's Desk screenshot with **two
+full-screen overlays on top of it**. The cleanup step was skipped, and even when run, `curpass-ov` had
+never been in the cleanup list. The owner caught it.
+
+**🔴 THE RULE — the list is best-effort; THE AUDIT IS THE GATE.**
+
+1. **Before every capture, run an UNFILTERED sweep** of `body *` for any `fixed`/`absolute` element
+   that is visible and whose rect **intersects the target**, excluding the target's own subtree.
+   **NO z-index floor. NO size floor.**
+2. **If the sweep is non-empty, DO NOT CAPTURE.** Add the offender, re-clean, re-audit.
+3. **Run the cleanup TWICE with a short gap.** `#scrollhint-ov` **re-shows itself within ~900 ms of
+   boot**, so a single clean at load is not enough.
+4. **When capturing an overlay deliberately, exempt it BY ID** rather than skipping the audit.
+5. **🆕 (28) WHEN THE AUDIT FLAGS SOMETHING GENUINELY *BEHIND* THE TARGET, PROVE IT WITH Z-INDEX
+   BEFORE EXEMPTING IT.** The cold-case backdrop `cold-ov` z500 sits under `colddetail-ov` z510 —
+   **read both computed z-indexes and compare, do not assume.**
+
+**Known cleanup list:** `scrollhint-ov`, `curpass-ov`, `ov-name`, `record-ov`, `ov-commend`,
+`ov-coins`, `ov-buy`, `ov-loupe`, `tour-sign`, `tour-down`, **`commish-card`**, **`commish-ov`**,
+**`commish-seal`**, plus `.overlay.open` and both toasts.
+**🆕 (28) `commish-card` (z498) WAS ADDED — it was found sitting over the cold shelf by the audit.**
+
+**⚠ WHY THIS BITES CLAUDE SPECIFICALLY: the `view` tool returns blank images in this sandbox
+(sessions 20–28). Claude cannot look at its own screenshots.** Every visual claim is a measurement,
+never an observation. **The audit is the only thing standing in for eyes.**
+
+- **⚠ MEASURE TOASTS/ANIMATIONS AT A SETTLED MOMENT (~2200 ms+)** — except when measuring *first paint*,
+  where you **poll at 50 ms**.
+- **⚠ A CLASS IS NOT A PIXEL, AND A MECHANISM IS NOT A PATH.** Drive the real entry point.
+- **⚠ VERIFY GEOMETRY BY MEASUREMENT, NOT BY EYE.**
+- **⚠ STATE PLAINLY WHEN A DELIVERABLE WAS VERIFIED BY MEASUREMENT RATHER THAN BY EYE**, and deliver
+  the artefact. **AND SAY SO WHEN THE OWNER FINDS A VISUAL FAULT.**
+
+### §11a — ⚠ VERIFICATION METHODS THAT GAVE FALSE ANSWERS
+**Eighteen methods have now produced confident, wrong results in this project.**
+1. **Colour/saturation masks over parchment.**
+2. **Resizing two images to a common square before diffing** — destroyed the aspect-ratio difference
+   that was the entire question, and the oblong coin shipped.
+3. **Bounding boxes when two objects overlap.**
+4. **Stubbing an asset from the page.** `window.PAW_INK="…"` did nothing because `PAW_INK` is a `const`
+   in a closure.
+5. **Measuring a gap next to a contact shadow.** **A scan window beginning where you expect the answer
+   will always confirm your expectation.**
+6. **Trusting that a delivered file was pushed.** **`curl` and hash-compare every repo file after any
+   ship.**
+7. **Reasoning about behaviour from a doc's description instead of reading the code.**
+8. **A test harness that silently didn't run.** **Assert the precondition in the same result object as
+   the measurement.**
+9. **GREPPING THE CODE SHAPE WHEN THE FACT LIVES IN A DATA BLOB.** **Parse JSON data; grep only code.**
+10. **A COLOUR MASK AGAINST AN 8px GLYPH AND A 55%-ALPHA HAIRLINE.**
+11. **AN AUDIT WHOSE FILTER CAN ONLY RETURN "CLEAN."** **A check that cannot fail is not a check.**
+12. **MEASURING A PNG FROM ONE BROWSER RUN WITH COORDINATES FROM ANOTHER.**
+13. **CHECKING THAT AN ELEMENT *EXISTS* INSTEAD OF THAT IT IS *USABLE*.** **Presence is not
+    reachability.** Assert `getBoundingClientRect().bottom <= innerHeight`.
+14. **SCROLLING THE WRONG NODE AND CONCLUDING "UNREACHABLE."**
+15. **SHOOTING THROUGH AN OVERLAY BECAUSE THE CLEANUP LIST WAS INCOMPLETE.** **See §11.R.**
+16. **A HARNESS THAT INJECTS STATE THE APP THEN REBUILDS.** `openColdCases()` rebuilds `_coldIdx`,
+    `coldCatOpen()` rebuilds it again, and **`publishCold()` calls `renderCurator()` at the end**.
+    **Inject AFTER every rebuild, and always return a `precondition:` field.**
+17. **🔴 NEW (28) — EDITING CSS WHEN AN INLINE STYLE FROM JS IS THE REAL SOURCE.** `.rank-stamp.home`
+    `font-size` was scaled and **measured identical in both builds**, because `refreshHomeBadge()`
+    sets `el.style.fontSize` from `base=30.94` with a length-based shrink. **The CSS edit was a
+    no-op.** **Before changing a computed value, grep for `.style.<prop>` on that element.**
+    **The A/B server (§11a(g)) is what caught it — a single-build measurement would have looked fine.**
+18. **🔴 NEW (28) — ASSERTING ON THE WRONG TARGET AND CALLING IT A CODE FAULT.** The CASE FILES plaque
+    click was tested against `#record-ov` and returned "not open." **`openCaseFiles()` calls
+    `go("s-cases")` — it is a screen, not an overlay.** **Read the function before writing the
+    assertion.** *(Caught and corrected in the same turn; nothing shipped on it.)*
+
+**✅ WHAT WORKS:** **(a) diff the finished render against the base art** (`|S−B|.sum(2)>34`);
+**(b) read the geometry out of the running page**; **(c) drive the real function and assert on its
+return value**; **(d) inject the future state at runtime and drive it**;
+**(e) THE DIFFERENTIAL RENDER, THE HOUSE METHOD FOR "DID THIS PAINT?"** Screenshot with the element
+visible, hide **only** that element (`visibility:hidden`), screenshot again, diff.
+**(f) THE MULTI-VIEWPORT ASSERTION TABLE.** Four viewports **and both states of any collapsible**.
+**(g) THE A/B SERVER.** Serve the previous build on a second port and measure both in one script.
+**🆕 (28) THIS IS NOW THE HOUSE METHOD FOR ANY "SCALE IT BY N%" INSTRUCTION** — print the ratio, not
+the value.
+**(h) THE INTRINSIC-WIDTH PROBE FOR "WILL IT FIT?"** Clone the real element, force
+`position:absolute; left:-9999px; white-space:nowrap; width:auto`, read `getBoundingClientRect().width`.
+**(i) THE CONSISTENCY PARSE.** Parse the registry and compare a typed value against its derived
+counterpart (§41.2).
+**(j) 🆕 (28) THE CENSUS.** When the owner asks "did we do X," enumerate **every** affected element and
+report counts — *30 rows, 0 dimmed, minimum opacity 1.00* — rather than answering yes.
+**(k) 🆕 (28) PIXEL-SAMPLING A DELIVERED RENDER.** For "is this colour right," open the PNG and read
+the actual pixels. It is how the site background was found to be exactly `#EDE4D3`, and later 204
+luminance.
+
+### §11b — 🔴 TESTS MUST NEVER WRITE TO THE LIVE WORKER
+`Store.set(key, val, true)` — the third argument — writes to **the production Cloudflare Worker and D1.**
+Session 23 did this twice and caused a real production incident.
+
+**THE RULES:**
+1. **Never pass `shared=true` in a test.** **Stub `Store` at the top of every probe:**
+   ```js
+   const mem=new Map();
+   Store.get=async k=>mem.get(k)??null;
+   Store.set=async(k,v)=>{mem.set(k,v);return true;};
+   Store.list=async()=>[]; Store.del=async()=>true;
+   ```
+   **✅ Sessions 24–28 stubbed on every suite and wrote nothing.**
+2. **`finishBuild()` PUBLISHES.** Any test that calls it mints a real case.
+   **SO DOES `publishCold()` — it writes `hunt:<code>` AND `cold:index`. Stub before driving it.**
+   **🆕 (28) AND SO DOES `purgeCase()` — IT *DELETES*. NEVER DRIVE IT UNSTUBBED.**
+3. **After any test session that touched `Store`, `curl` `/list` and diff against the expected key set.**
+4. **Distinguish your data from the owner's before deleting.** **"Papi" and "Papi 2" are real plays on
+   310401 — preserve them.**
+5. **⚠ A STUB CHANGES WHAT RENDERS.** With `Store` stubbed, `.cold-meta` shows *"CASE No. 221221"* with
+   **no "· 12 clues"**. **Seed the stub** — a `Store.get` that returns
+   `JSON.stringify({code, tiles:new Array(12).fill({id:1})})` for any `hunt:` key is the cheapest
+   seeding pattern — **before claiming anything about an async-populated line, and before capturing a
+   screenshot that shows one.**
+6. **SET `State.build` DIRECTLY TO TEST THE BUILDER SCREENS.** **A one-pixel PNG data URL is enough to
+   drive `openCrop`.** **Set `State.captureMode="hunt"` + `State.huntTarget={id:9}` for the hunter branch.**
+7. **TO TEST THE CURATOR'S DESK, SEED `mycases`.** Without it `renderCurator()` draws an empty list and
+   every assertion returns a confident zero. Then `openCurator()` → `renderCurator()`, and hide
+   `#curpass-ov` (§11.R).
+
+### §11c — 🔴 NEVER INFER; VALIDATE, OR LABEL IT
+**Owner instruction: *"never infer always validate we should never have this said again."***
+- **Never state an unverified thing as fact.** Either validate it first, **or label it as unverified in
+  the same breath — before the claim, not after being challenged.**
+- **⚠ THIS APPLIES TO INHERITED DOC CLAIMS TOO** (§0.1) — **and especially to absence claims.**
+- **Some things genuinely cannot be validated from the sandbox** — hardware share sheets, iMessage
+  bubble counts, GitHub Pages' bandwidth terms, **the Worker's source**. For those: **say "I can't
+  verify this from here" up front.**
+- **⚠ WHEN THE OWNER STATES A FACT THAT IS WRONG, CORRECT IT WITH EVIDENCE IMMEDIATELY.**
+  **🆕 (28) INCLUDING WHEN IT IS A FACT ABOUT THE CODE — see §45.3.**
+- **⚠ AND WHEN THE OWNER CORRECTS *CLAUDE*, CHECK IT PROPERLY AND CONCEDE IN ONE LINE.**
+- **⚠ 🆕 (28) AND WHEN A MEASUREMENT CONTRADICTS THE INSTRUCTION YOU WERE JUST GIVEN, SAY SO.**
+  The owner asked for a lighter background; the parchment texture measures darker. **Reporting that
+  is what let him make a real decision ("Keep").**
+
+---
+
+## 🔴 §13 — STANDING OPEN ITEMS (RE-RANKED AND RE-MEASURED, SESSION 52)
+
+**Every item below was re-checked against `index.html` at 32i and against the live services on Aug 4
+2026.** Items closed by measurement are kept, struck as CLOSED, with the evidence — they are not
+deleted, because a closed item that vanishes gets re-opened by the next session.
+
+### ✅ CLOSED SINCE THE s30 EDITION — DO NOT RE-OPEN
+
+- **✅ 1. PUSH 29a AND `test/`. CLOSED.** Long since pushed; the repo is nine builds past it.
+  **Nothing is pending push as of s52** — local == repo == Pages, `a951bf6a…`.
+- **✅ 3. `CURATOR_PASS="BAKER221B"` — THE TOP SECURITY ITEM. CLOSED, BOTH HALVES.**
+  Client: `CURATOR_PASS` **×0**, `BAKER221B` **×1 and only as `CURATOR_NAME`** — the public nameplate,
+  explicitly commented "not a secret and not treated as one." `CURATOR_WORD` **×11**: declared
+  `var CURATOR_WORD=""`, memory-only, never stored; `_curHdr()` is the single `X-Curator-Token` site
+  (**×1 in the whole file**); wrong word clears it and toasts "The archivist does not recognise that
+  word" — **it fails closed, as specified.** Worker: **the rotation happened** — `BAKER221B` → 403.
+  **The load-bearing order in the old item was followed. Nothing here is left to do.**
+- **✅ 6. THE SERVICE WORKER. CLOSED.** `sw.js` in repo, 200 on Pages. **⚠ THE HASH THAT STOOD HERE
+  (`61a93b05…`, 3,435 B) WAS NEVER CORRECT — see the §0 row. It measured 3,349 B / `54127008…`, and
+  as of s54 it is 5,532 B / `7a1682bd…` with the push receiver (§71).** Registered
+  https-only inside a `try`, on `load`, with a swallowed `.catch()`. Its own header states the
+  non-negotiables: **network-first for the document** (a 3.8 MB cache-first would pin hunters to a
+  dead build), never cache the Worker, never cache a non-GET/non-200/opaque response, versioned cache.
+  **It stores no hunter data.**
+  - **🔴 BUT `manifest` IS STILL ×0.** The SW shipped without a web-app manifest, so there is still no
+    install prompt and no home-screen identity. **This is the remainder of item 6 and it is small.**
+
+### 🔴 STILL OPEN — RANKED
+
+1. **🟢 INSTRUMENTATION — MOSTLY BUILT. ONE GAP.** ⚠ **The s52 re-base first recorded this as "NO
+   INSTRUMENTATION" and that was WRONG — see §53.1.** What actually ships at 32i is
+   **the Company Ledger (SPEC-51.4 §3)**: `function ev(name,code,tile,cat)` posting to **`/ev`** on
+   the Worker, `keepalive:true`, `Content-Type: text/plain` (**CORS-safelisted on purpose, so it costs
+   no preflight and adds no round trip**), `.catch()` swallowed. **It never blocks, never surfaces an
+   error and never retries — offline, the count is simply lost.** Payload is event, case, clue id and
+   shelf: **no name, no credential, no location.** Origin is stamped server-side from the request.
+   **`EV_NAMES`, and the Worker rejects anything else:**
+   `badge_issued` · `case_opened` · `case_finished` · `hint_completed` · `cold_viewed` · `case_scanned`.
+   **Wired at six sites, all verified s52:** `mintCred()` → badge_issued · `joinCase()` → case_opened
+   (after the expiry gate) · `finishHunt()` → case_finished · `openColdDetail()` → cold_viewed ·
+   `markHintSeen()` → hint_completed · the deep-link handler → **case_scanned, deliberately fired
+   before every gate, because `case_opened` only fires after five refusals and cannot answer how many
+   people a poster actually reached.**
+   **~~THE REMAINING GAP IS `first_find`~~ — ✅ BUILT AND LIVE, corrected s54 (§70.3, §73.4). It is
+   in `EV_NAMES`, in the per-case ledger row, the totals row and the CSV. What follows is history;
+   the gap it describes was closed and nobody noticed because the MONTH view never shows the
+   figure — only the per-case sheet does.** The §49.3 funnel was opened / joined / first-find /
+   finished. Scanned, opened and finished are covered; **there is no event on a hunter's first
+   confirmed find**, so the drop-off between taking a case and getting one photograph — the single
+   most diagnostic step — is invisible. **Adding it is a one-line `ev()` call plus a name in
+   `EV_NAMES`, and the Worker must accept the new name or it is silently dropped.** That makes it a
+   Worker-paste item, not a client-only one (item 5).
+   **🔴 AND THE READ SIDE IS UNVERIFIED.** `/report` exists and is 403-gated, with three client call
+   sites in the Desk ledger. **Nobody has confirmed what it returns or whether the numbers are
+   sane.** Before building anything new here: **sign in at the Desk and look at the ledger.**
+2. **🔴 NO BACKUP AND NO CLIENT EXPORT.** `exportAll` ×0 · `downloadBackup` ×0 · `exportCase` ×0 —
+   unchanged since s29. Every case, profile and submission sits in one D1 table that `PUT` lets anyone
+   overwrite. The mitigation is not auth (item 8 rules that out); it is **a periodic export**.
+   **✅ THE s30 "ARCHIVE CLERK" (§51.3) — IT IS RUNNING. MEASURED s53, STATUS NO LONGER UNKNOWN.**
+   The owner connected `Hunt-backups` and it was read directly. **All four setup steps were done.**
+   Three snapshots on disk: `archive-2026-07-30.json` (121 B, one key), `archive-2026-08-03.json`
+   (45,325 B, **749 listed keys**), `archive-2026-08-04.json` (45,758 B, **758 listed keys**), each
+   `includesProfiles:true` across ten key families. **The archive half of item 2 is closed. What
+   remains here is the CLIENT export — `exportAll` / `downloadBackup` / `exportCase`, still ×0.**
+   **🔴 THREE DEFECTS FOUND IN THE CLERK, s53 — see §59. One was serious: the clerk was not backing
+   up `SUPER-HANDOFF.md`.**
+3. **🔴 THE FULL LOOP HAS NEVER RUN ON HARDWARE (§50.2).** build → share → join → photograph → verify
+   → coin → rank, end to end, on two real phones. Everything verified to date is headless Chromium.
+   **This is now the highest-risk item that no amount of grepping can close**, and it has been carried
+   since s29 while nine builds shipped on top of it. Items 15 and 16 below are subsets of it.
+4. **🔴 THE HOME PLAQUE / "CASE FILES" REQUEST — §46. STILL UNBUILT, CONFIRMED s52.**
+   `btn-plaque` ×7 resolves to **three plaques on home** — `startBuild()`, `openJoin()`,
+   `openColdCases()` — plus one repeat of the Build plaque in the empty-state of `#s-cases`.
+   **There is no fourth plaque, and the red stamp is gone: `FIND CURRENT` ×0.** The `#s-cases` screen
+   exists and is titled "Case Files", so the destination is built; **only the route from home is
+   missing.** Rebuild as specified: **fourth `.btn-plaque` + the red `FIND CURRENT & OLD CASES HERE`
+   stamp reinstated as its own element** (it was the silent loss of that stamp that got the s28 swap
+   undone). The Case Ready copy change stands.
+5. **🔴 THE WORKER SESSION — NOW TWO JOBS, ONE PASTE.** Was four; (a) the owner-delete door and
+   (b) `CURATOR_WORD` are both done. **Remaining: (c) an export/backup route · (d) per-case counters.**
+   **Owner pastes v2.6.1 source in, Claude hands source back** (§A.1). **⚠ The paste must be v2.6.1 —
+   pasting the old v2.3 text back would silently revert the rotation-era Worker and `/report`.**
+6. **🔴 §43.3 — MOVE THE VOLUME REGISTRY TO D1** so the Desk can mint Volume IV without a push.
+   **Owner chose Option B. `volumeOf()` ×10 already reads the case record — half the bridge.**
+   **⚠ `volumeReady()` (×2) must move with it.** *(s52 note: 32i shipped **agency licence minting** in
+   the Desk — `validAgencyKey`/`AGY_KEY` ×3, `SEAT_PRICE` — so the Desk can now mint one kind of thing
+   at runtime. Whoever takes this item should read that code first; the pattern may already exist.)*
+
+7. **⚠ THE COLD DETAIL CARD AND THE SMALL-SCREEN RULE (§8g.1).** On 320 the $1.49 button sits 137 px
+   below the fold; **on 375 it clears by only 3 px.** The owner accepted this knowingly, twice.
+   **Cheapest fix if he changes his mind: clamp companion blurbs to one line (~62 px back).**
+8. **⚠ `PUT` IS UNAUTHENTICATED.** **v2.3 did not fix it, and s52 has no evidence v2.6.1 did** and cannot without a per-user auth model.
+   **Do not attempt a quick fix — it will break the app.**
+9. **"pack" vs "Volume" copy sweep.** **§8v's turn-away message still says "pack" and IS LIVE.**
+10. **DEAD CODE, LEFT DELIBERATELY — one cleanup pass owed (§5). RE-MEASURED s52:**
+    **Still dead (definition only, zero callers):** `volumeSaving` ×1 · `volumeShort` ×1 ·
+    `buyEverything` ×1. **`buyPack` ×2 = definition + one mention in a comment — still zero real
+    callers.** `BUNDLE_PRICE` ×3. **⚠ `priceOf` IS NO LONGER DEAD — ×3, with two live call sites in
+    the cold-detail buy path. Do not delete it.** `.stamp-link` ×5, still live. Original list:
+    `.coldrow .caseno` CSS · `buyPack()` (0 callers) · `priceOf()` (only `buyPack` calls it) ·
+    `volumeSaving()` (0 callers) · `volumeShort()` (0 callers) · `BUNDLE_PRICE` (×1, unrendered) ·
+    `buyEverything()` (0 callers) · `grantEntitlement`'s `pack` and `everything` branches.
+    **⚠ `.stamp-link` CSS is LIVE in 28e — it only became dead in the undone 28f.**
+11. **`archiveCaseAsk()` still uses a native `confirm()` on a priced action** — contrary to the §39 rule.
+    **RE-VERIFIED OPEN s52**: the function's own comment reads "App Store billing replaces the confirm() at release."
+12. **§41.2 numeral-drift check** — add the label-vs-`volumeNo()` parse to the §32 bootstrap.
+13. **No route to a volume for a non-builder (§9).** **Owner has not ruled.**
+14. **The 8-digit case-number migration — §38.** **⚠ NOW ALSO TOUCHES NINE `VOLUMES[].codes` ARRAYS.**
+15. **⚠ THE COMMENDATION CARD HAS NEVER RUN ON HARDWARE.** **Needs two devices or two browser profiles.**
+16. **⚠ THE INVITATION MESSAGE IS UNPROVEN ON HARDWARE.**
+17. **The commendation Notify button** — `email` ×0, `pushToken` ×0. **There is no address.** Owner's call.
+18. **⚠ ACCESSIBILITY: `maximum-scale=1` blocks page zoom. STILL PRESENT AT 32i (×2, in the viewport meta).** iOS Safari overrides it; **Android Chrome
+    honours it.** All type is `px` with **zero `em`/`rem`**. **Caveat: probably load-bearing for the
+    map's `touch-action:none` pan and the loupe pinch.**
+19. **⚠ UNANSWERED — build clue-tip read duration.** **3000 ms** → MOVE_TIP ~4200 ms; **2500 ms** →
+    ~3700 ms; or leave it. **Carried unanswered since session 19.**
+20. **⚠ git history still contains the brokerage statement.** **Owner decision owed, carried nine sessions.**
+21. **⚠ `MAX_VALUE` is 2 MB and a 50-clue photo case approaches it.** A PUT over it returns 413. Untested.
+22. **`/list` LIMIT 500** — **398–400 keys as of s30**; it will silently truncate at 500.
+    **⚠ s52 COULD NOT RE-COUNT — the curator word is rotated and Claude does not hold it (correctly).**
+    **Owner: check the key count at the Desk. If it is near 500 this is now urgent, not theoretical.**
+23. **⚠ THE CREDENTIALS CREST MAY BE A REAL CLAN CREST BADGE** (`'S RIOGHAL MO DHREAM`). Unverified
+    provenance. **§7 rule-adjacent. Worth checking before submission.**
+24. **Face ID / WebAuthn on the Curator's Desk — §36.9.** **Sequenced AFTER the custom domain and AFTER
+    §13.3.**
+25. **The guardian's cipher** (§37.1) — designed, deliberately NOT built.
+26. **Remaining file-size levers:** fonts ≈ 90 KB; `gWater` 238 KB; `COIN_HERO` 51 KB.
+27. **River/border splices** for Mississippi, Ohio, Rio Grande — §8e recipe.
+28. **Waterfront/off-river pins** — `gazAuto` centroid auto-fill → curator re-pin.
+29. **Loupe follow-ups:** pinch centres on the stage not the finger midpoint.
+30. **Registrar identity** (`#ov-name` vs `#scrollhint-ov`) — cleanup/dedupe. **⚠ ALSO A TEST HAZARD.**
+31. **Stamp tap target** ~27–35 px tall (< 44 px comfort min).
+32. **Undiffed +25 KB base** — session-9 work sits on an uploaded base never diffed.
+33. **Doc-refresh debt** — **Project Instructions §9 pricing is fully superseded**, and it still
+    describes a single-file repo, the old file size and pin clustering. **`Monetization-Brief.md`
+    refreshed in 27; `Marketing-Brief.md` created in 28.**
+34. **⚠ Move the deep link off the URL fragment** before store submission.
+35. **THE WEBSITE (§44):** create the `info@` mailbox · HTTP→HTTPS redirect · lawyer review then remove
+    the DRAFT banner · a 6.5″ screenshot set · Google Play's long description.
+36. **Curation throughput** (§42) — one reviewer will not scale.
+37. **CONTENT: 3 more Almanac cases — APRIL, JULY, AUGUST.** **Under the three-per-volume rule these
+    become Almanac Volume IV** — the out-of-step growth the owner wants. **The natural next authoring task.**
+38. **PROCESS — keep the handoff streak.**
+
+**CLOSED SESSION 29:** **28e confirmed live** (hash-exact on Pages and raw) · **§45 all three
+delete-path defects fixed** · **the territory deed built** — ownership transfer, mandatory tick,
+reset-on-reopen, defensive server-side-of-the-UI guard · **`Store.del()` now returns the server's
+verdict** · **a persistent test suite committed** — 21 assertions, proven to catch the exact defect
+that shipped · **four structural gaps identified and specced** (§49, §50) · **the website found to be
+un-uploaded** — a real blocker that the session-28 doc recorded as delivered.
+
+**CLOSED SESSION 28:** 27c confirmed live · **the teaser state built** (§8x) · **volume-not-sellable-
+until-complete built** (§9 rule 6 / `volumeReady`) · **companion rows on the detail card** (§8y) ·
+**the credentials block scaled to 75 %** (§8z) · **$1.49 confirmed on both stores** · **store metadata
+limits verified** · **Apple org-enrolment requirements verified** · **the App Store mockup and three
+real 1290×2796 screenshots** · **`Marketing-Brief.md` created** · **the public website built —
+three files, brand parchment, privacy policy stating 60 days** · **three delete-path defects found**
+(§45) · **two new §11a failure modes** · Worker v2.3 re-verified.
+
+---
+
+## §14 — HOMEWORK (owner-side, unblocks Claude)
+- **🔴 NEXT: PUSH 29a AND `test/`** — https://github.com/gahensley1/Hunt/upload/main — then confirm on
+  `gahensley1.github.io` that the size is **3,690,652** and the marker reads **29a**.
+  **The five `test/` files go to the repo root as a folder.**
+- **🔴 UPLOAD THE THREE SITE FILES (§44) — STILL NOT DONE, AND THE DOC PREVIOUSLY SAID IT WAS.**
+  `site-index.html` **renamed to `index.html`**, `privacy.html`, `parch.jpg`. **The domain currently
+  serves a 4,260 B placeholder and `privacy.html` 404s (§47.6).**
+- **🔴 ADD THE TERRITORY CARVE-OUT TO THE PRIVACY POLICY** before it goes up — territory cases are
+  sweep-exempt and permanently held, which the flat 60-day claim does not cover (§47.2, §47.6).
+- **🔴 CREATE THE `info@scavengerandhunt.com` MAILBOX.** Apple checks the address resolves.
+- **🔴 THE LEGAL ENTITY — SEE §50.1. THIS IS THE CRITICAL PATH AND IT IS STALLED.**
+  Entity → D-U-N-S (30-day lead, exact name match) → domain/mailbox → enrolment.
+- **🔴 THE TWO-PHONE PLAYTEST — SEE §50.2.** Eight steps. The core loop has never been run end to end.
+- **🔴 PASTE THE WORKER SOURCE at the start of the next session** — four jobs need it (§13.2).
+  dash.cloudflare.com → **Compute (Workers)** → **Workers & Pages** → **deerstalker** → **Edit Code**.
+- **🔴 FIX HTTP → HTTPS REDIRECT** on scavengerandhunt.com.
+- **🔴 LAWYER REVIEW OF THE PRIVACY POLICY, THEN REMOVE THE DRAFT BANNER.**
+- **✅ DONE: 27c pushed and verified. ✅ DONE: `worker-v2.3.js` deployed and verified.**
+  **⚠ Cloudflare secrets are WRITE-ONLY — do not ask the owner to "look at" a secret again.**
+- **🔴 choose and STORE a new curator word (do not set it yet — see §13.3 sequencing).**
+- **🔴 REWORK THE ALMANAC GROUPING** — **whatever it becomes must divide into threes.**
+- **🔴 REPLACE THE NINE VOLUME LABELS AND THE VOLNOTE** — Claude's placeholders, labelled as such.
+- **🔴 DECIDE THE APP NAME AND THE SELLER LINE (§44.4)** — 10 spare characters, and "Do No Harm Co."
+  will appear publicly beneath the brand.
+- **Legal entity:** register **Do No Harm Co.** as a GA LLC/corp. Georgia files online through eCorp;
+  **$100 base plus a small online service charge, 3–7 business days.** *(Sources vary between $100 and
+  $110 depending on filing method — confirm at georgia.gov.)*
+  **⚠ THE REGISTERED NAME MUST MATCH THE D-U-N-S RECORD AND THE APPLE FORM EXACTLY** — punctuation,
+  "LLC" vs "L.L.C.", the ampersand. **Pick the string once and reuse it verbatim.**
+- **Domain:** ✅ **scavengerandhunt.com acquired.** **GoDaddy → GitHub Pages if the app moves:** apex
+  **A** records `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`;
+  **www CNAME → `gahensley1.github.io`**; then repo **Settings → Pages → Custom domain** +
+  **Enforce HTTPS**. **⚠ AVOID GODADDY FORWARDING/MASKING — it breaks HTTPS and the deep link.**
+  - **A custom domain moves the site to the domain ROOT**, shortening every invitation link.
+    **`joinLink()` derives its origin from `location`, so no code change is needed** — but the
+    **absolute `og:image` URLs in `index.html` and `j.html` still point at github.io.**
+  - **⚠ NEVER give Claude GoDaddy or Cloudflare account credentials.**
+- **D-U-N-S:** request one — free, **5 business days to 2 weeks**, plus up to 2 more for Apple to
+  receive it. **Check the lookup tool first; have registration documents ready.**
+- **Store enrollment:** Apple Developer ($99/yr) + Google Play ($25, as **Organization**).
+  **✅ $1.49 is confirmed available on both — no longer an open question.**
+- **Cloudflare:** confirm Worker cron `0 3 * * *` armed.
+- **⚠ A LAWYER SHOULD LOOK AT THE CHILDREN'S-PRIVACY POSTURE BEFORE SUBMISSION** (§37.1).
+- **Decisions owed:** Play's $0.99 US minimum; Dreams-Doc Q1 (DMO pricing); **the build clue-tip
+  duration (§13.19)**; **whether to rewrite git history (§13.20)**; **whether non-builders need a route
+  to a volume (§13.13)**; **whether the gold hint toggle and the `BUY VOL n` stamp read well on a real
+  phone**; **whether the Roman/Arabic split reads right in his hand (§41.2)**; **the clan-crest
+  question (§13.23)**.
+- **Hardware testing owed:** the commendation card end-to-end and the invitation message bubble count.
+- *Optional/non-blocking:* USPTO trademark (Class 9 + 41) — **file first**, then the visual/literary
+  work, then the program.
+
+---
+
+## §32 — EFFICIENCY BOOTSTRAP (run once at session start)
+- **`curl` Pages, `sha256sum`, compare to §0**, and **`curl` all eight repo files** for 200 + size +
+  **Set a User-Agent on every Worker probe** (bare Python UA → 403, §A). **Check `Hunt-backups` for a
+  fresh Monday snapshot** once the owner's §51.3 setup is done. Original continuation:
+  **hash**. **Audit the repo file list. `curl` the Worker root (v2.3) and `/list` (403 with no token).**
+  **🆕 `curl` scavengerandhunt.com and /privacy.html.**
+- **Build the landmark index — `work/marks.py`.** One pass records line number, byte offset and count of
+  key functions/IDs into `work/marks.json`. **Regenerate after every ship — offsets move.**
+  Landmark list to include, at minimum:
+  ```
+  toast( toast2( _toastUnder _toastAtAdd _toastAtRow2 _tipClear _tipQueue _huntTour _huntArm
+  _movePanTour _movePanArm openClue openLoupe tileEl( renderBuild( renderHunt( openTileEdit
+  saveTileEdit openCrop( confirmCrop( joinCase( joinLink( joinGetPack buildShareMsg shareCase(
+  saveHunterSub finishBuild genCode caseSeats listSubs chartScalePins chartGo( coldFilter(
+  renderColdPins _pinsAt chartTipStack _tipPlace askName( go( stampedCard commendCard commendFacts
+  rankFor openCommend shareCommend rankNeeds myRankName myCoins commCount coinBalance spendCoin
+  buyCoins openCoinShop renderHintRow toggleTileHint hintSeen( isLocked ownsPack buyPack grantPack
+  purchaseLicence purchaseGranted openLicence requirePurchase grantEntitlement purchaseOwned
+  buyConfirm buyDecline const VOLUMES volumeById volumeOf volumeShort volumeSaving volumeNo
+  volumeRank volumeReady caseTeaser bundleVolume ownsVolume grantVolume buyVolume buyEverything
+  renderLicTiers BUNDLE_PRICE renderColdList openColdDetail renderKeepLine raiseComplement
+  makeItYours MAP_CHART Store PAW_INK COIN_HERO COIN_PACK HUNTER_CAP SEAT_BLOCK renderCurator
+  publishCold curEditCase curGeo curDiff purgeCase deleteCaseAsk archiveCaseAsk subTerrFile
+  subAccept refreshHomeBadge id="buildmark" id="s-share" id="s-join" id="s-hunt" id="s-build"
+  id="ov-clue" id="ov-tile" id="tile-hint" id="crop-hint" id="tile-hint-toggle"
+  id="crop-hint-toggle" id="crop-cluerow" id="clue-hintrow" id="ov-coins" id="ov-buy" id="buy-go"
+  id="lic-tiers" id="s-licence" id="s-receipt" id="ov-loupe" id="ov-name" id="ov-commend"
+  id="record-ov" id="curator-ov" id="curator-list" id="toast" id="toast2" id="gWater"
+  id="home-cred-badge" id="home-rank-stamp" id="cold-sample" _runDeepLink CURATOR_PASS
+  shco:hinttip award-card.jpeg og-card.jpeg .volband{ .volband-soon{ .hint-toggle{ .hint-guide{
+  .coldrow.teaser{ .coldstamp.locked{ .cd-comp{ .cold-file{ cf-wrap btn-strike stamp-link
+  max-height:620px BUILTIN_INDEX=[ cvol- ccat- BUY VOL
+  ```
+- **Read `BUILTIN_INDEX` by PARSING, never grepping (§0.1):**
+  ```python
+  i=t.find('BUILTIN_INDEX='); j=t.find('];',i)
+  arr=json.loads(t[i+len('BUILTIN_INDEX='):j+1])
+  ```
+- **RUN THE §41.2 CONSISTENCY PARSE** — for each `VOLUMES` row, compare the Roman numeral in `label`
+  against `volumeNo()`'s position-within-shelf. **Nine rows, must all agree.**
+- **Write `work/battery.py` once** (Agent B/D + hygiene, PASS/FAIL only). **⚠ AGENT D COMPARES DELTA
+  AGAINST THE PREVIOUS BUILD, NOT AN ABSOLUTE BASELINE (§11).**
+- **Write `work/probe.mjs` once** — **AUDIT before every capture (§11.R)**, **stubs `Store` (§11b)**,
+  drives real functions and asserts on return values, **returns a `precondition:` field**.
+- **Write `work/btn.mjs` once — THE MODAL ASSERTION TABLE (§8g.1).** Four viewports × folded/unfolded
+  = **16 cells.**
+- **Write `work/diff.mjs` once** — the differential render (§11a(e)).
+- **🆕 Write `work/ab.mjs` once — THE A/B SERVER MEASUREMENT.** Two ports, previous build on one,
+  new build on the other, **print ratios not values.** This is the tool that caught §11a #17.
+- **Write `work/samp.mjs` once** — seeds a coin ledger, calls `commendCard()`, writes the returned
+  `File` to disk. Copy `award-card.jpeg` and `og-card.jpeg` into the serve directory.
+Then, every session: **`grep -c` each literal before editing** (**and `grep -o | wc -l` when the count
+matters**); **cap every grep and `sed`**; **`timeout N` every long python heredoc**; **match
+verification depth to risk**; **keep ship summaries to ~3 lines + the hash**; **encourage batching**;
+**do NOT trim verification or the handoff.**
+
+---
+
+## 🔴 §84 — THE YEAR. WORKER v2.6.11 IS DEPLOYED; THE DESK UI IS NOT BUILT. (s55 close)
+
+**OWNER, s55, VERBATIM:** *"on the report side i need to be able to sort by year like i will need an
+annual report per case and over all and when 2027 rolls around start fresh."*
+
+**✅ SERVER: `worker-v2_6_11.js` 97,885 B /
+`7dacce07977efdc466af0fbf5b59b04e02e678204403024a5ba38bdf890fce74` — DEPLOYED AND VERIFIED,
+root reads `(v2.6.11)`.** It also carries v2.6.10 (the CSV header block, `Aug 1` day labels, and the
+`d.day` bug — see §84.4). `node --check` clean.
+**🔴 CLIENT: NOT BUILT. There is no way to reach a year from the Desk yet.** The routes are additive,
+so 33e is unaffected and nothing is broken — the feature is simply unreachable until the UI lands.
+
+### 84.1 ✅ "START FRESH IN 2027" NEEDED NO WORK, AND A RESET WOULD BE A BUG
+**Every counter is already year-stamped** — `mo:YYYY-MM:event` and `ct:CODE:YYYY-MM-DD:event`. **A
+year is a FILTER, not a reset.** Nothing is archived, zeroed or rolled over at midnight on New Year's
+Eve, and **nothing should be: a reset would destroy the year-on-year comparison the annual report
+exists to make.** Do not add one, and do not accept a request for one without reading this line back.
+
+### 84.2 THE ROUTES — ALL CURATOR-LOCKED, `?year=` BEATS `?month=`
+```
+GET  /report?year=2026                      -> annual(env, year)      the company
+GET  /report?code=112211&year=2026           -> caseYear(env, code, year)  one case
+POST /report-email?year=2026[&code=112211]   -> sendYear(env, rep)     either, by post
+```
+**`?year=` is tested BEFORE `?month=` deliberately** — a caller sending both gets the year it asked
+for, not silently the month. **A malformed year is a 400, never a quiet fallback to the month.**
+`yearOK` verified: `2026` true; `26`, `20x6`, `2026-08` all false.
+
+### 🔴 84.3 WHERE EVERY FIGURE COMES FROM — AND THE THREE THAT CANNOT BE YEARLY AT ALL
+- **THE COMPANY YEAR IS EXACT AND STAYS EXACT FOREVER.** `mo:` rows are true monthly deltas **and
+  are in the sweep's permanent set**, so the year is twelve reads and never degrades.
+- **A CASE's YEAR COMES FROM ITS DAILY ROWS**, which are true daily deltas — **but they are folded
+  after `DAILY_KEEP_DAYS = 400`.** So a case year is exact only while those days survive. Every
+  case-year payload therefore carries **`foldedBefore`** (the cutoff date) and **`complete`**, and the
+  email prints a note naming the date. **A month reading zero because the record was folded is NOT
+  the same as nothing happening, and the report must never let a reader confuse the two.**
+- **🔴 `joined`, `first_find`, the state tally and the geography CANNOT BE SPLIT BY YEAR.**
+  `seen:`, `seenf:`, `st:` and `geo:` rows **carry no date whatsoever** — all-time by construction.
+  They are printed under their own heading, **`ALL-TIME — NOT THIS YEAR`**, never inside the year's
+  table. **Two traps recorded so nobody repeats them:** summing them per year would be **inventing
+  data**; and summing a sealed month's per-case `joined` across twelve months would **double-count
+  catastrophically, because that field is cumulative-to-date, not a monthly delta.** If a yearly
+  hunter count is ever genuinely wanted it needs **a dated key written at the time** — a future build,
+  never a query over what exists.
+
+### 84.4 🔴 A BUG SHIPPED IN v2.6.9 AND FIXED IN v2.6.10 — THE SAME MISTAKE AS §79.4
+The case CSV's first column arrived **empty in every row**. `caseCsv` read **`d.day`**; `caseSheet()`
+populates **`date`**. **Claude guessed the key instead of reading the shape** — the identical error to
+hand-typing the month label, twice in one session. **`out.days` entries are
+`{date, scanned, opened, finished, hints}`.** `scanned` was also being dropped and is now a column.
+**READ THE SHAPE. THE FILE IS RIGHT THERE.**
+
+### 84.5 HOW IT WAS VERIFIED WITHOUT A DATABASE — AND THE ONE TEST THAT PROVED THE FILTER
+The real functions were imported into **node** against a **stub D1** that translates SQL `LIKE` to a
+regex. **`export default` was rewritten to `const __handler =` rather than truncated** — the first
+attempt cut the file at `export default` and deleted every function under test, which are defined
+BELOW it.
+**THE TEST THAT MATTERS: a planted `ct:112211:2025-12-30:case_opened = 99`.** The 2026 case year
+returns **9** (2+1+1+1+4), **not 108** — so December 2025 does not leak into 2026. Company 2026
+totalled `badge_issued 27`, `cold_viewed 32`, `case_opened 62` from an August and a September row.
+**Sample CSVs were written and handed to the owner to open in Excel.** `csvDay('nonsense')` returns
+the input rather than `undefined`.
+
+### 🔴 84.6 WHAT IS LEFT — THE CLIENT, AND THE IDIOM ALREADY DECIDED
+The app already has the pattern: the case sheet's **`‹ The whole month`**. One level up:
+**Ledger (a month) → a line under the month row reading `The whole year 2026 ›` → the annual view,
+where the arrows become `‹ 2025 · 2026 · 2027 ›` and `‹ The month` returns.** Identical on a case
+sheet, so a year is one tap from wherever the reader stands, and **`email report` posts whatever is on
+screen** — month or year — through the same `_wireLedgEmail` (§83.2), which will need a `year`
+argument alongside `code`.
+**⚠ THE COPY IS THE OWNER'S AND WAS NOT APPROVED.** `The whole year 2026 ›` is Claude's placeholder.
+**Ask before shipping it.**
+
+---
+
+## 🔴 §80 — THE OPEN-TASK REGISTER, RE-AUDITED AT s55 CLOSE. THIS SUPERSEDES §65's ORDER.
+
+Every line below was checked against the document and, where measurable, against the live services
+at s55 close. **§65 was the s53 ordering; four of its ten items have since closed and it still reads
+as current. Use THIS list.**
+
+**GIT AND SURFACES: CLEAN.** `local == origin == 58f24c38`. `index.html` **33d** 4,037,229 B /
+`6f3d5f62…` identical on disk, raw and Pages. Worker **v2.6.7**. Site and `/privacy.html` both 200.
+
+### ✅ CLOSED SINCE §65 WAS WRITTEN — DO NOT RE-RAISE THESE
+1. **The notification card** — built s54, 32r (§66).
+2. **`TASK-live-roster`** — built s54, 32t (§68).
+3. **Read `/report` once** — done s54, and it found the take-rate defect (§73).
+4. **The take-rate defect** — fixed in Worker 2.6.6, and **2.6.7 is live**, so it is deployed (§73.2).
+5. **`first_find`** — was already built; struck s54 (§70.3).
+6. **Client export** — struck s54 with reasoning: nothing promises it (§75.4).
+7. **THE EMAILED LEDGER — ✅ FULLY CLOSED s55, BOTH HALVES.** Client 32y/33a/33b, on the Ledger AND
+   the case sheets (§79); **Worker v2.6.8 deployed and the send confirmed working by the owner
+   (§81).** Open since §64.4. **The remaining unknown is the 3am cron, not the send.**
+8. **§85.2, the ledger meta row** — closed by deleting the sentence (§78).
+9. **🆕 `candidate-32m.html` and `_candidate-32m.html`** — **BOTH 404 ON RAW. THEY ARE ALREADY GONE.**
+   §0's table still carries a red row ordering their deletion. **That row is stale — strike it.**
+10. **`privacy.html` to GoDaddy** — `scavengerandhunt.com/privacy.html` returns **200**. Done.
+
+### 🔴 OPEN, IN ORDER OF WHAT IT COSTS TO LEAVE IT
+0. **🆕 THE YEAR'S DESK UI (§84.6).** The Worker is deployed and answers `?year=`; **there is no way
+   to reach a year from the app.** The idiom is decided and the copy needs approving. **This is the
+   first thing to build next session** — it is half-finished work, which is the worst kind to leave.
+   **⚠ AND THE BATTERY HAS NOT RUN ON 33e** (§82's tick was 33d).
+1. **🔴🔴 GET IT ONTO A PHONE. Carried since s29, now nineteen builds deep.** It gates: the install
+   prompt (never seen), the notification card, the live roster, web push, **whether a ledger email
+   has ever actually arrived**, and the full loop on two devices. **The owner is on an iPhone 15 and
+   the app is a PWA — Safari can add it to the home screen and screen-record it today.** No amount
+   of measuring closes this and nothing else on this list is as risky.
+2. **🔴 THE LEGAL ENTITY (§50.1).** The real critical path, and it is stalled. Nothing ships to a
+   store without it.
+3. **✅ CLOSED — THE BATTERY IS GREEN ON 33d.** Run in **Claude Code** by the owner: STATIC clean,
+   BEHAVIOUR 59/59, session checks 19/19, Agent D drift NONE, hygiene clean, nothing rebaselined
+   (§82). **THE STANDING ARRANGEMENT: Claude cannot run it (§77.2) — CLAUDE CODE IS THE ROUTE.
+   Ask for it before every ship, with `PYTHONUTF8=1` (§82.1).**
+4. **🔴 PASTE THE PROJECT-INSTRUCTION BLOCK** from `claude/PROJECT-INSTRUCTIONS-s55.md`. Until then
+   every session is sent to a filename that does not exist and to a `§16` that was never written
+   (§77.9). **Cheapest item on the list; costs ten minutes of every future session.**
+5. **Cloudflare Workers Paid ($5/mo)** — a stated pre-event blocker. Free caps CPU at 10ms/request,
+   which can break `slim=1` on a large case (§69.1).
+6. **THE CASE FILES PLAQUE (§13.4 / §46)** — cheap, high value, still not done. Fourth
+   `.btn-plaque` **plus** the red stamp as its own element. **Do not re-apply 28f blindly.**
+7. **The Monday cron has never fired** — eleven runs, all manual (§59.3). And **the empty-snapshot
+   gate still passes a one-key file as a good backup** — a backup that cannot be trusted is not one.
+8. **REPLACE THE PROJECT-KNOWLEDGE HANDOFF** each session, or the next one opens stale.
+9. **THE OWNER-ONLY DECISIONS (§14):** the nine volume labels · the app name and seller line ·
+   clue-tip duration (open since s19) · the clan crest · the Almanac regrouping · a non-builder route
+   to a volume · **whether `SUPER-HANDOFF.md` stays in the public repo.**
+10. **Cloudflare Pages migration** — three arguments for it now (§70.5 item 6). Not urgent.
+
+### ⚠ SMALL, RECORDED, NOT URGENT
+- **`behaviour.py` STILL EXISTS TWICE** — repo root and `test/`, both 18,003 B, byte-identical. The
+  root copy is the accident. **Delete it on the next push that touches anything.**
+- **🔴 §0's "THE REPO IS TEN TOP-LEVEL ENTRIES" IS WRONG AGAIN. MEASURED s55: FIFTEEN** —
+  `.gitattributes` · `.nojekyll` · `SUPER-HANDOFF.md` · `_preview/` · `art/` · `award-card.jpeg` ·
+  `behaviour.py` · `hunt-icon-v5.png` · `icons/` · `index.html` · `j.html` ·
+  `manifest.webmanifest` · `og-card.jpeg` · `sw.js` · `test/`. It went 5 → 10 → 15 with a doc entry
+  only twice. **Audit it every session; it changes without ceremony.**
+- **`_preview/` is in the PUBLIC repo** and is scratch. Safe to delete wholesale.
+- **`hunt-icon-v5.png` is unreferenced.** Harmless.
+- **A per-case email route (v2.6.8)** would need writing and deploying if a single-case send is ever
+  wanted (§79.1). **Not requested — do not build it speculatively.**
+- **The Ledger nav's month is 7.9px right of card centre** (§78) — measured, shown to the owner,
+  deliberately not changed.
+
+---
+
+## 🔴 §77 — THE TOOLING FACTS. READ THIS BEFORE YOU TRY TO MEASURE ANYTHING. (s55)
+
+**Owner's instruction, s55: "concrete everything we have relearned here and put it somewhere you do
+not forget it."** This section is that place. It is here, in the canonical document, because a fact
+that lives in a chat is gone (§1v) and a fact in a side file is not read. **Every item below was
+established by measurement in session 55, most of them after wasting time on the alternative.**
+
+### 77.1 ✅ THERE IS A LOCAL WEB SERVER. IT IS THE ANSWER TO ALMOST EVERYTHING.
+
+**`C:\Users\tony\Documents\Hunt-backups\serve.ps1` serves the live working copy of the repo at
+`http://localhost:8000/`.** The owner runs it in a `cmd` window; it logs every request with a status
+and a byte count. **VERIFIED s55: `http://localhost:8000/index.html` returned buildmark `32z` — the
+real current on-disk build, not a stale copy.**
+
+**🔴 THIS IS THE PRIMARY MEASUREMENT ROUTE. USE IT FIRST, ALWAYS.** Load it in the Claude-in-Chrome
+extension and the true build is in a real browser, with real fonts, real CSS and a real DOM, before
+anything is pushed. It removes the entire class of problem this document has been fighting for three
+sessions: **measuring a build you cannot open.**
+**ASK THE OWNER TO START IT AT THE TOP OF EVERY SESSION THAT WILL TOUCH LAYOUT.**
+**⚠ Confirm the buildmark it serves before trusting it.** In one s55 log the served `index.html` was
+4,009,521 B and 4,010,286 B — **builds `32p` and `32q`** — because those requests were for
+`_preview/` copies. **A server on the right port can still hand you the wrong file. Check the mark.**
+
+### 77.2 🔴 WHAT CANNOT MEASURE, AND STOP RE-TRYING IT
+
+- **NO BROWSER IN THE SANDBOX. AT ALL.** `pip install playwright` works and
+  `playwright install chromium` downloads 115 MB, then the binary dies on
+  **`libXdamage.so.1: cannot open shared object file`**. `playwright install-deps` and `apt-get`
+  both fail — **no root, no dpkg lock, and `sudo` is not available.** There is no workaround.
+  **DO NOT SPEND ANOTHER MINUTE ON THIS.** ~4 minutes and a 115 MB download were spent proving it.
+  **The consequence: `test/run.py` — the §48 battery — CANNOT BE RUN FROM THE SANDBOX.** If a build
+  needs the battery, the owner runs it, or it ships labelled "battery not run."
+- **`file:///C:/...` DOES NOT WORK THROUGH THE CHROME EXTENSION.** `navigate` **silently prefixes
+  `https://`**, reports *"Navigated to https://file:///C:/..."* as a success, and the tab never
+  leaves `chrome://newtab`. The failure only surfaces on the next call, as
+  *"Cannot access a chrome:// URL."* **A NAVIGATION THAT REPORTS SUCCESS IS NOT A NAVIGATION —
+  read `location.href` back before you believe it.** This is why 77.1 matters: `http://localhost`
+  works where `file://` cannot.
+- **`resize_window` DID NOT CHANGE `window.innerWidth`** (stayed 1536 after a 390×844 call).
+  **To measure a phone layout, force the container's width in CSS instead** — see 77.3.
+
+### 77.3 🔴 HOW TO MEASURE A PHONE LAYOUT IN THIS APP, EXACTLY
+
+**Measured geometry of the curator overlay, s55 — write these numbers down, they are load-bearing:**
+`#curator-ov` has **18px** padding each side · `.tov-card` is `max-width:420px` with **16px** padding
+each side. **So at a 390px viewport: card = 354px, and the CONTENT WIDTH IS 322px.**
+
+**🔴 AND THE TRAP THAT ATE A ROUND TRIP: `#curator-list` LIVES INSIDE `#curator-ov.hidden`, SO EVERY
+`getBoundingClientRect()` RETURNS 0.** Not an error — a clean, confident set of zeros that reads
+exactly like a real measurement, including a cheerful `sameLine:true` (0 == 0). **This is the §11a
+class in its purest form. A ZERO IS NOT A MEASUREMENT.** Assert a non-zero width before believing
+any rect. The same thing happened a second time later in the session and the zeros were spotted only
+because the numbers were implausible.
+
+**THE ROUTE THAT WORKS:** either unhide `#curator-ov` and force `width:390px` on it, or append a
+`position:fixed` `.tov-card` of width 354px with 16px padding to `<body>` at a high `z-index`.
+
+### 🔴 77.3a THE ROTATE GATE — IT WILL EAT YOUR FIRST SCREENSHOT EVERY SINGLE TIME
+
+**Owner, s55: "remember and concrete this too — when you render it shows this unless you fix it."**
+
+Open the app in a desktop browser window and you do not get the app. You get **`#ov-rotate`** — a
+full-screen `position:fixed;inset:0;z-index:99999` panel reading *"The Agency conducts its business
+in portrait only. Kindly right your device before continuing the investigation."* **It is triggered
+by `@media (orientation: landscape) and (max-height: 500px)`**, which a normal desktop window
+satisfies, so **every screenshot is that panel until it is dealt with.** This cost a wasted
+screenshot in s55 and it will cost one every session that does not read this.
+
+**🔴 THE FIX IS ONE LINE, AND IT IS THE APP'S OWN ESCAPE HATCH — NOT A HACK:**
+
+```js
+document.documentElement.classList.add('rotlock-off');
+```
+
+`html.rotlock-off #ov-rotate{display:none!important}` already exists in the stylesheet. **In the UI
+the same switch is the full stop in "Scavenger & Hunt Co." on that panel** — `.rl-dot`, which calls
+`toggleRotLock()`. **Do not delete either; they are deliberate.**
+
+**RUN THAT LINE FIRST, BEFORE ANY SCREENSHOT OR RENDER, EVERY TIME.** Two alternatives, both worse:
+make the window taller than 500px, or use a `position:fixed` probe card at a higher `z-index` —
+**a probe card renders over the gate, which is why the s55 option screenshots worked while the
+earlier full-page one did not.** The one-liner is cleaner: it shows the *real* app, not a probe.
+
+### ⚠ 77.3b CLAUDE'S `Edit` TOOL ESCAPES NON-ASCII INTO `\uXXXX` IN THIS FILE
+
+An em dash, `§`, `‹`, `›` or `⚠` typed into an `index.html` edit **lands on disk as the literal
+seven characters `—`**, not the character. **Verified s55** — the 32z and 33a code comments both
+carry it. **Harmless in a JS comment, and harmless inside a JS string literal** (`"—"` still
+renders as the dash). **🔴 BUT IT WOULD BREAK CSS** — `content:"—"` is not the same thing — and
+it makes greps for the character fail. **Write code comments in plain ASCII, and if a non-ASCII
+character must reach a CSS or HTML literal, verify the bytes after the edit.**
+
+### 77.4 ⚠ THE MEASUREMENT THAT LOOKS LIKE A MEASUREMENT BUT ISN'T
+
+When `.meta` is `flex:1 1 auto`, **`scrollWidth` reports the FLEXED width, not the intrinsic one** —
+five different candidate sentences all reported exactly 252px. **To get the true width of a string,
+measure a `position:absolute;visibility:hidden;white-space:nowrap` clone of the same class.** The
+pass/fail was sound; the number was not, and it must never be quoted as an intrinsic width.
+
+### 77.5 THE OWNER'S SHELL IS `cmd.exe`, NOT PowerShell
+
+`Remove-Item`, `Get-FileHash` and `(Get-Item x).Length` all failed. **Send `cmd`: `cd /d`, `del`,
+`certutil -hashfile <file> SHA256`, `findstr /c:"..."`, `type`.** **ONE COMMAND PER LINE** — a
+verification block pasted onto the end of a `git push` line produced
+`git: 'push(Get-FileHash' is not a git command`, which cost a round trip and looked like a git fault.
+
+### 77.6 🔴 GIT: READ THE REFS, DO NOT INTERPRET THE MESSAGES
+
+**`git add` + `git commit` printing "nothing added to commit" DOES NOT MEAN THE EDITS ARE MISSING.**
+In s55 it meant they were **already committed** by an earlier command in the same window, and Claude
+told the owner his file had not been written — **a wrong and alarming claim, from a message that was
+merely ambiguous.** The refs said it plainly the whole time: `refs/heads/main` had advanced,
+`refs/remotes/origin/main` had not.
+**ALWAYS READ `.git/refs/heads/main` AND `.git/refs/remotes/origin/main` AS PLAIN FILES FIRST.
+`local != origin` means "committed, not pushed" and nothing else.**
+**AND `git push` REPORTING SUCCESS IN THE OWNER'S WINDOW IS NOT PROOF THE THING YOU CARE ABOUT WENT.**
+In s55 a push succeeded while the handoff commit stayed local — **`origin/main` was one commit
+behind and GitHub's copy of the handoff was 320,426 B against 322,949 B on disk.** Fetch and compare.
+**⚠ SCREENSHOTS OF A TERMINAL MAY BE SCROLLBACK.** One pasted screenshot showed
+`5c254ff..c749c87` and `318503c` — **session-52/53 pushes** — while the session was discussing today's.
+**Check the SHAs against the refs before reading a screenshot as current.**
+
+### 77.7 ✅ WHAT DOES WORK IN THE SANDBOX, AND WHAT THE BRIDGE COSTS
+
+- **`curl` WORKS.** §30's "Cowork's sandbox no longer fetches URLs" is **not universally true** —
+  raw, Pages, the Worker and the site were all fetched and hashed directly, in one command, in
+  seconds. **TRY `curl` FIRST: it is far cheaper than the extension for hashing a surface.**
+  **Hash all three surfaces in ONE command and say the result out loud** (§0).
+- **The Worker root probe MUST carry `?cb=<timestamp>` and a User-Agent.** With the buster it read
+  **`(v2.6.7)`**.
+- **Claude's host-path `Edit` writes DO reach the owner's real folder** — proven: the edits appeared
+  in his working tree and were committed from it. **Do not doubt this again.**
+- **THE BRIDGE CANNOT DELETE.** `touch` succeeds; `rm` returns **`Operation not permitted`**.
+  **Test it once with a throwaway file if the mode is ever in doubt — but a probe file you cannot
+  delete becomes litter in a PUBLIC repo.** `_deltest` had to be cleaned up by the owner.
+  **Prefer reading `.git/refs` to prove the mode; it costs nothing and leaves nothing behind.**
+- **THEREFORE: NEVER RUN `git` FROM THE SANDBOX, not even `git status`** — it writes
+  `.git/index.lock`, which the bridge cannot remove, stranding a lock that blocks the owner.
+
+### 🔴 77.9 THE PROJECT-INSTRUCTION BLOCK SENDS EVERY SESSION TO TWO THINGS THAT DO NOT EXIST
+
+**This wasted the first move of s55 and it will waste the first move of every session until the
+owner edits the instruction block. 🔴 OWNER ACTION: fix these two strings in the project
+instructions.**
+
+1. **THE PATH IS WRONG.** The block says the canonical document is **`claude/SUPERHANDOFF.md`** and
+   stresses "note the path: it lives under `claude/`, not at the root." **BOTH HALVES ARE FALSE.**
+   The file is **`SUPER-HANDOFF.md` — AT THE REPO ROOT, WITH A HYPHEN.** `claude/SUPERHANDOFF.md`
+   does not exist; `wc` on it returns *"No such file or directory."* `claude/` holds eleven briefs
+   and no handoff. **There is still only one handoff — the instruction just names it wrongly.**
+2. **`§16` DOES NOT EXIST.** The block says to read "§0, §13 and §16 before doing anything." **There
+   is no §16 in this document.** Read **§0, §13, §65 and §77** instead — §65 is the ranked backlog
+   the header points to, and §77 is the tooling.
+
+**✅ THE REPLACEMENT BLOCK IS WRITTEN AND ON DISK: `claude/PROJECT-INSTRUCTIONS-s55.md`.** It holds
+the full paste-ready text plus a numbered list of what changed and why. **⚠ `claude/` IS NOT IN GIT**
+(§69) — the laptop disk and `Hunt-backups` are its only durable copies. **If a future session finds
+the instruction block still naming `claude/SUPERHANDOFF.md` or `§16`, the owner has not pasted it
+yet: point him at that file rather than re-deriving it.**
+
+**THE GENERAL LESSON, AND IT IS THE §0.2 CLASS ONE LEVEL UP:** the instruction block is a document
+too, **and it is the one document that cannot be corrected from inside the repo.** It goes stale
+exactly like §0 did, it reads with total authority because it arrives before anything else, and
+**Claude cannot fix it — only the owner can.** **When the instructions and the disk disagree, THE
+DISK WINS, and say so out loud rather than hunting for the file the instructions promised.**
+
+### ⚠ 77.10 SMALL ONES, LOGGED SO THEY ARE NOT REDISCOVERED
+
+- **The extension's `zoom` screenshot action timed out** — *"CDP sendCommand Page.captureScreenshot
+  timed out after 30000ms"* — on a page where a plain `screenshot` worked immediately afterwards.
+  **Prefer a plain `screenshot`; do not retry `zoom`.**
+- **`Hunt-backups` was NOT connected this session.** Folder access does not persist. **Ask for both
+  folders at the top if the work will touch the archive, the clerk or `serve.ps1`.**
+- **`sudo` does not exist in the sandbox** — the error text even suggests adjusting a container
+  flag. There is no route to root. Nothing that needs `apt-get` will ever work.
+- **🔴 DO NOT RAISE `j.html` AS DRIFT. IT IS CRLF, NOT A DIFFERENCE.** A file-by-file disk-vs-GitHub
+  hash sweep at s55 close reported `j.html` mismatched — **disk 1,419 B, GitHub 1,386 B, exactly 33
+  bytes across 33 lines.** That is **CRLF on the owner's disk against LF in the repo**, normalised by
+  `.gitattributes` on check-in. **The content is identical and git reports the file clean.**
+  **A whole-file hash comparison is the wrong tool for text files here** — it will flag every
+  CRLF file forever. Compare `git`'s own view, or compare after `tr -d '\r'`. The nine binary and
+  LF-normalised files all matched exactly.
+
+### 77.8 THE TWO STANDING RULES FROM THIS SESSION
+
+Both are recorded in full at **§85.6** and are repeated here in one line each because they are the
+two the owner asked twice for: **(1) push permission is granted standing — do not ask again, but
+still hash before recording "pushed."** **(2) When Claude cannot execute something, the paste-ready
+`cmd` block ships in the SAME reply as the blocker, unprompted, with a verification block whose
+expected values are stated up front.**
+
+---
