@@ -1536,8 +1536,8 @@
 
 <div id="ov-plan" class="overlay center">
   <div class="modal">
-    <button class="plan-x" onclick="closePlan()" aria-label="Close the plan">✕</button>
-    <div id="plan-body" class="plan-wait">Fetching the plan…</div>
+    <button class="plan-x" onclick="closePlan()" aria-label="Close the map">✕</button>
+    <div id="plan-body" class="plan-wait">Fetching the map…</div>
     <div class="plan-cap" id="plan-cap"></div>
   </div>
 </div>
@@ -2249,17 +2249,17 @@ function planKey(code){ return "map:"+String(code||"").replace(/[^A-Za-z0-9]/g,"
 async function openPlan(code){
   var body=document.getElementById("plan-body"), cap=document.getElementById("plan-cap");
   if(!body) return;
-  body.className="plan-wait"; body.textContent="Fetching the plan\u2026";
+  body.className="plan-wait"; body.textContent="Fetching the map\u2026";
   if(cap) cap.textContent="";
   openOverlay("ov-plan");
   var d=null;
   try{ d=await Store.get(planKey(code), true); }catch(e){ d=null; }
-  if(!d){ body.className="plan-wait"; body.textContent="No plan is filed for this case."; return; }
+  if(!d){ body.className="plan-wait"; body.textContent="No map is filed for this case."; return; }
   body.className=""; body.innerHTML="";
   var img=document.createElement("img");
-  img.id="plan-img"; img.alt="Surveyor\u2019s plan"; img.decoding="async"; img.src=d;
+  img.id="plan-img"; img.alt="Map"; img.decoding="async"; img.src=d;
   body.appendChild(img);
-  if(cap) cap.textContent="Surveyor\u2019s Plan";
+  if(cap) cap.textContent="Map";
 }
 function closePlan(){
   closeOverlay("ov-plan");
@@ -2289,7 +2289,7 @@ function planChosen(code, input){
       State._planNew=State._planNew||{};
       State._planNew[code]=d;
       var b=document.getElementById("cplan-b-"+code);
-      if(b) b.textContent="\u2691 Plan chosen \u2014 file the Amendment to keep it";
+      if(b) b.textContent="\u2691 Map chosen \u2014 file the Amendment to keep it";
     };
     im.onerror=function(){ toast("Couldn\u2019t read that image \u2014 try another."); };
     im.src=rd.result;
@@ -4251,7 +4251,7 @@ function renderColdList(){
                    : (caseClosedOn(e.code)? '<span class="coldstamp closed">CASE CLOSED</span>'
                                           : '<span class="coldstamp">COLD CASE</span>'))
       +'<span class="coldsamp" role="button" tabindex="0">View sample</span>'
-    +(e.hasMap? '<span class="coldsamp" role="button" tabindex="0" onclick="event.stopPropagation();openPlan(\''+String(e.code).replace(/[^A-Za-z0-9]/g,"")+'\')">View plan</span>' : '')
+    +(e.hasMap? '<span class="coldsamp" role="button" tabindex="0" onclick="event.stopPropagation();openPlan(\''+String(e.code).replace(/[^A-Za-z0-9]/g,"")+'\')">View map</span>' : '')
     +'</span>';
     if(isLocked(e)) row.classList.add("locked");
     if(caseTeaser(e)) row.classList.add("teaser");
@@ -5230,7 +5230,7 @@ function _terrPaint(q){
       +'<input class="cur-in" id="cblurb-'+c+'" maxlength="120" placeholder="One-line teaser for the shelf" value="'+escapeHtml(e.blurb||"")+'">'
       +'<div class="cdiff-row"><span class="cdiff-lbl">Difficulty</span>'+starpickHTML("cdiff-"+c,e.diff||0)+'</div>'
       +'<div class="cgeo-row"><button class="btn-ghost" id="cgeo-pin-'+c+'"'+(e.lat!=null?' data-lat="'+e.lat+'" data-lon="'+e.lon+'"':'')+' onclick="curPick(\''+c+'\')">'+(e.lat!=null?'\u2691 Pin placed \u2014 tap to move':'\u2690 Place on chart')+'</button></div>'
-      +'<div class="cplan-row"><input type="file" accept="image/*" class="hidden" id="cplan-f-'+c+'" onchange="planChosen(\''+c+'\', this)"><button class="btn-ghost" id="cplan-b-'+c+'" onclick="planPick(\''+c+'\')">'+(e.hasMap?'\u2691 Plan filed \u2014 tap to replace':'\u2690 Attach a surveyor\u2019s plan')+'</button>'+(e.hasMap?'<span class="coldsamp" role="button" tabindex="0" onclick="openPlan(\''+c+'\')">View plan</span>':'')+'</div>'
+      +'<div class="cplan-row"><input type="file" accept="image/*" class="hidden" id="cplan-f-'+c+'" onchange="planChosen(\''+c+'\', this)"><button class="btn-ghost" id="cplan-b-'+c+'" onclick="planPick(\''+c+'\')">'+(e.hasMap?'\u2691 Map filed \u2014 tap to replace':'\u2690 Attach a map')+'</button>'+(e.hasMap?'<span class="coldsamp" role="button" tabindex="0" onclick="openPlan(\''+c+'\')">View map</span>':'')+'</div>'
 +'<button class="btn btn-brass terr-save" data-code="'+escapeHtml(c)+'">File the Amendment</button></div></div>';
   });
   box.innerHTML=sh;
@@ -5518,7 +5518,7 @@ async function renderCurator(){
       +'<div class="cgeo-row"><input class="cur-in" id="cgeo-city-'+code+'" maxlength="40" placeholder="City" value="'+escapeHtml((p&&p.city)||"")+'"><input class="cur-in" id="cgeo-state-'+code+'" maxlength="20" placeholder="State" value="'+escapeHtml((p&&p.state)||"")+'"></div>'
       +'<div class="cgeo-row"><input class="cur-in" id="cgeo-zip-'+code+'" maxlength="10" placeholder="Zip (required)" value="'+escapeHtml((p&&p.zip)||"")+'"><input class="cur-in" id="cgeo-ctry-'+code+'" maxlength="30" placeholder="Country" value="'+escapeHtml((p&&p.country)||"")+'"></div>'
       +'<div class="cgeo-row"><button class="btn-ghost" id="cgeo-pin-'+code+'"'+(p&&p.lat!=null?' data-lat="'+p.lat+'" data-lon="'+p.lon+'"':'')+' onclick="curPick(\''+code+'\')">'+(p&&p.lat!=null?'\u2691 Pin placed \u2014 tap to move':'\u2690 Place on chart')+'</button></div>'
-      +'<div class="cplan-row"><input type="file" accept="image/*" class="hidden" id="cplan-f-'+code+'" onchange="planChosen(\''+code+'\', this)"><button class="btn-ghost" id="cplan-b-'+code+'" onclick="planPick(\''+code+'\')">'+((p&&p.hasMap)?'\u2691 Plan filed \u2014 tap to replace':'\u2690 Attach a surveyor\u2019s plan')+'</button>'+((p&&p.hasMap)?'<span class="coldsamp" role="button" tabindex="0" onclick="openPlan(\''+code+'\')">View plan</span>':'')+'</div>'
+      +'<div class="cplan-row"><input type="file" accept="image/*" class="hidden" id="cplan-f-'+code+'" onchange="planChosen(\''+code+'\', this)"><button class="btn-ghost" id="cplan-b-'+code+'" onclick="planPick(\''+code+'\')">'+((p&&p.hasMap)?'\u2691 Map filed \u2014 tap to replace':'\u2690 Attach a map')+'</button>'+((p&&p.hasMap)?'<span class="coldsamp" role="button" tabindex="0" onclick="openPlan(\''+code+'\')">View map</span>':'')+'</div>'
 +'<div class="cur-btns"><button class="btn btn-brass" onclick="publishCold(\''+code+'\')">'+(p?"Update":"Publish")+'</button>'
       +'<button class="btn-ghost" onclick="curEditCase(\''+code+'\')">Edit</button>'
       +(p?'<button class="btn-ghost" onclick="retireCold(\''+code+'\')">Retire</button>':'')+'<button class="btn-ghost cur-del" onclick="armDel(\''+code+'\',this)">Delete</button>'+'</div>';
@@ -5978,7 +5978,7 @@ async function publishCold(code){
     /* s57 (§90) - THE PLAN, on the publish page too (owner, s57).
        🔴 AND A BUG THIS EXPOSED: `entry` here is built FRESH, not merged with the
        existing row the way saveTerrInfo does it. So re-publishing a case would have
-       DROPPED a hasMap flag filed earlier and the View plan pill would vanish while
+       DROPPED a hasMap flag filed earlier and the View map pill would vanish while
        the picture sat in the store. `_prevP` carries it through. */
     const _prevP = (i>=0 ? (idx[i]||{}) : {});
     let _hasMapP = !!_prevP.hasMap;

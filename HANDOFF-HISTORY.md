@@ -215,7 +215,21 @@ See §50.2 for the owner-side protocol.
 
 ## §50 — 🔴 OWNER-SIDE WORK, WRITTEN OUT (these two only you can do)
 
-### §50.1 — THE LEGAL ENTITY IS THE REAL CRITICAL PATH, AND IT IS STALLED
+### §50.1 — THE LEGAL ENTITY IS THE REAL CRITICAL PATH. 🟡 **SUBMITTED s57 — NO LONGER STALLED.**
+
+**🟡 s57, from the owner: "do no harm company llc submitted to ga after i received ok for the
+name."** The name was cleared first, then the filing went in. **Step 1 of the four below is with
+the State of Georgia and out of his hands.** The list is otherwise unchanged and the sequence still
+governs.
+
+**🔴 THE NEXT ACTION IS TIME-CRITICAL AND IS THE OWNER'S.** The D-U-N-S request goes in **the day
+approval lands** — it carries the 30-day lead and gates everything after it. **The name must match
+the registered entity EXACTLY; a mismatch restarts the wait.** So when approval comes:
+**write the registered name into this section VERBATIM, from the state's document, not from
+memory** — `Do No Harm Company LLC` and `Do No Harm Company, LLC` are not the same string, and the
+comma decides whether the match holds.
+
+*(the original entry, unchanged:)*
 **Everything on the store track sits behind it** — enrolment, receipt validation, the 15% tiers, the
 org-website check. **It has been carried for many sessions and it has a clock on it.**
 1. **Register `Do No Harm Co.` as a Georgia LLC or corporation.** The registered name becomes the

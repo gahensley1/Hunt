@@ -1081,7 +1081,9 @@ three files, brand parchment, privacy policy stating 60 days** · **three delete
 - **🔴 ADD THE TERRITORY CARVE-OUT TO THE PRIVACY POLICY** before it goes up — territory cases are
   sweep-exempt and permanently held, which the flat 60-day claim does not cover (§47.2, §47.6).
 - **🔴 CREATE THE `info@scavengerandhunt.com` MAILBOX.** Apple checks the address resolves.
-- **🔴 THE LEGAL ENTITY — SEE §50.1. THIS IS THE CRITICAL PATH AND IT IS STALLED.**
+- **🟡 THE LEGAL ENTITY — SEE §50.1. NO LONGER STALLED. `Do No Harm Company LLC` WAS SUBMITTED TO
+  GEORGIA at s57, after the name was cleared.** Awaiting the state. **The moment it is approved,
+  START THE D-U-N-S REQUEST — it is the 30-day item and it must match the registered name EXACTLY.**
   Entity → D-U-N-S (30-day lead, exact name match) → domain/mailbox → enrolment.
 - **🔴 THE TWO-PHONE PLAYTEST — SEE §50.2.** Eight steps. The core loop has never been run end to end.
 - **🔴 PASTE THE WORKER SOURCE at the start of the next session** — four jobs need it (§13.2).
@@ -1622,8 +1624,14 @@ and the Worker source must never be committed.**
    has ever actually arrived**, and the full loop on two devices. **The owner is on an iPhone 15 and
    the app is a PWA — Safari can add it to the home screen and screen-record it today.** No amount
    of measuring closes this and nothing else on this list is as risky.
-2. **🔴 THE LEGAL ENTITY (§50.1).** The real critical path, and it is stalled. Nothing ships to a
-   store without it.
+2. **🟡 THE LEGAL ENTITY (§50.1) — MOVED s57. `Do No Harm Company LLC` IS SUBMITTED TO GEORGIA,
+   after the name came back cleared.** Step 1 of four is in the state's hands; nothing else on the
+   store track can start until it is approved. **THE NEXT ACTION IS THE OWNER'S AND IT IS TIME-
+   CRITICAL: the D-U-N-S request the day approval lands.** Thirty-day lead, and the name must match
+   the registered entity EXACTLY — a mismatch restarts the wait, so it cannot be typed from memory.
+   **RECORD THE REGISTERED NAME VERBATIM IN §50.1 THE MOMENT IT IS APPROVED**, including whether
+   Georgia issues it as `Do No Harm Company LLC`, `Do No Harm Company, LLC` or otherwise — the
+   comma is not cosmetic when an exact match is the requirement.
 3. **✅ THE BATTERY IS GREEN ON `33g` — s57, ALL THREE SUITES. STATIC clean · SESSION 21/21 ·
    `BATTERY PASSED` (the aggregate exit code, so all three children returned 0).** The blocker was
    never the build: **Chromium had never been downloaded after a Playwright update**, so
@@ -1877,6 +1885,37 @@ too, **and it is the one document that cannot be corrected from inside the repo.
 exactly like §0 did, it reads with total authority because it arrives before anything else, and
 **Claude cannot fix it — only the owner can.** **When the instructions and the disk disagree, THE
 DISK WINS, and say so out loud rather than hunting for the file the instructions promised.**
+
+### 🔴 77.12 THE FIRST FOUR CALLS OF EVERY SESSION. DO THESE BEFORE ASKING THE OWNER FOR ANYTHING. (s57)
+
+**Owner, s57: "how can i make sure you know you have powershell and chrome access next time we start
+a chat and also you access the folder."** He should not have to. Three of the four are Claude's to
+do unprompted, and s57 wasted the top of the session asking for two of them.
+
+**1. MOUNT THE FOLDER YOURSELF. DO NOT ASK.** `request_cowork_directory` takes a PATH:
+`C:\Users\tony\Documents\Hunt`. It mounts on approval with no folder-picker and no hunting.
+**s57 opened by telling him to "Add folder" — wrong, and he had to say so.** Add
+`C:\Users\tony\Documents\Hunt-backups` too if the work touches the archive, the clerk or
+`serve.ps1`. Access does NOT persist between sessions; re-mounting is one call, not a request.
+
+**2. CHECK CHROME WITH `list_connected_browsers`. NEVER ASSUME EITHER WAY.** It returns `[]` when
+the extension is not paired and a device record when it is. **s57 was told "you have chrome" while
+it returned `[]` — the statement was true and the extension still was not connected.** If it is
+empty, ask for the EXTENSION by name; do not ask for the browser, the server or the port.
+🔴 **AND THE SERVER IS NOT A SUBSTITUTE.** `serve.ps1` runs on HIS machine. Claude's shell is a
+separate Linux VM: `localhost:8000`, `127.0.0.1:8000`, `host.docker.internal:8000` and
+`172.17.0.1:8000` were all tried at s57 and all four time out. **Server ✅ + extension ❌ is zero.**
+
+**3. RUN STATIC IN THE SANDBOX.** `PYTHONUTF8=1 python3 test/agents.py index.html` needs only
+`node`, which the sandbox has. Free drift, handler and hygiene check before the owner lifts a
+finger (§77.2). Only BEHAVIOUR and SESSION need his machine.
+
+**4. HASH THE THREE SURFACES AND PROBE THE WORKER**, per §0 and the block. `curl` works in-sandbox.
+
+**THE SHELL: `cmd.exe`, NOT PowerShell** (§77.5) — `cd /d`, `del`, `certutil -hashfile`, `findstr`,
+`type`. **THE ONE EXCEPTION IS `serve.ps1`**, which is launched THROUGH PowerShell from `cmd`:
+`powershell -ExecutionPolicy Bypass -File C:\Users\tony\Documents\Hunt-backups\serve.ps1`.
+That is not "he uses PowerShell" — it is one command that invokes it.
 
 ### 🔴 77.11 A PARTIAL READ OF A LOG IS NOT A MEASUREMENT (s57)
 
