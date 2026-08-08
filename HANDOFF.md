@@ -180,16 +180,16 @@ is proven and should be reused for every future Worker change.
 | *(historical)* `index.html` 32n | 4,012,600 B | `cd46c7ad766e8ab1421ef9ee9bc96ffd0b081418e4dddab30aae43c6763e8964` | deerstalker re-cut, boot print pulled, modulus 10 (§61) |
 | *(historical)* `index.html` 32m | 4,024,671 B | `811a118a332a76b222c4261f95bf53370195941e60daeb87f79fc261e81ae1c3` | photographic seals + the builder's commendation card (§60) |
 | *(historical)* `index.html` 32l | 3,908,422 B | `bdfb02224e5084ef055fb8f871bde21fbfe56aac4d8a05768978667e0081f1bc` | credentials-card side slider (§57) |
-| 🔴 `candidate-32m.html` **AND** `_candidate-32m.html` **— TEMPORARY, DELETE THEM** | 4,024,671 B each | `811a118a…` | Render-check copies pushed so GitHub Pages could serve them (§60.5). **They are byte-identical to the shipped `index.html` and serve no purpose now. The sandbox cannot delete — the owner must.** |
+| ~~`candidate-32m.html` / `_candidate-32m.html`~~ **✅ GONE — BOTH 404 ON RAW, verified s55 and again s57. The deletion order that stood here is DISCHARGED (§80.9).** | 4,024,671 B each | `811a118a…` | Render-check copies pushed so GitHub Pages could serve them (§60.5). **They are byte-identical to the shipped `index.html` and serve no purpose now. The sandbox cannot delete — the owner must.** |
 | *(historical)* `index.html` 32i | 3,896,676 B | `a951bf6a603359545a7ccb14c42ac8b0bbe4957c832281ffa9e1a995ddd7ef1c` | agency licence minting (`8a89e99`) — **this row said "LIVE" for three builds after it stopped being true. See §0.2.** |
-| `sw.js` **✅ LIVE s54** | 5,196 B | `c415cc1554e98d80…` | `notificationclick` + the **`push` receiver** (§66, §70.4); `CACHE` = `shco-v2` |
+| `sw.js` **✅ LIVE — RE-MEASURED s57, disk == Pages** | 5,532 B | `7a1682bd276e3bdba985270e7e36e5dea2f26ad696db53280d65a5c2cc80f45c` | `notificationclick` + the **`push` receiver** (§66, §70.4); `CACHE` = `shco-v2` |
 | *(was LIVE at s53 open)* `sw.js` — **🔴 §0 HAD THIS WRONG: it said 3,435 B / `61a93b05…`. MEASURED s54: disk == raw == Pages at 3,349 B / `54127008f4ff0bdb…`.** A fourth inherited doc error (§0.1). | 3,349 B | `54127008f4ff0bdbc057…` | the service worker (§13.6, CLOSED) |
 | `award-card.jpeg` **🆕 in repo** | 180,855 B | `3ef3ac34795c8708…` | commendation card (§8r) |
-| `hunt-icon-v5.png` **🆕 in repo** | 67,899 B | `969262cefd3c431e…` | app icon |
-| `behaviour.py` **🆕 in repo ROOT — ⚠ A STRAY DUPLICATE** | 18,003 B | `473b385d3b122c6e…` | **byte-identical to `test/behaviour.py`.** One of the two should go; the root copy is the accident. |
+| ~~`hunt-icon-v5.png`~~ **⚠ NO LONGER IN THE REPO — moved to `_to_delete\s56-repo-slim\` at s56 (§88). Hash kept for the record.** | 67,899 B | `969262cefd3c431e…` | app icon |
+| ~~`behaviour.py` (repo ROOT)~~ **✅ GONE — the stray root copy left the tree at s56 (§88). `test/behaviour.py` is the only copy. Hash kept for the record.** | 18,003 B | `473b385d3b122c6e…` | **byte-identical to `test/behaviour.py`.** One of the two should go; the root copy is the accident. |
 | `.nojekyll` **🆕 s54 (LIVE)** | 0 B | — | Pages publishes statically; no Jekyll step to fail (§70.2) |
-| `SUPER-HANDOFF.md` **🔴 NOW IN THE PUBLIC REPO** | 177,589 B (pre-rebase) | — | this document. See the §0 warning below. **🆕 s53: it had NO BACKUP until this session — the archive clerk's file list never learned about it (§59.1).** |
-| `art/` **🆕 (6 files)** | — | — | `bonnie-icon-source.png` + `icon-C/` (adaptive-background-432, adaptive-foreground-432, icon-1024, icon-180-appletouch, icon-512) |
+| 🔴 `HANDOFF.md` **+ `HANDOFF-SPEC.md` + `HANDOFF-HISTORY.md` — ALL THREE IN THE PUBLIC REPO** | 136,233 B · 78,607 B · 179,610 B (LF, as stored) | — | the canonical document, split from `SUPER-HANDOFF.md` at s55 close. `SUPER-HANDOFF.md` IS DEAD and is in no repo. **🔴 s57: `HANDOFF-SPEC.md` and `HANDOFF-HISTORY.md` were MISSING FROM THE WORKING CLONE while present in the repo — `ship.cmd`'s `git add -A` would have committed their deletion. Restored. CHECK ALL THREE ARE ON DISK AT EVERY SESSION OPEN.** The working clone is CRLF and the repo is LF (`.gitattributes`); hash disk against raw only after stripping `\r`. |
+| ~~`art/`~~ **⚠ NO LONGER IN THE REPO — left the tree at s56 (§88); source art lives on disk.** | — | — | `bonnie-icon-source.png` + `icon-C/` (adaptive-background-432, adaptive-foreground-432, icon-1024, icon-180-appletouch, icon-512) |
 | *(historical)* `index.html` 29a | 3,690,652 B | `26d31f08192fbd47…` | the s30 edition's "live" build — nine builds stale |
 | `privacy.html` **(🆕 REBUILT s30 — for scavengerandhunt.com, NOT the repo)** | 5,364 B | `6298d38db9060f9575619709ffab02951c2b7606c74c7fd49441124e6e94391c` | DRAFT banner; §45.4 language verbatim (§44.2b) |
 | `parch.jpg` **(🆕 RE-EXTRACTED s30 — byte-identical to s28's)** | 49,029 B | `118d98d0b52f27b5aa746a94ecb3f7ad0ff707e9a153ec41d0d8e43ac77d011d` | site background texture |
@@ -206,16 +206,19 @@ is proven and should be reused for every future Worker change.
 | `j.html` **(CHANGED since s30)** | 1,419 B | `bbf057e1f3225a0f…` | invitation landing page (§8n/§8o) |
 | `og-card.jpeg` | 246,070 B | `0067960541bec0ac…` | link-preview card |
 
-- **🔴 THE REPO IS TEN TOP-LEVEL ENTRIES, MEASURED s52:** `index.html` · `j.html` · `sw.js` ·
-  `og-card.jpeg` · `award-card.jpeg` · `hunt-icon-v5.png` · `behaviour.py` · `SUPER-HANDOFF.md` ·
-  `art/` · `test/`. **The "five files" rule is dead — do not re-assert it.**
-- **🔴 `SUPER-HANDOFF.md` IS IN THE PUBLIC REPO.** Every prior edition said it was not. It is.
+- **🔴 THE REPO IS EIGHTEEN TOP-LEVEL ENTRIES, MEASURED s57 FROM `api.github.com` (unchanged since s56):**
+  `.gitattributes` · `.gitignore` · `.nojekyll` · `HANDOFF.md` · `HANDOFF-SPEC.md` ·
+  `HANDOFF-HISTORY.md` · `award-card.jpeg` · `battery.cmd` · `claude/` · `docs/` · `icons/` ·
+  `index.html` · `j.html` · `manifest.webmanifest` · `og-card.jpeg` · `ship.cmd` · `sw.js` ·
+  `test/`. **The "five files" rule is dead and so is "ten" — the count went 5 → 10 → 15 → 18 with a
+  doc entry only twice. AUDIT IT EVERY SESSION.**
+- **🔴 THE HANDOFF SET IS IN THE PUBLIC REPO** — all three files. Every edition before s52 said it was not.
   **Consequence: this document is world-readable. Never write a secret, a token, a curator word or a
   personal detail into it.** (The old `BAKER221B` references throughout are harmless — that word is
   now rotated and dead as a token; it survives in the client only as `CURATOR_NAME`, the public
   nameplate on the desk door.) **Owner decision owed: keep it public, or move it to `Hunt-backups`.**
-- **⚠ `behaviour.py` EXISTS TWICE** — repo root and `test/`, byte-identical (`473b385d…`). Harmless
-  today, a divergence trap tomorrow. Delete the root copy on the next push that touches anything.
+- **✅ `behaviour.py` NO LONGER EXISTS TWICE** — the root copy left the tree at s56 (§88) and is
+  confirmed absent from the working clone s57. `test/behaviour.py` (18,003 B) is the only copy.
 - **Push queue for the owner:** (1) `index.html` 29b → repo → replace project-knowledge copy is N/A
   (project knowledge holds only this handoff — correct state). (2) `privacy.html` + `parch.jpg` →
   **GoDaddy, scavengerandhunt.com** — a DIFFERENT destination from the repo. (3) The backup zip →
@@ -224,8 +227,9 @@ is proven and should be reused for every future Worker change.
 **🆕 SEPARATE PROPERTY — the marketing site (NOT in the Hunt repo, NOT on GitHub Pages).** See §44.
 
 - **🔴 THE FIRST THING THE NEXT SESSION MUST DO IS RE-HASH ALL THREE SURFACES.** Expect
-  **3,908,422 B / `bdfb0222…` / `32l`** on local, raw and Pages alike. *(The line that stood here
-  demanded confirmation of **28e** — twenty-plus builds dead. A stale instruction is worse than no
+  **4,052,031 B / `ec6f2966…` / `33g`** on local, raw and Pages alike, and the Worker root to read
+  **`(v2.6.12)`**. *(Verified s57: all three identical, Worker confirmed. The line that stood here
+  named **`32l`** — twelve builds dead — and before that **28e**. A stale instruction is worse than no
   instruction: it sends the session to verify a fact that stopped mattering. Re-write this line on
   every ship.)*
 - **🔴 ⚠ VERIFY A PUSH AGAINST `gahensley1.github.io`, NOT `raw.githubusercontent.com`.**
