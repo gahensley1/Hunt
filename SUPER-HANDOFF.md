@@ -3108,9 +3108,41 @@ because the numbers were implausible.
 
 **THE ROUTE THAT WORKS:** either unhide `#curator-ov` and force `width:390px` on it, or append a
 `position:fixed` `.tov-card` of width 354px with 16px padding to `<body>` at a high `z-index`.
-**⚠ THE APP BLOCKS LANDSCAPE** — on a desktop window it shows "The Agency conducts its business in
-portrait only," which covers the overlay. **A fixed, high-`z-index` probe card renders on top of that
-block; unhiding the overlay alone does not.**
+
+### 🔴 77.3a THE ROTATE GATE — IT WILL EAT YOUR FIRST SCREENSHOT EVERY SINGLE TIME
+
+**Owner, s55: "remember and concrete this too — when you render it shows this unless you fix it."**
+
+Open the app in a desktop browser window and you do not get the app. You get **`#ov-rotate`** — a
+full-screen `position:fixed;inset:0;z-index:99999` panel reading *"The Agency conducts its business
+in portrait only. Kindly right your device before continuing the investigation."* **It is triggered
+by `@media (orientation: landscape) and (max-height: 500px)`**, which a normal desktop window
+satisfies, so **every screenshot is that panel until it is dealt with.** This cost a wasted
+screenshot in s55 and it will cost one every session that does not read this.
+
+**🔴 THE FIX IS ONE LINE, AND IT IS THE APP'S OWN ESCAPE HATCH — NOT A HACK:**
+
+```js
+document.documentElement.classList.add('rotlock-off');
+```
+
+`html.rotlock-off #ov-rotate{display:none!important}` already exists in the stylesheet. **In the UI
+the same switch is the full stop in "Scavenger & Hunt Co." on that panel** — `.rl-dot`, which calls
+`toggleRotLock()`. **Do not delete either; they are deliberate.**
+
+**RUN THAT LINE FIRST, BEFORE ANY SCREENSHOT OR RENDER, EVERY TIME.** Two alternatives, both worse:
+make the window taller than 500px, or use a `position:fixed` probe card at a higher `z-index` —
+**a probe card renders over the gate, which is why the s55 option screenshots worked while the
+earlier full-page one did not.** The one-liner is cleaner: it shows the *real* app, not a probe.
+
+### ⚠ 77.3b CLAUDE'S `Edit` TOOL ESCAPES NON-ASCII INTO `\uXXXX` IN THIS FILE
+
+An em dash, `§`, `‹`, `›` or `⚠` typed into an `index.html` edit **lands on disk as the literal
+seven characters `—`**, not the character. **Verified s55** — the 32z and 33a code comments both
+carry it. **Harmless in a JS comment, and harmless inside a JS string literal** (`"—"` still
+renders as the dash). **🔴 BUT IT WOULD BREAK CSS** — `content:"—"` is not the same thing — and
+it makes greps for the character fail. **Write code comments in plain ASCII, and if a non-ASCII
+character must reach a CSS or HTML literal, verify the bytes after the edit.**
 
 ### 77.4 ⚠ THE MEASUREMENT THAT LOOKS LIKE A MEASUREMENT BUT ISN'T
 
