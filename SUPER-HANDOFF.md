@@ -3242,6 +3242,12 @@ instructions.**
    is no §16 in this document.** Read **§0, §13, §65 and §77** instead — §65 is the ranked backlog
    the header points to, and §77 is the tooling.
 
+**✅ THE REPLACEMENT BLOCK IS WRITTEN AND ON DISK: `claude/PROJECT-INSTRUCTIONS-s55.md`.** It holds
+the full paste-ready text plus a numbered list of what changed and why. **⚠ `claude/` IS NOT IN GIT**
+(§69) — the laptop disk and `Hunt-backups` are its only durable copies. **If a future session finds
+the instruction block still naming `claude/SUPERHANDOFF.md` or `§16`, the owner has not pasted it
+yet: point him at that file rather than re-deriving it.**
+
 **THE GENERAL LESSON, AND IT IS THE §0.2 CLASS ONE LEVEL UP:** the instruction block is a document
 too, **and it is the one document that cannot be corrected from inside the repo.** It goes stale
 exactly like §0 did, it reads with total authority because it arrives before anything else, and
