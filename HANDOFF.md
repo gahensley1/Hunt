@@ -156,7 +156,9 @@ is proven and should be reused for every future Worker change.
 
 | File | Size | SHA-256 | Purpose |
 |---|---|---|---|
-| `index.html` **🆕 33g — ✅ LIVE s56, commit `9cd34d4d`. The CSV byte-order mark (§87).** | 4,052,031 B | `ec6f29661d09ba89bc4214db7577608a791905cc928e2b1d48e687598ab91d30` | needs Worker **v2.6.12**, which is deployed |
+| `index.html` **🆕 33h — THE SURVEYOR'S PLAN (§90). s57.** | 4,059,317 B | `c09f7377616bdb24a6ee70ca0509245f23f85a030135e06989041adcbbc45418` | needs Worker **v2.6.13**, which is deployed and gate-verified |
+| `worker-v2_6_13.js` **✅ THE LIVE WORKER, DEPLOYED AND VERIFIED s57 — root reads `(v2.6.13)`** | 99,952 B | — | `map:` keys are staff-only on PUT/DELETE; GET stays open (§90) |
+| *(superseded)* `index.html` 33g — was live s56, commit `9cd34d4d`. The CSV byte-order mark (§87). | 4,052,031 B | `ec6f29661d09ba89bc4214db7577608a791905cc928e2b1d48e687598ab91d30` | needs Worker **v2.6.12**, which is deployed |
 | *(superseded)* `index.html` 33f — was live s56, commit `b7e348e7`. THE ANNUAL REPORT (§86) | 4,051,223 B | `437fdc409f3e163831a062994da151638c985cc166f7fdcc599d50e401c90fc8` | needs Worker **v2.6.11**, which is deployed |
 | *(superseded)* `index.html` 33e — was live s55, commit `37ec0128` | 4,037,814 B | `e1fffd5e9fc6be3ed23b26ef061a53fc78d67bfcda1fdfc8ae4fa9a8f8d900af` | needs Worker **v2.6.9**, which is deployed |
 | `worker-v2_6_12.js` **✅ THE LIVE WORKER, DEPLOYED AND VERIFIED s56 — root reads `(v2.6.12)`** | 98,430 B | `e3b17467b27301cf448840ccfb24dcf8695830c0db0818746e799fac2a665586` | **THE BYTE-ORDER MARK** — one `csvBytes()` helper, three attachment sites (§87) |
@@ -1180,6 +1182,91 @@ verification depth to risk**; **keep ship summaries to ~3 lines + the hash**; **
 
 ---
 
+## ✅ §90 — THE SURVEYOR'S PLAN. A TERRITORY MAY CARRY A MAP. `33h` + Worker v2.6.13, s57.
+
+**Owner, s57: "i want to be able to add a map to the territories before we publish… there will be a
+button on the case if there is a map so one could click to see the map as a pop up it should have an
+x in the upper left hand to x out." And: "not every case will have it. only selected cases."**
+
+### 🔴 90.1 THE MAP MAKER IS GONE — §1v, AND IT COST THIS FEATURE A REBUILD
+
+A map maker was built in an earlier session and produced the sample plan. **It is not in
+`index.html` (zero hits for `surveyor`, `OpenStreetMap`, or any map builder), not on disk, not in
+the handoff, and not in project knowledge.** It existed only in a chat. **§1v in its purest form,
+and this is the second time the rule has been proved this session.** Only the output image survives.
+**Decision taken: the curator UPLOADS a finished image; the app does not make maps.** No map
+library, no tile fetch, nothing added to a 4 MB file.
+
+### 90.2 HOW IT WORKS
+
+- **Storage: `map:CODE`, one key, via the existing generic `/kv/{key}`.** No new route, no schema
+  change. `MAX_VALUE` is 2 MB; the client downscales the longest edge to 1200px and re-encodes at
+  the app's existing `0.72` JPEG, landing far inside.
+- **`hasMap` rides the `cold:index` entry**, so a shelf card knows a plan exists **without fetching
+  the picture**. Only selected cases carry it, so drawing a card costs no extra request.
+- **The picture is written ONLY when the Amendment is filed**, in the same action that sets the
+  flag, so the two can never disagree and an abandoned upload leaves nothing behind.
+- **The card gains a `View plan` pill** beside `View sample`, rendered only when the flag is set.
+- **The popup is `#ov-plan`** — the standard `.modal`, with **the ✕ UPPER-LEFT by the owner's
+  instruction**, not the usual right.
+
+### 🔴 90.3 WORKER v2.6.13 — A HOLE THAT WAS ALREADY OPEN
+
+**PUT on `/kv/` was gated for exactly two things: `cold:index` and `push:`. EVERYTHING ELSE WAS
+OPEN.** So any hunter holding a case code could have written that case's `map:` key — and, before
+this feature, any other key too. v2.6.13 refuses PUT and DELETE on `map:` without the curator token.
+**GET stays open deliberately: a hunter must be able to look at the plan, and a street plan carries
+nothing private.** Verified from outside, four ways: root reads `(v2.6.13)`; ungated PUT returns
+**403** *"the archivist shakes his head"*; the follow-up GET returns **404**, proving nothing was
+written; and a control PUT to a non-`map:` key still returns **200**, proving the gate is specific
+and not a blanket lock.
+
+**⚠ THE WIDER HOLE IS STILL OPEN AND IS NOT THIS SECTION'S TO CLOSE.** Ungated PUT on every other
+key remains. Recorded here because the control test proved it; **§80 should carry it.**
+
+### 90.4 `openCrop()` WAS NOT REUSED — AND THE PLAN SAID IT WOULD BE
+
+The plan claimed the upload could borrow `openCrop()`. **Reading it showed that was wrong:** it is
+wired to the clue-capture flow (`crop-cluerow`, `crop-clue`, `State.captureMode`,
+`State.huntTarget`) and sits on the hunt path. Borrowing it would have put clue fields on a map
+upload and risked the most-used screen in the app. **The plan was corrected before code was
+written, not after.**
+
+### 🔴 90.5 THE Z-INDEX BAND COMMENT HAD EXPIRED — AND THREE LAYOUT DEFECTS FOUND BY MEASURING
+
+**The CSS comment naming "515-519" as the free band is out of date: all five are taken, and 519
+already shares three overlays.** `#ov-plan` sits at **521** — above `#colddetail-ov` (510) and
+`#cred-ov` (520) so it paints over the archive that opens it, below `.toast` (620) so a toast still
+surfaces, clear of `#ov-loupe` (700). **NEXT FREE: 522.** The comment is corrected in place.
+
+Three faults were then found **by measuring in Chrome, none of them visible by reading the code**:
+
+1. **🔴 NO `max-height`. At a 449px-tall viewport the modal stood 787px with its top at −169 — THE
+   CLOSE BUTTON WAS OFF-SCREEN AND THE OVERLAY COULD NOT BE LEFT.** A landscape phone would have
+   trapped the user. Capped at `90vh`.
+2. **`max-height:100%` DOES NOT CONSTRAIN inside an auto-height flex parent** — a 705px image sat
+   in a 380px card and scrolled instead of fitting. **`vh` resolves against the viewport and always
+   bites.**
+3. **The card did not hug the plan** — 714px of parchment around a 337px map. `width:fit-content`.
+
+**Final measured state:** card 337×362 around a 337×337 plan, fits the viewport, X at 9,9, no
+scroll.
+
+### ⚠ 90.6 WHAT IS NOT PROVEN
+
+- **THE SCREENSHOT AND THE RECTS DISAGREE AND IT WAS NOT RESOLVED.** `getBoundingClientRect` reports
+  a 337px card centred in a 1024px viewport; the capture shows it starting at x≈500 and running off
+  the right edge. No transform, no zoom, `devicePixelRatio` 1.875, capture 1045px for a 1024px
+  viewport. **Trust the numbers, not the picture — and do not quote the picture as verification.**
+- **THE UPLOAD ROUND-TRIP HAS NEVER RUN.** Writing a `map:` key needs the curator token, which
+  Claude must never hold (§A.1). **The first real save at the Desk is the test.**
+- **NOT SEEN ON THE PHONE.** The owner is on an iPhone 15; every route Claude has is desktop Chrome.
+- **Only the TERRITORIES editor got the control.** The submissions (`sb`) and publish (`p`) editors
+  did not. That was the owner's instruction; if a map is ever wanted at publish time it is the same
+  four lines.
+
+---
+
 ## ✅ §89 — `GET /null 404` ON BOOT. RESOLVED — IT WAS THE HARNESS, NOT THE APP. (s57)
 
 **THE APP WAS NEVER AT FAULT. The premise that "the app is building a URL from a `null`" is struck.**
@@ -1542,6 +1629,14 @@ and the Worker source must never be committed.**
    clue-tip duration (open since s19) · the clan crest · the Almanac regrouping · a non-builder route
    to a volume · **whether `SUPER-HANDOFF.md` stays in the public repo.**
 10. **Cloudflare Pages migration** — three arguments for it now (§70.5 item 6). Not urgent.
+
+11. **🔴 UNGATED `PUT` ON EVERY OTHER `/kv/` KEY (found s57, §90.3).** PUT is curator-gated for
+   `cold:index`, `push:` and now `map:`. **Everything else is open to anyone who can reach the
+   Worker** — proven, not inferred: a control `PUT /kv/zztest:s57` returned **200**. A hunter
+   holding a case code can write keys for that case; the blast radius has not been mapped. **Rank
+   it against §13's security list before the next Worker version, and decide deliberately whether
+   it is acceptable — it may well be, since a builder must write their own case. What is not
+   acceptable is not having decided.**
 
 ### ⚠ SMALL, RECORDED, NOT URGENT
 - **`behaviour.py` STILL EXISTS TWICE** — repo root and `test/`, both 18,003 B, byte-identical. The

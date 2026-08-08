@@ -282,7 +282,7 @@
     #notify-card .nc-txt{font-size:14px}
   }
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#7FA33C;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#B4532A;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -512,6 +512,33 @@
   #ov-commend{z-index:517}
   #ov-tile{z-index:518}
   #ov-object{z-index:519}
+  /* 🔴 s57 - THE BAND ABOVE IS NOW FULL. 515-519 are all taken (519 shares three),
+     so the comment's advice expired. #ov-plan sits at 521: above #colddetail-ov (510)
+     and #cred-ov (520) so it paints over the archive that opens it, below .toast (620)
+     so a toast still surfaces, and clear of #ov-loupe (700). NEXT FREE: 522. */
+  #ov-plan{z-index:521}
+  /* 🔴 s57 - MAX-HEIGHT IS NOT OPTIONAL HERE. Measured at a 449px-tall viewport the
+     modal stood 787px and its top sat at -169: THE CLOSE BUTTON WAS OFF-SCREEN AND THE
+     OVERLAY COULD NOT BE LEFT. A plan is a big square picture, so it will always try to
+     out-grow a short screen - a landscape phone most of all. The card is capped, the
+     picture is contained inside it, and the X travels with the card. */
+  #ov-plan .modal{max-width:min(94vw,760px);max-height:90vh;width:fit-content;padding:0;
+    overflow:hidden;position:relative;display:flex;flex-direction:column}
+  #plan-body{flex:1 1 auto;min-height:0;display:flex;align-items:center;justify-content:center;overflow:auto}
+  /* max-height:100% DOES NOT CONSTRAIN inside an auto-height flex parent - measured
+     s57: a 705px image sat in a 380px card and scrolled instead of fitting. vh resolves
+     against the viewport and always bites. 46px is the caption strip. */
+  #plan-img{display:block;max-width:100%;max-height:calc(90vh - 46px);width:auto;height:auto;object-fit:contain}
+  /* THE X IS UPPER-LEFT BY THE OWNER'S INSTRUCTION (s57), not the usual right. */
+  .plan-x{position:absolute;left:10px;top:10px;z-index:2;width:34px;height:34px;
+    border-radius:50%;border:1px solid rgba(60,48,36,.45);background:rgba(247,242,230,.92);
+    color:var(--ink);font-size:17px;line-height:1;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+  .plan-x:hover{background:#fff}
+  .plan-cap{font-family:var(--type);font-size:11px;letter-spacing:1px;text-transform:uppercase;
+    text-align:center;padding:8px 10px;color:var(--ink);opacity:.75}
+  .plan-wait{padding:34px 16px;text-align:center;font-family:var(--serif);color:var(--ink)}
+  .cplan-row{display:flex;gap:6px;align-items:center;margin:6px 0}
   #ov-crop{z-index:519}
   #ov-source{z-index:519}
   .overlay.center{align-items:center}
@@ -1220,7 +1247,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">33g</p>
+      <p id="buildmark" aria-label="test build marker">33h</p>
     </div>
   </section>
 
@@ -1504,6 +1531,14 @@
     <p class="clue-text" id="clue-hint"></p>
     <div id="clue-hintrow"></div>
     <div class="row2" id="clue-actions"></div>
+  </div>
+</div>
+
+<div id="ov-plan" class="overlay center">
+  <div class="modal">
+    <button class="plan-x" onclick="closePlan()" aria-label="Close the plan">✕</button>
+    <div id="plan-body" class="plan-wait">Fetching the plan…</div>
+    <div class="plan-cap" id="plan-cap"></div>
   </div>
 </div>
 
@@ -2192,6 +2227,76 @@ function _toastAtAdd(t){
   }catch(e){ t.classList.remove("atadd"); }
 }
 function openOverlay(id){document.getElementById(id).classList.add("open");}
+
+/* ================= THE SURVEYOR'S PLAN (s57) =================
+   A territory may carry one map. NOT every case has one - only selected cases
+   (owner, s57) - so the shelf card must know WITHOUT fetching the image: a
+   `hasMap` flag rides the cold:index entry, the picture lives under its own key
+   `map:CODE`. Drawing a card therefore costs no extra request.
+
+   THE KEY IS STAFF-ONLY ON WRITE. Worker v2.6.13 refuses PUT and DELETE on a
+   `map:` key without the curator token; before it, any hunter holding a case code
+   could have replaced the plan every other player sees. GET stays open on purpose.
+
+   NOT openCrop(). That is wired to the clue-capture flow (crop-cluerow, crop-clue,
+   State.captureMode, State.huntTarget) and sits on the hunt path; borrowing it
+   would put clue fields on a map upload and risk the most-used screen in the app.
+   This reads and downscales on its own, with no crop UI. */
+var PLAN_MAX_PX = 1200;
+var PLAN_MAX_BYTES = 1500000;
+function planKey(code){ return "map:"+String(code||"").replace(/[^A-Za-z0-9]/g,""); }
+
+async function openPlan(code){
+  var body=document.getElementById("plan-body"), cap=document.getElementById("plan-cap");
+  if(!body) return;
+  body.className="plan-wait"; body.textContent="Fetching the plan\u2026";
+  if(cap) cap.textContent="";
+  openOverlay("ov-plan");
+  var d=null;
+  try{ d=await Store.get(planKey(code), true); }catch(e){ d=null; }
+  if(!d){ body.className="plan-wait"; body.textContent="No plan is filed for this case."; return; }
+  body.className=""; body.innerHTML="";
+  var img=document.createElement("img");
+  img.id="plan-img"; img.alt="Surveyor\u2019s plan"; img.decoding="async"; img.src=d;
+  body.appendChild(img);
+  if(cap) cap.textContent="Surveyor\u2019s Plan";
+}
+function closePlan(){
+  closeOverlay("ov-plan");
+  var b=document.getElementById("plan-body");
+  if(b){ b.className="plan-wait"; b.innerHTML=""; }   /* drop the bytes on close */
+}
+
+/* Read a chosen file, downscale the longest edge to PLAN_MAX_PX, hand back a JPEG
+   at the same 0.72 the rest of the app uses. HELD IN State UNTIL THE AMENDMENT IS
+   FILED, so an upload the curator abandons never reaches the server and never
+   leaves a hasMap flag with no picture behind it. */
+function planPick(code){ var f=document.getElementById("cplan-f-"+code); if(f) f.click(); }
+function planChosen(code, input){
+  var file=input.files&&input.files[0]; input.value="";
+  if(!file) return;
+  var rd=new FileReader();
+  rd.onload=function(){
+    var im=new Image();
+    im.onload=function(){
+      var w=im.naturalWidth, h=im.naturalHeight;
+      var k=Math.min(1, PLAN_MAX_PX/Math.max(w,h));
+      var cv=document.createElement("canvas");
+      cv.width=Math.round(w*k); cv.height=Math.round(h*k);
+      cv.getContext("2d").drawImage(im,0,0,cv.width,cv.height);
+      var d=cv.toDataURL("image/jpeg",0.72);
+      if(d.length>PLAN_MAX_BYTES){ toast("That plan is too large even after resizing \u2014 try a smaller image."); return; }
+      State._planNew=State._planNew||{};
+      State._planNew[code]=d;
+      var b=document.getElementById("cplan-b-"+code);
+      if(b) b.textContent="\u2691 Plan chosen \u2014 file the Amendment to keep it";
+    };
+    im.onerror=function(){ toast("Couldn\u2019t read that image \u2014 try another."); };
+    im.src=rd.result;
+  };
+  rd.onerror=function(){ toast("Couldn\u2019t read that file."); };
+  rd.readAsDataURL(file);
+}
 function toggleRotLock(){
   var off; try{ off=localStorage.getItem("shco:rotlock")==="off"; }catch(e){ off=false; }
   off=!off;
@@ -4145,7 +4250,9 @@ function renderColdList(){
       +(caseTeaser(e)? '' : isLocked(e)? '<span class="coldstamp locked">'+(function(){ const v=volumeOf(e.code); return v? 'BUY VOL '+volumeNo(v) : 'BUY'; })()+'</span>'
                    : (caseClosedOn(e.code)? '<span class="coldstamp closed">CASE CLOSED</span>'
                                           : '<span class="coldstamp">COLD CASE</span>'))
-      +'<span class="coldsamp" role="button" tabindex="0">View sample</span></span>';
+      +'<span class="coldsamp" role="button" tabindex="0">View sample</span>'
+    +(e.hasMap? '<span class="coldsamp" role="button" tabindex="0" onclick="event.stopPropagation();openPlan(\''+String(e.code).replace(/[^A-Za-z0-9]/g,"")+'\')">View plan</span>' : '')
+    +'</span>';
     if(isLocked(e)) row.classList.add("locked");
     if(caseTeaser(e)) row.classList.add("teaser");
     row.onclick=()=>openColdDetail(e.code);
@@ -5123,7 +5230,8 @@ function _terrPaint(q){
       +'<input class="cur-in" id="cblurb-'+c+'" maxlength="120" placeholder="One-line teaser for the shelf" value="'+escapeHtml(e.blurb||"")+'">'
       +'<div class="cdiff-row"><span class="cdiff-lbl">Difficulty</span>'+starpickHTML("cdiff-"+c,e.diff||0)+'</div>'
       +'<div class="cgeo-row"><button class="btn-ghost" id="cgeo-pin-'+c+'"'+(e.lat!=null?' data-lat="'+e.lat+'" data-lon="'+e.lon+'"':'')+' onclick="curPick(\''+c+'\')">'+(e.lat!=null?'\u2691 Pin placed \u2014 tap to move':'\u2690 Place on chart')+'</button></div>'
-      +'<button class="btn btn-brass terr-save" data-code="'+escapeHtml(c)+'">File the Amendment</button></div></div>';
+      +'<div class="cplan-row"><input type="file" accept="image/*" class="hidden" id="cplan-f-'+c+'" onchange="planChosen(\''+c+'\', this)"><button class="btn-ghost" id="cplan-b-'+c+'" onclick="planPick(\''+c+'\')">'+(e.hasMap?'\u2691 Plan filed \u2014 tap to replace':'\u2690 Attach a surveyor\u2019s plan')+'</button>'+(e.hasMap?'<span class="coldsamp" role="button" tabindex="0" onclick="openPlan(\''+c+'\')">View plan</span>':'')+'</div>'
++'<button class="btn btn-brass terr-save" data-code="'+escapeHtml(c)+'">File the Amendment</button></div></div>';
   });
   box.innerHTML=sh;
   box.querySelectorAll(".terr-edit").forEach(function(b){ b.onclick=function(){ State._subReview=null; curEditCase(b.getAttribute("data-code")); }; });
@@ -5802,8 +5910,21 @@ async function saveTerrInfo(code){
     try{ (_coldIdx||[]).forEach(function(x){ if(!idx.some(function(y){ return String(y.code)===String(x.code); })) idx.push(x); }); }catch(_e){}
     const i=idx.findIndex(function(x){ return String(x.code)===String(code); });
     const prev=(i>=0? idx[i] : {});
+    /* s57 - THE PLAN. Written only here, in the same action as the Amendment, so the
+       flag and the picture can never disagree. A curator who chose a file and walked
+       away leaves nothing behind. prev.hasMap carries a plan filed earlier through an
+       edit that did not touch it. */
+    let _hasMap = !!prev.hasMap;
+    try{
+      const _pn = (State._planNew||{})[code];
+      if(_pn){
+        const _ok = await Store.set(planKey(code), _pn, true);
+        if(_ok===false){ toast("The plan did not reach the office \u2014 the rest was filed."); }
+        else { _hasMap = true; try{ delete State._planNew[code]; }catch(_e){} }
+      }
+    }catch(_e){ toast("The plan did not reach the office \u2014 the rest was filed."); }
     const entry=Object.assign({}, prev,
-      {code:code, title:hh.title||prev.title||"Untitled Case", place:hh.place||"", blurb:hh.blurb||"", diff:curDiff(code)},
+      {code:code, title:hh.title||prev.title||"Untitled Case", place:hh.place||"", blurb:hh.blurb||"", diff:curDiff(code), hasMap:_hasMap},
       geo, {cat:"", paid:false, price:"", vol:""});
     /* A FRESHLY PLACED PIN WINS; A CHANGED ZIP OTHERWISE RE-DERIVES THE COORDS.
        The pin button is PRE-POPULATED from the stored entry, so "has a pin" cannot
