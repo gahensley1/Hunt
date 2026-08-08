@@ -156,7 +156,8 @@ is proven and should be reused for every future Worker change.
 
 | File | Size | SHA-256 | Purpose |
 |---|---|---|---|
-| `index.html` **🆕 33h — THE SURVEYOR'S PLAN (§90). s57.** | 4,059,317 B | `c09f7377616bdb24a6ee70ca0509245f23f85a030135e06989041adcbbc45418` | needs Worker **v2.6.13**, which is deployed and gate-verified |
+| `index.html` **🆕 33i — the plan on the PUBLISH page too, + the re-publish flag bug (§90.7). s57.** | 4,060,680 B | `eb5f9652d0e804bae1c3cd86128df73d2818d776d1ba2137d1c6dc03f6535c5d` | needs Worker **v2.6.13**, which is deployed and gate-verified |
+| *(superseded)* `index.html` 33h — was live s57, commit `e4906dd2`. THE SURVEYOR'S PLAN (§90). | 4,059,317 B | `c09f7377616bdb24a6ee70ca0509245f23f85a030135e06989041adcbbc45418` | needs Worker **v2.6.13** |
 | `worker-v2_6_13.js` **✅ THE LIVE WORKER, DEPLOYED AND VERIFIED s57 — root reads `(v2.6.13)`** | 99,952 B | — | `map:` keys are staff-only on PUT/DELETE; GET stays open (§90) |
 | *(superseded)* `index.html` 33g — was live s56, commit `9cd34d4d`. The CSV byte-order mark (§87). | 4,052,031 B | `ec6f29661d09ba89bc4214db7577608a791905cc928e2b1d48e687598ab91d30` | needs Worker **v2.6.12**, which is deployed |
 | *(superseded)* `index.html` 33f — was live s56, commit `b7e348e7`. THE ANNUAL REPORT (§86) | 4,051,223 B | `437fdc409f3e163831a062994da151638c985cc166f7fdcc599d50e401c90fc8` | needs Worker **v2.6.11**, which is deployed |
@@ -1261,9 +1262,28 @@ scroll.
 - **THE UPLOAD ROUND-TRIP HAS NEVER RUN.** Writing a `map:` key needs the curator token, which
   Claude must never hold (§A.1). **The first real save at the Desk is the test.**
 - **NOT SEEN ON THE PHONE.** The owner is on an iPhone 15; every route Claude has is desktop Chrome.
-- **Only the TERRITORIES editor got the control.** The submissions (`sb`) and publish (`p`) editors
-  did not. That was the owner's instruction; if a map is ever wanted at publish time it is the same
-  four lines.
+- **✅ SUPERSEDED IN `33i` — SEE §90.7. The publish page now has it too.** *(the 33h line, for the
+  record:)* Only the TERRITORIES editor got the control. The submissions (`sb`) and publish (`p`)
+  editors did not.
+
+### 🔴 90.7 THE PLAN ON THE PUBLISH PAGE — AND A BUG IT EXPOSED. `33i`, s57.
+
+**Owner, s57: "i need the Attach a surveyor's plan also on this publish page."** The same control,
+the same held-until-filed behaviour, written by `publishCold()` instead of `saveTerrInfo()`.
+
+**🔴 AND ADDING IT FOUND A REAL BUG IN THE PUBLISH PATH.** `saveTerrInfo()` builds its index entry
+with `Object.assign({}, prev, …)` — it MERGES. **`publishCold()` builds `entry` FRESH, from a
+literal.** So every field not named in that literal is dropped on re-publish. With `hasMap` added,
+**re-publishing a case that already had a plan would have silently cleared the flag: the `View
+plan` pill would vanish while the picture sat in the store, orphaned.** Fixed by reading
+`idx[i]` into `_prevP` and carrying the flag through.
+
+**⚠ THE SAME SHAPE MAY BITE AGAIN.** `publishCold()`'s literal is the only place in the Desk that
+rebuilds an index entry from scratch rather than merging. **Any future field added to a `cold:index`
+entry must be added THERE TOO, or re-publishing will erase it.** This one was caught only because
+the new field happened to be added in the same session; a later field would not be.
+
+**Buildmark `33i` / Cobalt `#3B6BA5`** — §8i's letters wrapped after `h` Rust.
 
 ---
 

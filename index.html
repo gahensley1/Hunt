@@ -282,7 +282,7 @@
     #notify-card .nc-txt{font-size:14px}
   }
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#B4532A;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#3B6BA5;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -1247,7 +1247,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">33h</p>
+      <p id="buildmark" aria-label="test build marker">33i</p>
     </div>
   </section>
 
@@ -5518,7 +5518,8 @@ async function renderCurator(){
       +'<div class="cgeo-row"><input class="cur-in" id="cgeo-city-'+code+'" maxlength="40" placeholder="City" value="'+escapeHtml((p&&p.city)||"")+'"><input class="cur-in" id="cgeo-state-'+code+'" maxlength="20" placeholder="State" value="'+escapeHtml((p&&p.state)||"")+'"></div>'
       +'<div class="cgeo-row"><input class="cur-in" id="cgeo-zip-'+code+'" maxlength="10" placeholder="Zip (required)" value="'+escapeHtml((p&&p.zip)||"")+'"><input class="cur-in" id="cgeo-ctry-'+code+'" maxlength="30" placeholder="Country" value="'+escapeHtml((p&&p.country)||"")+'"></div>'
       +'<div class="cgeo-row"><button class="btn-ghost" id="cgeo-pin-'+code+'"'+(p&&p.lat!=null?' data-lat="'+p.lat+'" data-lon="'+p.lon+'"':'')+' onclick="curPick(\''+code+'\')">'+(p&&p.lat!=null?'\u2691 Pin placed \u2014 tap to move':'\u2690 Place on chart')+'</button></div>'
-      +'<div class="cur-btns"><button class="btn btn-brass" onclick="publishCold(\''+code+'\')">'+(p?"Update":"Publish")+'</button>'
+      +'<div class="cplan-row"><input type="file" accept="image/*" class="hidden" id="cplan-f-'+code+'" onchange="planChosen(\''+code+'\', this)"><button class="btn-ghost" id="cplan-b-'+code+'" onclick="planPick(\''+code+'\')">'+((p&&p.hasMap)?'\u2691 Plan filed \u2014 tap to replace':'\u2690 Attach a surveyor\u2019s plan')+'</button>'+((p&&p.hasMap)?'<span class="coldsamp" role="button" tabindex="0" onclick="openPlan(\''+code+'\')">View plan</span>':'')+'</div>'
++'<div class="cur-btns"><button class="btn btn-brass" onclick="publishCold(\''+code+'\')">'+(p?"Update":"Publish")+'</button>'
       +'<button class="btn-ghost" onclick="curEditCase(\''+code+'\')">Edit</button>'
       +(p?'<button class="btn-ghost" onclick="retireCold(\''+code+'\')">Retire</button>':'')+'<button class="btn-ghost cur-del" onclick="armDel(\''+code+'\',this)">Delete</button>'+'</div>';
     list.appendChild(row);
@@ -5974,7 +5975,22 @@ async function publishCold(code){
     const idx=await coldIndex();
     try{ (_coldIdx||[]).forEach(e=>{ if(!idx.some(x=>String(x.code)===String(e.code))) idx.push(e); }); }catch(_e){}
     const i=idx.findIndex(e=>e.code===code);
-    const entry={code, title:hh.title||"Untitled Case", place:hh.place, blurb:hh.blurb, diff:curDiff(code), ...geo, cat:hh.cat||"", paid:!!hh.paid, price:hh.price||"", vol:hh.vol||""};
+    /* s57 (§90) - THE PLAN, on the publish page too (owner, s57).
+       🔴 AND A BUG THIS EXPOSED: `entry` here is built FRESH, not merged with the
+       existing row the way saveTerrInfo does it. So re-publishing a case would have
+       DROPPED a hasMap flag filed earlier and the View plan pill would vanish while
+       the picture sat in the store. `_prevP` carries it through. */
+    const _prevP = (i>=0 ? (idx[i]||{}) : {});
+    let _hasMapP = !!_prevP.hasMap;
+    try{
+      const _pn = (State._planNew||{})[code];
+      if(_pn){
+        const _ok = await Store.set(planKey(code), _pn, true);
+        if(_ok===false){ toast("The plan did not reach the office \u2014 the rest was filed."); }
+        else { _hasMapP = true; try{ delete State._planNew[code]; }catch(_e){} }
+      }
+    }catch(_e){ toast("The plan did not reach the office \u2014 the rest was filed."); }
+    const entry={code, title:hh.title||"Untitled Case", place:hh.place, blurb:hh.blurb, diff:curDiff(code), ...geo, cat:hh.cat||"", paid:!!hh.paid, price:hh.price||"", vol:hh.vol||"", hasMap:_hasMapP};
     if(entry.lat==null){ const a=gazAuto(entry); if(a){ entry.lat=+(+a[0]).toFixed(4); entry.lon=+(+a[1]).toFixed(4); } }
     if(i>=0) idx[i]=entry; else idx.push(entry);
     await Store.set("cold:index", JSON.stringify(idx), true);
