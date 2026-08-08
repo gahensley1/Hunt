@@ -38,6 +38,12 @@ window.fetch = async (u, o) => {
                         {status:200, headers:{"Content-Type":"application/json"}});
   return _f(u, o);
 };
+// s57 (SS89): end the stub on a primitive. page.evaluate() serialises its result
+// BY VALUE, and this string's completion value would otherwise be the assigned
+// window.fetch FUNCTION - which Playwright then INVOKES with null, firing
+// fetch(null) -> GET /null 404. That 404 was the harness stubbing itself, never
+// the app. Keep this terminal line; do not append a function after it.
+true;
 """
 
 RESULTS = []
@@ -55,10 +61,15 @@ async def gate(pg):
 async def boot(browser, w=390, h=844):
     pg = await browser.new_page(viewport={"width": w, "height": h})
     errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
+    # SS89: a failed subresource fetch is NOT a pageerror, so "no page errors"
+    # was blind to the /null 404 for many builds. Record every 404 the boot
+    # produces so Check 4 can fail on one. The app makes no deliberate 404s, so
+    # any 404 here is unexpected by definition.
+    bad404 = []; pg.on("response", lambda r: bad404.append(r.url) if r.status == 404 else None)
     await pg.goto(URL); await pg.wait_for_timeout(1100)
     await pg.evaluate(STUB)
     await gate(pg)
-    return pg, errs
+    return pg, errs, bad404
 
 async def render_ledger(pg, month="2026-08"):
     await pg.evaluate(f"""async () => {{
@@ -76,7 +87,7 @@ async def main():
 
         # ---- Check 1: _ledgLabel('2026-08') is exactly "August 2026" ----
         print('\nCheck 1  _ledgLabel("2026-08")  -- call the app formatter, no hand-typing')
-        pg, e1 = await boot(b)
+        pg, e1, _ = await boot(b)
         lbl = await pg.evaluate("_ledgLabel('2026-08')")
         check('returns exactly "August 2026"', lbl, "August 2026")
         check('contains no "(office time)"', "office time" in lbl, False)
@@ -84,7 +95,7 @@ async def main():
 
         # ---- Check 2: _wireLedgEmail is a fn; #ledg-email on BOTH screens ----
         print("\nCheck 2  _wireLedgEmail + #ledg-email on the Ledger AND a case sheet")
-        pg, e2 = await boot(b)
+        pg, e2, _ = await boot(b)
         check("_wireLedgEmail is a function",
               await pg.evaluate("typeof _wireLedgEmail"), "function")
         await render_ledger(pg)
@@ -104,7 +115,7 @@ async def main():
 
         # ---- Check 3: at 393px the nav buttons each sit on ONE line, tops level ----
         print("\nCheck 3  .ledg-nav at 393px  -- '< Earlier' / 'Later >' one line each, tops equal")
-        pg, e3 = await boot(b, w=393, h=844)
+        pg, e3, _ = await boot(b, w=393, h=844)
         await render_ledger(pg, "2026-08")
         m = await pg.evaluate("""() => {
           const p = document.getElementById('ledg-prev');
@@ -134,12 +145,16 @@ async def main():
         check("no page errors", e3, [])
         await pg.close()
 
-        # ---- Check 4: no page errors on boot at 390x844 and 320x568 ----
-        print("\nCheck 4  clean boot at 390x844 and 320x568")
-        pg, e4a = await boot(b, w=390, h=844); await pg.wait_for_timeout(400); await pg.close()
-        pg, e4b = await boot(b, w=320, h=568); await pg.wait_for_timeout(400); await pg.close()
+        # ---- Check 4: clean boot at 390x844 and 320x568 -- no page errors
+        # AND no unexpected 404. SS89/SS1w: "no page errors" alone was blind to a
+        # failed subresource fetch; a 404 on any non-deliberate request must go red.
+        print("\nCheck 4  clean boot at 390x844 and 320x568 -- no page errors, no unexpected 404")
+        pg, e4a, b404a = await boot(b, w=390, h=844); await pg.wait_for_timeout(400); await pg.close()
+        pg, e4b, b404b = await boot(b, w=320, h=568); await pg.wait_for_timeout(400); await pg.close()
         check("390x844 boots with no page errors", e4a, [])
         check("320x568 boots with no page errors", e4b, [])
+        check("390x844 boots with no unexpected 404", b404a, [])
+        check("320x568 boots with no unexpected 404", b404b, [])
 
         await b.close()
     httpd.shutdown()

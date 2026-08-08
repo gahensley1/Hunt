@@ -195,7 +195,7 @@ is proven and should be reused for every future Worker change.
 | `parch.jpg` **(🆕 RE-EXTRACTED s30 — byte-identical to s28's)** | 49,029 B | `118d98d0b52f27b5aa746a94ecb3f7ad0ff707e9a153ec41d0d8e43ac77d011d` | site background texture |
 | `Hunt-backups-starter.zip` **(🆕 s30 — for the NEW private repo)** | ~4.3 KB | `backup.py 218f390e…` · `backup.yml f90d9df6…` · `README 09782b3c…` | the archive clerk (§51.3) |
 | `test/run.py` **🆕 REWRITTEN s57 — THREE SUITES, NOT TWO** | — | — | now runs **SESSION** as well as STATIC and BEHAVIOUR; **refuses SESSION for a candidate build** (it always loads `.\index.html` and would report a pass for a file it never opened); every parent `print` is `say()` with `flush=True` (§77.11). *(was 698 B, two suites — battery runner, §48)* |
-| `test/find-null.py` **🆕 s57 — DIAGNOSTIC, NOT PART OF THE BATTERY** | — | — | finds who requests `/null` on boot (§89). Logs every `null` URL with a JS stack so the caller is named, not guessed |
+| `test/find-null.py` **🆕 s57 — DIAGNOSTIC, NOT PART OF THE BATTERY. §89 RESOLVED WITH IT.** | — | — | takes a **mode arg** `A`/`B`/`C`/`D` toggling the stub and gate independently. Cell C fired: **the harness stub, not the app, requested `/null`** — `page.evaluate(STUB)` returns the last statement's value, the assigned `window.fetch` fn, which Playwright invokes with `null`. Kept as the record of the mechanism (§89) |
 | `test/agents.py` `behaviour.py` `baseline.json` `README.md` ✅ ALL PUSHED (verified 200 on raw, s30) | — | — | (§48) |
 | `worker-v2_6_8.js` **🆕 ✅ DEPLOYED AND VERIFIED s55 — root reads `(v2.6.8)`. THE EMAILED LEDGER SENDS (§81).** | 75,522 B | `afd9b47751d836b307c4d5dc11e0a86baaa15ff6d3403cda9b570fc6076577bb` | `LEDGER_FROM` moved to the ROOT domain — the one-line fix |
 | `worker-v2_6_7.js` **(deployed s55, superseded within the session)** | 74,802 B | — | the emailed ledger, sending as an unverified identity |
@@ -739,6 +739,72 @@ never an observation. **The audit is the only thing standing in for eyes.**
 - **⚠ STATE PLAINLY WHEN A DELIVERABLE WAS VERIFIED BY MEASUREMENT RATHER THAN BY EYE**, and deliver
   the artefact. **AND SAY SO WHEN THE OWNER FINDS A VISUAL FAULT.**
 
+### 🔴 §11d — TEST-HARNESS RULES. WRITTEN s57, AFTER THE HARNESS FAKED A BUG FOR MANY BUILDS.
+
+**Delivered as rules and applied VERBATIM. Do not paraphrase or compress these.** The incident that
+produced them is §89 — the harness's own stub called `fetch(null)` on itself, and Check 4 could not
+see the resulting 404 because it only asserted "no page errors".
+
+```
+## Test-harness rule - make the failure visible, and don't let the stub fake it
+
+Two independent failures let a `GET /null 404` fire on every boot for many builds
+with the battery staying green. Both are general; both are now rules.
+
+### 1. A `page.evaluate(string)` stub must NOT end on a function-valued expression
+
+`page.evaluate(str)` returns the string's **completion value**, and Playwright
+serialises that value **by value**. When the completion value is a *function*,
+Playwright **invokes it** - passing `null` as the argument.
+
+So a stub whose last statement is an assignment like:
+
+    window.fetch = async (u, o) => { ... return _f(u, o); };
+
+leaves the completion value = the fetch function -> Playwright calls `fetch(null)`
+-> `"null"` resolves against the origin -> `GET /null` 404. The stub fetched itself;
+the app was never involved.
+
+**Rules:**
+- End every `evaluate`d stub string on a **primitive** (`true;`, `0;`, `void 0;`),
+  or wrap the mutations in a named function and call it separately
+  (`window.__stub = () => {...};` then `evaluate("window.__stub()")`) so the
+  completion value is `undefined`. (behaviour.py already does the wrapper form -
+  copy it.)
+- Never leave an assignment-to-a-function as the last statement of an `evaluate`d
+  string.
+
+### 2. "No page errors" is NOT "nothing went wrong" - assert on the network too
+
+A failed subresource fetch is **not** a `pageerror`. A boot check that asserts only
+"no page errors" is blind to any 404/500/failed request. A green tick is an exit
+code, not a result; a test that cannot see the bug is a copy of the bug.
+
+**Rules:**
+- Every boot check records responses and **fails on any unexpected 404** (or 4xx/5xx
+  and `requestfailed`). If the app has deliberate 404s, allow-list them explicitly;
+  everything else goes red.
+- Before trusting a new check, **prove it has teeth** - force the failure once and
+  confirm it turns red. A check that can only return "clean" is not a check.
+
+### 3. Attribute before you fix - isolate one variable at a time
+
+The symptom was pinned by toggling the harness's two post-load steps (stub, gate)
+independently across four runs and seeing which one reproduced it - not by reading
+the app and guessing. When a symptom appears only under the full harness, split the
+harness and run the cells. If neither half alone reproduces it, they interact -
+report that; don't force a story.
+
+**Rule:** never state a cause as fact until an experiment isolates it. Validate, or
+label it unproven.
+```
+
+**🔴 RULE 1 HAD TWO HOMES (§1w).** `session_checks.py` was fixed when the cause was found;
+**`test\\find-null.py` still ended on the same assignment** and was caught in review afterwards. A
+probe carrying the defect it hunts reproduces its own artefact on every run and reads as a live bug.
+Both now end on `true;` with a comment saying why it must stay. **When rule 1 is applied, grep every
+`evaluate(` in `test\\` — not just the file that failed.**
+
 ### §11a — ⚠ VERIFICATION METHODS THAT GAVE FALSE ANSWERS
 **Eighteen methods have now produced confident, wrong results in this project.**
 1. **Colour/saturation masks over parchment.**
@@ -1114,42 +1180,65 @@ verification depth to risk**; **keep ship summaries to ~3 lines + the hash**; **
 
 ---
 
-## 🔴 §89 — `GET /null 404` ON EVERY BOOT. OPEN. (s57)
+## ✅ §89 — `GET /null 404` ON BOOT. RESOLVED — IT WAS THE HARNESS, NOT THE APP. (s57)
 
-**`session_checks.py`'s server log shows it twice, once per viewport, about two seconds after each
-boot:**
+**THE APP WAS NEVER AT FAULT. The premise that "the app is building a URL from a `null`" is struck.**
+The `/null` was the test harness's own Store/fetch stub calling `fetch(null)` on itself when
+`page.evaluate()` serialised it. The app makes no such request. Proven by experiment, not inferred.
+
+**THE EXPERIMENT THAT SETTLED IT.** `find-null.py` was extended to take a mode argument
+(`A`/`B`/`C`/`D`) toggling `boot()`'s two post-`goto` steps — the Store stub and `gate()`
+(`credFiled()`) — independently. Run against a local server logging every request:
+
+| | stub | gate | result |
+|---|---|---|---|
+| A | no  | no  | 1 request, **no `/null`** |
+| B | no  | **yes** | 1 request, **no `/null`** |
+| C | **yes** | no  | **REPRODUCES `/null`** |
+| D | yes | yes | reproduces `/null` |
+
+**Cell C fired and cell B did not** — so the **stub owns it** and `credFiled()`/the gate is innocent.
+The confirmation in the battery log: the old `session_checks.py` printed **exactly five** `/null`
+404s per run — **one per `boot()` call** (5 boots), not two per viewport and nothing to do with the
+gate.
+
+**THE MECHANISM, PROVEN.** `boot()` does `await pg.evaluate(STUB)` where `STUB` is a multi-statement
+string. A `page.evaluate(string)` returns the string's **completion value**, and here the last
+statement is `window.fetch = async (u,o) => {…}` — an **assignment whose value is the newly-assigned
+fetch function.** Playwright serialises an `evaluate()` result *by value*, and **when that value is a
+function it INVOKES it** — with `null` as the argument. That call is literally `window.fetch(null)` →
+`"null"` resolves against the page origin → `GET /null` → 404. Reproduced in isolation with a
+three-line stub (function completion value throws `fetch(null)`; a primitive completion value does
+not). CDP `Network.requestWillBeSent` initiator, verbatim — note the deepest frame is `evaluate`,
+never an app function:
 
 ```
-127.0.0.1 - - "GET /index.html HTTP/1.1" 200 -
-127.0.0.1 - - code 404, message File not found
-127.0.0.1 - - "GET /null HTTP/1.1" 404 -
+--- CDP initiator ---
+  type: script
+    window.fetch  @ line 9  col 61      <- the stub's fetch wrapper
+    window.fetch  @ line 13 col 9       <- the probe's trace wrapper
+    evaluate      @ line 317 col 17     <- Playwright UtilityScript.evaluate
+    (anonymous)   @ line 0  col 43
 ```
 
-**The app is building a URL from a `null` and requesting it.** `null` — not `undefined` — which
-narrows it: something returned an explicit null and was used as a path without a guard.
-`localStorage.getItem` on a missing key is the classic source.
+**THE FIX — BOTH HALVES (§1w).**
+1. **The stub (root cause).** `session_checks.py`'s `STUB` now ends on a terminal primitive
+   (`true;`) so `evaluate()`'s completion value is no longer the fetch function. The `/null` is gone:
+   a full boot now makes exactly one request (`index.html` 200) and nothing else. Commented in place
+   so it is not undone.
+2. **The blind check (§11a — "the test that passes for the wrong reason").** Check 4 asserted only
+   *"boots with no page errors,"* and **a failed subresource fetch is not a page error**, so a 404
+   scrolled past under a green tick. `boot()` now records every 404 response, and Check 4 fails on
+   any unexpected one (the app makes no deliberate 404, so any 404 is unexpected). **Proven to have
+   teeth**: with a real missing subresource the check returns non-empty and goes red — it is not an
+   audit that can only return "clean" (§11a #11). SESSION is now **21/21** (was 19/19; +2).
 
-**🔴 THE BATTERY IS BLIND TO IT BY DESIGN, AND THAT IS THE REAL LESSON.** Check 4 asserts
-*"boots with no page errors"* and **a failed subresource fetch is not a page error** — so the check
-passes, `19/19` passes, and the 404 scrolls past in the server log underneath a green tick. **§11a:
-the test that passes for the wrong reason.** It has plausibly been happening on every boot for many
-builds and no one has looked, because nothing ever went red.
-
-**It is also invisible in production**, which is why it has survived: on Pages a 404 returns the
-site's own HTML rather than an error, and against the Worker it would read as a bad request.
-
-**STATIC ANALYSIS DID NOT FIND IT — RECORDED SO IT IS NOT RE-ATTEMPTED.** All eleven `.src`
-assignments in `index.html` are `data:` URIs (`SEAL_IMG`, `PAW_INK`, the coins), a
-`URL.createObjectURL`, or guarded by a truthiness check, and **no `getItem` feeds a `src`, `href`
-or `url`.** It is not an image. **Do not grep for it again — run the probe.**
-
-**THE ROUTE: `python test\\find-null.py`** (§0). It serves the repo as `session_checks.py` does,
-wraps `fetch`, `XMLHttpRequest.open` and the `HTMLImageElement.src` setter, and prints a stack for
-every `null` URL so the caller is **named**. **NOT YET RUN.**
-
-**⚠ WHEN IT IS FOUND, FIX THE CHECK TOO, NOT ONLY THE BUG.** Check 4 should fail on an unexpected
-404, or the next one like it is equally invisible. **§1w: a correction is not done until every copy
-of the error is dead — and a blind test is a copy of the error.**
+**STATE:** battery green on `33g`, all three suites — STATIC clean · BEHAVIOUR 59/59 · **SESSION
+21/21** · Agent D drift NONE. **No `index.html` byte changed** — this was a test-only correction, so
+no visual output moved. `find-null.py` keeps the four-cell mode and stands as the record of the
+mechanism. **⚠ s57 review: `find-null.py` itself still ended on the offending assignment — the
+SECOND COPY of the defect (§1w). Fixed with the same terminal primitive. The general rules are
+§11d.**
 
 ---
 
@@ -1428,13 +1517,14 @@ and the Worker source must never be committed.**
    of measuring closes this and nothing else on this list is as risky.
 2. **🔴 THE LEGAL ENTITY (§50.1).** The real critical path, and it is stalled. Nothing ships to a
    store without it.
-3. **✅ THE BATTERY IS GREEN ON `33g` — s57, ALL THREE SUITES. STATIC clean · SESSION 19/19 ·
+3. **✅ THE BATTERY IS GREEN ON `33g` — s57, ALL THREE SUITES. STATIC clean · SESSION 21/21 ·
    `BATTERY PASSED` (the aggregate exit code, so all three children returned 0).** The blocker was
    never the build: **Chromium had never been downloaded after a Playwright update**, so
    `behaviour.py` and `session_checks.py` both died on `chromium.launch()` before running a check.
    One command cleared it — `python -m playwright install chromium` (§82.3). **33e, 33f and 33g are
-   now covered:** STATIC clean, **BEHAVIOUR 59/59**, **SESSION 19/19**, Agent D drift NONE,
-   nothing rebaselined — the same four results as 33d, counted and not merely exit-coded. *(the s55 entry, for the record:)* Run in **Claude Code** by the owner: STATIC clean,
+   now covered:** STATIC clean, **BEHAVIOUR 59/59**, **SESSION 21/21** (was 19/19 — §89 added two
+   "no unexpected 404" checks to Check 4 at s57), Agent D drift NONE,
+   nothing rebaselined — the same results as 33d, counted and not merely exit-coded. *(the s55 entry, for the record:)* Run in **Claude Code** by the owner: STATIC clean,
    BEHAVIOUR 59/59, session checks 19/19, Agent D drift NONE, hygiene clean, nothing rebaselined
    (§82). **THE STANDING ARRANGEMENT: Claude cannot run it (§77.2) — CLAUDE CODE IS THE ROUTE.
    Ask for it before every ship, with `PYTHONUTF8=1` (§82.1).**

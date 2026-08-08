@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
 """
-s57 DIAGNOSTIC - not part of the battery. Finds who requests /null.
+s57 DIAGNOSTIC - not part of the battery. Finds who requests /null. RESOLVED.
 
-session_checks.py's log shows a `GET /null 404` about two seconds after every
-boot, at both viewports. Check 4 passes anyway because it only asserts "no page
-errors", and a failed subresource fetch is not a page error - so the battery is
-blind to it by design (SS11a: the test that passes for the wrong reason).
-
-This serves the repo the same way session_checks.py does and logs EVERY request
-whose URL contains "null", with a JS stack for each so the caller is named
-rather than guessed at (SS11c: never infer; validate).
+FINDING (SS89): the /null was the HARNESS, not the app. The four-cell experiment
+below (stub x gate) fired on cell C - stub ONLY - and stayed clean on cell B -
+gate only. So the Store/fetch STUB owns it and credFiled()/the gate is innocent.
+MECHANISM: boot() does `page.evaluate(STUB)`, and evaluate() returns the string's
+completion value. STUB's last statement is `window.fetch = async(u,o)=>{...}`, an
+assignment whose value is the fetch function; Playwright serialises the result BY
+VALUE and, when it is a function, INVOKES it with null -> fetch(null) -> GET /null
+-> 404. The fix landed in session_checks.py (terminate the stub on a primitive)
+and in Check 4 (fail on any unexpected 404). This file is kept as the record.
 
 USE:  set PYTHONUTF8=1
-      python test\\find-null.py
+      python test\\find-null.py [A|B|C|D]     (default D; C and D reproduce)
+      A no  stub/no  gate   B no  stub/YES gate   C YES stub/no  gate   D both
 """
 import asyncio, os, threading, http.server, socketserver, functools
 from playwright.async_api import async_playwright
@@ -55,21 +57,33 @@ Object.defineProperty(HTMLImageElement.prototype, 'src', {
 # -> credFiled(). The 404 lands ~2s in, which fits that sequence and not a raw load.
 # Replicated verbatim below. SS11a: a probe that does not reproduce the conditions
 # has not tested them.
+#
+# s57 v4: STUB IS NOW BYTE-FOR-BYTE session_checks.py's STUB (it carried window.__net
+# and a Store.del that records to it; the earlier copy here dropped both). Aligning
+# it removes the "but the stubs differ" objection from any attribution below.
 STUB = """
+window.__net = [];
 const _mem = new Map();
 Store.base = () => "https://STUB.invalid";
 Store.ok   = false;
 Store.get  = async (k) => _mem.has(k) ? _mem.get(k) : null;
 Store.set  = async (k, v) => { _mem.set(k, v); return true; };
 Store.list = async (pre) => [...(_mem.keys())].filter(x => x.startsWith(pre));
-Store.del  = async (k, shared) => { _mem.delete(k); return true; };
-const _f2 = window.fetch;
+Store.del  = async (k, shared) => { window.__net.push(k); _mem.delete(k); return true; };
+const _f = window.fetch;
 window.fetch = async (u, o) => {
   if (String(u).indexOf("STUB.invalid") >= 0)
     return new Response(JSON.stringify({totals:{},shelves:{},cases:[],badges:[],sealed:false}),
                         {status:200, headers:{"Content-Type":"application/json"}});
-  return _f2(u, o);
+  return _f(u, o);
 };
+// s57 (SS89, SS11d rule 1): TERMINAL PRIMITIVE. Without it this string's completion
+// value is the assigned window.fetch FUNCTION, which page.evaluate() then INVOKES
+// with null - firing the very fetch(null) this probe exists to hunt. The probe
+// would reproduce its own artefact on every run and read as a live bug.
+// session_checks.py was fixed the same way; this was the SECOND COPY (SS1w).
+// The four-cell experiment is recorded in SS89 and does not need re-firing.
+true;
 """
 
 GATE = """() => {
@@ -77,7 +91,26 @@ GATE = """() => {
   try { credFiled(); } catch (e) {}
 }"""
 
+# s57 v4: THE FOUR-CELL EXPERIMENT (SS89). boot() = wait 1100ms -> STUB -> gate().
+# Toggle each independently to see which one owns the /null:
+#   A no  stub / no  gate   (measured: 1 request, no /null)
+#   B no  stub / YES gate   -> if this fires, credFiled() (or what it schedules) owns it: a REAL bug
+#   C YES stub / no  gate   -> if this fires, the harness stub owns it: the app is clean
+#   D YES stub / YES gate   (measured: reproduces)
+# Whichever of B or C fires owns it; if only D does, the two interact.
+MODES = {"A": (False, False), "B": (False, True),
+         "C": (True,  False), "D": (True,  True)}
+
 async def main():
+    import sys
+    mode = (sys.argv[1] if len(sys.argv) > 1 else "D").upper()
+    if mode not in MODES:
+        print(f"unknown mode {mode!r}; use one of {sorted(MODES)}")
+        return 2
+    use_stub, use_gate = MODES[mode]
+    print("#" * 62)
+    print(f"# MODE {mode}   stub={'YES' if use_stub else 'no '}   gate={'YES' if use_gate else 'no '}")
+    print("#" * 62)
     seen = []
     async with async_playwright() as pw:
         b = await pw.chromium.launch()
@@ -101,8 +134,10 @@ async def main():
 
         await pg.goto(URL)
         await pg.wait_for_timeout(1100)          # boot() waits, THEN stubs
-        await pg.evaluate(STUB)
-        await pg.evaluate(GATE)
+        if use_stub:
+            await pg.evaluate(STUB)
+        if use_gate:
+            await pg.evaluate(GATE)
         await pg.wait_for_timeout(4000)          # the 404 lands ~2s after the gate
         calls = await pg.evaluate("window.__nullCalls || []")
         await b.close()

@@ -972,7 +972,7 @@ it.**
 | | |
 |---|---|
 | **STATIC** | clean — Agent A 0 failed · Agent B 109 handlers, unresolved NONE · Agent D drift **NONE** · hygiene 0/0/0 · `buildmark=33g` |
-| **SESSION** | **19/19** — same count as 33d |
+| **SESSION** | **21/21** — 19 as at 33d, **+2 added by §89**: Check 4 now fails on any unexpected 404 |
 | **BEHAVIOUR** | **59/59** — same count as 33d |
 | **Verdict** | `BATTERY PASSED` — rc is the OR of all three children, so all three returned 0 |
 
