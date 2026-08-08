@@ -952,6 +952,39 @@ below the fold — a warning, a slow test, a skipped check — **it will be invi
 **ASK FOR IT AS TEXT PASTED INTO THE CHAT, or as a file written into `Documents\Hunt\claude\`.**
 An artifact link is a fine thing for a human and a poor one for Claude.
 
+### ✅ 82.3 THE BATTERY IS GREEN ON `33g` — AND THE THREE-SESSION BLOCKER WAS ONE MISSING DOWNLOAD (s57)
+
+**33e, 33f and 33g had all shipped untested** and §80 item 3 had carried "green on 33d" since s55.
+The cause was never the build and never the harness:
+
+```
+BrowserType.launch: Executable doesn't exist at
+  ...\ms-playwright\chromium_headless_shell-1234\chrome-headless-shell.exe
+"Looks like Playwright was just installed or updated. Please run: playwright install"
+```
+
+**Playwright's Python package had been updated and Chromium was never re-downloaded.**
+`behaviour.py` and `session_checks.py` both died on `chromium.launch()` **before executing a single
+check** — so three builds were recorded as "untested" when the honest word was *unrun*, and nobody
+had read the traceback that said so in one line. **`python -m playwright install chromium` cleared
+it.**
+
+| | |
+|---|---|
+| **STATIC** | clean — Agent A 0 failed · Agent B 109 handlers, unresolved NONE · Agent D drift **NONE** · hygiene 0/0/0 · `buildmark=33g` |
+| **SESSION** | **19/19** — same count as 33d |
+| **BEHAVIOUR** | **59/59** — same count as 33d |
+| **Verdict** | `BATTERY PASSED` — rc is the OR of all three children, so all three returned 0 |
+
+**THE COUNT WAS ASKED FOR AND GIVEN: `59/59`.** It is recorded here because `BATTERY PASSED` alone
+proves only the exit codes — which is exactly what `battery.cmd`'s banner warns is not a result.
+**33a-33g are now covered, nothing was rebaselined and no application source was touched.**
+
+**🔴 AND STATIC WAS RUNNABLE IN THE SANDBOX THE WHOLE TIME.** §77.2 said "the battery cannot run
+from the sandbox"; the true statement is that the BROWSER half cannot. `agents.py` needs only
+`node`, which the sandbox has. Corrected in §77.2 — **run STATIC in-sandbox before asking the owner
+for anything.**
+
 **`worker-v2_6_8.js` 75,522 B / `afd9b47751d836b307c4d5dc11e0a86baaa15ff6d3403cda9b570fc6076577bb`.**
 Deployed by the owner; **root probed with a cache-buster twice: `(v2.6.8)`**, and `/report-email`
 still answers **403** unauthenticated, so the curator lock survived the deploy. **Owner confirms the

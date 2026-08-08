@@ -194,7 +194,8 @@ is proven and should be reused for every future Worker change.
 | `privacy.html` **(🆕 REBUILT s30 — for scavengerandhunt.com, NOT the repo)** | 5,364 B | `6298d38db9060f9575619709ffab02951c2b7606c74c7fd49441124e6e94391c` | DRAFT banner; §45.4 language verbatim (§44.2b) |
 | `parch.jpg` **(🆕 RE-EXTRACTED s30 — byte-identical to s28's)** | 49,029 B | `118d98d0b52f27b5aa746a94ecb3f7ad0ff707e9a153ec41d0d8e43ac77d011d` | site background texture |
 | `Hunt-backups-starter.zip` **(🆕 s30 — for the NEW private repo)** | ~4.3 KB | `backup.py 218f390e…` · `backup.yml f90d9df6…` · `README 09782b3c…` | the archive clerk (§51.3) |
-| `test/run.py` ✅ PUSHED | 698 B | — | battery runner (§48) |
+| `test/run.py` **🆕 REWRITTEN s57 — THREE SUITES, NOT TWO** | — | — | now runs **SESSION** as well as STATIC and BEHAVIOUR; **refuses SESSION for a candidate build** (it always loads `.\index.html` and would report a pass for a file it never opened); every parent `print` is `say()` with `flush=True` (§77.11). *(was 698 B, two suites — battery runner, §48)* |
+| `test/find-null.py` **🆕 s57 — DIAGNOSTIC, NOT PART OF THE BATTERY** | — | — | finds who requests `/null` on boot (§89). Logs every `null` URL with a JS stack so the caller is named, not guessed |
 | `test/agents.py` `behaviour.py` `baseline.json` `README.md` ✅ ALL PUSHED (verified 200 on raw, s30) | — | — | (§48) |
 | `worker-v2_6_8.js` **🆕 ✅ DEPLOYED AND VERIFIED s55 — root reads `(v2.6.8)`. THE EMAILED LEDGER SENDS (§81).** | 75,522 B | `afd9b47751d836b307c4d5dc11e0a86baaa15ff6d3403cda9b570fc6076577bb` | `LEDGER_FROM` moved to the ROOT domain — the one-line fix |
 | `worker-v2_6_7.js` **(deployed s55, superseded within the session)** | 74,802 B | — | the emailed ledger, sending as an unverified identity |
@@ -1113,6 +1114,45 @@ verification depth to risk**; **keep ship summaries to ~3 lines + the hash**; **
 
 ---
 
+## 🔴 §89 — `GET /null 404` ON EVERY BOOT. OPEN. (s57)
+
+**`session_checks.py`'s server log shows it twice, once per viewport, about two seconds after each
+boot:**
+
+```
+127.0.0.1 - - "GET /index.html HTTP/1.1" 200 -
+127.0.0.1 - - code 404, message File not found
+127.0.0.1 - - "GET /null HTTP/1.1" 404 -
+```
+
+**The app is building a URL from a `null` and requesting it.** `null` — not `undefined` — which
+narrows it: something returned an explicit null and was used as a path without a guard.
+`localStorage.getItem` on a missing key is the classic source.
+
+**🔴 THE BATTERY IS BLIND TO IT BY DESIGN, AND THAT IS THE REAL LESSON.** Check 4 asserts
+*"boots with no page errors"* and **a failed subresource fetch is not a page error** — so the check
+passes, `19/19` passes, and the 404 scrolls past in the server log underneath a green tick. **§11a:
+the test that passes for the wrong reason.** It has plausibly been happening on every boot for many
+builds and no one has looked, because nothing ever went red.
+
+**It is also invisible in production**, which is why it has survived: on Pages a 404 returns the
+site's own HTML rather than an error, and against the Worker it would read as a bad request.
+
+**STATIC ANALYSIS DID NOT FIND IT — RECORDED SO IT IS NOT RE-ATTEMPTED.** All eleven `.src`
+assignments in `index.html` are `data:` URIs (`SEAL_IMG`, `PAW_INK`, the coins), a
+`URL.createObjectURL`, or guarded by a truthiness check, and **no `getItem` feeds a `src`, `href`
+or `url`.** It is not an image. **Do not grep for it again — run the probe.**
+
+**THE ROUTE: `python test\\find-null.py`** (§0). It serves the repo as `session_checks.py` does,
+wraps `fetch`, `XMLHttpRequest.open` and the `HTMLImageElement.src` setter, and prints a stack for
+every `null` URL so the caller is **named**. **NOT YET RUN.**
+
+**⚠ WHEN IT IS FOUND, FIX THE CHECK TOO, NOT ONLY THE BUG.** Check 4 should fail on an unexpected
+404, or the next one like it is equally invisible. **§1w: a correction is not done until every copy
+of the error is dead — and a blind test is a copy of the error.**
+
+---
+
 ## ✅ §88 — THE REPO WAS SLIMMED. 22 MB OF IT WAS NEVER SERVED. s56.
 
 **THE OWNER, LOOKING AT THE GITHUB FILE LIST:** *"does all this need to live here"* — followed by
@@ -1235,8 +1275,10 @@ month callers are byte-identical in behaviour to 33e. The Worker tests `?year=` 
 not the one used. **Requires v2.6.11**, which is deployed.
 
 ### ⚠ 86.6 WHAT IS NOT DONE
-- **THE BATTERY.** §82's tick is still **33d**. 33e and now 33f have both shipped untested.
-  `node --check` was clean on the single script block, and that is all that was run.
+- **✅ CLOSED s57 — THE BATTERY IS GREEN ON `33g`, WHICH COVERS 33e, 33f AND 33g (§82.3).**
+  *(the s56 line, for the record:)* **THE BATTERY.** §82's tick is still **33d**. 33e and now 33f
+  have both shipped untested. `node --check` was clean on the single script block, and that is all
+  that was run.
 - **`ship`'s `git add -A` SWEPT 33f INTO THE s55 DOCS COMMIT.** The log message for `b7e348e7`
   reads `s55: docs rescued, .gitignore, ship.cmd…` and says nothing about the annual report.
   The code is correct; **the history misnames it.** Anyone bisecting on the message will miss it.
@@ -1386,7 +1428,13 @@ and the Worker source must never be committed.**
    of measuring closes this and nothing else on this list is as risky.
 2. **🔴 THE LEGAL ENTITY (§50.1).** The real critical path, and it is stalled. Nothing ships to a
    store without it.
-3. **✅ CLOSED — THE BATTERY IS GREEN ON 33d.** Run in **Claude Code** by the owner: STATIC clean,
+3. **✅ THE BATTERY IS GREEN ON `33g` — s57, ALL THREE SUITES. STATIC clean · SESSION 19/19 ·
+   `BATTERY PASSED` (the aggregate exit code, so all three children returned 0).** The blocker was
+   never the build: **Chromium had never been downloaded after a Playwright update**, so
+   `behaviour.py` and `session_checks.py` both died on `chromium.launch()` before running a check.
+   One command cleared it — `python -m playwright install chromium` (§82.3). **33e, 33f and 33g are
+   now covered:** STATIC clean, **BEHAVIOUR 59/59**, **SESSION 19/19**, Agent D drift NONE,
+   nothing rebaselined — the same four results as 33d, counted and not merely exit-coded. *(the s55 entry, for the record:)* Run in **Claude Code** by the owner: STATIC clean,
    BEHAVIOUR 59/59, session checks 19/19, Agent D drift NONE, hygiene clean, nothing rebaselined
    (§82). **THE STANDING ARRANGEMENT: Claude cannot run it (§77.2) — CLAUDE CODE IS THE ROUTE.
    Ask for it before every ship, with `PYTHONUTF8=1` (§82.1).**
@@ -1452,6 +1500,15 @@ and twice got the shell wrong.
 
 ### 77.1 ✅ THERE IS A LOCAL WEB SERVER. IT IS THE ANSWER TO ALMOST EVERYTHING.
 
+**🔴 s57 — THE PRECONDITION THIS HEADING OMITS: IT IS THE ANSWER ONLY WHEN A BROWSER IS
+PAIRED.** The server runs on the OWNER'S machine. **Claude's shell is a separate Linux VM with no
+route to it** — `localhost:8000`, `127.0.0.1`, `host.docker.internal` and `172.17.0.1` were all
+tried at s57 and all four time out. The server measures nothing by itself; the only thing that can
+reach it is a browser ON his machine, i.e. **the Chrome extension, which must be CONNECTED.**
+**CHECK `list_connected_browsers` FIRST** — at s57 it returned `[]` while the session was being
+told "you have chrome" and "you have port 8000", both true and neither sufficient. Server ✅ plus
+extension ❌ is still zero. Ask for the extension by name, not for the server.
+
 **`C:\Users\tony\Documents\Hunt-backups\serve.ps1` serves the live working copy of the repo at
 `http://localhost:8000/`.** The owner runs it in a `cmd` window; it logs every request with a status
 and a byte count. **VERIFIED s55: `http://localhost:8000/index.html` returned buildmark `32z` — the
@@ -1473,8 +1530,15 @@ sessions: **measuring a build you cannot open.**
   **`libXdamage.so.1: cannot open shared object file`**. `playwright install-deps` and `apt-get`
   both fail — **no root, no dpkg lock, and `sudo` is not available.** There is no workaround.
   **DO NOT SPEND ANOTHER MINUTE ON THIS.** ~4 minutes and a 115 MB download were spent proving it.
-  **The consequence: `test/run.py` — the §48 battery — CANNOT BE RUN FROM THE SANDBOX.** If a build
-  needs the battery, the owner runs it, or it ships labelled "battery not run."
+  **🔴 s57 CORRECTION — THIS IS HALF THE BATTERY, NOT ALL OF IT, AND THE OVERSTATEMENT COST
+  THREE SESSIONS OF NOT TRYING.** `test/agents.py` (STATIC — Agents A, B, D and hygiene) needs
+  **only `node`, which the sandbox HAS at `/usr/bin/node`.** Claude ran it on `33g` in-sandbox and
+  it passed, matching the owner's machine line for line. **RUN STATIC IN THE SANDBOX BEFORE ASKING
+  FOR ANYTHING** — it catches drift, unresolved handlers and hygiene for free.
+  **What genuinely cannot run here is the BROWSER half** — `behaviour.py` and `session_checks.py`,
+  both of which `import playwright.async_api` and launch Chromium. Those two, and only those two,
+  need the owner's machine. A build with STATIC green and the browser half unrun ships labelled
+  **"BEHAVIOUR and SESSION not run"** — which is a different claim from "battery not run."
 - **`file:///C:/...` DOES NOT WORK THROUGH THE CHROME EXTENSION.** `navigate` **silently prefixes
   `https://`**, reports *"Navigated to https://file:///C:/..."* as a success, and the tab never
   leaves `chrome://newtab`. The failure only surfaces on the next call, as
@@ -1608,6 +1672,24 @@ too, **and it is the one document that cannot be corrected from inside the repo.
 exactly like §0 did, it reads with total authority because it arrives before anything else, and
 **Claude cannot fix it — only the owner can.** **When the instructions and the disk disagree, THE
 DISK WINS, and say so out loud rather than hunting for the file the instructions promised.**
+
+### 🔴 77.11 A PARTIAL READ OF A LOG IS NOT A MEASUREMENT (s57)
+
+**`python test\\run.py > file 2>&1` PUTS THE PARENT'S OUTPUT AT THE BOTTOM AND THE CHILDREN'S AT
+THE TOP.** Redirected, Python block-buffers the parent and flushes it at exit, while each
+subprocess writes straight through. **The file reads back inside out.**
+
+**What it cost:** s57 was handed the last five lines of such a file — three suite headers and
+`BATTERY FAILED`, with nothing between them — and concluded that **every suite had failed silently
+and the harness was broken.** It had not and it was not. The suite output was sitting at the top of
+the same file, and the real cause was one line: **Chromium was never downloaded after a Playwright
+update.** Three round trips were spent on a diagnosis drawn from the wrong end of a log.
+
+**THE RULE: READ THE WHOLE FILE, OR SAY THAT YOU HAVE NOT.** This is §11a in a new coat — output
+that reads exactly like a clean result while being an artefact of how it was captured. **Fixed at
+source:** every parent `print` in `test\\run.py` is now `say()` with `flush=True`, so the order is
+true whether redirected or not. **The fix does not retire the rule** — any other tool's log can do
+the same thing.
 
 ### ⚠ 77.10 SMALL ONES, LOGGED SO THEY ARE NOT REDISCOVERED
 

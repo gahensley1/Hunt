@@ -1,0 +1,22 @@
+127.0.0.1 - - [08/Aug/2026 15:19:33] "GET /index.html HTTP/1.1" 200 -
+127.0.0.1 - - [08/Aug/2026 15:19:34] code 404, message File not found
+127.0.0.1 - - [08/Aug/2026 15:19:34] "GET /null HTTP/1.1" 404 -
+
+--- CDP initiator ------------------------------------------
+  type: script
+    window.fetch  @ line 9  col 61
+    window.fetch  @ line 12  col 9
+    evaluate  @ line 317  col 17
+    (anonymous)  @ line 0  col 43
+==============================================================
+requests total: 2   containing 'null': 1
+==============================================================
+  GET http://127.0.0.1:59947/null   [fetch]
+
+--- caller ------------------------------------------------
+  fetch  ->  null
+    at grab (<anonymous>:7:36)
+    at window.fetch (<anonymous>:10:34)
+    at window.fetch (eval at evaluate (:311:30), <anonymous>:13:10)
+    at UtilityScript.evaluate (<anonymous>:318:18)
+    at UtilityScript.<anonymous> (<anonymous>:1:44)
