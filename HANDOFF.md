@@ -1289,6 +1289,27 @@ not forget it."** This section is that place. It is here, in the canonical docum
 that lives in a chat is gone (§1v) and a fact in a side file is not read. **Every item below was
 established by measurement in session 55, most of them after wasting time on the alternative.**
 
+### ✅ 77.0 TWO SCRIPTS EXIST NOW. USE THEM INSTEAD OF PASTING COMMANDS. (s55)
+
+Both at the repo root, CRLF, written because s55 spent a dozen exchanges pasting the same commands
+and twice got the shell wrong.
+
+- **`ship "s56: 33f - what changed"`** — the whole push. Shows what is about to go, asks Y/N, stages
+  **honouring `.gitignore`** so the Worker sources and `docs-private\` cannot slip in, commits,
+  pushes, then **prints local HEAD, origin HEAD, the `index.html` SHA-256 and the buildmark.**
+  **⚠ IT DOES NOT PROVE PAGES.** Claude must still hash Pages and probe the Worker before anything is
+  recorded as live (§2f). A bare `ship` with no message dates one.
+- **`battery`** — the pre-ship battery with **`PYTHONUTF8=1` already set** (§82.1), installing
+  playwright/Chromium if absent and warning if `node` is off PATH. **`battery some.html`** tests a
+  candidate build.
+- **🔴 `.gitignore` EXISTS AT LAST**, and it is what makes `ship`'s `git add -A` safe:
+  `worker-v2_*.js` · `docs-private/` · `_to_delete/`. **Before s55 the nine Worker sources sitting at
+  the root were untracked by luck, not by rule.**
+- **⚠ A MISTAKE MADE WHILE WRITING THEM, LOGGED:** Claude appended `docs-private/` to
+  **`.gitattributes`**, which is not the file for exclusions and governs line-ending normalisation.
+  Reverted; `.gitattributes` is back to its original 672 B with only `*.cmd text eol=crlf` added.
+  **`.gitignore` excludes, `.gitattributes` normalises. They are not interchangeable.**
+
 ### 77.1 ✅ THERE IS A LOCAL WEB SERVER. IT IS THE ANSWER TO ALMOST EVERYTHING.
 
 **`C:\Users\tony\Documents\Hunt-backups\serve.ps1` serves the live working copy of the repo at

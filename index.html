@@ -282,7 +282,7 @@
     #notify-card .nc-txt{font-size:14px}
   }
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#7A5A98;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#A8478F;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -1220,7 +1220,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">33e</p>
+      <p id="buildmark" aria-label="test build marker">33f</p>
     </div>
   </section>
 
@@ -4377,6 +4377,21 @@ async function tryCurPass(){
   if(verdict==="unchecked") toast2("The office cannot be reached \u2014 your word was not checked.");
 }
 function _ledgNow(){ const n=new Date(); return n.getUTCFullYear()+"-"+String(n.getUTCMonth()+1).padStart(2,"0"); }
+/* 33f - THE YEAR. Owner, s55: "i need to be able to sort by year ... an annual report
+   per case and over all". The Worker (v2.6.11) already answers ?year=YYYY for the
+   company and for one case; these are the only helpers the client needed.
+   SS84.1 - A YEAR IS A FILTER, NOT A RESET. Nothing rolls over on New Year's Eve and
+   nothing should: a reset would destroy the year-on-year comparison the annual report
+   exists to make. Do not add one. */
+function _ledgYearNow(){ return String(new Date().getUTCFullYear()); }
+function _ledgYearOf(m){ return String(m||"").slice(0,4)||_ledgYearNow(); }
+function _ledgYearShift(y,by){ const n=parseInt(y,10); return String((isFinite(n)?n:parseInt(_ledgYearNow(),10))+by); }
+/* The whole-year label for a month key, so a case sheet and its year agree. */
+function _ledgMonShort(m){
+  const MN=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const i=parseInt(String(m||"").slice(5,7),10);
+  return (i>=1&&i<=12)?MN[i-1]:String(m||"");
+}
 function _ledgShift(m,by){
   const p=String(m).split("-"), d=new Date(Date.UTC(Number(p[0]),Number(p[1])-1+by,1));
   return d.getUTCFullYear()+"-"+String(d.getUTCMonth()+1).padStart(2,"0");
@@ -4567,6 +4582,8 @@ async function loadLedger(m){
        a double tap cannot post twice; the Worker would happily send two. Copy is the
        owner's, verbatim, s54. */
     _wireLedgEmail(month);
+    const yb=document.getElementById("ledg-year");
+    if(yb) yb.onclick=function(){ loadYear(_ledgYearOf(month),month); };
   };
   wire();
   let rep=null, err="";
@@ -4594,7 +4611,12 @@ async function loadLedger(m){
      \u26a0 THE SEALED-vs-OPEN STATE IS NOW SHOWN NOWHERE ON THIS SCREEN. `rep.sealed` is still
      returned by the Worker and still read here; it simply governs nothing. If that state
      must be visible again it needs its own home, NOT this row. */
-  h+='<div class="ledg-emailrow"><button class="btn-ghost" id="ledg-email">email report</button></div>'+look;
+  h+='<div class="ledg-emailrow"><button class="btn-ghost" id="ledg-email">email report</button></div>'
+    /* 33f - ONE TAP TO THE YEAR, from where the reader already stands (SS84.6). Copy is
+       the owner's, chosen s56. */
+    +'<div style="text-align:center;margin:0 0 8px">'
+    +'<button class="btn-ghost" id="ledg-year">Annual report \u203a</button></div>'
+    +look;
 
   h+='<div class="currow" style="flex-direction:column;align-items:stretch;gap:6px"><div class="ledg-head">THE MONTH IN FIGURES</div><div class="ledg-stats">'
     +_ledgStat("Badges issued",_ledgNum(T.badge_issued))
@@ -4691,7 +4713,7 @@ function _metaShelf(meta,fallback){
    parameter would be silently ignored. So on a case sheet this sends THAT SHEET'S MONTH,
    whose per-case CSV table contains the case. If a single-case email is ever wanted it
    needs a new Worker route (v2.6.8) and a deploy; do not fake it client-side. */
-function _wireLedgEmail(month,code){
+function _wireLedgEmail(month,code,year){
   const em=document.getElementById("ledg-email");
   if(!em) return;
   em.onclick=async function(){
@@ -4706,8 +4728,14 @@ function _wireLedgEmail(month,code){
          SS REQUIRES WORKER v2.6.9. On v2.6.8 and earlier `code` is silently IGNORED and
          the month is sent instead - a wrong report reported as a success. If the client
          is ever ahead of the Worker, THAT is the failure to look for. */
+      /* 33f - A YEAR POSTS AS A YEAR. `year` is appended ONLY when the caller passed
+         one, so both month callers are byte-identical in behaviour to 33e. The Worker
+         tests ?year= BEFORE ?month= (SS84.2), and it still validates `month`, so the
+         month stays on the query as a valid value and is simply not the one used.
+         SS REQUIRES WORKER v2.6.11, which is deployed and verified. */
       const q="/report-email?month="+encodeURIComponent(month)
-             +(code?"&code="+encodeURIComponent(code):"");
+             +(code?"&code="+encodeURIComponent(code):"")
+             +(year?"&year="+encodeURIComponent(year):"");
       const res=await fetch(base+q,
                             {method:"POST", headers:_curHdr(), signal:_sig(NET_SLOW_MS)});
       if(res.ok) toast("The ledger is away.", 3200);
@@ -4716,16 +4744,195 @@ function _wireLedgEmail(month,code){
     finally{ em.disabled=false; em.textContent=was; }
   };
 }
+/* ---- 33f - THE ANNUAL REPORT. Two views, one for the company and one for a case,
+   drawn from Worker v2.6.11's `?year=` routes (SS84.2). Owner, s55: "i need to be able
+   to sort by year like i will need an annual report per case and over all and when 2027
+   rolls around start fresh."
+   SS84.1 - "START FRESH" NEEDED NO WORK AND A RESET WOULD BE A BUG. Every counter is
+   already year-stamped; a year is a FILTER. Nothing here zeroes anything.
+   SS84.3 - THREE FIGURES CANNOT BE YEARLY AT ALL. Badges issued, hunters and first finds
+   carry no date in the record, so they are printed under their OWN heading and never
+   inside the year's table. Summing them per year would be inventing data. ---- */
+async function loadYear(y,fromMonth){
+  const sec=document.getElementById("cur-ledger"); if(!sec) return;
+  const year=/^[0-9]{4}$/.test(String(y))?String(y):_ledgYearNow();
+  const nav='<div class="ledg-nav">'
+    +'<button class="btn-ghost" id="ledg-yprev" aria-label="The year before">&#8249; '+escapeHtml(_ledgYearShift(year,-1))+'</button>'
+    +'<span class="ledg-month">'+escapeHtml(year)+'</span>'
+    +'<button class="btn-ghost" id="ledg-ynext" aria-label="The year after">'+escapeHtml(_ledgYearShift(year,1))+' &#8250;</button></div>'
+    +'<div class="ledg-emailrow"><button class="btn-ghost" id="ledg-email">email report</button></div>'
+    +'<div style="text-align:center;margin:0 0 8px">'
+    +'<button class="btn-ghost" id="ledg-back">&#8249; The month</button></div>';
+  const wire=function(){
+    const a=document.getElementById("ledg-yprev"), b=document.getElementById("ledg-ynext");
+    if(a) a.onclick=function(){ loadYear(_ledgYearShift(year,-1)); };
+    if(b) b.onclick=function(){ loadYear(_ledgYearShift(year,1)); };
+    const k=document.getElementById("ledg-back");
+    /* 33f - the month the reader came FROM, carried in. State.ledgMonth is set by
+       loadLedger only, so a case sheet's year had no month of its own to return to. */
+    const bm=/^[0-9]{4}-[0-9]{2}$/.test(String(fromMonth))?String(fromMonth):(State.ledgMonth||_ledgNow());
+    if(k) k.onclick=function(){ loadLedger(bm); };
+    _wireLedgEmail(bm,null,year);
+  };
+  sec.innerHTML='<p class="ladder-eyebrow" style="margin:6px 0 4px">THE ANNUAL REPORT</p>'+nav
+    +'<div class="empty">Compiling the year\u2026</div>';
+  wire();
+
+  let rep=null, err="";
+  try{
+    const base=Store.base();
+    if(!base) err="The sync office cannot be reached.";
+    else if(!CURATOR_WORD) err="You are not signed in at the desk. Close the Desk and sign in again.";
+    else{
+      const res=await fetch(base+"/report?year="+encodeURIComponent(year),{headers:_curHdr(),signal:_sig(NET_SLOW_MS)});
+      if(res.status===403) err="The archivist does not recognise your word. Close the Desk and sign in again.";
+      else if(res.status===400) err="That is not a year the office recognises.";
+      else if(!res.ok) err="The year could not be drawn (\u2116 "+res.status+").";
+      else rep=await res.json();
+    }
+  }catch(e){ err="The year could not be drawn. ("+((e&&e.message)||"no reason given")+")"; }
+  if(err){ sec.innerHTML='<p class="ladder-eyebrow" style="margin:6px 0 4px">THE ANNUAL REPORT</p>'+nav
+      +'<div class="empty">'+escapeHtml(err)+'</div>'; wire(); return; }
+
+  const T=(rep&&rep.totals)||{}, MO=(rep&&rep.months)||[], AT=(rep&&rep.allTime)||{};
+  let h='<p class="ladder-eyebrow" style="margin:6px 0 4px">THE ANNUAL REPORT</p>'+nav;
+  h+='<div class="meta" style="margin:0 0 8px">THE COMPANY \u00b7 '+escapeHtml(year)+'</div>';
+  h+='<div class="currow" style="flex-direction:column;align-items:stretch;gap:6px">'
+    +'<div class="ledg-head">THE YEAR IN FIGURES</div><div class="ledg-stats">'
+    +_ledgStat("Badges issued",_ledgNum(T.badge_issued))
+    +_ledgStat("Cases looked at",_ledgNum(T.cold_viewed))
+    +_ledgStat("Cases taken",_ledgNum(T.case_opened))
+    +_ledgStat("Cases closed",_ledgNum(T.case_finished))
+    +_ledgStat("Hints revealed",_ledgNum(T.hint_completed))
+    +'</div></div>';
+
+  /* Every month of the year is drawn, quiet ones included - a table with gaps in it
+     invites the reader to wonder whether they are empty or missing. */
+  h+='<div class="ledg-head" style="margin:12px 0 4px">THE YEAR, MONTH BY MONTH</div>';
+  h+='<table class="ledg-tbl"><thead><tr><th>Month</th><th>Looked at</th><th>Taken</th><th>Closed</th><th>Hints</th></tr></thead><tbody>';
+  MO.forEach(function(r){
+    const rt=(r&&r.totals)||{};
+    h+='<tr><td>'+escapeHtml(_ledgMonShort(r.month))+'</td><td>'+_ledgNum(rt.cold_viewed)+'</td><td>'
+      +_ledgNum(rt.case_opened)+'</td><td>'+_ledgNum(rt.case_finished)+'</td><td>'+_ledgNum(rt.hint_completed)+'</td></tr>';
+  });
+  h+='<tr class="ledg-sum"><td>Total</td><td>'+_ledgNum(T.cold_viewed)+'</td><td>'+_ledgNum(T.case_opened)
+    +'</td><td>'+_ledgNum(T.case_finished)+'</td><td>'+_ledgNum(T.hint_completed)+'</td></tr>';
+  h+='</tbody></table>';
+
+  h+='<div class="ledg-head" style="margin:12px 0 4px">ALL-TIME \u2014 NOT THIS YEAR</div>'
+    +'<div class="ledg-stats">'+_ledgStat("Badges issued",_ledgNum(AT.badge_issued))+'</div>'
+    +'<p class="meta">'+escapeHtml(String(rep.allTimeNote||""))+'</p>';
+  h+='<p class="cur-clear-note">'+escapeHtml(String(rep.note||""))+'</p>';
+  sec.innerHTML=h; wire();
+}
+
+async function loadCaseYear(code,y,fromMonth){
+  const sec=document.getElementById("cur-ledger"); if(!sec) return;
+  const year=/^[0-9]{4}$/.test(String(y))?String(y):_ledgYearNow();
+  const back='<div class="ledg-nav" style="justify-content:center">'
+    +'<span class="ledg-month">CASE No. '+escapeHtml(String(code))+'</span></div>'
+    +'<div class="ledg-nav">'
+    +'<button class="btn-ghost" id="ledg-yprev" aria-label="The year before">&#8249; '+escapeHtml(_ledgYearShift(year,-1))+'</button>'
+    +'<span class="ledg-month">'+escapeHtml(year)+'</span>'
+    +'<button class="btn-ghost" id="ledg-ynext" aria-label="The year after">'+escapeHtml(_ledgYearShift(year,1))+' &#8250;</button></div>'
+    +'<div class="ledg-emailrow"><button class="btn-ghost" id="ledg-email">email report</button></div>'
+    +'<div style="text-align:center;margin:0 0 8px">'
+    +'<button class="btn-ghost" id="ledg-back">&#8249; The month</button></div>';
+  const wire=function(){
+    const a=document.getElementById("ledg-yprev"), b=document.getElementById("ledg-ynext");
+    if(a) a.onclick=function(){ loadCaseYear(code,_ledgYearShift(year,-1)); };
+    if(b) b.onclick=function(){ loadCaseYear(code,_ledgYearShift(year,1)); };
+    const k=document.getElementById("ledg-back");
+    const bm=/^[0-9]{4}-[0-9]{2}$/.test(String(fromMonth))?String(fromMonth):(State.ledgMonth||_ledgNow());
+    if(k) k.onclick=function(){ loadCaseSheet(code,bm); };
+    _wireLedgEmail(bm,code,year);
+  };
+  sec.innerHTML='<p class="ladder-eyebrow" style="margin:6px 0 4px">THE ANNUAL REPORT</p>'+back
+    +'<div class="empty">Compiling the year\u2026</div>';
+  wire();
+
+  let cy=null, err="";
+  try{
+    const base=Store.base();
+    if(!base) err="The sync office cannot be reached.";
+    else if(!CURATOR_WORD) err="You are not signed in at the desk. Close the Desk and sign in again.";
+    else{
+      const res=await fetch(base+"/report?code="+encodeURIComponent(code)+"&year="+encodeURIComponent(year),{headers:_curHdr(),signal:_sig(NET_SLOW_MS)});
+      if(res.status===403) err="The archivist does not recognise your word. Close the Desk and sign in again.";
+      else if(res.status===400) err="That is not a case number the office recognises.";
+      else if(!res.ok) err="The year could not be drawn (\u2116 "+res.status+").";
+      else cy=await res.json();
+    }
+  }catch(e){ err="The year could not be drawn. ("+((e&&e.message)||"no reason given")+")"; }
+  if(err){ sec.innerHTML='<p class="ladder-eyebrow" style="margin:6px 0 4px">THE ANNUAL REPORT</p>'+back
+      +'<div class="empty">'+escapeHtml(err)+'</div>'; wire(); return; }
+
+  const meta=await _caseMeta(code);
+  const title=(meta&&meta.title)?String(meta.title):"";
+  const shelf=_metaShelf(meta,cy.shelf);
+  const T=(cy&&cy.totals)||{}, MO=(cy&&cy.months)||[], AT=(cy&&cy.allTime)||{};
+  let h='<p class="ladder-eyebrow" style="margin:6px 0 4px">THE ANNUAL REPORT</p>'+back;
+  if(title) h+='<div class="cn" style="text-align:center;margin:0 0 2px">'+escapeHtml(title)+'</div>';
+  h+='<div class="meta" style="margin:0 0 8px">'+escapeHtml(String(shelf||"unknown").toUpperCase())
+    +' \u00b7 '+escapeHtml(year)+'</div>';
+
+  h+='<div class="currow" style="flex-direction:column;align-items:stretch;gap:6px">'
+    +'<div class="ledg-head">THE YEAR IN FIGURES</div><div class="ledg-stats">'
+    +_ledgStat("Scanned",_ledgNum(T.scanned))
+    +_ledgStat("Taken",_ledgNum(T.opened))
+    +_ledgStat("Closed",_ledgNum(T.finished))
+    +_ledgStat("Hints",_ledgNum(T.hints))
+    +'</div></div>';
+
+  h+='<div class="ledg-head" style="margin:12px 0 4px">THE YEAR, MONTH BY MONTH</div>';
+  h+='<table class="ledg-tbl"><thead><tr><th>Month</th><th>Scanned</th><th>Taken</th><th>Closed</th><th>Hints</th></tr></thead><tbody>';
+  MO.forEach(function(r){
+    h+='<tr><td>'+escapeHtml(_ledgMonShort(r&&r.month))+'</td><td>'+_ledgNum(r&&r.scanned)+'</td><td>'
+      +_ledgNum(r&&r.opened)+'</td><td>'+_ledgNum(r&&r.finished)+'</td><td>'+_ledgNum(r&&r.hints)+'</td></tr>';
+  });
+  h+='<tr class="ledg-sum"><td>Total</td><td>'+_ledgNum(T.scanned)+'</td><td>'+_ledgNum(T.opened)
+    +'</td><td>'+_ledgNum(T.finished)+'</td><td>'+_ledgNum(T.hints)+'</td></tr>';
+  h+='</tbody></table>';
+
+  /* SS84.3 - A MONTH READING ZERO BECAUSE THE RECORD WAS FOLDED IS NOT THE SAME AS
+     NOTHING HAPPENING, and the report must never let a reader confuse the two. The
+     Worker says so itself in `foldNote`; it is printed whenever the year is incomplete. */
+  if(cy.complete===false) h+='<p class="meta">'+escapeHtml(String(cy.foldNote||("Daily records before "+String(cy.foldedBefore||"")+" have been folded away, so figures before that date are not complete.")))+'</p>';
+
+  h+='<div class="ledg-head" style="margin:12px 0 4px">ALL-TIME \u2014 NOT THIS YEAR</div>'
+    +'<div class="ledg-stats">'
+    +_ledgStat("Looked at",_ledgNum(AT.viewed))
+    +_ledgStat("Taken",_ledgNum(AT.opened))
+    +_ledgStat("Hunters",_ledgNum(AT.joined))
+    +_ledgStat("First finds",_ledgNum(AT.first_find))
+    +_ledgStat("Closed",_ledgNum(AT.finished))
+    +'</div>'
+    +'<p class="meta">'+escapeHtml(String(cy.allTimeNote||""))+'</p>';
+  h+='<p class="cur-clear-note">'+escapeHtml(String(cy.note||""))+'</p>';
+  sec.innerHTML=h; wire();
+}
+
 async function loadCaseSheet(code,m){
   const sec=document.getElementById("cur-ledger"); if(!sec) return;
   const month=/^[0-9]{4}-[0-9]{2}$/.test(String(m))?String(m):_ledgNow();
-  const back='<div class="ledg-nav">'
-    +'<button class="btn-ghost ledg-arrow" id="ledg-sprev" aria-label="The month before">&#8249;</button>'
-    +'<span class="ledg-month">CASE No. '+escapeHtml(String(code))+'</span>'
-    +'<button class="btn-ghost ledg-arrow" id="ledg-snext" aria-label="The month after">&#8250;</button></div>'
+  /* 33f - TWO ROWS. Until now the arrows sat either side of "CASE No. 112211" and the
+     month was named nowhere in the nav, so the reader could scroll months without ever
+     seeing which one he was on - the owner read that as having no earlier/later at all.
+     Row one is the case number; row two is the Ledger's own row, verbatim, so the two
+     screens scroll the same way. The bare-guillemet .ledg-arrow buttons are gone with
+     the labels that replaced them; the class is still used nowhere else and is left in
+     place rather than freelanced out (SS5). */
+  const back='<div class="ledg-nav" style="justify-content:center">'
+    +'<span class="ledg-month">CASE No. '+escapeHtml(String(code))+'</span></div>'
+    +'<div class="ledg-nav">'
+    +'<button class="btn-ghost" id="ledg-sprev" aria-label="The month before">&#8249; Earlier</button>'
+    +'<span class="ledg-month">'+escapeHtml(_ledgLabel(month))+'</span>'
+    +'<button class="btn-ghost" id="ledg-snext" aria-label="The month after">Later &#8250;</button></div>'
     /* 33b - the email button sits under the CASE No. line, same class and same centring
        as the Ledger's (SS78), above "The whole month". */
     +'<div class="ledg-emailrow"><button class="btn-ghost" id="ledg-email">email report</button></div>'
+    +'<div style="text-align:center;margin:0 0 8px">'
+    +'<button class="btn-ghost" id="ledg-cyear">Annual report \u203a</button></div>'
     +'<div style="text-align:center;margin:0 0 8px">'
     +'<button class="btn-ghost" id="ledg-back">&#8249; The whole month</button></div>';
   const wire=function(){
@@ -4737,6 +4944,8 @@ async function loadCaseSheet(code,m){
     if(nx) nx.onclick=function(){ loadCaseSheet(code,_ledgShift(month,1)); };
     const cv=document.getElementById("ledg-csv");
     if(cv) cv.onclick=function(){ _ledgCsv(); };
+    const yb=document.getElementById("ledg-cyear");
+    if(yb) yb.onclick=function(){ loadCaseYear(code,_ledgYearOf(month),month); };
     _wireLedgEmail(month,code);
   };
   sec.innerHTML='<p class="ladder-eyebrow" style="margin:6px 0 4px">THE CASE SHEET</p>'+back

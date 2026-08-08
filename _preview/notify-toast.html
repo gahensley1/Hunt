@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The notification ask, as a toast — three shapes</title>
+<style>
+:root{
+  --paper:#EDE4D3; --paper-2:#E3D7C0; --ink:#1E1C1A; --ink-soft:#4A4239;
+  --tweed:#7A5C3E; --green:#2E4739; --brass:#B8863B; --brass-lt:#D8AF63; --oxblood:#8A3324;
+  --serif:"Playfair Display",Georgia,serif;
+  --type:"Special Elite","Courier New",monospace;
+  --shadow:0 10px 30px rgba(30,28,26,.16);
+}
+*{box-sizing:border-box}
+body{margin:0;background:#cfc4ae;font-family:var(--type);padding:22px;color:var(--ink)}
+h1{font-family:var(--serif);font-size:19px;margin:0 0 4px}
+.note{font-size:11.5px;color:#7a6a55;line-height:1.6;margin:0 0 18px;max-width:760px}
+.row{display:flex;gap:22px;flex-wrap:wrap}
+.col{width:340px}
+.lbl{font-size:10px;letter-spacing:1.6px;color:#7a6a55;text-transform:uppercase;margin:0 0 6px}
+.desc{font-size:11px;color:#6b5d4a;line-height:1.55;margin:8px 0 0}
+/* the phone frame */
+.phone{position:relative;height:300px;border-radius:20px;overflow:hidden;
+  background:
+    linear-gradient(rgba(237,228,211,.92),rgba(237,228,211,.92)),
+    repeating-linear-gradient(0deg,#d9cdb4 0 2px,#e3d7c0 2px 4px);
+  box-shadow:0 8px 22px rgba(30,28,26,.28)}
+.fakebar{background:var(--green);color:#EDE4D3;font-family:var(--serif);font-size:14px;
+  padding:10px 12px;letter-spacing:.5px}
+.fakebody{padding:12px}
+.fakeline{height:9px;background:rgba(30,28,26,.10);border-radius:4px;margin:0 0 8px}
+.fakeline.s{width:60%}
+.fakebtn{background:var(--green);color:#F3EAD8;border-radius:6px;padding:9px;text-align:center;
+  font-size:11.5px;letter-spacing:1.2px;margin-top:10px}
+
+/* ---- the toast base, copied from the app ---- */
+.toast{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);
+  background:var(--ink);color:var(--paper);border-radius:30px;
+  box-shadow:var(--shadow);width:calc(100% - 24px)}
+
+/* A — two inline actions */
+.tA{padding:10px 8px 10px 16px;display:flex;align-items:center;gap:10px}
+.tA .txt{font-size:12.5px;line-height:1.35;flex:1}
+.tA .yes{background:var(--brass-lt);color:#231a10;border:0;border-radius:20px;
+  padding:7px 13px;font-family:var(--type);font-size:11px;letter-spacing:1px;white-space:nowrap}
+.tA .no{background:none;border:0;color:rgba(237,228,211,.62);font-family:var(--type);
+  font-size:10.5px;letter-spacing:.8px;padding:6px 8px}
+
+/* B — one tap, whole toast */
+.tB{padding:12px 16px;display:flex;align-items:center;gap:12px}
+.tB .txt{font-size:12.5px;line-height:1.4;flex:1}
+.tB .chev{color:var(--brass-lt);font-size:15px}
+.tB .x{color:rgba(237,228,211,.45);font-size:14px;padding-left:4px}
+
+/* C — stacked, a title line and a reason */
+.tC{padding:12px 16px 11px}
+.tC .ttl{font-family:var(--serif);font-size:14.5px;color:#F3EAD8;margin-bottom:3px}
+.tC .txt{font-size:11.5px;line-height:1.45;color:rgba(237,228,211,.80);margin-bottom:9px}
+.tC .acts{display:flex;gap:8px;justify-content:flex-end;align-items:center}
+.tC .yes{background:var(--brass-lt);color:#231a10;border:0;border-radius:20px;
+  padding:7px 14px;font-family:var(--type);font-size:11px;letter-spacing:1px}
+.tC .no{background:none;border:0;color:rgba(237,228,211,.62);font-family:var(--type);
+  font-size:10.5px;letter-spacing:.8px;padding:6px 6px}
+</style></head><body>
+
+<h1>The notification ask, as a toast</h1>
+<p class="note">Shown on the Case Ready screen, where the card sits today. All three are the app's
+existing toast — ink pill, paper text, 30px radius — but tappable and staying put until answered,
+because the browser only raises its own prompt from a tap. The bordered brass card is retired in
+every one of them. Copy below is a placeholder in your voice; you set the final wording.</p>
+
+<div class="row">
+
+  <div class="col">
+    <p class="lbl">A — two actions, one line</p>
+    <div class="phone">
+      <div class="fakebar">Case Ready</div>
+      <div class="fakebody">
+        <div class="fakeline"></div><div class="fakeline s"></div>
+        <div class="fakebtn">✉ Share via Message</div>
+      </div>
+      <div class="toast tA">
+        <div class="txt">Shall the Agency send word when a find is filed?</div>
+        <button class="yes">YES</button>
+        <button class="no">NOT NOW</button>
+      </div>
+    </div>
+    <p class="desc">Closest to how most apps ask. Both answers are one tap and the choice is
+    obvious. Widest of the three, and on a 320px phone the text drops to two lines.</p>
+  </div>
+
+  <div class="col">
+    <p class="lbl">B — a single tap, whole toast</p>
+    <div class="phone">
+      <div class="fakebar">Case Ready</div>
+      <div class="fakebody">
+        <div class="fakeline"></div><div class="fakeline s"></div>
+        <div class="fakebtn">✉ Share via Message</div>
+      </div>
+      <div class="toast tB">
+        <div class="txt">Tap to have the Agency send word when a find is filed.</div>
+        <div class="chev">›</div>
+        <div class="x">✕</div>
+      </div>
+    </div>
+    <p class="desc">Lightest. The whole pill is the button; the ✕ dismisses without spending the
+    ask. Least like a dialogue — but a passing tap could raise the browser prompt unintended.</p>
+  </div>
+
+  <div class="col">
+    <p class="lbl">C — stacked, with the reason</p>
+    <div class="phone">
+      <div class="fakebar">Case Ready</div>
+      <div class="fakebody">
+        <div class="fakeline"></div><div class="fakeline s"></div>
+        <div class="fakebtn">✉ Share via Message</div>
+      </div>
+      <div class="toast tC">
+        <div class="ttl">Shall we send word?</div>
+        <div class="txt">The Agency can tell you the moment a detective files a find.</div>
+        <div class="acts"><button class="no">NOT NOW</button><button class="yes">SEND WORD</button></div>
+      </div>
+    </div>
+    <p class="desc">Keeps the card's voice and its reason, at a third of the height. Still a toast,
+    but it explains itself — which is the whole point of asking before the browser does.</p>
+  </div>
+
+</div>
+</body></html>
