@@ -14,6 +14,7 @@
 # SUPER-HANDOFF.md — The Deerstalker / Scavenger & Hunt Co.
 ### Session-53 edition (Aug 6 2026) — supersedes the ENTIRE prior chain, including the session-52 edition.
 ### 🔴🔴 **READ §77 BEFORE YOU MEASURE, RENDER, HASH, RUN THE BATTERY OR TOUCH GIT.** It is the tooling-facts section, written s55 on the owner's explicit instruction to record what was relearned. It holds: **the local server at `http://localhost:8000` (`Hunt-backups\serve.ps1`) — the primary measurement route, and it serves the real current build**; the three things that CANNOT work and must never be re-attempted (no browser in the sandbox, so **the §48 battery cannot be run there**; `file:///` is silently rewritten by the Chrome extension; `resize_window` does not change `innerWidth`); the **zero-rect trap** on hidden containers; the curator overlay's measured widths (**322px content at a 390px phone**); **the owner's shell is `cmd`, not PowerShell**; and **why git's messages must never be read in place of `.git/refs`**. Every item was learned by wasting time on the alternative.
+### ✅ **s56: `33f` IS LIVE — 4,051,223 B / `437fdc409f3e1638…` / buildmark `33f` / Magenta `#A8478F`, commit `b7e348e7`.** Disk == raw == Pages, hash-verified. **THE YEAR'S DESK UI IS BUILT — §84.6 AND §80 ITEM 0 ARE CLOSED (§86).** `Annual report ›` on the Ledger AND every case sheet; the case-sheet nav gained the month it never named. **⚠ THE COMMIT MESSAGE MISNAMES IT** — `ship`'s `git add -A` swept 33f into the s55 docs commit, so the log reads `s55: docs rescued…`. **NEXT MARKER `33g` / Lime `#7FA33C`.**
 ### 🔴🔴 **SESSION 55 CLOSE — READ §80 FOR WHAT IS OPEN, §84 FOR WHAT IS HALF-BUILT, §77 BEFORE TOUCHING A TOOL.** **LIVE NOW: `index.html` `33e` 4,037,814 B / `e1fffd5e…` (commit `37ec0128`, disk == raw == Pages) · Worker **v2.6.11** · `local == origin`.** s55 shipped **33a → 33e** and Worker **2.6.8 → 2.6.11**: the ledger nav levelled, `(office time)` struck, `email report` on the Ledger AND the case sheets, the emailed ledger FIXED and sending, per-case email, a professional CSV, and the YEAR routes. **THE ONE HALF-FINISHED THING: the year has no Desk UI (§84.6).** **THE BATTERY IS GREEN ON 33d, NOT 33e (§82).** **NEXT MARKER `33f` / Magenta `#A8478F`.**
 ### ✅ **s55: `32z` IS LIVE — 4,034,407 B / `3300b442940c72fd…` / buildmark `32z` / Lime `#7FA33C`, commit `abc819d2`.** Disk == raw == Pages, hash-verified, and the fetched bytes were checked for both changes, not just the hash. **This push also carried the unpushed 32x and 32y.** Ledger nav levelled (§85.1); the Email button relabelled on the owner's verbatim call. **⚠ §85.2 is still owed — the button still sits below the sentence, and that is a known state.** **NEXT MARKER `33a` / Rust `#B4532A` — the letters ran out at `32z`.**
 ### 🔴 **READ §65 FIRST — IT IS THE SESSION-53 CLOSE AND IT RANKS EVERYTHING THAT IS OWED.** §30 below is the s52 ordering and is superseded by it.
@@ -154,7 +155,8 @@ is proven and should be reused for every future Worker change.
 
 | File | Size | SHA-256 | Purpose |
 |---|---|---|---|
-| `index.html` **🆕 33e — ✅ LIVE s55, commit `37ec0128`. A case sheet emails its own case (§83). ⚠ BATTERY NOT RUN ON THIS BUILD.** | 4,037,814 B | `e1fffd5e9fc6be3ed23b26ef061a53fc78d67bfcda1fdfc8ae4fa9a8f8d900af` | needs Worker **v2.6.9**, which is deployed |
+| `index.html` **🆕 33f — ✅ LIVE s56, commit `b7e348e7`. THE ANNUAL REPORT, on the Ledger and every case sheet (§86).** | 4,051,223 B | `437fdc409f3e163831a062994da151638c985cc166f7fdcc599d50e401c90fc8` | needs Worker **v2.6.11**, which is deployed |
+| *(superseded)* `index.html` 33e — was live s55, commit `37ec0128` | 4,037,814 B | `e1fffd5e9fc6be3ed23b26ef061a53fc78d67bfcda1fdfc8ae4fa9a8f8d900af` | needs Worker **v2.6.9**, which is deployed |
 | `worker-v2_6_11.js` **✅ THE LIVE WORKER, DEPLOYED AND VERIFIED s55 — root reads `(v2.6.11)`** | 97,885 B | `7dacce07977efdc466af0fbf5b59b04e02e678204403024a5ba38bdf890fce74` | **THE YEAR** — `?year=` for the company and per case, by GET and by post (§84). Carries v2.6.10's CSV header + `Aug 1` labels |
 | *(superseded)* `worker-v2_6_10.js` | 82,800 B | `b6d5dfe2da7715736c3ca06b24c968bd8addb20a1d22f31d2e061a1450478244` | the case CSV became a document; fixed the empty `day` column (§84.4) |
 | *(superseded)* `worker-v2_6_9.js` — was deployed s55 | 79,906 B | `5c48441c54e377b7a3ed15fa470c1855807b2131accd1948de36dfdfe0b78c83` | `/report-email?…&code=` sends ONE case sheet + its day CSV (§83) |
@@ -1104,7 +1106,66 @@ verification depth to risk**; **keep ship summaries to ~3 lines + the hash**; **
 
 ---
 
-## 🔴 §84 — THE YEAR. WORKER v2.6.11 IS DEPLOYED; THE DESK UI IS NOT BUILT. (s55 close)
+## ✅ §86 — THE ANNUAL REPORT REACHED THE DESK. `33f`, s56.
+
+**OWNER, s56, VERBATIM:** *"on the case sheet i think we need a yearly report button and a earlier
+later with month scroll like the ledger this needs to be on each case sheet."*
+
+**SHIPPED: `33f` / Magenta `#A8478F` — 4,051,223 B / `437fdc409f3e163831a062994da151638c985cc166f7fdcc599d50e401c90fc8`,
+commit `b7e348e7`. Disk == raw == Pages, hash-verified.** Client only; Worker v2.6.11 was already
+answering `?year=` and was not touched.
+
+### 86.1 THE SECOND HALF OF HIS ASK WAS ALREADY THERE — AND THAT IS WHY HE COULD NOT SEE IT
+The case sheet has had working month arrows since 33b (`ledg-sprev` / `ledg-snext`). What it did
+NOT have was **the month's name anywhere in the nav** — the centre read `CASE No. 112211`, so a
+reader could scroll four months and never learn which one he was on. **He read a missing LABEL as a
+missing FEATURE, and he was right to: an unlabelled control is not a control.**
+**33f: two rows.** Row one is the case number; row two is the Ledger's own
+`‹ Earlier · August 2026 · Later ›`, verbatim, so both screens scroll identically. The bare-guillemet
+`.ledg-arrow` buttons went with the labels that replaced them; **the CSS rule is left in place** —
+unrequested deletions are how a later session finds a class it cannot explain (§5).
+
+### 86.2 THE COPY IS THE OWNER'S. CLAUDE'S PLACEHOLDER WAS NOT SHIPPED.
+§84.6 proposed `The whole year 2026 ›` and flagged it as unapproved. It was put to him with two
+alternatives; **he chose `Annual report ›`**, and that is what is in the file, on both screens.
+Layout was also offered as three options before a pixel moved (the aesthetics rule), and the
+two-row nav is the one he picked.
+
+### 86.3 WHAT THE YEAR VIEWS SHOW — AND THE HEADING THAT KEEPS THEM HONEST
+`loadYear(year, fromMonth)` (the company) and `loadCaseYear(code, year, fromMonth)` (one case).
+Both carry `‹ 2025 · 2026 · 2027 ›`, a month-by-month table with **every month drawn, quiet ones
+included**, and `‹ The month` back to exactly where the reader came from.
+**🔴 THE §84.3 FIGURES ARE PRINTED UNDER THEIR OWN HEADING, `ALL-TIME — NOT THIS YEAR`, AND NEVER
+INSIDE THE YEAR'S TABLE.** Badges issued, hunters and first finds carry no date in the record;
+summing them per year would be inventing data. A case year that crosses the 400-day fold prints the
+Worker's own `foldNote` — **a month reading zero because the record was folded is not the same as
+nothing happening.**
+
+### 86.4 `fromMonth` — A BUG CAUGHT BEFORE IT SHIPPED, RECORDED BECAUSE THE CAUSE RECURS
+The first cut had both year views return via `State.ledgMonth`. **`State.ledgMonth` is set by
+`loadLedger` and by nothing else** — `loadCaseSheet` never writes it — so a case sheet's year would
+have returned to whatever month the LEDGER last showed, which is usually not the month the reader
+left. The month is now **carried in as an argument**. *(The general fault: reading shared state to
+recover a value the caller already had.)*
+
+### 86.5 `email report` POSTS WHAT IS ON SCREEN
+`_wireLedgEmail(month, code, year)`. **`year` is appended only when the caller passes one**, so both
+month callers are byte-identical in behaviour to 33e. The Worker tests `?year=` before `?month=`
+(§84.2) and still validates `month`, so the month stays on the query as a valid value and is simply
+not the one used. **Requires v2.6.11**, which is deployed.
+
+### ⚠ 86.6 WHAT IS NOT DONE
+- **THE BATTERY.** §82's tick is still **33d**. 33e and now 33f have both shipped untested.
+  `node --check` was clean on the single script block, and that is all that was run.
+- **`ship`'s `git add -A` SWEPT 33f INTO THE s55 DOCS COMMIT.** The log message for `b7e348e7`
+  reads `s55: docs rescued, .gitignore, ship.cmd…` and says nothing about the annual report.
+  The code is correct; **the history misnames it.** Anyone bisecting on the message will miss it.
+- **NO CSV FOR A YEAR.** `Take a copy` is on the month's case sheet only. Not requested — not built.
+- **NOTHING HAS BEEN SEEN ON A PHONE**, as with every build since s29 (§80 item 1).
+
+---
+
+## ✅ §84 — THE YEAR. **CLOSED s56 — THE DESK UI SHIPPED IN `33f`. SEE §86.** (written s55 close)
 
 **OWNER, s55, VERBATIM:** *"on the report side i need to be able to sort by year like i will need an
 annual report per case and over all and when 2027 rolls around start fresh."*
@@ -1174,8 +1235,7 @@ where the arrows become `‹ 2025 · 2026 · 2027 ›` and `‹ The month` retur
 sheet, so a year is one tap from wherever the reader stands, and **`email report` posts whatever is on
 screen** — month or year — through the same `_wireLedgEmail` (§83.2), which will need a `year`
 argument alongside `code`.
-**⚠ THE COPY IS THE OWNER'S AND WAS NOT APPROVED.** `The whole year 2026 ›` is Claude's placeholder.
-**Ask before shipping it.**
+**✅ s56: BUILT, AND THE COPY WAS PUT TO THE OWNER RATHER THAN SHIPPED.** He chose **`Annual report ›`** — Claude's `The whole year 2026 ›` placeholder was NOT used. See §86.
 
 ---
 
@@ -1235,7 +1295,7 @@ and the Worker source must never be committed.**
 `_preview/` is scratch sitting in the public repo; `hunt-icon-v5.png` is unreferenced.
 
 ### 🔴 OPEN, IN ORDER OF WHAT IT COSTS TO LEAVE IT
-0. **🆕 THE YEAR'S DESK UI (§84.6).** The Worker is deployed and answers `?year=`; **there is no way
+0. **✅ CLOSED s56 — THE YEAR'S DESK UI SHIPPED IN `33f` (§86). DO NOT RE-RAISE.** *(the original entry, for the record:)* **THE YEAR'S DESK UI (§84.6).** The Worker is deployed and answers `?year=`; **there is no way
    to reach a year from the app.** The idiom is decided and the copy needs approving. **This is the
    first thing to build next session** — it is half-finished work, which is the worst kind to leave.
    **⚠ AND THE BATTERY HAS NOT RUN ON 33e** (§82's tick was 33d).
