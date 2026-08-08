@@ -282,7 +282,7 @@
     #notify-card .nc-txt{font-size:14px}
   }
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#7A5A98;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#A8478F;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -990,6 +990,12 @@
   .cur-in{width:100%;margin-top:7px;padding:8px 9px;border:1px solid rgba(122,85,31,.45);border-radius:7px;background:rgba(255,252,244,.8);font-family:var(--type);font-size:16px;color:var(--ink)}
   .cur-btns{display:flex;gap:8px;margin-top:9px}
   .ledg-nav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 8px}
+  /* 32y — the compiled line and "Email a copy" sit on one line, the button hard right.
+     Wraps rather than squeezing the sentence on a narrow phone. */
+  .ledg-meta-row{display:flex;align-items:center;justify-content:space-between;
+    gap:10px;flex-wrap:wrap;margin:0 0 8px}
+  .ledg-meta-row .meta{flex:1 1 auto;min-width:0;margin:0}
+  .ledg-meta-row button{flex:0 0 auto}
   .ledg-month{font-family:var(--type);font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:var(--ink)}
   .reg-sh.on{border-color:var(--brass);color:var(--ink)}
   .ledg-head{font-family:var(--type);font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:var(--ink-soft)}
@@ -1204,7 +1210,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">32w</p>
+      <p id="buildmark" aria-label="test build marker">32y</p>
     </div>
   </section>
 
@@ -1977,7 +1983,15 @@ function _huntTour(){
     return;
   }
   window._huntTourDone=true;
-  toast(HUNT_TIP,4200,"atrow2");          // closes 2s after the third tile fires
+  /* 32x — THE TWO TIPS NOW DIE TOGETHER (owner, s54). The oxblood beat fires at 3700ms
+     and runs 4600, so it ends at 8300. The black tip used to close at 4200, leaving the
+     oxblood alone on screen for four seconds and reading as a correction rather than a
+     second sentence. Held to the same instant, the pair reads as one message.
+     🔴 ONLY WHEN THE OXBLOOD WILL ACTUALLY FIRE. With no photograph to enlarge there is
+     no second beat, and a black tip left up for 8.3s on its own is just slow. */
+  const _hasPhoto=(State.hunt&&State.hunt.tiles||[]).some(function(t){ return t.type==="photo"&&safeImgSrc(t.src); });
+  const HUNT_ZOOM_AT=3700, HUNT_ZOOM_MS=4600;
+  toast(HUNT_TIP, _hasPhoto ? (HUNT_ZOOM_AT+HUNT_ZOOM_MS) : 4200, "atrow2");
   try{ if(window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches) return; }catch(e){}
   const n=cells.length;
   let pick = n>=5 ? [0,2,4]
@@ -1996,13 +2010,14 @@ function _huntTour(){
   },600+pick.length*800+1000);
   /* Second beat of the tour: once the black tip has closed (4200ms), tell them the
      clue can be studied - but only if there is a photograph to enlarge. */
-  const hasPhoto=(State.hunt&&State.hunt.tiles||[]).some(function(t){ return t.type==="photo"&&safeImgSrc(t.src); });
-  if(hasPhoto){
+  if(_hasPhoto){
     clearTimeout(window._huntZoomTipT);
     window._huntZoomTipT=setTimeout(function(){
       try{ if(localStorage.getItem("shco:hunttour")) return; }catch(e){}
-      if(_tipClear("s-hunt","hunt-grid",true)) toast2(HUNT_ZOOM_TIP,4600,"tip atunder");
-    },3700);
+      /* Both channels are now cleared by the same expiry, 8300ms after the black tip
+         was raised. Change one of these numbers and you must change the other. */
+      if(_tipClear("s-hunt","hunt-grid",true)) toast2(HUNT_ZOOM_TIP,HUNT_ZOOM_MS,"tip atunder");
+    },HUNT_ZOOM_AT);
   }
 }
 /* Arm or re-arm the pan tour. One timer, so repeated calls debounce rather than stack. */
@@ -4531,6 +4546,23 @@ async function loadLedger(m){
       loadCaseSheet(v,month); };
     if(f) f.onclick=go;
     if(q) q.onkeydown=function(e){ if(e.key==="Enter") go(); };
+    /* 32y — POST the month currently ON SCREEN, not today's. Disabled while in flight so
+       a double tap cannot post twice; the Worker would happily send two. Copy is the
+       owner's, verbatim, s54. */
+    const em=document.getElementById("ledg-email");
+    if(em) em.onclick=async function(){
+      if(em.disabled) return;
+      em.disabled=true; const was=em.textContent; em.textContent="Sending\u2026";
+      try{
+        const base=Store.base();
+        if(!base||!CURATOR_WORD){ toast("The post did not go. Nothing was sent.", 3600, "err"); return; }
+        const res=await fetch(base+"/report-email?month="+encodeURIComponent(month),
+                              {method:"POST", headers:_curHdr(), signal:_sig(NET_SLOW_MS)});
+        if(res.ok) toast("The ledger is away.", 3200);
+        else toast("The post did not go. Nothing was sent.", 3600, "err");
+      }catch(e){ toast("The post did not go. Nothing was sent.", 3600, "err"); }
+      finally{ em.disabled=false; em.textContent=was; }
+    };
   };
   wire();
   let rep=null, err="";
@@ -4550,7 +4582,11 @@ async function loadLedger(m){
 
   const T=(rep&&rep.totals)||{}, SH=(rep&&rep.shelves)||{}, CS=(rep&&rep.cases)||[], BD=(rep&&rep.badges)||[];
   let h='<p class="ladder-eyebrow" style="margin:6px 0 4px">THE COMPANY LEDGER</p>'+nav+look;
-  h+='<div class="meta" style="margin:0 0 8px">'+(rep&&rep.sealed?"Sealed \u00b7 this month is closed and will not change.":"Compiled to the minute \u00b7 this month is still open.")+'</div>';
+  /* 32y — EMAIL A COPY. Level with the compiled line, right-aligned, per the owner's brief.
+     An OPEN month may be emailed; the body says so in terms. */
+  h+='<div class="ledg-meta-row"><div class="meta">'
+    +(rep&&rep.sealed?"Sealed \u00b7 this month is closed and will not change.":"Compiled to the minute \u00b7 this month is still open.")
+    +'</div><button class="btn-ghost" id="ledg-email">Email a copy</button></div>';
 
   h+='<div class="currow" style="flex-direction:column;align-items:stretch;gap:6px"><div class="ledg-head">THE MONTH IN FIGURES</div><div class="ledg-stats">'
     +_ledgStat("Badges issued",_ledgNum(T.badge_issued))

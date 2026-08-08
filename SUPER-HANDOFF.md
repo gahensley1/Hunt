@@ -135,7 +135,8 @@ is proven and should be reused for every future Worker change.
 
 | File | Size | SHA-256 | Purpose |
 |---|---|---|---|
-| `index.html` **🆕 32w — BUILT s54, ON DISK ONLY** | 4,031,642 B | `7fa2a89c406de3f7b34b1ce1ef24a94467126e792cfcfc54bc903905ad9350d8` | the first-sleuth ask (§74); carries 32u web push + 32v |
+| `index.html` **🆕 32y — BUILT s54, ON DISK ONLY, ⚠ ONE LAYOUT ITEM OWED (§75.2)** | 4,034,030 B | `a5a4a801890747287346285de6b83e1014103edb899087ba046778dab85a2771` | the ledger button + paired tips |
+| *(superseded on disk)* `index.html` 32w | 4,031,642 B | `7fa2a89c406de3f7b34b1ce1ef24a94467126e792cfcfc54bc903905ad9350d8` | the first-sleuth ask (§74); carries 32u web push + 32v |
 | `index.html` *(LIVE on Pages: 32u)* | 4,023,779 B | `7d7a0598d49c6ef742956476d0dd1e057136e9ec778d17cdbb5ffdd0ab03a049` | **32t** — the live roster watcher (§68) |
 | *(superseded on disk)* `index.html` 32s | 4,017,670 B | `54385a7bb5fc041e7de244e37fca40ac32fbc29061356ca0b3fcf7e48c31a540` | **32s** — the slim poll against Worker v2.6.3 (§67) |
 | *(superseded on disk)* `index.html` 32r | 4,014,420 B | `21c7d6aa60f1a1a16267b56a8381a39e014aec83626834ec7fdf0c325647712f` | **32r** — notification priming card, cold ask killed, notifications routed through the SW (§66) |
@@ -2983,6 +2984,126 @@ Run against the exact files staged for `present_files`:
    staging step of session 30.
 
 **All four steps clean. The handoff is complete.**
+
+---
+
+## 🔴 §76 — SESSION 54 CLOSE: WHAT IS OWED, IN ORDER
+
+**LIVE RIGHT NOW:** `index.html` **32w** (4,031,642 B / `7fa2a89c…`) on disk == raw == Pages ·
+`sw.js` 5,532 B / `7a1682bd…` · Worker **v2.6.7**, verified on eight consecutive probes ·
+`.nojekyll` in place, Pages builds green in under a minute.
+
+**ON DISK, NOT PUSHED:** `index.html` **32y** (4,034,030 B / `a5a4a801…`) — the paired tips and the
+ledger button, **with the §75.2 placement still owed.**
+
+**s54 SHIPPED:** 32r the notification card · 32s the slim poll · 32t the live roster watcher ·
+32u web push · 32v/32w the first-sleuth ask · 32x paired tips · 32y the ledger button (unpushed).
+Worker v2.6.3 → v2.6.7. Battery baseline regenerated and green ever since.
+
+### THE ORDER
+
+**1. 🔴 A PHONE. It now gates SIX things at once** and has been carried since s29: the install
+prompt (never seen), the first-sleuth toast, the live roster, **push on a locked phone** (the owner
+proved push works once — a real field run has not), the two-device loop, and the ledger button.
+`claude/FIELD-TEST-PROTOCOL.md` is written and waiting.
+
+**2. 🔴 CLOUDFLARE WORKERS PAID ($5/mo).** Free caps CPU at 10 ms — a `slim=1` call on a large case
+may error until this is done — and 162k writes/day at target scale exceeds the plan outright.
+**Pre-event blocker. Owner's hands only (§A.1).**
+
+**3. THE §75.2 PLACEMENT** — one CSS decision on the "Email a copy" row, options shown first.
+Then push 32y.
+
+**4. One free WAF rate-limit rule** on the Worker route — the abuse ceiling for public QR posters.
+
+**5. The emailed ledger, END TO END.** The route is live and the cron is guarded, but **NO EMAIL HAS
+EVER ARRIVED.** First send: **CHECK SPAM** — a new sending domain with no reputation posting a
+self-addressed report is exactly what filters distrust. Mark it not-spam once.
+
+**6. `_preview/` IS IN THE PUBLIC REPO** and is scratch by §65's own note. So is `SUPER-HANDOFF.md`
+— that decision is still open (§0).
+
+**7. The Monday cron has never fired** — eleven runs, all manual (§59.3).
+
+**8. Cloudflare Pages migration** — three arguments now: the 100 GB/month bandwidth wall, silent
+slow rebuilds, and a whole evening lost to a GitHub Actions outage in a build step this site does
+not need.
+
+**9. THE STORE GATE, unchanged:** LLC → D-U-N-S · Stripe onboarding · counsel on the consent flow,
+then the Privacy Policy off DRAFT · store screenshots · **remove `#buildmark` as the last code
+change before filing.**
+
+**10. THE DECISIONS ONLY THE OWNER CAN MAKE (§14):** the nine volume labels · the app name and
+seller line · clue-tip duration · the clan crest · the Almanac regrouping · a non-builder route to
+a volume · whether `SUPER-HANDOFF.md` stays in the public repo.
+
+### ⚠ HOUSEKEEPING
+
+- **`SUPERHANDOFF.md` (the s52 edition) IS STILL IN PROJECT KNOWLEDGE** beside the current file.
+  **Delete it** — the instructions say there is one copy and never another. `docs/` also carries
+  `worker-v2_5_0/2_6_0/2_6_1.js` but not the live v2.6.7; add it.
+- Two probe stubs Claude wrote to production (`push:111111:builder`, `push:999999:builder`) are
+  harmless — fake endpoints, non-existent cases — and now gated. Delete with the curator token or
+  leave them.
+- `claude/` holds nine briefs, all banded with dated corrections (§1w). **It is NOT in git.**
+
+---
+
+## 🔴 §75 — 32x + 32y: THE PAIRED TIPS, AND "EMAIL A COPY" (built s54, NOT PUSHED)
+
+**ON DISK ONLY.** `index.html` **4,034,030 B /
+`a5a4a801890747287346285de6b83e1014103edb899087ba046778dab85a2771` / buildmark `32y`
+Magenta `#A8478F`.** Carries 32w (the first-sleuth ask), 32x (the paired tips) and 32y
+(the ledger button). Battery PASSES: 59/59 behaviour, Agent D drift NONE.
+
+### 75.1 32x — THE TWO HUNT-PAGE TIPS NOW DIE TOGETHER
+
+Owner, s54. The black tip ran 4200ms from t=0; the oxblood beat fires at 3700 and runs 4600, so it
+ended at 8300 — **leaving the oxblood alone on screen for four seconds, which reads as a correction
+rather than a second sentence.** The black tip is now held to 8300 too. **Measured: black on at
+50ms, oxblood at 3747, BOTH OFF AT 8357 — 0ms apart.**
+
+**🔴 ONLY WHEN THE OXBLOOD WILL ACTUALLY FIRE.** With no photograph to enlarge there is no second
+beat, and a black tip held 8.3s alone is just slow — so `_hasPhoto` is computed BEFORE the black
+toast and decides its duration. `HUNT_ZOOM_AT` and `HUNT_ZOOM_MS` are now named constants shared by
+both channels. **Change one and you must change the other; they are the same expiry.**
+
+### 75.2 32y — "EMAIL A COPY", AND WHAT IS STILL OWED ON IT
+
+Per `claude/TASK-ledger-email.md` §5. Posts `POST /report-email?month=…` with `_curHdr()`, **for the
+month currently ON SCREEN, not today's** — it reads the same `month` the ‹ Earlier / Later › control
+drives. Disabled while in flight (the Worker would happily send twice), label reverts in a `finally`.
+
+**COPY, OWNER'S, VERBATIM, s54:** sent → *"The ledger is away."* · failed → *"The post did not go.
+Nothing was sent."* (the failure toast carries `err`, so it is oxblood).
+
+**VERIFIED against a path-aware mock:** button renders and is labelled; a 200 gives the sent line; a
+502 gives the failure line in oxblood; the month posted is the one on screen; no page errors.
+
+**🔴 THE ONE THING NOT DONE — THE PLACEMENT.** The brief says right-aligned and LEVEL WITH the
+"Compiled to the minute" line. Measured: `sameLine:false`, `rightAligned:false` — **it wraps onto
+its own line below.** `.ledg-meta-row` is `flex-wrap:wrap` and the sentence takes the full width at
+390px, so the button is pushed down. **Fix is one CSS decision, not a rebuild** — either let the
+sentence truncate, shorten it, or accept the button below and say so. **AESTHETICS: show the owner
+options before choosing.** DO NOT PUSH 32y AS THE FINAL WORD ON THIS ROW.
+
+### 75.3 ⚠ A HARNESS LESSON THAT COST FOUR RUNS
+
+`renderCurator()` threw `idx.forEach is not a function` because the mock answered **every** Worker
+request with the ledger JSON, so `coldIndex()` received an object where it wanted an array. Four
+runs were spent concluding "the button does not render" when the button was fine and **the mock was
+the bug**. Also: the Desk tab key is **`ledg`**, not `ledger`, and `#cur-ledger` does not exist in
+the DOM until `renderCurator()` has run. **Mock per PATH, and dump the DOM on the first failure
+instead of re-running the same assertion.**
+
+### 75.4 EXPORT IS STRUCK FROM THE BACKLOG — WITH ITS REASONING
+
+**§65 item 8 (`exportAll`/`downloadBackup`/`exportCase`) is CLOSED, NOT BUILT.** Its only
+justification was §49.2's "there is no backup" — **and the archive clerk closed that in s30** (758
+keys in the last snapshot). **The Privacy Policy promises no export**: it offers walk-away,
+delete-your-own-cases, and write-to-`info@`, and nothing else. No user has asked; no store requires
+it. **Owner confirmed s54: the agreed work was the report, not an export.** If it returns it will
+return with a reason attached.
 
 ---
 
