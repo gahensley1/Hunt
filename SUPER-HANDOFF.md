@@ -170,6 +170,8 @@ is proven and should be reused for every future Worker change.
 | `Hunt-backups-starter.zip` **(🆕 s30 — for the NEW private repo)** | ~4.3 KB | `backup.py 218f390e…` · `backup.yml f90d9df6…` · `README 09782b3c…` | the archive clerk (§51.3) |
 | `test/run.py` ✅ PUSHED | 698 B | — | battery runner (§48) |
 | `test/agents.py` `behaviour.py` `baseline.json` `README.md` ✅ ALL PUSHED (verified 200 on raw, s30) | — | — | (§48) |
+| `worker-v2_6_8.js` **🆕 ✅ DEPLOYED AND VERIFIED s55 — root reads `(v2.6.8)`. THE EMAILED LEDGER SENDS (§81).** | 75,522 B | `afd9b47751d836b307c4d5dc11e0a86baaa15ff6d3403cda9b570fc6076577bb` | `LEDGER_FROM` moved to the ROOT domain — the one-line fix |
+| `worker-v2_6_7.js` **(deployed s55, superseded within the session)** | 74,802 B | — | the emailed ledger, sending as an unverified identity |
 | `worker-v2_6_6.js` **🆕 s54 — WRITTEN, NOT DEPLOYED. Fixes the take rate (§73)** | 66,001 B | `c959cb36ec463b93d87621ce461122ae56976b13f047b93b9128445b5d37ffc5` | — |
 | `worker-v2_6_5.js` **(deployed s54; superseded by 2.6.6)** | 64,222 B | `04ca5309e6d9e7fe17f83b605a87e2164e170103f11f2d06fc5e6edd01ef90a1` | — |
 | `worker-v2_6_4.js` **(DEPLOYED s54 — ⚠ CARRIES THE §72 HOLE, SUPERSEDE IT)** | 62,827 B | `23d81339e37ff3ff889e14286f44a175be17fa5d5602ae23e50f906b1012e429` | — |
@@ -3056,6 +3058,57 @@ a volume · whether `SUPER-HANDOFF.md` stays in the public repo.
 
 ---
 
+## ✅ §81 — THE EMAILED LEDGER SENDS. WORKER v2.6.8, DEPLOYED AND VERIFIED s55.
+
+**`worker-v2_6_8.js` 75,522 B / `afd9b47751d836b307c4d5dc11e0a86baaa15ff6d3403cda9b570fc6076577bb`.**
+Deployed by the owner; **root probed with a cache-buster twice: `(v2.6.8)`**, and `/report-email`
+still answers **403** unauthenticated, so the curator lock survived the deploy. **Owner confirms the
+send works. This closes the emailed ledger, which has been open since §64.4.**
+
+### 81.1 🔴 THE ROOT CAUSE — ONE ADDRESS, AND EVERY OTHER SUSPECT WAS INNOCENT
+
+**`LEDGER_FROM` was `reports@send.scavengerandhunt.com`. The domain verified in Resend is
+`scavengerandhunt.com` — THE ROOT.** So the Worker was sending as an identity Resend had never
+authorised: Resend answered **403**, `sendLedger` returned `{ok:false, why:"resend 403"}`, the route
+**502**d, and the client said *"The post did not go. Nothing was sent."*
+**THE FIX: `const LEDGER_FROM = "reports@scavengerandhunt.com";`** — one line.
+**⚠ DO NOT "TIDY" IT BACK TO `send.*`. That subdomain is NOT a sending identity** — it is only the
+return-path host Resend asks you to publish. **SPF and MX live on `send.`; DKIM lives at
+`resend._domainkey` on the ROOT. That split is what makes this look verified when it is not.**
+
+**NOTHING ELSE WAS WRONG, and each was cleared by measurement rather than elimination:**
+- **`RESEND_KEY` was present** as a Worker Secret — the first and most likely suspect, and false.
+- **The DNS was complete and correct** — SPF, DKIM and the `send.` MX all resolved from the sandbox.
+- **The client was correct** — 32y's POST path, and 33a/33b's buttons, all fine.
+- **§44.2's own warning had it inverted.** It said *"the sender must live on the verified domain…
+  Resend's default is the `send.` subdomain, which would make it
+  `agency@send.scavengerandhunt.com`."* **The rule was right and the assumption about which domain
+  gets verified was wrong** — and the code was written to the assumption. **A caveat that names the
+  right risk can still point you the wrong way.**
+
+### 81.2 ⚠ THE CLIENT HIDES THE REASON, AND THAT IS WHY THIS TOOK SO LONG
+
+**Every failure mode — 403 no-token, `no key`, `resend 403`, `csv encode`, `threw`, a network
+timeout — produces the SAME toast:** *"The post did not go. Nothing was sent."* The Worker's 502 body
+says exactly which (`the post did not go: resend 403`) **and the client discards it.**
+This was diagnosed from outside the app instead: probing the route, reading the DNS, reading
+`sendLedger`, then asking the owner for the Resend dashboard. **It worked, but it cost four
+exchanges to learn something the response body already said.**
+**⚠ AN OFFER STANDING, NOT BUILT: append the Worker's reason to the failure toast.** It changes the
+owner's copy, so it was not done unasked. **If a second mail fault ever appears, do this first.**
+
+### 81.3 ⚠ ONE THING TO WATCH — AND A WRONG DIAL THAT GOT TURNED
+
+- **`LEDGER_FROM` and `LEDGER_TO` ARE NOW THE SAME ADDRESS**, `reports@scavengerandhunt.com`. Resend
+  permits it. **But a clean send to a mailbox that does not receive is indistinguishable from success
+  in the app.** The owner reports it fixed, so it receives.
+- **⚠ `VAPID_SUBJECT` WAS CHANGED FROM `mailto:info@` TO `mailto:reports@` MID-DIAGNOSIS.** It is the
+  **web-push contact address and has nothing to do with the ledger.** Harmless — any real contact
+  address is valid — but **it is not the fix and must not be recorded as one.** Logged so a future
+  session does not read that edit as load-bearing.
+
+---
+
 ## 🔴 §80 — THE OPEN-TASK REGISTER, RE-AUDITED AT s55 CLOSE. THIS SUPERSEDES §65's ORDER.
 
 Every line below was checked against the document and, where measurable, against the live services
@@ -3072,7 +3125,9 @@ as current. Use THIS list.**
 4. **The take-rate defect** — fixed in Worker 2.6.6, and **2.6.7 is live**, so it is deployed (§73.2).
 5. **`first_find`** — was already built; struck s54 (§70.3).
 6. **Client export** — struck s54 with reasoning: nothing promises it (§75.4).
-7. **The emailed ledger, client side** — 32y/33a/33b, now on the Ledger AND the case sheets (§79).
+7. **THE EMAILED LEDGER — ✅ FULLY CLOSED s55, BOTH HALVES.** Client 32y/33a/33b, on the Ledger AND
+   the case sheets (§79); **Worker v2.6.8 deployed and the send confirmed working by the owner
+   (§81).** Open since §64.4. **The remaining unknown is the 3am cron, not the send.**
 8. **§76.2, the ledger meta row** — closed by deleting the sentence (§78).
 9. **🆕 `candidate-32m.html` and `_candidate-32m.html`** — **BOTH 404 ON RAW. THEY ARE ALREADY GONE.**
    §0's table still carries a red row ordering their deletion. **That row is stale — strike it.**
