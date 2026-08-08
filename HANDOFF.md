@@ -14,6 +14,7 @@
 # SUPER-HANDOFF.md — The Deerstalker / Scavenger & Hunt Co.
 ### Session-53 edition (Aug 6 2026) — supersedes the ENTIRE prior chain, including the session-52 edition.
 ### 🔴🔴 **READ §77 BEFORE YOU MEASURE, RENDER, HASH, RUN THE BATTERY OR TOUCH GIT.** It is the tooling-facts section, written s55 on the owner's explicit instruction to record what was relearned. It holds: **the local server at `http://localhost:8000` (`Hunt-backups\serve.ps1`) — the primary measurement route, and it serves the real current build**; the three things that CANNOT work and must never be re-attempted (no browser in the sandbox, so **the §48 battery cannot be run there**; `file:///` is silently rewritten by the Chrome extension; `resize_window` does not change `innerWidth`); the **zero-rect trap** on hidden containers; the curator overlay's measured widths (**322px content at a 390px phone**); **the owner's shell is `cmd`, not PowerShell**; and **why git's messages must never be read in place of `.git/refs`**. Every item was learned by wasting time on the alternative.
+### ✅ **s56: `33g` IS LIVE — 4,052,031 B / `ec6f29661d09ba89…` / buildmark `33g` / Lime `#7FA33C`, commit `9cd34d4d`.** Pages hash-verified. **WORKER `v2.6.12` DEPLOYED AND VERIFIED — root reads `(v2.6.12)`, `/list` no token still 403.** **EVERY CSV NOW CARRIES A BYTE-ORDER MARK (§87)** — the emailed ones from the Worker, the downloaded ones from the client. Excel had been opening them as Windows-1252 and mangling every em dash since the first CSV shipped. **⚠ THE OWNER PUSHED THIS ONE THROUGH THE GITHUB WEB PAGE, SO HIS LOCAL CLONE IS BEHIND ORIGIN** — `git pull` before the next `ship`. **NEXT MARKER `33h` / Rust `#B4532A`.**
 ### ✅ **s56: `33f` IS LIVE — 4,051,223 B / `437fdc409f3e1638…` / buildmark `33f` / Magenta `#A8478F`, commit `b7e348e7`.** Disk == raw == Pages, hash-verified. **THE YEAR'S DESK UI IS BUILT — §84.6 AND §80 ITEM 0 ARE CLOSED (§86).** `Annual report ›` on the Ledger AND every case sheet; the case-sheet nav gained the month it never named. **⚠ THE COMMIT MESSAGE MISNAMES IT** — `ship`'s `git add -A` swept 33f into the s55 docs commit, so the log reads `s55: docs rescued…`. **NEXT MARKER `33g` / Lime `#7FA33C`.**
 ### 🔴🔴 **SESSION 55 CLOSE — READ §80 FOR WHAT IS OPEN, §84 FOR WHAT IS HALF-BUILT, §77 BEFORE TOUCHING A TOOL.** **LIVE NOW: `index.html` `33e` 4,037,814 B / `e1fffd5e…` (commit `37ec0128`, disk == raw == Pages) · Worker **v2.6.11** · `local == origin`.** s55 shipped **33a → 33e** and Worker **2.6.8 → 2.6.11**: the ledger nav levelled, `(office time)` struck, `email report` on the Ledger AND the case sheets, the emailed ledger FIXED and sending, per-case email, a professional CSV, and the YEAR routes. **THE ONE HALF-FINISHED THING: the year has no Desk UI (§84.6).** **THE BATTERY IS GREEN ON 33d, NOT 33e (§82).** **NEXT MARKER `33f` / Magenta `#A8478F`.**
 ### ✅ **s55: `32z` IS LIVE — 4,034,407 B / `3300b442940c72fd…` / buildmark `32z` / Lime `#7FA33C`, commit `abc819d2`.** Disk == raw == Pages, hash-verified, and the fetched bytes were checked for both changes, not just the hash. **This push also carried the unpushed 32x and 32y.** Ledger nav levelled (§85.1); the Email button relabelled on the owner's verbatim call. **⚠ §85.2 is still owed — the button still sits below the sentence, and that is a known state.** **NEXT MARKER `33a` / Rust `#B4532A` — the letters ran out at `32z`.**
@@ -155,9 +156,11 @@ is proven and should be reused for every future Worker change.
 
 | File | Size | SHA-256 | Purpose |
 |---|---|---|---|
-| `index.html` **🆕 33f — ✅ LIVE s56, commit `b7e348e7`. THE ANNUAL REPORT, on the Ledger and every case sheet (§86).** | 4,051,223 B | `437fdc409f3e163831a062994da151638c985cc166f7fdcc599d50e401c90fc8` | needs Worker **v2.6.11**, which is deployed |
+| `index.html` **🆕 33g — ✅ LIVE s56, commit `9cd34d4d`. The CSV byte-order mark (§87).** | 4,052,031 B | `ec6f29661d09ba89bc4214db7577608a791905cc928e2b1d48e687598ab91d30` | needs Worker **v2.6.12**, which is deployed |
+| *(superseded)* `index.html` 33f — was live s56, commit `b7e348e7`. THE ANNUAL REPORT (§86) | 4,051,223 B | `437fdc409f3e163831a062994da151638c985cc166f7fdcc599d50e401c90fc8` | needs Worker **v2.6.11**, which is deployed |
 | *(superseded)* `index.html` 33e — was live s55, commit `37ec0128` | 4,037,814 B | `e1fffd5e9fc6be3ed23b26ef061a53fc78d67bfcda1fdfc8ae4fa9a8f8d900af` | needs Worker **v2.6.9**, which is deployed |
-| `worker-v2_6_11.js` **✅ THE LIVE WORKER, DEPLOYED AND VERIFIED s55 — root reads `(v2.6.11)`** | 97,885 B | `7dacce07977efdc466af0fbf5b59b04e02e678204403024a5ba38bdf890fce74` | **THE YEAR** — `?year=` for the company and per case, by GET and by post (§84). Carries v2.6.10's CSV header + `Aug 1` labels |
+| `worker-v2_6_12.js` **✅ THE LIVE WORKER, DEPLOYED AND VERIFIED s56 — root reads `(v2.6.12)`** | 98,430 B | `e3b17467b27301cf448840ccfb24dcf8695830c0db0818746e799fac2a665586` | **THE BYTE-ORDER MARK** — one `csvBytes()` helper, three attachment sites (§87) |
+| *(superseded)* `worker-v2_6_11.js` — was live s55 | 97,885 B | `7dacce07977efdc466af0fbf5b59b04e02e678204403024a5ba38bdf890fce74` | **THE YEAR** — `?year=` for the company and per case, by GET and by post (§84). Carries v2.6.10's CSV header + `Aug 1` labels |
 | *(superseded)* `worker-v2_6_10.js` | 82,800 B | `b6d5dfe2da7715736c3ca06b24c968bd8addb20a1d22f31d2e061a1450478244` | the case CSV became a document; fixed the empty `day` column (§84.4) |
 | *(superseded)* `worker-v2_6_9.js` — was deployed s55 | 79,906 B | `5c48441c54e377b7a3ed15fa470c1855807b2131accd1948de36dfdfe0b78c83` | `/report-email?…&code=` sends ONE case sheet + its day CSV (§83) |
 | *(superseded)* `index.html` 33d — was live s55 | 4,037,229 B | `6f3d5f62779d1bd4ebdc912ed295967fef1fc45a65007866a6c4192fab3d08e2` | `(office time)` struck; the nav row fits one line (§79.5) |
@@ -1106,6 +1109,79 @@ verification depth to risk**; **keep ship summaries to ~3 lines + the hash**; **
 
 ---
 
+## ✅ §88 — THE REPO WAS SLIMMED. 22 MB OF IT WAS NEVER SERVED. s56.
+
+**THE OWNER, LOOKING AT THE GITHUB FILE LIST:** *"does all this need to live here"* — followed by
+*"whatever is best as long as u have it locally."* It did not.
+
+### 88.1 WHAT THE SITE ACTUALLY NEEDS — ELEVEN THINGS, MEASURED NOT ASSUMED
+`index.html` · `sw.js` · `manifest.webmanifest` · `j.html` · `og-card.jpeg` · `award-card.jpeg` ·
+`icons/` (180, 192, 512 and the maskable pair) · `.nojekyll`.
+**`sw.js` PRECACHES ONLY SIX PATHS** — `./`, `./index.html`, `./j.html`, `./award-card.jpeg`,
+`./og-card.jpeg`, `./icons/icon-192.png`. That list is the shortest honest answer to "what is the app".
+
+### 88.2 WHAT LEFT, AND WHERE IT WENT
+**Moved to `_to_delete\s56-repo-slim\` — ON DISK, gitignored, NOT deleted:**
+`_preview/` **19 MB** (scratch HTML from old design passes) · `art/` **2.8 MB** (source art: the Bonnie
+source, the seals, icon-C) · `hunt-icon-v5.png` · the **root** `behaviour.py`, byte-identical to
+`test/behaviour.py` and carried as a known duplicate since s52.
+**22 MB out of a repo whose app is 4 MB.** `art/` is source material and is kept deliberately — it
+simply has no business in a PUBLIC WEB repo.
+
+### 🔴 88.3 A NEAR-MISS, RECORDED BECAUSE IT WOULD HAVE READ AS PROOF
+The first reference check reported **`art` referenced 567 times** and Claude nearly stopped there.
+**It was matching the substring** — `start`, `part`, `apart`. Re-run against the PATH form
+(`"art/`, `'art/`, `(art/`) and against each filename individually, the true count is **zero**.
+**A grep for a short word is not a grep for a path.** The same class as §0.1's `paid:` error:
+querying the wrong shape and believing the number that came back.
+
+### 88.4 WHAT STAYS, AND THE DECISION STILL OWED
+`HANDOFF*.md`, `docs/`, `claude/`, `test/`, `ship.cmd`, `battery.cmd` all stay. None are served; they
+are the build record. **The question about them is not size, it is that THE REPO IS PUBLIC** — the
+three handoffs are world-readable and describe the Worker's routes, the retention rules and the open
+security items. **No secret is in them (re-checked s56).** `Marketing-Brief.md` and
+`Monetization-Brief.md` were correctly NEVER committed — pricing and positioning are not public.
+**§80 item 9's decision stands open: keep the handoffs public, or move them to `Hunt-backups`.**
+
+---
+
+## ✅ §87 — THE BYTE-ORDER MARK. EVERY CSV HAS BEEN WRONG SINCE THE FIRST ONE. `33g` + Worker v2.6.12, s56.
+
+**HOW IT WAS FOUND:** the owner opened the emailed annual report and asked what was in the sheet —
+its title row read **`THE CASE â€” THE YEAR`**. He was not reporting a bug; he was asking a question,
+and §1's rule held — **measure and answer, do not assume a change was requested.** The answer was a
+defect older than the feature he was looking at.
+
+### 87.1 THE CAUSE, AND WHY `charset=utf-8` NEVER SAVED IT
+**Excel opens a `.csv` with no byte-order mark as Windows-1252.** The em dash is UTF-8
+`E2 80 94`; read as cp1252 those three bytes are `â€”`. **The `charset=utf-8` on the MIME type does not
+reach Excel** — by the time the file is on disk the header is gone, and a `.csv` has no other way to
+declare its encoding. **Only the BOM does.** Every em dash, guillemet and `№` in every report has been
+arriving mangled since the first CSV shipped; nobody noticed because nobody had opened one in Excel.
+
+### 87.2 THE SAME DEFECT HAD TWO HOMES (§1w)
+**Worker `v2.6.12`** — one helper, `csvBytes(s)`, prepending `\uFEFF`, wired into **all three**
+attachment sites (`sendYear`, `sendCaseSheet`, `sendLedger`). One helper and not three inline copies,
+deliberately: a fourth copy of the same string is how they drift.
+**Client `33g`** — the two `Take a copy` `Blob` constructors, which download rather than email and
+were the half a Worker fix would have left broken.
+**Fixing only the one the owner could see would have left the other, and he would have found it.**
+
+### 87.3 WHAT WAS VERIFIED
+Worker root reads `(v2.6.12)`; `/list` with no token still **403** — the lock was not disturbed.
+Pages serves `ec6f2966…` / 4,052,031 B / `33g` with **both** BOM sites present, counted in the
+FETCHED bytes rather than inferred from the hash. `node --check` clean on both files.
+**Raw was still serving `33f` at the time and that is normal (§0) — Pages is authoritative.**
+
+### ⚠ 87.4 TWO THINGS RECORDED
+- **THE BATTERY IS STILL GREEN ONLY ON `33d`.** 33e, 33f and 33g have all shipped untested.
+  This is now three builds of drift and it should be closed before the next one.
+- **`33g` WAS PUSHED THROUGH THE GITHUB WEB PAGE, NOT `ship`.** So the owner's **local clone is
+  behind origin** (`4b7432a5` local, `9cd34d4d` origin). **`git pull` before the next `ship`** or the
+  push is rejected. *(Claude cannot run git from the sandbox at all — §77 — so this is his to do.)*
+
+---
+
 ## ✅ §86 — THE ANNUAL REPORT REACHED THE DESK. `33f`, s56.
 
 **OWNER, s56, VERBATIM:** *"on the case sheet i think we need a yearly report button and a earlier
@@ -1291,8 +1367,8 @@ It also holds `worker-v2_5_0/2_6_0/2_6_1.js`, all superseded; the live Worker is
 `worker-v2_6_10.js` (one back).** All are untracked and must stay untracked — **the repo is public
 and the Worker source must never be committed.**
 
-**⚠ STILL CARRIED, UNCHANGED:** `behaviour.py` exists twice (root and `test/`, byte-identical);
-`_preview/` is scratch sitting in the public repo; `hunt-icon-v5.png` is unreferenced.
+**✅ ALL THREE CLOSED s56 — SEE §88.** The root `behaviour.py`, `_preview/` and
+`hunt-icon-v5.png` are out of the repo tree and kept on disk at `_to_delete\s56-repo-slim\`.
 
 ### 🔴 OPEN, IN ORDER OF WHAT IT COSTS TO LEAVE IT
 0. **✅ CLOSED s56 — THE YEAR'S DESK UI SHIPPED IN `33f` (§86). DO NOT RE-RAISE.** *(the original entry, for the record:)* **THE YEAR'S DESK UI (§84.6).** The Worker is deployed and answers `?year=`; **there is no way
