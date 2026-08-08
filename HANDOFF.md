@@ -1404,7 +1404,7 @@ and the Worker source must never be committed.**
 ### ⚠ SMALL, RECORDED, NOT URGENT
 - **`behaviour.py` STILL EXISTS TWICE** — repo root and `test/`, both 18,003 B, byte-identical. The
   root copy is the accident. **Delete it on the next push that touches anything.**
-- **🔴 §0's "THE REPO IS TEN TOP-LEVEL ENTRIES" IS WRONG AGAIN. MEASURED s55: FIFTEEN** —
+- **✅ s56: MEASURED AGAIN AFTER THE SLIM — **EIGHTEEN**, LISTED FROM `api.github.com`: `.gitattributes` · `.gitignore` · `.nojekyll` · `HANDOFF.md` · `HANDOFF-SPEC.md` · `HANDOFF-HISTORY.md` · `award-card.jpeg` · `battery.cmd` · `claude/` · `docs/` · `icons/` · `index.html` · `j.html` · `manifest.webmanifest` · `og-card.jpeg` · `ship.cmd` · `sw.js` · `test/` (§88). **AUDIT IT EVERY SESSION.** *(the s55 line, for the record:)* **§0's "THE REPO IS TEN TOP-LEVEL ENTRIES" IS WRONG AGAIN. MEASURED s55: FIFTEEN** —
   `.gitattributes` · `.nojekyll` · `SUPER-HANDOFF.md` · `_preview/` · `art/` · `award-card.jpeg` ·
   `behaviour.py` · `hunt-icon-v5.png` · `icons/` · `index.html` · `j.html` ·
   `manifest.webmanifest` · `og-card.jpeg` · `sw.js` · `test/`. It went 5 → 10 → 15 with a doc entry
