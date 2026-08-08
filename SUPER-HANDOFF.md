@@ -137,7 +137,10 @@ is proven and should be reused for every future Worker change.
 
 | File | Size | SHA-256 | Purpose |
 |---|---|---|---|
-| `index.html` **🆕 33a — ✅ LIVE, HASH-VERIFIED s55. Commit `fd9f2eb1`. `local == origin`.** | 4,034,680 B | `a9cba68133408851e20745a3b61b004dbbc9c37858c2dc196008517d4683d260` | `email report` under the month; the compiled/sealed sentence STRUCK; `.ledg-meta-row` CSS deleted (§78). **§76.2 CLOSED.** |
+| `index.html` **🆕 33d — BUILT s55, ON DISK, NOT PUSHED** | 4,037,229 B | `6f3d5f62779d1bd4ebdc912ed295967fef1fc45a65007866a6c4192fab3d08e2` | `(office time)` struck; the nav row fits one line (§79.5) |
+| *(superseded on disk)* 33c | 4,036,625 B | `91bf9fcca34126ba5b9525b929f893f532582f1edc74eb9df788fb6ff1600a15` | nav buttons `nowrap` — the real "later is up" fix (§79.4) |
+| *(superseded on disk)* 33b | 4,036,031 B | `6ee4f535e4cb6e280828d97df7d3d1da378b715cca17e073ae8c68787dd0e052` | `email report` on the CASE SHEETS via one shared handler (§79) |
+| *(superseded)* `index.html` 33a — LIVE, hash-verified s55, commit `fd9f2eb1` | 4,034,680 B | `a9cba68133408851e20745a3b61b004dbbc9c37858c2dc196008517d4683d260` | `email report` under the month; the compiled/sealed sentence STRUCK; `.ledg-meta-row` CSS deleted (§78). **§76.2 CLOSED.** |
 | *(superseded)* `index.html` 32z — LIVE earlier in s55, commit `abc819d2` | 4,034,407 B | `3300b442940c72fddf1b0bf3b510401687e2eca6e3eaec3522ac2ae54aa4fbbc` | ledger nav levelled + button relabelled `Email` (§76) |
 | *(superseded on disk, committed as `9b10257` but NEVER pushed)* `index.html` 32y | 4,034,030 B | `a5a4a801890747287346285de6b83e1014103edb899087ba046778dab85a2771` | the ledger button + paired tips |
 | *(superseded on disk)* `index.html` 32w | 4,031,642 B | `7fa2a89c406de3f7b34b1ce1ef24a94467126e792cfcfc54bc903905ad9350d8` | the first-sleuth ask (§74); carries 32u web push + 32v |
@@ -3053,6 +3056,130 @@ a volume · whether `SUPER-HANDOFF.md` stays in the public repo.
 
 ---
 
+## 🔴 §79 — 33b: THE EMAIL BUTTON REACHES THE CASE SHEETS (built s55, NOT YET PUSHED)
+
+`index.html` **4,036,031 B /
+`6ee4f535e4cb6e280828d97df7d3d1da378b715cca17e073ae8c68787dd0e052` / buildmark `33b`
+Cobalt `#3B6BA5`.** **Owner, s55: "email report needs to be on the case sheets also most
+important."**
+
+- **ONE HANDLER, TWO SCREENS — `_wireLedgEmail(month)`.** The 32y handler lived **inline inside
+  `loadLedger`**. Rather than paste a second copy into `loadCaseSheet`, it is now a shared function
+  called from both `wire()`s. **A second inline copy is precisely how the two drift (§1w).** Verified:
+  helper defined ×1, called ×2, button in the DOM ×2, and no orphaned inline copy left behind.
+  **⚠ Claude's first attempt fenced the old block off as "dead code for diffing" — that is exactly
+  what §78 condemns in CSS. It was deleted instead. Do not leave dead code as a souvenir.**
+- **The button sits under the CASE No. line, above "‹ The whole month"**, same `.ledg-emailrow` rule
+  as the Ledger. **MEASURED IN THE REAL APP** (§77.1, gate off per §77.3a): centred at **189.9px,
+  identical to the CASE No. centre** — the case sheet's arrows are bare `‹` `›` of equal width, so it
+  centres exactly, where the Ledger's is 7.9px off (§78). Handler confirmed attached; label reads
+  `email report`.
+- **It is added to `back`, so it appears on the loading and error states too** — consistent, and it
+  cannot vanish when the fetch fails.
+
+### 🔴 79.1 WHAT IT ACTUALLY SENDS — READ BEFORE PROMISING THE OWNER A PER-CASE EMAIL
+
+**`POST /report-email?month=YYYY-MM` IS THE ONLY MAIL ROUTE THE WORKER HAS.** Read out of
+`worker-v2_6_7.js`, not assumed: it is curator-locked, it takes **`month` and nothing else**, and a
+`code` parameter **would be silently ignored.** So on a case sheet the button sends **that sheet's
+month**, whose per-case CSV table contains the case.
+
+**🔴 A TRUE SINGLE-CASE EMAIL NEEDS A NEW WORKER ROUTE — v2.6.8 — AND A DEPLOY THE OWNER MUST DO.**
+Claude can write the source; Claude has no Worker access and never will (§A.1). **DO NOT FAKE IT
+CLIENT-SIDE**, and do not describe the current button as emailing "the case." **The owner has been
+told this plainly.**
+
+### ⚠ 79.2 THE LEDGER NAV: "LATER IS UP" COULD NOT BE REPRODUCED — STILL OPEN
+
+Owner, s55: *"later is up still because of a hyphen and not aligned with earlier on the ledger."*
+**MEASURED TWICE IN THE REAL APP AND THE TWO LABELS ARE LEVEL TO 0.00px** — `‹ Earlier` and
+`Later ›` both box-top **397.8**, and by `Range` on the text nodes both **top 405.80 / bottom
+417.00**, `textTopDelta 0.00`, `textBottomDelta 0.00`. Same font (`Special Elite`), same 11px, same
+8px padding, same `vertical-align:baseline`, no border. **The §76.1 margin fix is holding.**
+
+**WHAT *IS* ASYMMETRIC, AND IS THE LIKELIEST THING HE IS SEEING:**
+- **The label widths differ — `‹ Earlier` 63.55px vs `Later ›` 47.79px** (the word "Earlier" is
+  longer). Both are `text-decoration:underline`, **so the two underlines are visibly different
+  lengths**, which reads as one side sitting differently.
+- **Consequently the month is NOT card-centred: 202.9px against the card's 195.0px, 7.9px right**,
+  because `.ledg-nav` is `justify-content:space-between`.
+- **The case sheet does NOT have this** — its arrows are bare `‹` `›`, equal width, so it centres
+  exactly. **That contrast is probably what makes the Ledger row look wrong.**
+
+**NOT FIXED — it is an aesthetics change and needs his ruling.** The candidates: equalise the two
+buttons with a `min-width`; drop the words and use bare arrows as the case sheet does; or centre the
+month absolutely and let the buttons sit at the edges. **Do not pick one unasked.**
+
+### ✅ 79.4 SOLVED — AND IT WAS NEVER iOS. CLAUDE MOCKED THE LABEL INSTEAD OF READING IT.
+
+**33c. `index.html` 4,036,625 B / `91bf9fcca34126ba5b9525b929f893f532582f1edc74eb9df788fb6ff1600a15`
+/ buildmark `33c` Ochre `#C88A2E`.** THE FIX: **`.ledg-nav .btn-ghost{white-space:nowrap}`.**
+
+**THE CAUSE.** `_ledgLabel()` returns **`"August 2026 (office time)"`** — not `"August 2026"`.
+Rendered it is **~158px**, and `‹ Earlier` (83.6) + `Later ›` (67.8) + gaps (16) + 158 **exceeds the
+325px of content available at 393pt**. `.btn-ghost` has no `white-space`, so **the BUTTONS wrapped
+their own labels: `‹` above `Earlier`, and `Later` above `›`.** That dropped guillemet is exactly
+what the owner meant by *"later is up... because of a hyphen"* — he was describing the stray `›`
+sitting on its own line.
+**Measured at 393pt: before — row 38.4px, both buttons 2 lines. After — row 26.7px, 1 line each,
+text tops and bottoms level to 0.00px.**
+
+**🔴🔴 THE LESSON, AND IT IS THE WORST ONE OF THE SESSION. CLAUDE INVENTED THE TEST DATA.**
+Three probes used a hand-typed `'AUGUST 2026'` because that is what the label *looked* like in a
+screenshot. **The real string is 70px wider, and every one of those three measurements was therefore
+sound arithmetic about a row that does not exist.** Claude then told the owner twice that the row was
+level "to 0.00px" — and it was, in the fiction. **The moment the real `_ledgLabel('2026-08')` was
+called, the defect reproduced on the FIRST try, on the desktop, with no phone involved.**
+**THE RULE: NEVER HAND-TYPE A STRING THE APP GENERATES. CALL THE FUNCTION.** `_ledgLabel`,
+`_ledgStat`, `_metaShelf` and every other formatter are available in the page — use them. A mock is
+a hypothesis about the app; the app is the app. **This is the §75.3 mock lesson a second time, and
+it cost four exchanges here as it cost four runs there.**
+**AND: A DEFECT THAT CANNOT BE REPRODUCED IS USUALLY A TEST THAT IS WRONG, NOT A REPORTER WHO IS.**
+The owner said "later is up" three times while Claude reported 0.00px. **He was right every time.**
+
+### ✅ 79.5 33d — `(office time)` IS GONE, AND THE WHOLE ROW NOW FITS ON ONE LINE
+
+**`index.html` 4,037,229 B /
+`6f3d5f62779d1bd4ebdc912ed295967fef1fc45a65007866a6c4192fab3d08e2` / buildmark `33d`
+Rose `#B5566B`.** Owner, s55: **"we can say AUG 2026"** then **"or remove office time is better."**
+Second instruction taken; the full month name is kept.
+
+`_ledgLabel()` now returns **`"August 2026"`**. That is **~90px against ~158px**, so the row is
+`‹ Earlier | AUGUST 2026 | Later ›` **on one line with 67.5px of slack.** Verified by CALLING
+`_ledgLabel` (§79.4), not typing it: one line each, `textTopDelta 0.00`, `textBottomDelta 0.00`,
+row 27.2px. **The longest label is `September 2026`, ~28px wider than August — still inside the
+67.5px slack, so no month overflows.** The 33c `nowrap` stays as a belt-and-braces guard.
+Grepped after the edit: the only remaining `office time` strings are **code comments** — nothing
+user-facing survives (§1w).
+
+**🔴 WHAT WAS LOST, STATED PLAINLY: the label no longer tells anyone the month boundary is UTC.**
+`compile()` and `monthOf()` in the Worker are unchanged and still UTC. **If a month's figures are
+ever questioned as "off by a day," that is the reason, and this label used to explain it.** Logged so
+the answer exists when the question comes.
+
+**⚠ `_ledgLabel` HAS A SECOND CALLER** — the case sheet's `SHELF · month` meta line. It shortens
+there too, which is consistent and was checked. **Two callers, one function: change it once.**
+
+### 🔴 79.3 THE MEASUREMENT THAT WAS NEVER GOING TO SETTLE IT — HE IS ON AN iPHONE 15
+
+**The owner reports layout faults FROM A PHONE. Every measurement route Claude has is CHROME ON HIS
+DESKTOP.** §79.2 measured the nav row twice, got `0.00px` twice, and told him it was level — **while
+he was looking at iOS Safari on an iPhone 15 (393pt).** A desktop `getBoundingClientRect` is not
+evidence about an iOS rendering, and reporting it as though it were is the §11a error wearing a new
+coat: **the measurement was accurate and the conclusion was still wrong, because the wrong thing was
+measured.**
+
+**🔴 THE RULE: WHEN THE OWNER REPORTS A VISUAL FAULT, ASK WHICH DEVICE BEFORE MEASURING ANYTHING.**
+If the answer is the phone, **ask for a screenshot from the phone** — that is the only ground truth
+available — and label every desktop number as "Chrome desktop, not iOS."
+**PLAUSIBLE iOS-ONLY CAUSES, ALL UNPROVEN:** `Special Elite` may not carry `‹` / `›` (U+2039 /
+U+203A), so iOS falls back to a different family whose ascent shifts that label's baseline where
+Chrome's fallback does not; and Safari applies its own default button metrics. **The case sheet uses
+BARE `‹` `›` and the Ledger uses arrow-plus-word — comparing those two rows on the same phone
+isolates whether it is the guillemets or the words.**
+
+---
+
 ## ✅ §78 — 33a: "email report", AND §76.2 IS CLOSED BY DELETION (built AND SHIPPED s55)
 
 **✅ LIVE, HASH-VERIFIED.** `index.html` **4,034,680 B /
@@ -3263,6 +3390,13 @@ DISK WINS, and say so out loud rather than hunting for the file the instructions
   folders at the top if the work will touch the archive, the clerk or `serve.ps1`.**
 - **`sudo` does not exist in the sandbox** — the error text even suggests adjusting a container
   flag. There is no route to root. Nothing that needs `apt-get` will ever work.
+- **🔴 DO NOT RAISE `j.html` AS DRIFT. IT IS CRLF, NOT A DIFFERENCE.** A file-by-file disk-vs-GitHub
+  hash sweep at s55 close reported `j.html` mismatched — **disk 1,419 B, GitHub 1,386 B, exactly 33
+  bytes across 33 lines.** That is **CRLF on the owner's disk against LF in the repo**, normalised by
+  `.gitattributes` on check-in. **The content is identical and git reports the file clean.**
+  **A whole-file hash comparison is the wrong tool for text files here** — it will flag every
+  CRLF file forever. Compare `git`'s own view, or compare after `tr -d '\r'`. The nine binary and
+  LF-normalised files all matched exactly.
 
 ### 77.8 THE TWO STANDING RULES FROM THIS SESSION
 

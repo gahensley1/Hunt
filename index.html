@@ -282,7 +282,7 @@
     #notify-card .nc-txt{font-size:14px}
   }
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#B4532A;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#B5566B;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -994,7 +994,14 @@
      which pushed both buttons' boxes 5px below the month label even though the row is
      align-items:center. Measured: centres 43.6 / 38.6 / 43.6 before, all equal after.
      Scoped to .ledg-nav — .btn-ghost's margins are load-bearing elsewhere. */
-  .ledg-nav .btn-ghost{margin:0}
+  /* 33c - AND THEY MUST NOT WRAP THEIR OWN LABELS. The month reads
+     "August 2026 (office time)", ~158px, so at 393pt (iPhone 15) there is not enough room
+     for "< Earlier" + month + "Later >" on one line. Without nowrap the BUTTONS wrapped:
+     "<" above "Earlier", and "Later" above ">", which is what the owner saw as "later is
+     up" - its guillemet had dropped to a second line. Measured at 393pt: row 38.4px and
+     both buttons 2 lines before; 27.2px and 1 line each after.
+     The MONTH still wraps to two lines and that is accepted - it is what fits. */
+  .ledg-nav .btn-ghost{margin:0;white-space:nowrap}
   /* 33a — the email button, alone, centred under the month and year. The 32y
      .ledg-meta-row rules are GONE: nothing uses that class now, and dead layout CSS is
      how a later session concludes a row is "already handled." */
@@ -1213,7 +1220,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">33a</p>
+      <p id="buildmark" aria-label="test build marker">33d</p>
     </div>
   </section>
 
@@ -4376,7 +4383,14 @@ function _ledgShift(m,by){
 }
 function _ledgLabel(m){
   const M=["January","February","March","April","May","June","July","August","September","October","November","December"];
-  const p=String(m).split("-"); return (M[Number(p[1])-1]||"")+" "+p[0]+" (office time)";
+  /* 33d - "(office time)" REMOVED. Owner, s55: "or remove office time is better."
+     It was ~68px of the label and the reason the nav row could not fit at 393pt (SS79.4).
+     With it gone the label is ~90px and "< Earlier | AUGUST 2026 | Later >" sits on ONE
+     line with room to spare - the nowrap from 33c stays as a belt-and-braces guard.
+     SS THE MONTH BOUNDARY IS STILL UTC. compile() and monthOf() in the Worker use UTC and
+     that has not changed; the label simply no longer says so. If a month's figures are
+     ever queried as "off by a day", THAT is the reason and this label used to explain it. */
+  const p=String(m).split("-"); return (M[Number(p[1])-1]||"")+" "+p[0];
 }
 function _ledgNum(v){ const n=Number(v); return isFinite(n)?n:0; }
 function _ledgPct(v){ return (v===null||v===undefined)?"\u2014":(_ledgNum(v)+"%"); }
@@ -4552,20 +4566,7 @@ async function loadLedger(m){
     /* 32y — POST the month currently ON SCREEN, not today's. Disabled while in flight so
        a double tap cannot post twice; the Worker would happily send two. Copy is the
        owner's, verbatim, s54. */
-    const em=document.getElementById("ledg-email");
-    if(em) em.onclick=async function(){
-      if(em.disabled) return;
-      em.disabled=true; const was=em.textContent; em.textContent="Sending\u2026";
-      try{
-        const base=Store.base();
-        if(!base||!CURATOR_WORD){ toast("The post did not go. Nothing was sent.", 3600, "err"); return; }
-        const res=await fetch(base+"/report-email?month="+encodeURIComponent(month),
-                              {method:"POST", headers:_curHdr(), signal:_sig(NET_SLOW_MS)});
-        if(res.ok) toast("The ledger is away.", 3200);
-        else toast("The post did not go. Nothing was sent.", 3600, "err");
-      }catch(e){ toast("The post did not go. Nothing was sent.", 3600, "err"); }
-      finally{ em.disabled=false; em.textContent=was; }
-    };
+    _wireLedgEmail(month);
   };
   wire();
   let rep=null, err="";
@@ -4677,6 +4678,36 @@ function _metaShelf(meta,fallback){
   if(meta) return "territory";
   return String(fallback||"unknown");
 }
+/* 33b - ONE EMAIL HANDLER, TWO SCREENS. Wires whatever "#ledg-email" is on screen to
+   POST the month it was given. Owner, s55: the button belongs on the case sheets too,
+   and he called that the most important part.
+   It is a SHARED FUNCTION and not a copy on purpose: the 32y original lived inline in
+   loadLedger, and a second inline copy is how the two drift (SS1w).
+   POSTs the month currently ON SCREEN, never today's. Disabled while in flight so a
+   double tap cannot post twice - the Worker would happily send two. Label is restored
+   in a `finally`, so it survives a thrown error.
+   SS THE WORKER TAKES ONLY `month`. /report-email?month=YYYY-MM is the ONLY mail route
+   v2.6.7 has, and it is curator-locked. THERE IS NO PER-CASE EMAIL ROUTE - a `code`
+   parameter would be silently ignored. So on a case sheet this sends THAT SHEET'S MONTH,
+   whose per-case CSV table contains the case. If a single-case email is ever wanted it
+   needs a new Worker route (v2.6.8) and a deploy; do not fake it client-side. */
+function _wireLedgEmail(month){
+  const em=document.getElementById("ledg-email");
+  if(!em) return;
+  em.onclick=async function(){
+    if(em.disabled) return;
+    em.disabled=true; const was=em.textContent; em.textContent="Sending…";
+    try{
+      const base=Store.base();
+      if(!base||!CURATOR_WORD){ toast("The post did not go. Nothing was sent.", 3600, "err"); return; }
+      const res=await fetch(base+"/report-email?month="+encodeURIComponent(month),
+                            {method:"POST", headers:_curHdr(), signal:_sig(NET_SLOW_MS)});
+      if(res.ok) toast("The ledger is away.", 3200);
+      else toast("The post did not go. Nothing was sent.", 3600, "err");
+    }catch(e){ toast("The post did not go. Nothing was sent.", 3600, "err"); }
+    finally{ em.disabled=false; em.textContent=was; }
+  };
+}
 async function loadCaseSheet(code,m){
   const sec=document.getElementById("cur-ledger"); if(!sec) return;
   const month=/^[0-9]{4}-[0-9]{2}$/.test(String(m))?String(m):_ledgNow();
@@ -4684,6 +4715,9 @@ async function loadCaseSheet(code,m){
     +'<button class="btn-ghost ledg-arrow" id="ledg-sprev" aria-label="The month before">&#8249;</button>'
     +'<span class="ledg-month">CASE No. '+escapeHtml(String(code))+'</span>'
     +'<button class="btn-ghost ledg-arrow" id="ledg-snext" aria-label="The month after">&#8250;</button></div>'
+    /* 33b - the email button sits under the CASE No. line, same class and same centring
+       as the Ledger's (SS78), above "The whole month". */
+    +'<div class="ledg-emailrow"><button class="btn-ghost" id="ledg-email">email report</button></div>'
     +'<div style="text-align:center;margin:0 0 8px">'
     +'<button class="btn-ghost" id="ledg-back">&#8249; The whole month</button></div>';
   const wire=function(){
@@ -4695,6 +4729,7 @@ async function loadCaseSheet(code,m){
     if(nx) nx.onclick=function(){ loadCaseSheet(code,_ledgShift(month,1)); };
     const cv=document.getElementById("ledg-csv");
     if(cv) cv.onclick=function(){ _ledgCsv(); };
+    _wireLedgEmail(month);
   };
   sec.innerHTML='<p class="ladder-eyebrow" style="margin:6px 0 4px">THE CASE SHEET</p>'+back
     +'<div class="empty">Drawing the case\u2026</div>';
