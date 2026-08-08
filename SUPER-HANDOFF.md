@@ -1,5 +1,7 @@
 # SUPER-HANDOFF.md — The Deerstalker / Scavenger & Hunt Co.
 ### Session-53 edition (Aug 6 2026) — supersedes the ENTIRE prior chain, including the session-52 edition.
+### 🔴🔴 **READ §77 BEFORE YOU MEASURE, RENDER, HASH, RUN THE BATTERY OR TOUCH GIT.** It is the tooling-facts section, written s55 on the owner's explicit instruction to record what was relearned. It holds: **the local server at `http://localhost:8000` (`Hunt-backups\serve.ps1`) — the primary measurement route, and it serves the real current build**; the three things that CANNOT work and must never be re-attempted (no browser in the sandbox, so **the §48 battery cannot be run there**; `file:///` is silently rewritten by the Chrome extension; `resize_window` does not change `innerWidth`); the **zero-rect trap** on hidden containers; the curator overlay's measured widths (**322px content at a 390px phone**); **the owner's shell is `cmd`, not PowerShell**; and **why git's messages must never be read in place of `.git/refs`**. Every item was learned by wasting time on the alternative.
+### ✅ **s55: `32z` IS LIVE — 4,034,407 B / `3300b442940c72fd…` / buildmark `32z` / Lime `#7FA33C`, commit `abc819d2`.** Disk == raw == Pages, hash-verified, and the fetched bytes were checked for both changes, not just the hash. **This push also carried the unpushed 32x and 32y.** Ledger nav levelled (§76.1); the Email button relabelled on the owner's verbatim call. **⚠ §76.2 is still owed — the button still sits below the sentence, and that is a known state.** **NEXT MARKER `33a` / Rust `#B4532A` — the letters ran out at `32z`.**
 ### 🔴 **READ §65 FIRST — IT IS THE SESSION-53 CLOSE AND IT RANKS EVERYTHING THAT IS OWED.** §30 below is the s52 ordering and is superseded by it.
 ### 🔎 **SESSION 53 BEGAN AS A REVIEW AND ENDED AS A BUILD.** The review: re-hashed all three surfaces, opened `Hunt-backups` for the first time since s30, fixed three clerk defects (§59), and corrected §0, which had been contradicting §58 inside the s52 edition (§0.2). Then three owner task files arrived and **32m shipped** — photographic seals, the builder's commendation card, four-second cards, the ×1.25 stamp (§60).
 ### ✅ **`index.html` 32m IS LIVE ON PAGES.** **4,024,671 B / `811a118a332a76b2…` / buildmark `32m` / Ochre `#C88A2E`.** Base was 32l `bdfb0222…`. Hash-verified on Pages against the disk copy; raw was still serving 32l at the time, which §0 records as normal.
@@ -3050,6 +3052,123 @@ a volume · whether `SUPER-HANDOFF.md` stays in the public repo.
 
 ---
 
+## 🔴 §77 — THE TOOLING FACTS. READ THIS BEFORE YOU TRY TO MEASURE ANYTHING. (s55)
+
+**Owner's instruction, s55: "concrete everything we have relearned here and put it somewhere you do
+not forget it."** This section is that place. It is here, in the canonical document, because a fact
+that lives in a chat is gone (§1v) and a fact in a side file is not read. **Every item below was
+established by measurement in session 55, most of them after wasting time on the alternative.**
+
+### 77.1 ✅ THERE IS A LOCAL WEB SERVER. IT IS THE ANSWER TO ALMOST EVERYTHING.
+
+**`C:\Users\tony\Documents\Hunt-backups\serve.ps1` serves the live working copy of the repo at
+`http://localhost:8000/`.** The owner runs it in a `cmd` window; it logs every request with a status
+and a byte count. **VERIFIED s55: `http://localhost:8000/index.html` returned buildmark `32z` — the
+real current on-disk build, not a stale copy.**
+
+**🔴 THIS IS THE PRIMARY MEASUREMENT ROUTE. USE IT FIRST, ALWAYS.** Load it in the Claude-in-Chrome
+extension and the true build is in a real browser, with real fonts, real CSS and a real DOM, before
+anything is pushed. It removes the entire class of problem this document has been fighting for three
+sessions: **measuring a build you cannot open.**
+**ASK THE OWNER TO START IT AT THE TOP OF EVERY SESSION THAT WILL TOUCH LAYOUT.**
+**⚠ Confirm the buildmark it serves before trusting it.** In one s55 log the served `index.html` was
+4,009,521 B and 4,010,286 B — **builds `32p` and `32q`** — because those requests were for
+`_preview/` copies. **A server on the right port can still hand you the wrong file. Check the mark.**
+
+### 77.2 🔴 WHAT CANNOT MEASURE, AND STOP RE-TRYING IT
+
+- **NO BROWSER IN THE SANDBOX. AT ALL.** `pip install playwright` works and
+  `playwright install chromium` downloads 115 MB, then the binary dies on
+  **`libXdamage.so.1: cannot open shared object file`**. `playwright install-deps` and `apt-get`
+  both fail — **no root, no dpkg lock, and `sudo` is not available.** There is no workaround.
+  **DO NOT SPEND ANOTHER MINUTE ON THIS.** ~4 minutes and a 115 MB download were spent proving it.
+  **The consequence: `test/run.py` — the §48 battery — CANNOT BE RUN FROM THE SANDBOX.** If a build
+  needs the battery, the owner runs it, or it ships labelled "battery not run."
+- **`file:///C:/...` DOES NOT WORK THROUGH THE CHROME EXTENSION.** `navigate` **silently prefixes
+  `https://`**, reports *"Navigated to https://file:///C:/..."* as a success, and the tab never
+  leaves `chrome://newtab`. The failure only surfaces on the next call, as
+  *"Cannot access a chrome:// URL."* **A NAVIGATION THAT REPORTS SUCCESS IS NOT A NAVIGATION —
+  read `location.href` back before you believe it.** This is why 77.1 matters: `http://localhost`
+  works where `file://` cannot.
+- **`resize_window` DID NOT CHANGE `window.innerWidth`** (stayed 1536 after a 390×844 call).
+  **To measure a phone layout, force the container's width in CSS instead** — see 77.3.
+
+### 77.3 🔴 HOW TO MEASURE A PHONE LAYOUT IN THIS APP, EXACTLY
+
+**Measured geometry of the curator overlay, s55 — write these numbers down, they are load-bearing:**
+`#curator-ov` has **18px** padding each side · `.tov-card` is `max-width:420px` with **16px** padding
+each side. **So at a 390px viewport: card = 354px, and the CONTENT WIDTH IS 322px.**
+
+**🔴 AND THE TRAP THAT ATE A ROUND TRIP: `#curator-list` LIVES INSIDE `#curator-ov.hidden`, SO EVERY
+`getBoundingClientRect()` RETURNS 0.** Not an error — a clean, confident set of zeros that reads
+exactly like a real measurement, including a cheerful `sameLine:true` (0 == 0). **This is the §11a
+class in its purest form. A ZERO IS NOT A MEASUREMENT.** Assert a non-zero width before believing
+any rect. The same thing happened a second time later in the session and the zeros were spotted only
+because the numbers were implausible.
+
+**THE ROUTE THAT WORKS:** either unhide `#curator-ov` and force `width:390px` on it, or append a
+`position:fixed` `.tov-card` of width 354px with 16px padding to `<body>` at a high `z-index`.
+**⚠ THE APP BLOCKS LANDSCAPE** — on a desktop window it shows "The Agency conducts its business in
+portrait only," which covers the overlay. **A fixed, high-`z-index` probe card renders on top of that
+block; unhiding the overlay alone does not.**
+
+### 77.4 ⚠ THE MEASUREMENT THAT LOOKS LIKE A MEASUREMENT BUT ISN'T
+
+When `.meta` is `flex:1 1 auto`, **`scrollWidth` reports the FLEXED width, not the intrinsic one** —
+five different candidate sentences all reported exactly 252px. **To get the true width of a string,
+measure a `position:absolute;visibility:hidden;white-space:nowrap` clone of the same class.** The
+pass/fail was sound; the number was not, and it must never be quoted as an intrinsic width.
+
+### 77.5 THE OWNER'S SHELL IS `cmd.exe`, NOT PowerShell
+
+`Remove-Item`, `Get-FileHash` and `(Get-Item x).Length` all failed. **Send `cmd`: `cd /d`, `del`,
+`certutil -hashfile <file> SHA256`, `findstr /c:"..."`, `type`.** **ONE COMMAND PER LINE** — a
+verification block pasted onto the end of a `git push` line produced
+`git: 'push(Get-FileHash' is not a git command`, which cost a round trip and looked like a git fault.
+
+### 77.6 🔴 GIT: READ THE REFS, DO NOT INTERPRET THE MESSAGES
+
+**`git add` + `git commit` printing "nothing added to commit" DOES NOT MEAN THE EDITS ARE MISSING.**
+In s55 it meant they were **already committed** by an earlier command in the same window, and Claude
+told the owner his file had not been written — **a wrong and alarming claim, from a message that was
+merely ambiguous.** The refs said it plainly the whole time: `refs/heads/main` had advanced,
+`refs/remotes/origin/main` had not.
+**ALWAYS READ `.git/refs/heads/main` AND `.git/refs/remotes/origin/main` AS PLAIN FILES FIRST.
+`local != origin` means "committed, not pushed" and nothing else.**
+**AND `git push` REPORTING SUCCESS IN THE OWNER'S WINDOW IS NOT PROOF THE THING YOU CARE ABOUT WENT.**
+In s55 a push succeeded while the handoff commit stayed local — **`origin/main` was one commit
+behind and GitHub's copy of the handoff was 320,426 B against 322,949 B on disk.** Fetch and compare.
+**⚠ SCREENSHOTS OF A TERMINAL MAY BE SCROLLBACK.** One pasted screenshot showed
+`5c254ff..c749c87` and `318503c` — **session-52/53 pushes** — while the session was discussing today's.
+**Check the SHAs against the refs before reading a screenshot as current.**
+
+### 77.7 ✅ WHAT DOES WORK IN THE SANDBOX, AND WHAT THE BRIDGE COSTS
+
+- **`curl` WORKS.** §30's "Cowork's sandbox no longer fetches URLs" is **not universally true** —
+  raw, Pages, the Worker and the site were all fetched and hashed directly, in one command, in
+  seconds. **TRY `curl` FIRST: it is far cheaper than the extension for hashing a surface.**
+  **Hash all three surfaces in ONE command and say the result out loud** (§0).
+- **The Worker root probe MUST carry `?cb=<timestamp>` and a User-Agent.** With the buster it read
+  **`(v2.6.7)`**.
+- **Claude's host-path `Edit` writes DO reach the owner's real folder** — proven: the edits appeared
+  in his working tree and were committed from it. **Do not doubt this again.**
+- **THE BRIDGE CANNOT DELETE.** `touch` succeeds; `rm` returns **`Operation not permitted`**.
+  **Test it once with a throwaway file if the mode is ever in doubt — but a probe file you cannot
+  delete becomes litter in a PUBLIC repo.** `_deltest` had to be cleaned up by the owner.
+  **Prefer reading `.git/refs` to prove the mode; it costs nothing and leaves nothing behind.**
+- **THEREFORE: NEVER RUN `git` FROM THE SANDBOX, not even `git status`** — it writes
+  `.git/index.lock`, which the bridge cannot remove, stranding a lock that blocks the owner.
+
+### 77.8 THE TWO STANDING RULES FROM THIS SESSION
+
+Both are recorded in full at **§76.6** and are repeated here in one line each because they are the
+two the owner asked twice for: **(1) push permission is granted standing — do not ask again, but
+still hash before recording "pushed."** **(2) When Claude cannot execute something, the paste-ready
+`cmd` block ships in the SAME reply as the blocker, unprompted, with a verification block whose
+expected values are stated up front.**
+
+---
+
 ## ✅ §76 — 32z: THE LEDGER NAV IS LEVEL, AND THE BUTTON IS NOW "EMAIL" (built AND SHIPPED s55)
 
 **✅ LIVE, HASH-VERIFIED ON ALL THREE SURFACES.** Commit **`abc819d2`**, pushed `9b10257..abc819d`.
@@ -3095,6 +3214,19 @@ label from `Email a copy` (109px) to `Email` (60px) recovers 49px and still leav
 **OWNER DECISION STILL OWED: shorten the sentence, truncate it with an ellipsis, or accept the
 button below.** Until he rules, **the row ships with the button on its own line** and that is a
 known state, not an oversight.
+
+**🆕 s55, MEASURED IN THE REAL DOM off `http://localhost:8000` (§77.1), which confirmed the
+arithmetic above: content width 322.0px, sentence 344.1px, budget beside the 60.3px `Email` button
+251.7px, `sameLine:false`.** The three options were rendered side by side in the real card and
+screenshotted for the owner.
+**🔴 AND OPTION A IS NOT ONE RULE, IT IS TWO.** `text-overflow:ellipsis` alone **did not** bring the
+button back up — the screenshot shows the sentence correctly truncated to
+*"Compiled to the minute · this month is still …"* **and the button still sitting below it, centred.**
+`.ledg-meta-row` is `flex-wrap:wrap`, and a `nowrap` `.meta` still reports an intrinsic 344px, so the
+row wraps before it shrinks. **Option A therefore needs `flex-wrap:nowrap` on the row as well as the
+ellipsis. That combination was NOT successfully measured** — the follow-up probe returned the §77.3
+zeros — **so treat "A works with nowrap" as UNPROVEN and measure it before shipping it.**
+**Option B (`Compiled to the minute.`) WAS confirmed on one line with the button hard right.**
 
 ### 76.3 ⚠ THE BATTERY DID NOT RUN, AND WHY — SAY THIS OUT LOUD, DO NOT RE-ATTEMPT BLIND
 
