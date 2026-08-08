@@ -135,7 +135,8 @@ is proven and should be reused for every future Worker change.
 
 | File | Size | SHA-256 | Purpose |
 |---|---|---|---|
-| `index.html` **🆕 32y — BUILT s54, ON DISK ONLY, ⚠ ONE LAYOUT ITEM OWED (§75.2)** | 4,034,030 B | `a5a4a801890747287346285de6b83e1014103edb899087ba046778dab85a2771` | the ledger button + paired tips |
+| `index.html` **🆕 32z — BUILT s55, ON DISK ONLY, NOT PUSHED** | 4,034,407 B | `3300b442940c72fddf1b0bf3b510401687e2eca6e3eaec3522ac2ae54aa4fbbc` | ledger nav levelled + button relabelled `Email` (§76) |
+| *(superseded on disk, committed as `9b10257` but NEVER pushed)* `index.html` 32y | 4,034,030 B | `a5a4a801890747287346285de6b83e1014103edb899087ba046778dab85a2771` | the ledger button + paired tips |
 | *(superseded on disk)* `index.html` 32w | 4,031,642 B | `7fa2a89c406de3f7b34b1ce1ef24a94467126e792cfcfc54bc903905ad9350d8` | the first-sleuth ask (§74); carries 32u web push + 32v |
 | `index.html` *(LIVE on Pages: 32u)* | 4,023,779 B | `7d7a0598d49c6ef742956476d0dd1e057136e9ec778d17cdbb5ffdd0ab03a049` | **32t** — the live roster watcher (§68) |
 | *(superseded on disk)* `index.html` 32s | 4,017,670 B | `54385a7bb5fc041e7de244e37fca40ac32fbc29061356ca0b3fcf7e48c31a540` | **32s** — the slim poll against Worker v2.6.3 (§67) |
@@ -3046,6 +3047,110 @@ a volume · whether `SUPER-HANDOFF.md` stays in the public repo.
   harmless — fake endpoints, non-existent cases — and now gated. Delete with the curator token or
   leave them.
 - `claude/` holds nine briefs, all banded with dated corrections (§1w). **It is NOT in git.**
+
+---
+
+## 🔴 §76 — 32z: THE LEDGER NAV IS LEVEL, AND THE BUTTON IS NOW "EMAIL" (built s55, NOT PUSHED)
+
+**ON DISK ONLY.** `index.html` **4,034,407 B /
+`3300b442940c72fddf1b0bf3b510401687e2eca6e3eaec3522ac2ae54aa4fbbc` / buildmark `32z`
+Lime `#7FA33C`.** Carries everything in 32w/32x/32y. **Battery NOT run — see §76.3.**
+
+### 76.1 ‹ EARLIER · MONTH · LATER › NOW SIT LEVEL — owner report, s55
+
+**THE CAUSE.** `.ledg-nav` is `align-items:center`, so the row looked correct on paper. But
+**`.btn-ghost` carries `margin:14px 0 4px`** — an asymmetric margin belonging to its use as a
+standalone stacked button. In a centred flex row that margin is part of the item's outer box, so
+**both buttons' boxes were centred while their visible bodies sat 5px low.**
+**Measured in the owner's own Chrome at a 390px phone width: centres `43.6 / 38.6 / 43.6`
+(buttons / month / buttons) before; `29.6 / 29.6 / 29.6` after — level to 0.0px, across
+`AUGUST 2026`, `SEPTEMBER 2026` and the case-sheet's longer `CASE No. 09300912` label. Row height
+falls 45.2 → 27.2. No overflow in any of the three.**
+
+**THE FIX, one rule, scoped:** `.ledg-nav .btn-ghost{margin:0}`.
+**🔴 DO NOT GENERALISE IT TO `.btn-ghost`.** Those margins are load-bearing everywhere else the
+class is used stacked; a global change would collapse the spacing on the Desk's other rows.
+**⚠ THE SAME TRAP IS PROBABLY ELSEWHERE.** Any centred flex row containing a `.btn-ghost` inherits
+the 5px. `.ledg-meta-row` has it too but the button wraps there anyway, so it does not read as
+misalignment. **Nothing else was audited.**
+
+### 76.2 🔴 §75.2 IS **NOT** CLOSED — THE BUTTON STILL WRAPS, AND HERE IS THE ARITHMETIC
+
+Owner's call s55, verbatim: **"Email (just use email)"** — the label is now `Email`, applied verbatim.
+**It does not put the button back on the sentence's line, and this was measured, not assumed.**
+
+At a 390px viewport the ledger card's content width is **322px** (390 − 36 `#curator-ov` padding −
+32 `.tov-card` padding). Beside a 60px `Email` button plus the 10px gap, **252px is left for the
+sentence. "Compiled to the minute · this month is still open." needs 344px.** The sealed variant
+needs 346px. **The button was never the problem — the sentence is 92px too long.** Shrinking the
+label from `Email a copy` (109px) to `Email` (60px) recovers 49px and still leaves it short.
+
+**Measured to fit beside `Email`, one line, right-aligned:** `Compiled to the minute.` ·
+`This month is still open.` · `Open · compiled to the minute.` · `Still open.` · `Sealed.`
+**OWNER DECISION STILL OWED: shorten the sentence, truncate it with an ellipsis, or accept the
+button below.** Until he rules, **the row ships with the button on its own line** and that is a
+known state, not an oversight.
+
+### 76.3 ⚠ THE BATTERY DID NOT RUN, AND WHY — SAY THIS OUT LOUD, DO NOT RE-ATTEMPT BLIND
+
+**Cowork's Linux sandbox cannot run a browser.** `pip install playwright` succeeds and
+`playwright install chromium` downloads, but the binary dies on
+**`libXdamage.so.1: cannot open shared object file`**, and `install-deps` / `apt-get` both fail —
+**no root, no dpkg lock.** There is no route to a headless browser in-sandbox. Roughly four minutes
+and a 115 MB download were spent proving it.
+**THE WORKING ROUTE, AND IT IS THE ONLY ONE: the Claude-in-Chrome extension, per §30 item 2(a).**
+Both measurements above were taken that way.
+**🔴 `file:///C:/...` DOES NOT WORK THROUGH THE EXTENSION** — `navigate` silently prefixes `https://`
+and the tab never leaves `chrome://newtab`, then `javascript_tool` errors with *"Cannot access a
+chrome:// URL"*. **A navigation that reports success is not a navigation.** The route that works:
+load **live Pages**, then inject the new CSS rule and a probe copy of the markup and measure there.
+**And measure inside a VISIBLE container.** `#curator-list` lives inside `#curator-ov.hidden`, so
+every rect came back **0** — a clean zero that reads exactly like a real measurement (§11a). The
+probe must be a `position:fixed` `.tov-card` of the right width appended to `<body>`.
+**⚠ ONE SOFT NUMBER, LABELLED:** the "fits" candidates all reported `scrollWidth` 252px, which is
+the flexed width, not the intrinsic one. **The pass/fail is sound; the 252 is not an intrinsic
+measurement and must not be quoted as one.**
+
+### 76.4 🔴 THE PUSH DID NOT HAPPEN, AND CLAUDE COULD NOT DO IT
+
+**The folder arrived over the no-network bridge**, proven not assumed: `touch` succeeds, `rm` returns
+**`Operation not permitted`**. Per the standing rule **no `git` was run at all** — not even
+`git status`, which would strand `.git/index.lock` the bridge cannot remove. Git state was read as
+plain files: `HEAD` → `refs/heads/main` = **`9b10257a`** (32y), `refs/remotes/origin/main` =
+**`2c7527a7`** (32w). **32y was committed last session and never pushed; 32z is now uncommitted on
+top of it.** The owner pushes.
+
+**⚠ A STRAY FILE CLAUDE CREATED AND CANNOT DELETE: `_deltest`, 0 B, repo root.** It was the write/
+delete probe. **It must not go into the public repo — delete it before pushing.** §1w: this is
+logged here because a file that exists only in a chat is lost.
+
+### 76.6 🔴 TWO STANDING OWNER RULES, GRANTED s55 — CARRY THEM FORWARD IN EVERY EDITION
+
+1. **PERMISSION TO PUSH IS GRANTED STANDING.** The owner said it plainly and said not to forget it.
+   **Do not ask again.** §2f still applies in full: **fetch and hash before recording "pushed."**
+   **⚠ AND PERMISSION IS NOT CAPABILITY.** Through the no-network bridge git still cannot be run at
+   all (§76.4) — `rm` returns `Operation not permitted`, so a `git` invocation strands
+   `.git/index.lock` the sandbox cannot remove. **The grant removes the asking, not the bridge.**
+   On his own machine with real git, push — and say so first, per the standing rule.
+2. **🔴 ALWAYS SEND THE PASTE-READY CODE, PROMPTLY AND UNPROMPTED.** When Claude cannot execute
+   something, the deliverable is **the exact block for the owner to paste** — in the same reply that
+   reports the blocker, never a reply later and never only on request. A blocker reported without
+   the command that clears it is an unfinished answer. PowerShell, `cd C:\Users\tony\Documents\Hunt`
+   first, and pair it with a **verification block** whose expected values are stated up front so the
+   result can be checked rather than trusted.
+
+### 76.5 SURFACES AS MEASURED AT s55 OPEN
+
+- `index.html` live, **raw AND Pages byte-identical**: 4,031,642 B /
+  `7fa2a89c406de3f7b34b1ce1ef24a94467126e792cfcfc54bc903905ad9350d8` / buildmark **32w**.
+  **So 32w DID reach production** — §75's "NOT PUSHED" heading is true only of 32x/32y.
+- Worker root with a cache-buster: **`(v2.6.7)`**. **🔴 §0's table has no 2.6.7 row** — its newest
+  entry is 2.6.6 "written, not deployed", while `worker-v2_6_7.js` (74,802 B) sits on disk and 2.6.7
+  is what answers. §0 was one deploy stale again; the housekeeping note knew and the table did not.
+  **This is the §0.2 class exactly: one section updated, another not.**
+- `scavengerandhunt.com` 200 · `/privacy.html` 200.
+- `curl` works in-sandbox this session, so §30's "the sandbox no longer fetches URLs" is **not
+  universally true** — try `curl` first, it is far cheaper than the extension.
 
 ---
 

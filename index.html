@@ -282,7 +282,7 @@
     #notify-card .nc-txt{font-size:14px}
   }
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#A8478F;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#7FA33C;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -990,6 +990,11 @@
   .cur-in{width:100%;margin-top:7px;padding:8px 9px;border:1px solid rgba(122,85,31,.45);border-radius:7px;background:rgba(255,252,244,.8);font-family:var(--type);font-size:16px;color:var(--ink)}
   .cur-btns{display:flex;gap:8px;margin-top:9px}
   .ledg-nav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 8px}
+  /* 32z — ‹ Earlier · MONTH · Later › sit level. .btn-ghost carries margin:14px 0 4px,
+     which pushed both buttons' boxes 5px below the month label even though the row is
+     align-items:center. Measured: centres 43.6 / 38.6 / 43.6 before, all equal after.
+     Scoped to .ledg-nav — .btn-ghost's margins are load-bearing elsewhere. */
+  .ledg-nav .btn-ghost{margin:0}
   /* 32y — the compiled line and "Email a copy" sit on one line, the button hard right.
      Wraps rather than squeezing the sentence on a narrow phone. */
   .ledg-meta-row{display:flex;align-items:center;justify-content:space-between;
@@ -1210,7 +1215,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">32y</p>
+      <p id="buildmark" aria-label="test build marker">32z</p>
     </div>
   </section>
 
@@ -4586,7 +4591,7 @@ async function loadLedger(m){
      An OPEN month may be emailed; the body says so in terms. */
   h+='<div class="ledg-meta-row"><div class="meta">'
     +(rep&&rep.sealed?"Sealed \u00b7 this month is closed and will not change.":"Compiled to the minute \u00b7 this month is still open.")
-    +'</div><button class="btn-ghost" id="ledg-email">Email a copy</button></div>';
+    +'</div><button class="btn-ghost" id="ledg-email">Email</button></div>';
 
   h+='<div class="currow" style="flex-direction:column;align-items:stretch;gap:6px"><div class="ledg-head">THE MONTH IN FIGURES</div><div class="ledg-stats">'
     +_ledgStat("Badges issued",_ledgNum(T.badge_issued))
