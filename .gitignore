@@ -1,0 +1,9 @@
+# s55 - WHAT MUST NEVER REACH THIS PUBLIC REPO.
+# The Worker source is pasted into the Cloudflare dashboard by hand and is not a repo
+# file (SSA.1). The commercial briefs are the owner's pricing and positioning - kept on
+# disk and in the private Hunt-backups repo instead. _to_delete/ is a staging area
+# because the file bridge cannot delete; nothing in it is a source of record.
+worker-v2_6_*.js
+worker-v2_*.js
+docs-private/
+_to_delete/

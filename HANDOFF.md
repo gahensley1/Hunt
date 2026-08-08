@@ -1203,6 +1203,37 @@ as current. Use THIS list.**
    §0's table still carries a red row ordering their deletion. **That row is stale — strike it.**
 10. **`privacy.html` to GoDaddy** — `scavengerandhunt.com/privacy.html` returns **200**. Done.
 
+### 🆕 §80.1 THE FILE AUDIT AT s55 CLOSE — WHAT THE SPLIT TURNED UP
+
+**🔴 THE FOUR "OTHER CANONICAL DOCS" WERE NOT ON DISK AT ALL.** `Marketing-Brief.md`,
+`Monetization-Brief.md`, `Privacy-Policy-DRAFT.md`, `Branding-Guidelines.md` and
+`SPEC-SERVICE-WORKER.md` existed **only in the claude.ai project knowledge** — read-only, outside
+git, one copy, invisible to `curl` and to any future session that did not happen to be given the
+project. **§1v in its purest form, and it had been true since s27/s28 without anyone noticing.**
+**Claude's own s55 instruction block carried the same five names forward WITHOUT CHECKING THEY
+EXISTED** — the identical error §77.9 was written to condemn, committed in the act of fixing it.
+**✅ NOW COPIED TO `docs/`:** Marketing-Brief 19,652 B · Monetization-Brief 13,849 B ·
+Privacy-Policy-DRAFT 12,489 B · Branding-Guidelines 3,079 B · SPEC-SERVICE-WORKER 6,839 B.
+**⚠ NOT YET COMMITTED — an owner decision is owed first: see the note on the two commercial briefs
+below.** The instruction block's paths become true only once they are committed; until then it names
+files a fresh clone will not have.
+
+**🔴 THE PROJECT KNOWLEDGE HOLDS TWO DEAD HANDOFFS, AND BOTH ARE NOW DOUBLY DEAD.**
+`SUPER-HANDOFF.md` (312,895 B) and `SUPERHANDOFF.md` (76,521 B) are both there. The instruction
+"there is one copy and never another" has been violated the whole time, and after the s55 split
+**neither file exists in the repo at all.** **DELETE BOTH FROM PROJECT KNOWLEDGE and upload
+`HANDOFF.md` in their place.** *(Only `HANDOFF.md` — the other two are reference and history and do
+not belong in a context window.)*
+It also holds `worker-v2_5_0/2_6_0/2_6_1.js`, all superseded; the live Worker is **v2.6.11**.
+
+**⚠ NINE WORKER SOURCES WERE SITTING AT THE ROOT.** Seven are now staged at
+`_to_delete\old-worker-sources\` (2.6.3 → 2.6.9). **Kept: `worker-v2_6_11.js` (live) and
+`worker-v2_6_10.js` (one back).** All are untracked and must stay untracked — **the repo is public
+and the Worker source must never be committed.**
+
+**⚠ STILL CARRIED, UNCHANGED:** `behaviour.py` exists twice (root and `test/`, byte-identical);
+`_preview/` is scratch sitting in the public repo; `hunt-icon-v5.png` is unreferenced.
+
 ### 🔴 OPEN, IN ORDER OF WHAT IT COSTS TO LEAVE IT
 0. **🆕 THE YEAR'S DESK UI (§84.6).** The Worker is deployed and answers `?year=`; **there is no way
    to reach a year from the app.** The idiom is decided and the copy needs approving. **This is the
