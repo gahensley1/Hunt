@@ -137,7 +137,9 @@ is proven and should be reused for every future Worker change.
 
 | File | Size | SHA-256 | Purpose |
 |---|---|---|---|
-| `index.html` **🆕 33d — BUILT s55, ON DISK, NOT PUSHED** | 4,037,229 B | `6f3d5f62779d1bd4ebdc912ed295967fef1fc45a65007866a6c4192fab3d08e2` | `(office time)` struck; the nav row fits one line (§79.5) |
+| `index.html` **🆕 33e — ✅ LIVE s55, commit `37ec0128`. A case sheet emails its own case (§83). ⚠ BATTERY NOT RUN ON THIS BUILD.** | 4,037,814 B | `e1fffd5e9fc6be3ed23b26ef061a53fc78d67bfcda1fdfc8ae4fa9a8f8d900af` | needs Worker **v2.6.9**, which is deployed |
+| `worker-v2_6_9.js` **✅ DEPLOYED AND VERIFIED s55 — root reads `(v2.6.9)`** | 79,906 B | `5c48441c54e377b7a3ed15fa470c1855807b2131accd1948de36dfdfe0b78c83` | `/report-email?…&code=` sends ONE case sheet + its day CSV (§83) |
+| *(superseded)* `index.html` 33d — was live s55 | 4,037,229 B | `6f3d5f62779d1bd4ebdc912ed295967fef1fc45a65007866a6c4192fab3d08e2` | `(office time)` struck; the nav row fits one line (§79.5) |
 | *(superseded on disk)* 33c | 4,036,625 B | `91bf9fcca34126ba5b9525b929f893f532582f1edc74eb9df788fb6ff1600a15` | nav buttons `nowrap` — the real "later is up" fix (§79.4) |
 | *(superseded on disk)* 33b | 4,036,031 B | `6ee4f535e4cb6e280828d97df7d3d1da378b715cca17e073ae8c68787dd0e052` | `email report` on the CASE SHEETS via one shared handler (§79) |
 | *(superseded)* `index.html` 33a — LIVE, hash-verified s55, commit `fd9f2eb1` | 4,034,680 B | `a9cba68133408851e20745a3b61b004dbbc9c37858c2dc196008517d4683d260` | `email report` under the month; the compiled/sealed sentence STRUCK; `.ledg-meta-row` CSS deleted (§78). **§76.2 CLOSED.** |
@@ -3058,7 +3060,22 @@ a volume · whether `SUPER-HANDOFF.md` stays in the public repo.
 
 ---
 
-## 🔴 §83 — 33e + WORKER v2.6.9: A CASE SHEET POSTS ITS OWN CASE (built s55, NOT DEPLOYED, NOT PUSHED)
+## ✅ §83 — 33e + WORKER v2.6.9: A CASE SHEET POSTS ITS OWN CASE (SHIPPED AND DEPLOYED s55)
+
+**✅ BOTH HALVES LIVE AND VERIFIED.** Pages serves **33e** `e1fffd5e…` 4,037,814 B, code-aware
+(`_wireLedgEmail(month,code)` present in the fetched bytes). Worker root reads **`(v2.6.9)`** on a
+cache-busted probe, twice. **Locks intact after the deploy: `/report-email` → 403 both with and
+without `code`.** *(`POST /report` → 404 is correct; that route is GET-only.)*
+`local == origin == 37ec0128`.
+
+### 🔴 83.0 IT WENT OUT IN THE WRONG ORDER, AND THE WINDOW WAS REAL
+**The client was pushed BEFORE the Worker was deployed.** For the minutes in between, Pages served
+33e against v2.6.8: **the `code` parameter was silently ignored, so a case sheet's button emailed the
+WHOLE MONTH while the app said "The ledger is away."** Caught by probing both surfaces instead of
+taking "pushed" as done (§2f). No harm — nothing was sent in the window.
+**THE STANDING RULE THIS EARNS: WHEN A CHANGE SPANS THE CLIENT AND THE WORKER, THE WORKER GOES
+FIRST, AND BOTH SURFACES ARE PROBED BEFORE ANYTHING IS TESTED.** A client ahead of its Worker does
+not error — **it succeeds at the wrong thing**, which is the harder failure to see.
 
 **OWNER, s55, VERBATIM:** *"note that this email report should actually email this specific
 report... not a general report."* **This closes §79.1, which was logged as needing a Worker route.**
