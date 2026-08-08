@@ -137,7 +137,8 @@ is proven and should be reused for every future Worker change.
 
 | File | Size | SHA-256 | Purpose |
 |---|---|---|---|
-| `index.html` **🆕 32z — ✅ LIVE, HASH-VERIFIED ON ALL THREE SURFACES s55. Commit `abc819d2`.** | 4,034,407 B | `3300b442940c72fddf1b0bf3b510401687e2eca6e3eaec3522ac2ae54aa4fbbc` | ledger nav levelled + button relabelled `Email` (§76). **⚠ §76.2 still owed.** |
+| `index.html` **🆕 33a — ✅ LIVE, HASH-VERIFIED s55. Commit `fd9f2eb1`. `local == origin`.** | 4,034,680 B | `a9cba68133408851e20745a3b61b004dbbc9c37858c2dc196008517d4683d260` | `email report` under the month; the compiled/sealed sentence STRUCK; `.ledg-meta-row` CSS deleted (§78). **§76.2 CLOSED.** |
+| *(superseded)* `index.html` 32z — LIVE earlier in s55, commit `abc819d2` | 4,034,407 B | `3300b442940c72fddf1b0bf3b510401687e2eca6e3eaec3522ac2ae54aa4fbbc` | ledger nav levelled + button relabelled `Email` (§76) |
 | *(superseded on disk, committed as `9b10257` but NEVER pushed)* `index.html` 32y | 4,034,030 B | `a5a4a801890747287346285de6b83e1014103edb899087ba046778dab85a2771` | the ledger button + paired tips |
 | *(superseded on disk)* `index.html` 32w | 4,031,642 B | `7fa2a89c406de3f7b34b1ce1ef24a94467126e792cfcfc54bc903905ad9350d8` | the first-sleuth ask (§74); carries 32u web push + 32v |
 | `index.html` *(LIVE on Pages: 32u)* | 4,023,779 B | `7d7a0598d49c6ef742956476d0dd1e057136e9ec778d17cdbb5ffdd0ab03a049` | **32t** — the live roster watcher (§68) |
@@ -3052,6 +3053,41 @@ a volume · whether `SUPER-HANDOFF.md` stays in the public repo.
 
 ---
 
+## ✅ §78 — 33a: "email report", AND §76.2 IS CLOSED BY DELETION (built AND SHIPPED s55)
+
+**✅ LIVE, HASH-VERIFIED.** `index.html` **4,034,680 B /
+`a9cba68133408851e20745a3b61b004dbbc9c37858c2dc196008517d4683d260` / buildmark `33a`
+Rust `#B4532A`**, commit **`fd9f2eb1`**, `local == origin`. Pages and raw both checked for the
+*content* — `email report` present, `.ledg-meta-row{` gone, `.ledg-emailrow{` present — not just the
+hash. **THE ALPHABET WRAPPED AT `32z`; the series is now `33a`.**
+
+**OWNER'S INSTRUCTION, s55, VERBATIM:** *"remove the other text and just say 'email report' tuck it
+under the month and year simple nothing else."* Applied exactly, **lower case included** (§7: owner
+copy is never re-cased).
+
+- **The compiled/sealed sentence is DELETED, not shortened.** Three sessions of layout argument
+  ended by striking the text. **§76.2 is CLOSED.**
+- `.ledg-emailrow{display:flex;justify-content:center;margin:0 0 8px}` — one rule. The button is
+  inserted between `nav` and `look`, so it sits directly under the month and year and above the
+  CASE No. field. **The 32y `.ledg-meta-row` rules were REMOVED, not left orphaned** — dead layout
+  CSS is how a later session concludes a row is "already handled."
+- **`#ledg-email` is unchanged, so `wire()` and the whole §75.2 POST path are untouched.** Verified
+  the id still resolves once.
+- **✅ MEASURED IN THE REAL APP** off `http://localhost:8000` with the rotate gate defeated (§77.3a)
+  — the first time a ledger row in this project has been seen rendered rather than reconstructed.
+  Content width 322.0px, button 110.2px, row 45.2px, sits below the nav.
+- **⚠ ONE THING MEASURED AND LEFT ALONE, DELIBERATELY.** The button is centred on the CARD
+  (**195.0px**) but the month label's centre is **202.9px** — **7.9px apart.** `.ledg-nav` is
+  `space-between` and `‹ Earlier` (83.6px) is wider than `Later ›` (67.8px), so the month is not
+  card-centred. **Centring it would change the nav row, which is an aesthetics change — not made,
+  and not to be made without asking.** The owner was shown the number.
+- **🔴 WHAT THIS COST: the sealed-vs-open state is now displayed NOWHERE.** `rep.sealed` is still
+  returned by the Worker and still read in `renderLedger`; it governs nothing. **If it must be
+  visible again it needs its own home, NOT this row.** Logged so no future session reads its absence
+  as an oversight.
+
+---
+
 ## 🔴 §77 — THE TOOLING FACTS. READ THIS BEFORE YOU TRY TO MEASURE ANYTHING. (s55)
 
 **Owner's instruction, s55: "concrete everything we have relearned here and put it somewhere you do
@@ -3190,6 +3226,37 @@ behind and GitHub's copy of the handoff was 320,426 B against 322,949 B on disk.
   **Prefer reading `.git/refs` to prove the mode; it costs nothing and leaves nothing behind.**
 - **THEREFORE: NEVER RUN `git` FROM THE SANDBOX, not even `git status`** — it writes
   `.git/index.lock`, which the bridge cannot remove, stranding a lock that blocks the owner.
+
+### 🔴 77.9 THE PROJECT-INSTRUCTION BLOCK SENDS EVERY SESSION TO TWO THINGS THAT DO NOT EXIST
+
+**This wasted the first move of s55 and it will waste the first move of every session until the
+owner edits the instruction block. 🔴 OWNER ACTION: fix these two strings in the project
+instructions.**
+
+1. **THE PATH IS WRONG.** The block says the canonical document is **`claude/SUPERHANDOFF.md`** and
+   stresses "note the path: it lives under `claude/`, not at the root." **BOTH HALVES ARE FALSE.**
+   The file is **`SUPER-HANDOFF.md` — AT THE REPO ROOT, WITH A HYPHEN.** `claude/SUPERHANDOFF.md`
+   does not exist; `wc` on it returns *"No such file or directory."* `claude/` holds eleven briefs
+   and no handoff. **There is still only one handoff — the instruction just names it wrongly.**
+2. **`§16` DOES NOT EXIST.** The block says to read "§0, §13 and §16 before doing anything." **There
+   is no §16 in this document.** Read **§0, §13, §65 and §77** instead — §65 is the ranked backlog
+   the header points to, and §77 is the tooling.
+
+**THE GENERAL LESSON, AND IT IS THE §0.2 CLASS ONE LEVEL UP:** the instruction block is a document
+too, **and it is the one document that cannot be corrected from inside the repo.** It goes stale
+exactly like §0 did, it reads with total authority because it arrives before anything else, and
+**Claude cannot fix it — only the owner can.** **When the instructions and the disk disagree, THE
+DISK WINS, and say so out loud rather than hunting for the file the instructions promised.**
+
+### ⚠ 77.10 SMALL ONES, LOGGED SO THEY ARE NOT REDISCOVERED
+
+- **The extension's `zoom` screenshot action timed out** — *"CDP sendCommand Page.captureScreenshot
+  timed out after 30000ms"* — on a page where a plain `screenshot` worked immediately afterwards.
+  **Prefer a plain `screenshot`; do not retry `zoom`.**
+- **`Hunt-backups` was NOT connected this session.** Folder access does not persist. **Ask for both
+  folders at the top if the work will touch the archive, the clerk or `serve.ps1`.**
+- **`sudo` does not exist in the sandbox** — the error text even suggests adjusting a container
+  flag. There is no route to root. Nothing that needs `apt-get` will ever work.
 
 ### 77.8 THE TWO STANDING RULES FROM THIS SESSION
 
