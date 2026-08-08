@@ -3056,6 +3056,71 @@ a volume · whether `SUPER-HANDOFF.md` stays in the public repo.
 
 ---
 
+## 🔴 §80 — THE OPEN-TASK REGISTER, RE-AUDITED AT s55 CLOSE. THIS SUPERSEDES §65's ORDER.
+
+Every line below was checked against the document and, where measurable, against the live services
+at s55 close. **§65 was the s53 ordering; four of its ten items have since closed and it still reads
+as current. Use THIS list.**
+
+**GIT AND SURFACES: CLEAN.** `local == origin == 58f24c38`. `index.html` **33d** 4,037,229 B /
+`6f3d5f62…` identical on disk, raw and Pages. Worker **v2.6.7**. Site and `/privacy.html` both 200.
+
+### ✅ CLOSED SINCE §65 WAS WRITTEN — DO NOT RE-RAISE THESE
+1. **The notification card** — built s54, 32r (§66).
+2. **`TASK-live-roster`** — built s54, 32t (§68).
+3. **Read `/report` once** — done s54, and it found the take-rate defect (§73).
+4. **The take-rate defect** — fixed in Worker 2.6.6, and **2.6.7 is live**, so it is deployed (§73.2).
+5. **`first_find`** — was already built; struck s54 (§70.3).
+6. **Client export** — struck s54 with reasoning: nothing promises it (§75.4).
+7. **The emailed ledger, client side** — 32y/33a/33b, now on the Ledger AND the case sheets (§79).
+8. **§76.2, the ledger meta row** — closed by deleting the sentence (§78).
+9. **🆕 `candidate-32m.html` and `_candidate-32m.html`** — **BOTH 404 ON RAW. THEY ARE ALREADY GONE.**
+   §0's table still carries a red row ordering their deletion. **That row is stale — strike it.**
+10. **`privacy.html` to GoDaddy** — `scavengerandhunt.com/privacy.html` returns **200**. Done.
+
+### 🔴 OPEN, IN ORDER OF WHAT IT COSTS TO LEAVE IT
+1. **🔴🔴 GET IT ONTO A PHONE. Carried since s29, now nineteen builds deep.** It gates: the install
+   prompt (never seen), the notification card, the live roster, web push, **whether a ledger email
+   has ever actually arrived**, and the full loop on two devices. **The owner is on an iPhone 15 and
+   the app is a PWA — Safari can add it to the home screen and screen-record it today.** No amount
+   of measuring closes this and nothing else on this list is as risky.
+2. **🔴 THE LEGAL ENTITY (§50.1).** The real critical path, and it is stalled. Nothing ships to a
+   store without it.
+3. **🔴 NO BUILD SINCE 32y HAS RUN THE BATTERY.** 33a, 33b, 33c and 33d are unverified by
+   `test/run.py`. **Claude CANNOT run it — no browser in the sandbox (§77.2).** The owner runs it, or
+   four builds stay untested. **This is new debt created this session and it should not grow.**
+4. **🔴 PASTE THE PROJECT-INSTRUCTION BLOCK** from `claude/PROJECT-INSTRUCTIONS-s55.md`. Until then
+   every session is sent to a filename that does not exist and to a `§16` that was never written
+   (§77.9). **Cheapest item on the list; costs ten minutes of every future session.**
+5. **Cloudflare Workers Paid ($5/mo)** — a stated pre-event blocker. Free caps CPU at 10ms/request,
+   which can break `slim=1` on a large case (§69.1).
+6. **THE CASE FILES PLAQUE (§13.4 / §46)** — cheap, high value, still not done. Fourth
+   `.btn-plaque` **plus** the red stamp as its own element. **Do not re-apply 28f blindly.**
+7. **The Monday cron has never fired** — eleven runs, all manual (§59.3). And **the empty-snapshot
+   gate still passes a one-key file as a good backup** — a backup that cannot be trusted is not one.
+8. **REPLACE THE PROJECT-KNOWLEDGE HANDOFF** each session, or the next one opens stale.
+9. **THE OWNER-ONLY DECISIONS (§14):** the nine volume labels · the app name and seller line ·
+   clue-tip duration (open since s19) · the clan crest · the Almanac regrouping · a non-builder route
+   to a volume · **whether `SUPER-HANDOFF.md` stays in the public repo.**
+10. **Cloudflare Pages migration** — three arguments for it now (§70.5 item 6). Not urgent.
+
+### ⚠ SMALL, RECORDED, NOT URGENT
+- **`behaviour.py` STILL EXISTS TWICE** — repo root and `test/`, both 18,003 B, byte-identical. The
+  root copy is the accident. **Delete it on the next push that touches anything.**
+- **🔴 §0's "THE REPO IS TEN TOP-LEVEL ENTRIES" IS WRONG AGAIN. MEASURED s55: FIFTEEN** —
+  `.gitattributes` · `.nojekyll` · `SUPER-HANDOFF.md` · `_preview/` · `art/` · `award-card.jpeg` ·
+  `behaviour.py` · `hunt-icon-v5.png` · `icons/` · `index.html` · `j.html` ·
+  `manifest.webmanifest` · `og-card.jpeg` · `sw.js` · `test/`. It went 5 → 10 → 15 with a doc entry
+  only twice. **Audit it every session; it changes without ceremony.**
+- **`_preview/` is in the PUBLIC repo** and is scratch. Safe to delete wholesale.
+- **`hunt-icon-v5.png` is unreferenced.** Harmless.
+- **A per-case email route (v2.6.8)** would need writing and deploying if a single-case send is ever
+  wanted (§79.1). **Not requested — do not build it speculatively.**
+- **The Ledger nav's month is 7.9px right of card centre** (§78) — measured, shown to the owner,
+  deliberately not changed.
+
+---
+
 ## 🔴 §79 — 33b: THE EMAIL BUTTON REACHES THE CASE SHEETS (built s55, NOT YET PUSHED)
 
 `index.html` **4,036,031 B /
