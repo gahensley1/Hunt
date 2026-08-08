@@ -3058,6 +3058,56 @@ a volume · whether `SUPER-HANDOFF.md` stays in the public repo.
 
 ---
 
+## 🔴 §83 — 33e + WORKER v2.6.9: A CASE SHEET POSTS ITS OWN CASE (built s55, NOT DEPLOYED, NOT PUSHED)
+
+**OWNER, s55, VERBATIM:** *"note that this email report should actually email this specific
+report... not a general report."* **This closes §79.1, which was logged as needing a Worker route.**
+
+**TWO FILES, AND THEY MUST LAND TOGETHER:**
+- `index.html` **33e** 4,037,814 B / `e1fffd5e9fc6be3ed23b26ef061a53fc78d67bfcda1fdfc8ae4fa9a8f8d900af`
+  buildmark `33e` **Amethyst `#7A5A98`**.
+- `worker-v2_6_9.js` 79,906 B / `5c48441c54e377b7a3ed15fa470c1855807b2131accd1948de36dfdfe0b78c83`
+  — **NOT DEPLOYED YET.** `node --check` clean, braces balanced.
+
+### 83.1 THE SERVER — AN ADDED BRANCH, NO NEW STORAGE, NO NEW COMPILE
+`caseSheet(env, code, month)` already returned everything the sheet displays, and `/report?code=`
+already served it. **v2.6.9 only adds a way to POST it.** `/report-email?month=…&code=……`:
+- **`code` absent → the month, exactly as v2.6.8.** Every existing caller is untouched.
+- **`code` present → `caseSheet()` then `sendCaseSheet()`.** Subject
+  `The Case Sheet — No. <code> — <month>`, plain-text body, and a **day-by-day CSV attached** as
+  `case-<code>-<month>.csv`.
+- **🔴 A MALFORMED CODE IS REFUSED WITH 400, NEVER WIDENED TO THE MONTH.** Posting the wrong report
+  is worse than posting none, **and the client reports success either way** — it cannot tell.
+- **`sendCaseSheet` is its own function, not a flag on `sendLedger`.** Subject, body and attachment
+  all differ; **a boolean threaded through three of those is how the wrong report gets posted.**
+- Same curator lock, same `LEDGER_FROM` root-domain sender (§81), same failure shape.
+
+### 83.2 THE CLIENT — ONE OPTIONAL ARGUMENT
+`_wireLedgEmail(month, code)`. **`code` is appended only when the caller passes one**, so the
+Ledger's own button is behaviourally identical to 33d. `loadCaseSheet` passes its `code`.
+
+**VERIFIED WITH A STUBBED `fetch` — NOTHING TOUCHED THE LIVE WORKER (§11b):**
+Ledger → `/report-email` with **one** param, `month=2026-08`, **`code` null.**
+Case sheet → **two** params, `month=2026-08`, **`code=112211`.**
+A second sheet → **`month=2026-07`, `code=093009`** — so **the code AND the month both follow the
+sheet on screen**, not today's. `liveWorkerTouched: false`.
+
+### 🔴 83.3 THE ORDER MATTERS — WORKER FIRST, OR IT LIES TO YOU
+**DEPLOY v2.6.9 BEFORE PUSHING 33e.** On v2.6.8 and earlier the `code` parameter is **silently
+ignored** and the month is sent instead — **a wrong report, reported to the owner as a success.**
+If the client is ever ahead of the Worker, that is the failure to look for. Confirm the root reads
+**`(v2.6.9)`** with a cache-buster first.
+**⚠ AND THE BATTERY HAS NOT RUN ON 33e.** §82's green tick was 33d. Ask Claude Code again
+(`PYTHONUTF8=1`, §82.1).
+
+### ⚠ 83.4 A TOOLING NOTE — THE EXTENSION REDACTS URLS
+`javascript_tool` returned **`[BLOCKED: Cookie/query string data]`** instead of any URL carrying a
+query string, twice. **A test that asserts on a raw URL string cannot be read back.** Parse it in the
+page instead and return the pieces — `new URL(u).searchParams.get('code')` — which is what produced
+the numbers above.
+
+---
+
 ## ✅ §82 — THE BATTERY IS GREEN ON 33d. RUN IN CLAUDE CODE, NOT HERE. (s55)
 
 **"The Case of the Green Tick" — QA docket, build 33d.** Run by the owner in **Claude Code on his own
