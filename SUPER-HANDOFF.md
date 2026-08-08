@@ -3058,7 +3058,57 @@ a volume · whether `SUPER-HANDOFF.md` stays in the public repo.
 
 ---
 
-## ✅ §81 — THE EMAILED LEDGER SENDS. WORKER v2.6.8, DEPLOYED AND VERIFIED s55.
+## ✅ §82 — THE BATTERY IS GREEN ON 33d. RUN IN CLAUDE CODE, NOT HERE. (s55)
+
+**"The Case of the Green Tick" — QA docket, build 33d.** Run by the owner in **Claude Code on his own
+machine**, which has what this sandbox cannot have: a browser (§77.2).
+
+| | |
+|---|---|
+| **STATIC** | clean |
+| **BEHAVIOUR** | **59/59**, headless Chromium |
+| **Session checks** | **19/19** — the 33d ledger changes |
+| **Agent D drift** | **NONE** vs `baseline.json` |
+| **Hygiene** | clean — 0 `console.log`, 0 `http://`, 0 `CURATOR_PASS` |
+
+**Verdict: BATTERY PASSED. And nothing was rebaselined and no application source was touched** —
+which is the part that makes the pass mean something. **33a, 33b, 33c and 33d are now covered; §80
+item 3 is CLOSED.**
+
+**🔴 AGENT D REPORTED *NO* DRIFT, WHICH WAS NOT THE EXPECTATION.** Claude predicted drift because the
+baseline predates four builds. **It was wrong: none of 33a–33d changed the tag balance** — they were
+CSS rules, a label, one deleted markup block and one added `div`, all balanced. **The prediction was
+reasonable and still wrong; the measurement is what counts.**
+
+### 🔴 82.1 TWO ENVIRONMENT FACTS THAT MAKE THE BATTERY RUNNABLE ON THIS MACHINE — RECORD THEM
+
+**This machine had NEITHER runtime.** What stood in for Python were **0-byte Microsoft Store stubs**,
+which fail in a way that looks like a broken script rather than a missing interpreter. Both were
+installed for the run:
+- **`node` 24.19.0 LTS** via **winget**, user scope, placed on PATH — Agent A's `node --check`
+  needs it.
+- **Python 3.12.10** via winget, with **Playwright + Chromium installed into it.**
+
+**🔴 AND THE ONE THAT WILL BITE AGAIN: RUN IT WITH `PYTHONUTF8=1`.** Without it **`agents.py` throws a
+Windows-only `cp1252 UnicodeEncodeError`** while writing its report — the app is full of `·`, `‹`,
+`—` and `№`, and the legacy Windows code page cannot encode them. **The battery fails on its own
+output, not on the build.** In `cmd`:
+
+```
+set PYTHONUTF8=1
+python test\run.py
+```
+
+### ⚠ 82.2 THE ARTIFACT COULD NOT BE READ IN FULL — HOW TO HAND OVER A REPORT
+
+The docket arrived as a **claude.ai artifact link**. `WebFetch` returned only the page shell
+(client-rendered), and in the Chrome extension the artifact renders in a **cross-origin iframe**:
+`get_page_text` found nothing, `document.body.innerText` gave only the page chrome, the frame's real
+`src` came back **`[BLOCKED: Cookie/query string data]`**, and the frame **would not scroll** by click
+or wheel. **Everything above was read off the FIRST SCREENFUL only.** If a future docket has detail
+below the fold — a warning, a slow test, a skipped check — **it will be invisible.**
+**ASK FOR IT AS TEXT PASTED INTO THE CHAT, or as a file written into `Documents\Hunt\claude\`.**
+An artifact link is a fine thing for a human and a poor one for Claude.
 
 **`worker-v2_6_8.js` 75,522 B / `afd9b47751d836b307c4d5dc11e0a86baaa15ff6d3403cda9b570fc6076577bb`.**
 Deployed by the owner; **root probed with a cache-buster twice: `(v2.6.8)`**, and `/report-email`
@@ -3141,9 +3191,10 @@ as current. Use THIS list.**
    of measuring closes this and nothing else on this list is as risky.
 2. **🔴 THE LEGAL ENTITY (§50.1).** The real critical path, and it is stalled. Nothing ships to a
    store without it.
-3. **🔴 NO BUILD SINCE 32y HAS RUN THE BATTERY.** 33a, 33b, 33c and 33d are unverified by
-   `test/run.py`. **Claude CANNOT run it — no browser in the sandbox (§77.2).** The owner runs it, or
-   four builds stay untested. **This is new debt created this session and it should not grow.**
+3. **✅ CLOSED — THE BATTERY IS GREEN ON 33d.** Run in **Claude Code** by the owner: STATIC clean,
+   BEHAVIOUR 59/59, session checks 19/19, Agent D drift NONE, hygiene clean, nothing rebaselined
+   (§82). **THE STANDING ARRANGEMENT: Claude cannot run it (§77.2) — CLAUDE CODE IS THE ROUTE.
+   Ask for it before every ship, with `PYTHONUTF8=1` (§82.1).**
 4. **🔴 PASTE THE PROJECT-INSTRUCTION BLOCK** from `claude/PROJECT-INSTRUCTIONS-s55.md`. Until then
    every session is sent to a filename that does not exist and to a `§16` that was never written
    (§77.9). **Cheapest item on the list; costs ten minutes of every future session.**
