@@ -135,7 +135,7 @@ is proven and should be reused for every future Worker change.
 
 | File | Size | SHA-256 | Purpose |
 |---|---|---|---|
-| `index.html` **🆕 32z — BUILT s55, ON DISK ONLY, NOT PUSHED** | 4,034,407 B | `3300b442940c72fddf1b0bf3b510401687e2eca6e3eaec3522ac2ae54aa4fbbc` | ledger nav levelled + button relabelled `Email` (§76) |
+| `index.html` **🆕 32z — ✅ LIVE, HASH-VERIFIED ON ALL THREE SURFACES s55. Commit `abc819d2`.** | 4,034,407 B | `3300b442940c72fddf1b0bf3b510401687e2eca6e3eaec3522ac2ae54aa4fbbc` | ledger nav levelled + button relabelled `Email` (§76). **⚠ §76.2 still owed.** |
 | *(superseded on disk, committed as `9b10257` but NEVER pushed)* `index.html` 32y | 4,034,030 B | `a5a4a801890747287346285de6b83e1014103edb899087ba046778dab85a2771` | the ledger button + paired tips |
 | *(superseded on disk)* `index.html` 32w | 4,031,642 B | `7fa2a89c406de3f7b34b1ce1ef24a94467126e792cfcfc54bc903905ad9350d8` | the first-sleuth ask (§74); carries 32u web push + 32v |
 | `index.html` *(LIVE on Pages: 32u)* | 4,023,779 B | `7d7a0598d49c6ef742956476d0dd1e057136e9ec778d17cdbb5ffdd0ab03a049` | **32t** — the live roster watcher (§68) |
@@ -3050,9 +3050,14 @@ a volume · whether `SUPER-HANDOFF.md` stays in the public repo.
 
 ---
 
-## 🔴 §76 — 32z: THE LEDGER NAV IS LEVEL, AND THE BUTTON IS NOW "EMAIL" (built s55, NOT PUSHED)
+## ✅ §76 — 32z: THE LEDGER NAV IS LEVEL, AND THE BUTTON IS NOW "EMAIL" (built AND SHIPPED s55)
 
-**ON DISK ONLY.** `index.html` **4,034,407 B /
+**✅ LIVE, HASH-VERIFIED ON ALL THREE SURFACES.** Commit **`abc819d2`**, pushed `9b10257..abc819d`.
+**Disk == raw == Pages, all 4,034,407 B / `3300b442…4aa4fbbc` / buildmark `32z`, both the nav rule
+and the `Email` label confirmed present in the fetched bytes** — not just the hash. raw did **not**
+lag this time; both surfaces were current inside a minute. **This push also carried 32x and 32y,
+which had been sitting unpushed since s54 — so `32w`, `32x`, `32y` and `32z` all reached production
+in one go.** `index.html` **4,034,407 B /
 `3300b442940c72fddf1b0bf3b510401687e2eca6e3eaec3522ac2ae54aa4fbbc` / buildmark `32z`
 Lime `#7FA33C`.** Carries everything in 32w/32x/32y. **Battery NOT run — see §76.3.**
 
@@ -3111,7 +3116,29 @@ probe must be a `position:fixed` `.tov-card` of the right width appended to `<bo
 the flexed width, not the intrinsic one. **The pass/fail is sound; the 252 is not an intrinsic
 measurement and must not be quoted as one.**
 
-### 76.4 🔴 THE PUSH DID NOT HAPPEN, AND CLAUDE COULD NOT DO IT
+### 76.4 THE PUSH — CLAUDE COULD NOT DO IT, AND ONE FALSE READ ALONG THE WAY
+
+**✅ RESOLVED: the owner pushed it. `9b10257..abc819d main -> main`, verified on both surfaces.**
+
+**🔴 A FALSE CONCLUSION CLAUDE DREW AND MUST NOT REPEAT.** `git add index.html SUPER-HANDOFF.md`
+followed by `git commit` printed **"nothing added to commit"**, and Claude read that as *the edits
+never reached the real folder* and told the owner so. **Wrong.** An earlier command in the same
+window had already committed them; the tree genuinely matched `HEAD`. **"Nothing to commit" means
+the work is already committed at least as often as it means the work is missing** — and the refs
+said so plainly: `refs/heads/main` had already advanced to `abc819d2` while `origin/main` sat at
+`9b10257a`. **READ THE REFS BEFORE INTERPRETING A GIT MESSAGE.** They are two plain files and they
+are unambiguous.
+
+**⚠ AND A SYNTAX ERROR THAT COST A ROUND TRIP: THE OWNER IS IN `cmd.exe`, NOT PowerShell.**
+`Remove-Item` and `Get-FileHash` both failed, and a verification block pasted onto the end of a
+`git push` line produced `git: 'push(Get-FileHash' is not a git command`. **Send `cmd` syntax:
+`cd /d`, `del`, `certutil -hashfile <file> SHA256`, `findstr /c:`. One command per line.**
+
+**THE BRIDGE FACTS, PROVEN NOT ASSUMED.** `touch` succeeds, `rm` returns
+**`Operation not permitted`**. Per the standing rule **no `git` was run from the sandbox at all** —
+not even `git status`, which would strand `.git/index.lock` the bridge cannot remove. Git state was
+read as plain files. **Claude's host-path `Edit` writes DO reach the owner's real folder** — proven
+here: the edits were in his working tree and committed from it. `_deltest` is gone.
 
 **The folder arrived over the no-network bridge**, proven not assumed: `touch` succeeds, `rm` returns
 **`Operation not permitted`**. Per the standing rule **no `git` was run at all** — not even
@@ -3123,6 +3150,12 @@ top of it.** The owner pushes.
 **⚠ A STRAY FILE CLAUDE CREATED AND CANNOT DELETE: `_deltest`, 0 B, repo root.** It was the write/
 delete probe. **It must not go into the public repo — delete it before pushing.** §1w: this is
 logged here because a file that exists only in a chat is lost.
+
+### 76.7 NEXT BUILD MARKER
+
+**`32z` / Lime `#7FA33C` is SPENT.** The §8i rotation wraps after `g`, so the next marker is
+**`33a` / Rust `#B4532A`** (letter `h`), and the one after that returns to `a` Cobalt `#3B6BA5`.
+**The build letters have run out of alphabet at `32z` — the series moves to `33a`.**
 
 ### 76.6 🔴 TWO STANDING OWNER RULES, GRANTED s55 — CARRY THEM FORWARD IN EVERY EDITION
 
