@@ -283,7 +283,7 @@
     #notify-card .nc-txt{font-size:14px}
   }
   #buildmark{margin:4px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#7A5A98;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#4E9A87;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -1329,7 +1329,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">34d</p>
+      <p id="buildmark" aria-label="test build marker">34e</p>
     </div>
   </section>
 
@@ -3623,9 +3623,12 @@ async function saveHunterSub(status){
      reload resumes the hunt; only the timing and the score are filed with the Yard, which
      is all the par clock and the shelf ratings ever needed. */
   if(hunt.cold){
-    try{ await Store.set("sub:"+hunt.code+":"+State.hid, JSON.stringify(sub), false); }catch(e){}
+    const _wCold=Store.set("sub:"+hunt.code+":"+State.hid, JSON.stringify(sub), false).catch(function(){});
     const slim=Object.assign({}, sub, {finds:finds.map(f=>({tileId:f.tileId, src:f.src?1:null}))});
     try{ await Store.set("sub:"+hunt.code+":"+State.hid, JSON.stringify(slim), true); }catch(e){}
+    /* the local write above is the record the resume path reads - it must be finished before
+       this returns, or a reload can race it. Started early, awaited here: parallel, not floating. */
+    try{ await _wCold; }catch(e){}
     return sub;
   }
   /* THE DEVICE IS THE SYSTEM OF RECORD FOR FINDS.
@@ -3635,9 +3638,14 @@ async function saveHunterSub(status){
      Write local FIRST (durable), then sync. Cold cases always did this; builder
      hunts did not, which is why a killed tab restarted the hunt from zero. */
   const raw=JSON.stringify(sub);
+  /* SS108: THE TWO WRITES ARE INDEPENDENT AND WENT ONE AFTER THE OTHER - two round trips at the
+     end of every join and every find. Fired together; `durable` still reports the LOCAL write,
+     which is the one the resume path depends on. */
   let durable=false;
-  try{ durable=await Store.set("sub:"+hunt.code+":"+State.hid, raw, false); }catch(e){}
-  try{ await Store.set("sub:"+hunt.code+":"+State.hid, raw, true); }catch(e){}
+  const _wLocal=Store.set("sub:"+hunt.code+":"+State.hid, raw, false).catch(function(){ return false; });
+  const _wShared=Store.set("sub:"+hunt.code+":"+State.hid, raw, true).catch(function(){ return false; });
+  try{ durable=await _wLocal; }catch(e){}
+  try{ await _wShared; }catch(e){}
   sub._durable=durable;
   return sub;
 }
@@ -7090,6 +7098,9 @@ async function joinCase(){
   const _pHunt=Store.get("hunt:"+code,true);
   const _pStat=Store.get("coldstat:"+code,true);
   let   _pSubs=listSubNames(code);
+  /* SS108: the NAME does not depend on the case, so it has no business waiting for it. It sat
+     as a serial round trip between the record arriving and the roster being read. */
+  const _pName=getMyName();
   const raw=await _pHunt;
   if(!raw){ err.textContent="No case found for No. "+code+". Check the digits and try again."; joinFail(err); return; }
   const huntCandidate=JSON.parse(raw);
@@ -7118,7 +7129,7 @@ async function joinCase(){
   ev("case_opened", code, "", huntCandidate.cold ? (huntCandidate.cat||"territory") : "");
   State.hunt=huntCandidate; State.founds={};
   // permanent detective name — chosen once, for good; credentials issued under it.
-  let name=await getMyName();
+  let name=await _pName;
   if(!name){
     name=await askName("State your name, detective","Join the ranks \u2014 this name is yours for good; credentials issued under it.","",false);
     if(name===null) return; // user backed out — stay on Join screen
@@ -7154,14 +7165,18 @@ async function joinCase(){
   if(!hid){ toast("Couldn\u2019t seat you on this case \u2014 try again."); return; }
   State.hid=hid;
   // resume any prior progress \u2014 archive photographs live only on this device
-  let prev=null;
-  if(State.hunt && State.hunt.cold){ try{ prev=await Store.get("sub:"+code+":"+hid, false); }catch(e){} }
-  if(!prev) prev=await Store.get("sub:"+code+":"+hid, true);
-  /* Prefer the copy that actually holds photographs. The shared record may be slim
-     (archive cases) or missing (offline), and the local one may be newer. Merge both,
-     local last, so a real dataURL always beats a placeholder. */
-  let prevLocal=null;
-  try{ prevLocal=await Store.get("sub:"+code+":"+hid, false); }catch(e){}
+  /* SS108: THE SAME LOCAL KEY WAS READ TWICE on a cold case - once into `prev`, once into
+     `prevLocal` - and the shared read and the return-check then ran one after the other. All
+     three are independent once `hid` is known, so they go together and are awaited where needed.
+     Prefer the copy that actually holds photographs: the shared record may be slim (archive
+     cases) or missing (offline), and the local one may be newer. Merge both, local last, so a
+     real dataURL always beats a placeholder. */
+  const _pLocalSub=Store.get("sub:"+code+":"+hid,false).catch(function(){ return null; });
+  const _pSharedSub=Store.get("sub:"+code+":"+hid,true).catch(function(){ return null; });
+  const _pReturn=checkMyReturn();
+  const prevLocal=await _pLocalSub;
+  let prev=(State.hunt && State.hunt.cold) ? prevLocal : null;
+  if(!prev) prev=await _pSharedSub;
   [prev,prevLocal].forEach(function(rawSub){
     if(!rawSub) return;
     try{ (JSON.parse(rawSub).finds||[]).forEach(function(f){
@@ -7169,7 +7184,7 @@ async function joinCase(){
   });
   if(!prev) prev=prevLocal;
   let prevStatus=null; if(prev){ try{ prevStatus=JSON.parse(prev).status; }catch(e){} }
-  const wasReturned=await checkMyReturn();
+  const wasReturned=await _pReturn;
   State.locked = !wasReturned && (prevStatus==="submitted"||prevStatus==="reviewed");
   let subNow=null;
   if(!State.locked) subNow=await saveHunterSub(wasReturned?"returned":"playing");

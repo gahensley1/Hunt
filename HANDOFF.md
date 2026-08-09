@@ -156,7 +156,7 @@ is proven and should be reused for every future Worker change.
 
 | File | Size | SHA-256 | Purpose |
 |---|---|---|---|
-| `index.html` **🆕 34d — THE WIPE CROP, THE ORDINAL, THE BADGE PRESS (§106, §107). s58.** | 4,301,443 B | `d4ab9a7996c37496a9c046dcf3428e4b31a00a612f9399d7f03b1e3bb1335744` | needs Worker **v2.6.13**. The wipe crop, the ordinal at 1.95em, the badge press (§106, §107) |
+| `index.html` **🆕 34e — THE WIPE CROP, THE ORDINAL, THE BADGE PRESS, THE JOIN LAG (§106-§108). s58.** | 4,302,603 B | `2adb51cf74344de5eb02f155f8b932cec661492d106f8478f69772bd39039357` | needs Worker **v2.6.13**. The wipe crop, the ordinal, the badge press, the join-lag reads and writes (§106-§108) |
 | `index.html` **33n — LIVE, commit `165b7400`, 16:03Z 9 Aug 2026. THE CASE CLOSED STAMP (§94).** | 4,111,862 B | `1ac7f99edb1b8f2eec3fa5c8cabe02ef10cf90965fd0c7b4bbc4cfb0fc76b873` | needs Worker **v2.6.13**. 🔴 **THIS IS AN EARLY 33n. Stamp 250px, red `#B92230`. EIGHT LATER REVISIONS NEVER REACHED IT — see §94.10** |
 | *(superseded on disk, NEVER SHIPPED)* `index.html` 33m — THE HINT COIN IS EARNED, NEVER SOLD (§93). s58, Sun 9 Aug 2026.** | 4,071,402 B | `64c094c82543eb60e6fa0cc06515f481b5e0694f7ad42e8b2b5f1a86fb11bd44` | needs Worker **v2.6.13** |
 | *(superseded)* `index.html` 33l — was live s57, commit `3d49b6cd`. THE ZIP BAND (§91). | 4,068,353 B | `2f9cd80f4ec8fa678f4fd1acaeff8f4b4530f03203afd765994d2a80f0c3dc5d` | needs Worker **v2.6.13**. Carries 33k's caption + pin median tier, never separately shipped |
@@ -239,7 +239,7 @@ is proven and should be reused for every future Worker change.
 
 - **🔴 THE FIRST THING THE NEXT SESSION MUST DO IS RE-HASH ALL THREE SURFACES.** Expect
   **4,111,862 B / `1ac7f99e…` / `33n`** on raw and Pages, and the Worker root to read **`(v2.6.13)`**.
-  **4,301,443 B / `d4ab9a79…` / `34d` once pushed.** *(Verified s57: all three identical, Worker confirmed. The line that stood here
+  **4,302,603 B / `2adb51cf…` / `34e` once pushed.** *(Verified s57: all three identical, Worker confirmed. The line that stood here
   named **`32l`** — twelve builds dead — and before that **28e**. A stale instruction is worse than no
   instruction: it sends the session to verify a fact that stopped mattering. Re-write this line on
   every ship.)*
@@ -1326,6 +1326,33 @@ styles, rects and pixel probes all agreed with Claude and all missed it. **When 
 visual fault he can see and the measurements say fine, THE MEASUREMENTS ARE ANSWERING A DIFFERENT
 QUESTION — look for a compositing difference, not an arithmetic one.**
 
+## 🟡 §108 — THE JOIN LAG. PART FIXED, THE REST MEASURED. `34d`, s58.
+
+**Fixed:** `getMyName()` was a serial round trip waiting on the case record it does not depend on -
+it now fires with the three opening reads. The local `sub:` key was **read twice** on a cold case,
+and the shared `sub:` read and `checkMyReturn()` ran one after the other though both are independent
+once `hid` is known - all three now go together.
+
+**Also fixed:** `saveHunterSub()` wrote the record twice, local then shared, **one after the other** -
+two round trips at the end of every join AND every find. Fired together; `durable` still reports the
+LOCAL write, which is what the resume path depends on, and the cold branch awaits its local write
+before returning so a reload cannot race it. Measured: 7529ms -> 6433ms synthetic, depth 7 -> 6.
+
+**🔴 STILL OPEN.** Instrumented with a 120ms stand-in for phone latency,
+one join makes **12 Store calls, 7 round trips deep**, and reads the SAME key four times and writes
+it twice:
+
+```
+1109ms get sub:CODE:HID      2994ms get sub:CODE:HID (x2)
+4102ms get sub:CODE:HID      5108ms set sub:CODE:HID      5990ms set sub:CODE:HID
+```
+
+The reads at 1109 and 4102 and the duplicate write come from the **resume and board-render path,
+not `joinCase`** - trace `saveHunterSub()` and the board render before touching anything. **The
+7.5s figure is synthetic: the shape is real, the number is not.**
+
+---
+
 ## ✅ §100 — THE STAMP IS ANCHORED TO THE CARD. `34a`, s58.
 
 **The plate hung off `.done-photowrap`, which is `width:208px` AND FIXED, while the thing that clips
@@ -1367,8 +1394,8 @@ loupe's, which has its own pointer map.
 Two-pointer tracking now drives `_vb`, anchored on the midpoint. `chartApply()` already clamps width
 to 0.5-1000, so pinch only sets width and origin. **`_lockScroll` is held while two fingers are down
 and released when the second lifts** - without it two fingers drag the page behind the map on iOS.
-Proven with synthetic PointerEvents: spread 1000 -> 333, pinch back to 1000. **Not yet proven with
-real fingers.**
+Proven with synthetic PointerEvents: spread 1000 -> 333, pinch back to 1000.
+**✅ CONFIRMED WITH REAL FINGERS BY THE OWNER, s58.**
 
 ---
 
