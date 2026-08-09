@@ -1,3 +1,14 @@
+<!-- ================================================================= -->
+<!-- THIS FILE SUPERSEDES `Branding-Guidelines.md`, WHICH IS STALE.      -->
+<!-- s58: the palette red and the type rule both changed and could not   -->
+<!-- be written back - `Branding-Guidelines.md` is LOCKED on the owner's -->
+<!-- disk (PermissionError on write, `del` fails silently). Until it is  -->
+<!-- released and replaced by this file, READ THIS ONE.                  -->
+<!-- The two disagree on: oxblood is #8B0000 (not #8A3324), and the      -->
+<!-- "never a third face" rule was deliberately overridden (SS94.9,      -->
+<!-- SS95.3 in HANDOFF.md, which is authoritative over both).            -->
+<!-- ================================================================= -->
+
 # Branding Guidelines — The Deerstalker / Scavenger & Hunt Co.
 
 *Updated this session: terminology correction ("A Stranger" retired) and one new reusable style pattern noted. Everything else unchanged from prior consolidation.*

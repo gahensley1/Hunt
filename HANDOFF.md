@@ -156,7 +156,7 @@ is proven and should be reused for every future Worker change.
 
 | File | Size | SHA-256 | Purpose |
 |---|---|---|---|
-| `index.html` **🆕 34b — THE PLATE 25% DOWN AND UP 30px (§100). s58. **The rotation wrapped at `34a` Cobalt; h Rust was spent.**** | 4,172,960 B | `fb6420036e1687dbbe231d0cb364991ab5cb0adaf10af6626b34bc92d4e8d844` | needs Worker **v2.6.13**. The plate 25% down, up 30px (§100) |
+| `index.html` **🆕 34c — THE iOS COMPOSITING ARTEFACTS (§102). s58.** | 4,300,501 B | `6fd797e02640323b028e0ce3535b35ec6887c382b620a666681797f4f5021bb3` | needs Worker **v2.6.13**. The iOS layer artefacts (§102) |
 | `index.html` **33n — LIVE, commit `165b7400`, 16:03Z 9 Aug 2026. THE CASE CLOSED STAMP (§94).** | 4,111,862 B | `1ac7f99edb1b8f2eec3fa5c8cabe02ef10cf90965fd0c7b4bbc4cfb0fc76b873` | needs Worker **v2.6.13**. 🔴 **THIS IS AN EARLY 33n. Stamp 250px, red `#B92230`. EIGHT LATER REVISIONS NEVER REACHED IT — see §94.10** |
 | *(superseded on disk, NEVER SHIPPED)* `index.html` 33m — THE HINT COIN IS EARNED, NEVER SOLD (§93). s58, Sun 9 Aug 2026.** | 4,071,402 B | `64c094c82543eb60e6fa0cc06515f481b5e0694f7ad42e8b2b5f1a86fb11bd44` | needs Worker **v2.6.13** |
 | *(superseded)* `index.html` 33l — was live s57, commit `3d49b6cd`. THE ZIP BAND (§91). | 4,068,353 B | `2f9cd80f4ec8fa678f4fd1acaeff8f4b4530f03203afd765994d2a80f0c3dc5d` | needs Worker **v2.6.13**. Carries 33k's caption + pin median tier, never separately shipped |
@@ -239,7 +239,7 @@ is proven and should be reused for every future Worker change.
 
 - **🔴 THE FIRST THING THE NEXT SESSION MUST DO IS RE-HASH ALL THREE SURFACES.** Expect
   **4,111,862 B / `1ac7f99e…` / `33n`** on raw and Pages, and the Worker root to read **`(v2.6.13)`**.
-  **4,172,960 B / `fb642003…` / `34b` once pushed.** *(Verified s57: all three identical, Worker confirmed. The line that stood here
+  **4,300,501 B / `6fd797e0…` / `34c` once pushed.** *(Verified s57: all three identical, Worker confirmed. The line that stood here
   named **`32l`** — twelve builds dead — and before that **28e**. A stale instruction is worse than no
   instruction: it sends the session to verify a fact that stopped mattering. Re-write this line on
   every ship.)*
@@ -1285,6 +1285,44 @@ does not look like a bug, which is why this survived.
 ---
 
 | `index.html` **34a — LIVE, commit `f6b9eed4`, 22:12Z 9 Aug 2026 (§98-§100).** | 4,172,954 B | `c6ac5c528f809095fd3f41662d52dfb1e95bd7ce6cd8c8a51bf67673240dd0a2` | **The first build of s58 that shipped as the build it named.** |
+
+| `index.html` **34b — LIVE, commit `192e9733`, 22:23Z 9 Aug 2026. The plate 25% down, up 30px.** | 4,172,960 B | `fb6420036e1687dbbe231d0cb364991ab5cb0adaf10af6626b34bc92d4e8d844` | — |
+
+## 🔴 §102 — FOUR LAYER-FORMING PROPERTIES, INVISIBLE ON DESKTOP, WRONG ON iOS. `34c`, s58.
+
+**Everything in this section was added by Claude for polish, looked correct in desktop Chrome, and
+was WRONG on the owner's iPhone. He photographed each one; Claude could not see any of them.**
+
+**iOS Safari rasterises layer-forming properties into their own compositing layer and backs that
+layer OPAQUE.** The result is a pale rectangle where a transparent ground was intended, and a
+straight-edged cut where the layer meets a clip.
+
+| property | on | symptom |
+|---|---|---|
+| `mix-blend-mode:multiply` + `filter:drop-shadow` | the plate | pale box behind the stamp, straight cut |
+| `text-shadow` parchment glow | the handwriting | pale patch behind the script |
+| `isolation:isolate` | the fill wrapper | pale box behind the script |
+| `clip-path` (the ink wipe) | the handwriting | **suspected, not yet ruled out** |
+
+**🔴 ON THIS CARD, A LAYER-FORMING PROPERTY IS A LAST RESORT, NOT A PRECAUTION.** The blend bought
+almost nothing at 93% ink; the glow and the isolation were belt-and-braces that were not needed —
+`z-index:6` over the plate's `2` already settles the order.
+
+### §103 — THE 30 DEGREES IS BAKED INTO THE ART
+
+A rotated **square** always overhangs its bounding box — 32px at this size — and iOS clips that
+rectangle. **A CIRCLE's bounding box is identical rotated or not**, so the angle was baked into the
+asset and `transform` set to `none` (with `stampFlat`, a scale-only keyframe). The element's box is
+now tight to the ink: 176x176, nothing to clip, and the 15px gap holds with 27px of clearance.
+**The fill keeps its CSS rotation and still aligns**, because the art was square with the circle
+inscribed — the tight box of the rotated circle is the same box on the same centre.
+
+### 🔴 §104 — CLAUDE CANNOT SEE THIS CLASS OF BUG
+
+**Every desktop measurement said the card was correct while the phone showed it broken.** Computed
+styles, rects and pixel probes all agreed with Claude and all missed it. **When the owner reports a
+visual fault he can see and the measurements say fine, THE MEASUREMENTS ARE ANSWERING A DIFFERENT
+QUESTION — look for a compositing difference, not an arithmetic one.**
 
 ## ✅ §100 — THE STAMP IS ANCHORED TO THE CARD. `34a`, s58.
 
