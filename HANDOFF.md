@@ -156,7 +156,7 @@ is proven and should be reused for every future Worker change.
 
 | File | Size | SHA-256 | Purpose |
 |---|---|---|---|
-| `index.html` **🆕 34c — THE iOS COMPOSITING ARTEFACTS (§102). s58.** | 4,300,501 B | `6fd797e02640323b028e0ce3535b35ec6887c382b620a666681797f4f5021bb3` | needs Worker **v2.6.13**. The iOS layer artefacts (§102) |
+| `index.html` **🆕 34d — THE WIPE CROP, THE ORDINAL, THE BADGE PRESS (§106, §107). s58.** | 4,301,443 B | `d4ab9a7996c37496a9c046dcf3428e4b31a00a612f9399d7f03b1e3bb1335744` | needs Worker **v2.6.13**. The wipe crop, the ordinal at 1.95em, the badge press (§106, §107) |
 | `index.html` **33n — LIVE, commit `165b7400`, 16:03Z 9 Aug 2026. THE CASE CLOSED STAMP (§94).** | 4,111,862 B | `1ac7f99edb1b8f2eec3fa5c8cabe02ef10cf90965fd0c7b4bbc4cfb0fc76b873` | needs Worker **v2.6.13**. 🔴 **THIS IS AN EARLY 33n. Stamp 250px, red `#B92230`. EIGHT LATER REVISIONS NEVER REACHED IT — see §94.10** |
 | *(superseded on disk, NEVER SHIPPED)* `index.html` 33m — THE HINT COIN IS EARNED, NEVER SOLD (§93). s58, Sun 9 Aug 2026.** | 4,071,402 B | `64c094c82543eb60e6fa0cc06515f481b5e0694f7ad42e8b2b5f1a86fb11bd44` | needs Worker **v2.6.13** |
 | *(superseded)* `index.html` 33l — was live s57, commit `3d49b6cd`. THE ZIP BAND (§91). | 4,068,353 B | `2f9cd80f4ec8fa678f4fd1acaeff8f4b4530f03203afd765994d2a80f0c3dc5d` | needs Worker **v2.6.13**. Carries 33k's caption + pin median tier, never separately shipped |
@@ -239,7 +239,7 @@ is proven and should be reused for every future Worker change.
 
 - **🔴 THE FIRST THING THE NEXT SESSION MUST DO IS RE-HASH ALL THREE SURFACES.** Expect
   **4,111,862 B / `1ac7f99e…` / `33n`** on raw and Pages, and the Worker root to read **`(v2.6.13)`**.
-  **4,300,501 B / `6fd797e0…` / `34c` once pushed.** *(Verified s57: all three identical, Worker confirmed. The line that stood here
+  **4,301,443 B / `d4ab9a79…` / `34d` once pushed.** *(Verified s57: all three identical, Worker confirmed. The line that stood here
   named **`32l`** — twelve builds dead — and before that **28e**. A stale instruction is worse than no
   instruction: it sends the session to verify a fact that stopped mattering. Re-write this line on
   every ship.)*
@@ -1287,6 +1287,8 @@ does not look like a bug, which is why this survived.
 | `index.html` **34a — LIVE, commit `f6b9eed4`, 22:12Z 9 Aug 2026 (§98-§100).** | 4,172,954 B | `c6ac5c528f809095fd3f41662d52dfb1e95bd7ce6cd8c8a51bf67673240dd0a2` | **The first build of s58 that shipped as the build it named.** |
 
 | `index.html` **34b — LIVE, commit `192e9733`, 22:23Z 9 Aug 2026. The plate 25% down, up 30px.** | 4,172,960 B | `fb6420036e1687dbbe231d0cb364991ab5cb0adaf10af6626b34bc92d4e8d844` | — |
+
+| `index.html` **34c — LIVE, commit `4138f6e4`, 22:53Z 9 Aug 2026. The three compositing fixes (§102).** | 4,300,501 B | `6fd797e02640323b028e0ce3535b35ec6887c382b620a666681797f4f5021bb3` | 🔴 **Shipped before the wipe crop, the ordinal and the badge press. FOURTH mark spent mid-flight this session — see §101.** |
 
 ## 🔴 §102 — FOUR LAYER-FORMING PROPERTIES, INVISIBLE ON DESKTOP, WRONG ON iOS. `34c`, s58.
 

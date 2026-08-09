@@ -283,7 +283,7 @@
     #notify-card .nc-txt{font-size:14px}
   }
   #buildmark{margin:4px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#B5566B;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#7A5A98;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -782,7 +782,14 @@
   .cold-hd{position:relative;padding:calc(var(--safe-t) + 30px) 16px 0;text-align:center;border-bottom:2px solid rgba(184,134,59,.6);background:var(--paper-2)}
   .btn-ghost.btn-big{font-size:15px;font-weight:700}
   .cred-badge{background:none;border:0;padding:0;display:block;margin:-10px auto 0;width:min(351px,100%);aspect-ratio:316/424;height:auto;cursor:pointer;-webkit-tap-highlight-color:transparent}
-  .cred-badge svg{width:100%;height:100%;display:block;pointer-events:none;filter:drop-shadow(0 4px 3px rgba(10,7,4,.6)) drop-shadow(0 10px 14px rgba(10,7,4,.35))}
+  .cred-badge svg{width:100%;height:100%;display:block;pointer-events:none;
+    filter:drop-shadow(0 4px 3px rgba(10,7,4,.6)) drop-shadow(0 10px 14px rgba(10,7,4,.35));
+    transition:transform .08s ease,filter .12s ease}
+  /* SS107: the plaque idiom, applied to the medal. The cast shadow collapses and the plate
+     settles a pixel down, so it reads as pressed INTO the paper rather than nudged across it.
+     Matches .btn-plaque:active img exactly - one press behaviour for everything on this screen. */
+  .cred-badge:active svg{transform:translateY(1px) scale(.985);
+    filter:drop-shadow(0 1px 1px rgba(10,7,4,.5)) drop-shadow(0 2px 3px rgba(10,7,4,.28)) brightness(1.04)}
   .cred-badge text{font-family:var(--serif);font-weight:800;font-size:16.2px;letter-spacing:.6px;fill:#35322E}
   .cred-badge .cb-lip text{fill:rgba(255,255,255,.5)}
   #record-ov{position:fixed;inset:0;background:rgba(20,13,7,.88);z-index:520;display:flex;align-items:center;justify-content:center;padding:10px;overflow:hidden}
@@ -1185,7 +1192,7 @@
        owner's iPhone it read as a pale BACKGROUND behind the handwriting. The stroke gives the
        weight; the ground stays transparent. */
     -webkit-text-stroke:0.8px var(--ink);
-    clip-path:inset(0 100% 0 0);animation:inkWrite 1.2s steps(26,end) both}
+    clip-path:inset(-60% 100% -60% -60%);animation:inkWrite 1.2s steps(26,end) both}
   .done-stampfill .dsf-date{left:40.5%;width:32.7%;bottom:31.93%;font-size:16.5px;animation-delay:1.45s}
   .done-stampfill .dsf-init{left:52%;width:22.9%;bottom:23.87%;font-size:16.5px;animation-delay:2.85s}
   /* SS103: THE 30 DEGREES IS BAKED INTO THE ART. A rotated SQUARE always overhangs its own
@@ -1195,8 +1202,12 @@
      rotation and still lines up, because the art was square with the circle inscribed - the tight
      box of the rotated circle is the same box, on the same centre. */
   @keyframes stampFlat{0%{transform:scale(2.2);opacity:0}55%{transform:scale(.95);opacity:1}75%{transform:scale(1.04)}100%{transform:scale(1)}}
-  @keyframes inkWrite{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 -6% 0 0)}}
-  .ord-n{font-size:1.5em;line-height:1}
+  /* SS106: THE WIPE MUST ONLY EVER MOVE THE RIGHT EDGE. This ended at `inset(0 -6% 0 0)`, which
+     relaxes the right and leaves TOP, BOTTOM and LEFT clipping at the span's own box - so any part
+     of the script overhanging its box was shaved off for good, which is the crop the owner kept
+     seeing on the handwriting. The other three sides now sit well outside the box at every frame. */
+  @keyframes inkWrite{from{clip-path:inset(-60% 100% -60% -60%)}to{clip-path:inset(-60% -60% -60% -60%)}}
+  .ord-n{font-size:1.95em;line-height:1}
   @media (max-width:349px){ .done-photowrap{width:160px;margin-left:3px} .done-photowrap .stamp-img.done-stamp{width:146px;top:-38px;right:-1px}
     .done-stampfill{width:146px;top:-38px;right:-1px}
     .done-stampfill .dsf{font-size:13.7px} }
@@ -1318,7 +1329,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">34c</p>
+      <p id="buildmark" aria-label="test build marker">34d</p>
     </div>
   </section>
 
