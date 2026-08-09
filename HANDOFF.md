@@ -156,7 +156,7 @@ is proven and should be reused for every future Worker change.
 
 | File | Size | SHA-256 | Purpose |
 |---|---|---|---|
-| `index.html` **🆕 34a — THE PRECINCT DEFAULT, CHART PINCH, THE STAMP ANCHOR (§98-§100). s58. **BUILDMARK ROTATION WRAPPED: h Rust was spent, so this is 34a Cobalt.**** | 4,172,954 B | `c6ac5c528f809095fd3f41662d52dfb1e95bd7ce6cd8c8a51bf67673240dd0a2` | needs Worker **v2.6.13**. Adds §98-§100 |
+| `index.html` **🆕 34b — THE PLATE 25% DOWN AND UP 30px (§100). s58. **The rotation wrapped at `34a` Cobalt; h Rust was spent.**** | 4,172,960 B | `fb6420036e1687dbbe231d0cb364991ab5cb0adaf10af6626b34bc92d4e8d844` | needs Worker **v2.6.13**. The plate 25% down, up 30px (§100) |
 | `index.html` **33n — LIVE, commit `165b7400`, 16:03Z 9 Aug 2026. THE CASE CLOSED STAMP (§94).** | 4,111,862 B | `1ac7f99edb1b8f2eec3fa5c8cabe02ef10cf90965fd0c7b4bbc4cfb0fc76b873` | needs Worker **v2.6.13**. 🔴 **THIS IS AN EARLY 33n. Stamp 250px, red `#B92230`. EIGHT LATER REVISIONS NEVER REACHED IT — see §94.10** |
 | *(superseded on disk, NEVER SHIPPED)* `index.html` 33m — THE HINT COIN IS EARNED, NEVER SOLD (§93). s58, Sun 9 Aug 2026.** | 4,071,402 B | `64c094c82543eb60e6fa0cc06515f481b5e0694f7ad42e8b2b5f1a86fb11bd44` | needs Worker **v2.6.13** |
 | *(superseded)* `index.html` 33l — was live s57, commit `3d49b6cd`. THE ZIP BAND (§91). | 4,068,353 B | `2f9cd80f4ec8fa678f4fd1acaeff8f4b4530f03203afd765994d2a80f0c3dc5d` | needs Worker **v2.6.13**. Carries 33k's caption + pin median tier, never separately shipped |
@@ -239,7 +239,7 @@ is proven and should be reused for every future Worker change.
 
 - **🔴 THE FIRST THING THE NEXT SESSION MUST DO IS RE-HASH ALL THREE SURFACES.** Expect
   **4,111,862 B / `1ac7f99e…` / `33n`** on raw and Pages, and the Worker root to read **`(v2.6.13)`**.
-  **4,172,954 B / `c6ac5c52…` / `34a` once pushed.** *(Verified s57: all three identical, Worker confirmed. The line that stood here
+  **4,172,960 B / `fb642003…` / `34b` once pushed.** *(Verified s57: all three identical, Worker confirmed. The line that stood here
   named **`32l`** — twelve builds dead — and before that **28e**. A stale instruction is worse than no
   instruction: it sends the session to verify a fact that stopped mattering. Re-write this line on
   every ship.)*
@@ -1284,6 +1284,8 @@ does not look like a bug, which is why this survived.
 
 ---
 
+| `index.html` **34a — LIVE, commit `f6b9eed4`, 22:12Z 9 Aug 2026 (§98-§100).** | 4,172,954 B | `c6ac5c528f809095fd3f41662d52dfb1e95bd7ce6cd8c8a51bf67673240dd0a2` | **The first build of s58 that shipped as the build it named.** |
+
 ## ✅ §100 — THE STAMP IS ANCHORED TO THE CARD. `34a`, s58.
 
 **The plate hung off `.done-photowrap`, which is `width:208px` AND FIXED, while the thing that clips
@@ -1294,6 +1296,11 @@ Claude measured 15px of clearance and saw nothing wrong.
 `.done-photowrap` is now `position:static`, handing the containing block up to `.stamp-done`, which
 IS the card. **Verified at five card widths - 307, 337, 367, 397, 457 - ink gap 15px at every one,
 plate and hand aligned at every one.** Before the fix that number moved with the screen.
+
+**`34b`: the plate went to 176px (-25%) and up 30px, and `right` WAS NOT TOUCHED - the ink edge held
+at 15px on its own. THE INSCRIBED CIRCLE'S RIGHT EDGE IS THE UNROTATED BOX'S RIGHT EDGE whatever the
+rotation, because a circle is invariant about its own centre.** Resize from the anchored side and the
+gap keeps itself; only the rotated bounding box changes, and that corner is empty.
 
 **🔴 A FAILED FIRST ATTEMPT IS WORTH RECORDING: Claude moved the MARKUP out of the wrapper instead.
 The positioning rule is `.done-photowrap .stamp-img.done-stamp` - SCOPED TO THE WRAPPER - so the

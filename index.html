@@ -283,7 +283,7 @@
     #notify-card .nc-txt{font-size:14px}
   }
   #buildmark{margin:4px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#3B6BA5;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#C88A2E;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -1155,10 +1155,10 @@
      208px, while the clip is the card - so the same offset cut the plate at narrow widths and
      cleared it at wide ones. Right is now measured from the card, so 15px is 15px everywhere.
      THE OVERHANG IS GONE ON PURPOSE: it was never overhang, it was a slice. */
-  .stamp-img.done-stamp{position:absolute;top:-10px;right:-1px;width:234px;margin:0;z-index:2;opacity:.72}
+  .stamp-img.done-stamp{position:absolute;top:-40px;right:-1px;width:176px;margin:0;z-index:2;opacity:.72}
   /* SS94: the clerk fills the stamp in by hand. The fill box sits exactly where the stamp
      image sits and carries the same rotation, so both marks ride the same form. */
-  .done-stampfill{position:absolute;top:-10px;right:-1px;width:234px;aspect-ratio:721/720;
+  .done-stampfill{position:absolute;top:-40px;right:-1px;width:176px;aspect-ratio:721/720;
     /* SS: the hand is WRITTEN ON the impression - it must sit above the plate, and above any
        stacking context the plate's mix-blend-mode creates. isolation keeps the multiply on the
        stamp from ever reaching back over the script. */
@@ -1172,13 +1172,13 @@
     -webkit-text-stroke:0.8px var(--ink);
     text-shadow:0 0 3px rgba(237,228,211,.95), 0 0 6px rgba(237,228,211,.7);
     clip-path:inset(0 100% 0 0);animation:inkWrite 1.2s steps(26,end) both}
-  .done-stampfill .dsf-date{left:40.5%;width:32.7%;bottom:31.93%;font-size:22px;animation-delay:1.45s}
-  .done-stampfill .dsf-init{left:52%;width:22.9%;bottom:23.87%;font-size:22px;animation-delay:2.85s}
+  .done-stampfill .dsf-date{left:40.5%;width:32.7%;bottom:31.93%;font-size:16.5px;animation-delay:1.45s}
+  .done-stampfill .dsf-init{left:52%;width:22.9%;bottom:23.87%;font-size:16.5px;animation-delay:2.85s}
   @keyframes inkWrite{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 -6% 0 0)}}
   .ord-n{font-size:1.5em;line-height:1}
-  @media (max-width:349px){ .done-photowrap{width:160px;margin-left:3px} .done-photowrap .stamp-img.done-stamp{width:195px;top:-8px;right:-1px}
-    .done-stampfill{width:195px;top:-8px;right:-1px}
-    .done-stampfill .dsf{font-size:18.3px} }
+  @media (max-width:349px){ .done-photowrap{width:160px;margin-left:3px} .done-photowrap .stamp-img.done-stamp{width:146px;top:-38px;right:-1px}
+    .done-stampfill{width:146px;top:-38px;right:-1px}
+    .done-stampfill .dsf{font-size:13.7px} }
   @keyframes stampDown{0%{transform:rotate(12deg) scale(2.2);opacity:0}55%{transform:rotate(32deg) scale(.95);opacity:1}75%{transform:rotate(29deg) scale(1.04)}100%{transform:rotate(30deg) scale(1)}}
 
   .toast{position:fixed;left:50%;bottom:calc(90px + var(--safe-b));transform:translateX(-50%);z-index:620;
@@ -1297,7 +1297,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">34a</p>
+      <p id="buildmark" aria-label="test build marker">34b</p>
     </div>
   </section>
 
