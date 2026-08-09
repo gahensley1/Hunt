@@ -282,7 +282,7 @@
     #notify-card .nc-txt{font-size:14px}
   }
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#7A5A98;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#4E9A87;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -1259,7 +1259,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">33l</p>
+      <p id="buildmark" aria-label="test build marker">33m</p>
     </div>
   </section>
 
@@ -1582,12 +1582,14 @@
     <div class="lic-eyebrow" style="margin-bottom:6px">THE DETECTIVE’S PURSE</div>
     <h3>A coin for your trouble</h3>
     <p class="coin-line" id="coins-have"></p>
-    <p class="clue-text" style="font-size:15px">A hint is a shortcut, not the road. Five coins will
-      see you past the clues that will not yield — and your rank stands exactly where you
-      earned it.</p>
+    <p class="clue-text" style="font-size:15px">A hint is a shortcut, not the road. A coin comes to
+      you for every case you close — and your rank stands exactly where you earned it,
+      whether you spend them or keep them.</p>
+    <!-- §93, s58: THE COINS ARE NOT FOR SALE. A "Five coins · $0.99" button stood here and was
+         removed on the owner's decision: "i would rather them buy into the play." Do NOT restore
+         it, and do NOT add any purchase path reachable from a hint or any other failure state. -->
     <div class="row2">
-      <button class="btn btn-primary" onclick="buyCoins()">Five coins · $0.99</button>
-      <button class="btn-ghost" onclick="closeOverlay('ov-coins')">Not now</button>
+      <button class="btn-ghost" onclick="closeOverlay('ov-coins')">Close the purse</button>
     </div>
   </div>
 </div>
@@ -7204,19 +7206,57 @@ function renderHintRow(t){
     row.appendChild(p);
     return;
   }
+  /* ================= THE HINT COIN (§93, s58) =================
+     EARNED, NEVER SOLD. Owner: "i would rather them buy into the play."
+
+     🔴 THE LINE THAT WAS HERE: `if(coinBalance()<1){ openCoinShop(); return; }` — a stuck
+     player who tapped for a hint with an empty purse was shown a till. Frustration straight
+     to a purchase with no step between, which is the pattern behind the kid-spending
+     headlines. THERE IS NO PATH FROM A FAILURE STATE TO A PURCHASE ANY MORE, AND NONE MAY
+     BE ADDED. An empty purse now says how to EARN one.
+
+     🔴 AND THE SPEND IS CONFIRMED. It used to fire on a single tap and was irreversible.
+     Two-state in place rather than an overlay, and NOT a double-tap gesture — the loupe
+     already owns double-tap for zoom. The second tap is labelled, shows the balance, and
+     reverts on its own after HINT_CONFIRM_MS.
+
+     🔴 THE COPY MUST NOT SAY A SPEND COSTS A PROMOTION. It does not. myCoins() is a ledger,
+     not a balance: rank reads its LENGTH, which only grows. Say the opposite. */
   if(hintIsFree(code)){
-    row.appendChild(btn("btn btn-ghost hint-buy","Consult the hint",function(){
+    row.appendChild(btn("btn btn-ghost hint-buy","Consult the hint \u2014 on the house",function(){
       markHintSeen(code,t.id);
       renderHintRow(t);
     }));
+  } else if(coinBalance()<1){
+    /* No till here. Tell them how a coin is come by. */
+    var dry=btn("btn btn-ghost hint-buy","Consult the hint \u00b7 1 coin",function(){
+      toast("Your purse is empty \u2014 a coin for every case you close.",3600);
+    });
+    dry.classList.add("hint-dry");
+    row.appendChild(dry);
   } else {
-  row.appendChild(btn("btn btn-ghost hint-buy","Consult the hint \u00b7 1 coin",function(){
-      if(coinBalance()<1){ openCoinShop(); return; }
+    var armed=false, revert=null;
+    var b=btn("btn btn-ghost hint-buy","Consult the hint \u00b7 1 coin",function(){
+      if(!armed){
+        armed=true;
+        b.textContent="Tap again to spend 1 coin \u00b7 you hold "+coinBalance()
+                     +" \u00b7 your rank stands regardless";
+        b.classList.add("hint-armed");
+        clearTimeout(revert);
+        revert=setTimeout(function(){
+          armed=false;
+          b.textContent="Consult the hint \u00b7 1 coin";
+          b.classList.remove("hint-armed");
+        }, HINT_CONFIRM_MS);
+        return;
+      }
+      clearTimeout(revert);
       if(!spendCoin()){ toast("The coin would not leave your purse \u2014 try again."); return; }
       markHintSeen(code,t.id);
       renderHintRow(t);
       toast("One coin spent \u2014 your rank stands where you earned it.",3200);
-    }));
+    });
+    row.appendChild(b);
   }
   const note=document.createElement("p");
   note.className="hint-note";
@@ -7225,6 +7265,7 @@ function renderHintRow(t){
   note.textContent=_hintNote();
   row.appendChild(note);
 }
+var HINT_CONFIRM_MS=4000;   /* the armed button disarms itself (§93) */
 var HINT_NOTES=[
   "Stuck? I keep a quiet word in the drawer, should you want it.",
   "The gears will not turn for you? Ask, and I shall whisper a hint."
@@ -7372,6 +7413,16 @@ function renderLicTiers(){
   host.innerHTML=h;
 }
 
+/* 🔴 §93, s58 — RETIRED, NOT REMOVED. Owner: "all the coin routes stay with the note but no
+   buying for .99". The function, `requirePurchase("coins", …)`, `shco:bought` and the Worker's
+   side of it all REMAIN so the route is intact and reversible — but NOTHING CALLS THIS. The
+   "Five coins · $0.99" button was taken out of `#ov-coins`.
+   Coins are EARNED: one per case closed. "i would rather them buy into the play."
+   🔴 IF THIS IS EVER WIRED BACK UP, IT MUST NOT BE REACHABLE FROM A FAILURE STATE. The old
+   hint path called openCoinShop() the moment a stuck player's purse was empty — frustration
+   straight to a till, the pattern behind the kid-spending headlines and the reason the owner
+   killed it. A purse the player opens deliberately is fine; a till that appears when they are
+   stuck is not. See §93. */
 async function buyCoins(){
   closeOverlay("ov-coins");
   const r=await requirePurchase("coins",{

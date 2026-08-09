@@ -156,7 +156,8 @@ is proven and should be reused for every future Worker change.
 
 | File | Size | SHA-256 | Purpose |
 |---|---|---|---|
-| `index.html` **🆕 33l — THE ZIP BAND (§91). s57.** | 4,068,353 B | `2f9cd80f4ec8fa678f4fd1acaeff8f4b4530f03203afd765994d2a80f0c3dc5d` | needs Worker **v2.6.13**. Carries 33k's caption + pin median tier, never separately shipped |
+| `index.html` **🆕 33m — THE HINT COIN IS EARNED, NEVER SOLD (§93). s58, Sun 9 Aug 2026.** | 4,071,402 B | `64c094c82543eb60e6fa0cc06515f481b5e0694f7ad42e8b2b5f1a86fb11bd44` | needs Worker **v2.6.13** |
+| *(superseded)* `index.html` 33l — was live s57, commit `3d49b6cd`. THE ZIP BAND (§91). | 4,068,353 B | `2f9cd80f4ec8fa678f4fd1acaeff8f4b4530f03203afd765994d2a80f0c3dc5d` | needs Worker **v2.6.13**. Carries 33k's caption + pin median tier, never separately shipped |
 | *(superseded on disk, NEVER SHIPPED)* `index.html` 33k — caption + pin median tier (§90.11) | 4,062,995 B | `15f4dc8edc806bad42b75e4bee82336f29124183649ec76eb84309fed5120280` | needs Worker **v2.6.13**, deployed and gate-verified |
 | *(superseded)* `index.html` 33j — was live s57, commit `12f9e02c`. TAP THE MAP TO MAGNIFY (§90.8). | 4,061,182 B | `628833f342e5b236197f5cb510998cc9de3e546561e47614923dcc10b6dd974a` | needs Worker **v2.6.13**, which is deployed and gate-verified. Battery green: STATIC · BEHAVIOUR 59/59 · SESSION 21/21 |
 | *(superseded)* `index.html` 33i — was live s57, commit `9abcb27e`. PLAN renamed MAP. | 4,060,601 B | `74a333afa485bb6fc3844abeaf48a16b229dcd5c864572a1c1f1ddc9e203182d` | — |
@@ -1189,6 +1190,78 @@ verification depth to risk**; **keep ship summaries to ~3 lines + the hash**; **
 
 ---
 
+## ✅ §93 — THE HINT COIN IS EARNED, NEVER SOLD. OWNER DECISION, s57.
+
+**Owner, verbatim: "lets jsut remove montezation of the coins,,, i would rather them buy into the
+play."** And, earlier: **"i just dont want parent ire if a kid gives up and buys."**
+
+**DECISION: coins are earned only — one per case closed. The coin shop and any purchase path come
+out.** This is a monetisation decision and the full reasoning belongs in `Monetization-Brief.md`
+under *Rejected, and why — do not reopen*. ⚠ **THAT FILE COULD NOT BE WRITTEN AT s57 — the bridge
+returned permission denied on `docs-private\` (OneDrive lock or read-only). The paste-ready insert
+is at `claude\BRIEF-INSERT-coins-s57.md` and MUST be applied**, or this decision lives only in the
+public handoff and the brief still implies coins are sold.
+
+### 🔴 93.1 THE LINE THAT MADE IT URGENT
+
+```js
+if(coinBalance()<1){ openCoinShop(); return; }
+```
+
+**The shop opened automatically when a stuck player tapped for a hint with an empty purse** —
+frustration straight to a till with no step between. That is the pattern behind the kid-spending
+headlines and the FTC settlements with Apple and Google. **The owner identified the risk himself,
+unprompted, before any code was written.**
+
+### 🔴 93.2 RANK WAS NEVER AT RISK — DO NOT WRITE COPY SAYING OTHERWISE
+
+`myCoins()` is a **ledger, not a balance**: one entry per case closed, and it only grows. Rank reads
+its **length**, so a spend can never demote a detective — the high-water mark is a property of the
+shape, not a rule bolted on. **A draft confirmation was going to warn that spending "takes away from
+your next promotion". THAT WOULD HAVE BEEN FALSE.** The true line is the reassurance the app already
+shows *after* the spend — move it *before*: **"Your rank stands regardless."**
+
+### ✅ 93.4 BUILT IN `33m`. s58.
+
+**Owner amendment: "all the coin routes stay with the note but no buying for .99."** So the route is
+**retired, not removed** — `buyCoins()`, `requirePurchase("coins", …)`, `shco:bought`,
+`coinBalance()`'s arithmetic and the Worker's side all remain intact and reversible. **Nothing calls
+`buyCoins()`**; the *"Five coins · $0.99"* button is out of `#ov-coins`. A long comment above the
+function records why and what must never be done if it is ever wired back.
+
+**What changed in the client:**
+
+1. **🔴 NO TILL AT A FAILURE STATE.** `if(coinBalance()<1){ openCoinShop(); return; }` is gone. An
+   empty purse now says *"Your purse is empty — a coin for every case you close."* **Verified: the
+   only live `openCoinShop()` in the file is its own definition; the other two hits are the warning
+   comments.**
+2. **The spend is confirmed.** Two-state button in place — first tap arms it and relabels to *"Tap
+   again to spend 1 coin · you hold N · your rank stands regardless"*, disarming itself after
+   `HINT_CONFIRM_MS` (4s). **NOT a double-tap gesture: the loupe already owns double-tap for zoom
+   (§90.8), and two meanings for one gesture is a collision.**
+3. **The balance and the reassurance are shown BEFORE the spend**, not after. The old toast said the
+   right thing at the wrong moment.
+4. **A free hint now says so** — *"Consult the hint — on the house."* Previously a free hint and a
+   paid one wore identical button text, so a player could not tell whether they were spending.
+5. **The purse copy** no longer offers a sale.
+
+**STATIC clean; inline handlers 113 → 112, the one removed being the sale button.**
+
+### 93.3 THE BUILD — done in `33m`, kept for the record
+
+1. **Hint path:** replace the `openCoinShop()` call with *"Your purse is empty — a coin for every
+   case closed."* No till at the moment of failure, ever.
+2. **`coinBalance()`** becomes earned − spent. **Keep READING `shco:bought`** so any existing value
+   still counts — the code comment says purchases were preview-only, so no real money is involved,
+   but do not strand a balance.
+3. **`#ov-coins`** keeps the purse display, loses the purchase controls.
+4. **The confirmation (§93.2 wording), and free hints labelled as free** — currently a free hint and
+   a paid one wear the same button text, so a player cannot tell whether they are spending.
+5. **Removes a consumable IAP from the store track entirely** — the heaviest compliance category
+   there is, gone for nothing lost.
+
+---
+
 ## ✅ §92 — `ship` NOW REFUSES THINGS. THREE GATES, TWO PROVEN TO BITE. s57.
 
 **The finding this rests on: every rule enforced by code held today; every rule that was only prose
@@ -1395,14 +1468,32 @@ Three faults were then found **by measuring in Chrome, none of them visible by r
 **Final measured state:** card 337×362 around a 337×337 plan, fits the viewport, X at 9,9, no
 scroll.
 
+### ✅ 90.12 THE OWNER TESTED IT. IT WORKS. (s57 close)
+
+**Owner, s57: "map works!" and then "I TESTED THE MAP ITS GOOD THE REPORTS LOOK GOOD."**
+
+**THE WRITE PATH IS PROVEN BY USE** — attach a plan in the Desk, file the Amendment, the `map:CODE`
+key is written under the curator token, the `hasMap` flag lands on the `cold:index` entry, the
+**VIEW MAP** pill appears on the shelf card, the popup opens, and tap-to-magnify works through the
+loupe. **None of that had ever been executed end to end before this; every claim in §90 up to now
+was static analysis, measurement or reasoning.** The reports were checked at the same time and read
+correctly.
+
+**🟢 ASKED, AND THE ANSWER WAS "IPHONE".** So this is the first feature in the project's history
+verified **on the target device** rather than in headless Chromium or on a desktop. It also means
+the loupe's pinch-and-drag has now been driven by real touch, not synthesised events — something no
+test in the battery can do. *(§90.6 below is superseded on the round-trip and the pixels, and
+stands on everything else.)*
+
 ### ⚠ 90.6 WHAT IS NOT PROVEN
 
 - **THE SCREENSHOT AND THE RECTS DISAGREE AND IT WAS NOT RESOLVED.** `getBoundingClientRect` reports
   a 337px card centred in a 1024px viewport; the capture shows it starting at x≈500 and running off
   the right edge. No transform, no zoom, `devicePixelRatio` 1.875, capture 1045px for a 1024px
   viewport. **Trust the numbers, not the picture — and do not quote the picture as verification.**
-- **THE UPLOAD ROUND-TRIP HAS NEVER RUN.** Writing a `map:` key needs the curator token, which
-  Claude must never hold (§A.1). **The first real save at the Desk is the test.**
+- **✅ SUPERSEDED — THE UPLOAD ROUND-TRIP RAN AND WORKED (§90.12).** *(the original line:)* Writing
+  a `map:` key needs the curator token, which Claude must never hold (§A.1), so the first real save
+  at the Desk was the test.
 - **NOT SEEN ON THE PHONE.** The owner is on an iPhone 15; every route Claude has is desktop Chrome.
 - **✅ SUPERSEDED IN `33i` — SEE §90.7. The publish page now has it too.** *(the 33h line, for the
   record:)* Only the TERRITORIES editor got the control. The submissions (`sb`) and publish (`p`)
@@ -1851,11 +1942,33 @@ and the Worker source must never be committed.**
    to reach a year from the app.** The idiom is decided and the copy needs approving. **This is the
    first thing to build next session** — it is half-finished work, which is the worst kind to leave.
    **⚠ AND THE BATTERY HAS NOT RUN ON 33e** (§82's tick was 33d).
-1. **🔴🔴 GET IT ONTO A PHONE. Carried since s29, now nineteen builds deep.** It gates: the install
-   prompt (never seen), the notification card, the live roster, web push, **whether a ledger email
-   has ever actually arrived**, and the full loop on two devices. **The owner is on an iPhone 15 and
-   the app is a PWA — Safari can add it to the home screen and screen-record it today.** No amount
-   of measuring closes this and nothing else on this list is as risky.
+1. **🟡 THE PHONE — PARTLY DONE AT LAST, s57. Carried since s29.** **The owner ran the app on his
+   iPhone and exercised the surveyor's map end to end there** — the Desk upload, the shelf pill, the
+   popup, pinch-zoom by real touch — **and the reports too (§90.12).** After nineteen-plus builds of
+   "it has never been on a phone", it has.
+   **🔴 BUT THE ITEM DOES NOT CLOSE, AND THE DIFFERENCE MATTERS.** Running in mobile Safari is not
+   the same as being installed. **STILL UNTESTED:** the **install / home-screen standalone mode**
+   (never seen), the **notification card**, **web push**, the **live roster**, and the **full hunt
+   loop across two devices** (§50.2).
+   **✅ THE LEDGER EMAIL IS OFF THIS LIST — CONFIRMED RECEIVED (owner, s57): "IT SENDS AND WAS
+   RECIEVED."** The send was confirmed at s55 (§81); **arrival in the inbox is now confirmed too.**
+   The only unknown left on that feature is the 3am cron, which has never fired on its own (§59.3).
+   **🔴 THE APP HAS NO INSTALL AFFORDANCE AT ALL — MEASURED s57: `Add to Home` ×0,
+   `beforeinstallprompt` ×0, `display-mode: standalone` ×0, `navigator.standalone` ×0.** The
+   manifest is complete (`display:standalone`, six icons, theme colour) and **has never once been
+   exercised.** **ON iOS APPLE PROVIDES NO PROGRAMMATIC PROMPT** — installing is Share → Add to Home
+   Screen by hand, so the "install prompt" has to be the app's OWN instruction card, shown only when
+   it detects it is not standalone.
+   **🔴 WEB PUSH ON iOS REQUIRES THE HOME-SCREEN INSTALL (Apple, iOS 16.4+).** The notification card
+   and push are therefore **not broken — they are UNREACHABLE from a Safari tab**, and no amount of
+   testing in one will move them. Standalone also changes the layout: no browser chrome means a
+   taller viewport and real safe-area insets, which `--safe-b` and the rotate gate were written for
+   and have never met.
+   **NEXT BUILD, SMALL AND HIGH-LEVERAGE:** detect standalone with
+   `navigator.standalone || matchMedia('(display-mode: standalone)').matches`; when false on iOS,
+   show a Victorian instruction card. Then Share → Add to Home Screen, open from the icon, confirm
+   it launches standalone — **and the notification card, push and the roster all become testable for
+   the first time.**
 2. **🟡 THE LEGAL ENTITY (§50.1) — MOVED s57. `Do No Harm Company LLC` IS SUBMITTED TO GEORGIA,
    after the name came back cleared.** Step 1 of four is in the state's hands; nothing else on the
    store track can start until it is approved. **THE NEXT ACTION IS THE OWNER'S AND IT IS TIME-
