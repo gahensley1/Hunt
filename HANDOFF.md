@@ -1189,6 +1189,64 @@ verification depth to risk**; **keep ship summaries to ~3 lines + the hash**; **
 
 ---
 
+## ✅ §92 — `ship` NOW REFUSES THINGS. THREE GATES, TWO PROVEN TO BITE. s57.
+
+**The finding this rests on: every rule enforced by code held today; every rule that was only prose
+was broken at least once.** Agent D stopped Claude twice and would not be talked round. `battery`
+never lied. Meanwhile a log was read from the wrong end, the wrong build was shipped, and §0 was
+left stale twice — all covered by written rules that had been read that morning. **So the rules that
+matter were moved into the script.**
+
+| gate | refuses when | the s57 failure it answers |
+|---|---|---|
+| **1** | `index.html`'s hash is absent from `HANDOFF.md` | the wrong build shipped **and** §0 left stale — one check, both faults |
+| **2** | `index.html` changed but the buildmark did not | §8i, enforced instead of remembered |
+| **3** | the battery last passed on a **different** build | 33e, 33f and 33g all shipped untested |
+
+`ship /force "..."` overrides all three; **the message must say why.**
+
+**GATE 3 NEEDS A STAMP.** `battery.cmd` now writes `test\.last-battery` containing the hash of the
+`index.html` it passed on — **only on a full pass with no argument**, since `battery some.html`
+skips SESSION and must not leave a stamp claiming the shelf build was tested. The stamp is
+**gitignored**: machine-local evidence, not a source of record, and it must not travel between
+clones.
+
+### 92.1 THEY WERE TESTED, NOT ASSUMED (§11d: prove it has teeth)
+
+- **GATE 1 — PROVEN.** A comment was appended to `index.html` so its hash (`152b16c8…`) appeared
+  nowhere in `HANDOFF.md`. `ship` refused, named the reason, and **never reached the Y/N prompt**.
+  The file was restored to the shipped bytes immediately after and re-hashed to confirm.
+- **GATE 3 — PROVEN.** The stamp was doctored to all zeros while `index.html` stood at
+  `2f9cd80f…`. `ship` refused, printed **both** hashes side by side, and named the three builds the
+  gate exists to prevent. Stamp restored and re-verified.
+- **GATE 2 — PROVEN, AND ISOLATED.** A comment was added to `index.html`, **its new hash was written
+  into `HANDOFF.md` and into the battery stamp on purpose**, so gates 1 and 3 both passed and gate 2
+  was the only thing that could refuse. It did, on an unbumped `33l`. All three files were reverted
+  and re-hashed afterwards.
+
+**ALL THREE GATES HAVE NOW BEEN SEEN TO REFUSE, each isolated so that only the gate under test could
+fire.** That is the §11d standard — a check that has only ever returned "clean" is not a check — and
+it is the first time in this project that the *refusal* path of anything has been exercised
+deliberately rather than discovered by accident.
+
+**⚠ WHEN TESTING, DO NOT PASTE THE REFUSAL TEXT BACK INTO `cmd`.** It tries to run each line as a
+command and sprays "is not recognized as an internal or external command". Harmless, but it reads
+like a second failure and is not one.
+
+### ⚠ 92.2 THE SCRIPT WAS WRITTEN BLIND
+
+**Claude cannot execute `cmd.exe`.** Every line of `ship.cmd`'s gate logic was written without being
+run once. **The pre-s57 script is kept at `claude\ship-s55-backup.cmd`** — if `ship` misbehaves,
+copy it back over `ship.cmd` and carry on. A script that refuses wrongly is worse than one that
+never refuses.
+
+**⚠ AND A FIRST-RUN CONFUSION, RECORDED:** the first test expected a gate-3 refusal and got a clean
+ship. **The gate was right and the expectation was stale** — the owner had run `battery` in between,
+so the stamp legitimately matched. `33l` went live under the commit message "gate test", which is a
+poor record; §0 and §91 carry the real one.
+
+---
+
 ## ✅ §91 — A ZIP IS A MAIL ROUTE, NOT A NEIGHBOURHOOD. THE ZIP BAND. `33l`, s57.
 
 **Owner, s57: "when i type in the zip 31405 it says showing one and there are several pins on the
@@ -1817,9 +1875,16 @@ and the Worker source must never be committed.**
    BEHAVIOUR 59/59, session checks 19/19, Agent D drift NONE, hygiene clean, nothing rebaselined
    (§82). **THE STANDING ARRANGEMENT: Claude cannot run it (§77.2) — CLAUDE CODE IS THE ROUTE.
    Ask for it before every ship, with `PYTHONUTF8=1` (§82.1).**
-4. **🔴 PASTE THE PROJECT-INSTRUCTION BLOCK** from `claude/PROJECT-INSTRUCTIONS-s55.md`. Until then
-   every session is sent to a filename that does not exist and to a `§16` that was never written
-   (§77.9). **Cheapest item on the list; costs ten minutes of every future session.**
+4. **✅ CLOSED s57 — THE BLOCK IS PASTED.** `claude/PROJECT-INSTRUCTIONS-s57.md`, datestamped
+   `2026-08-08 20:13 EDT · session 57 · live build 33k`. Open since s55 and the cheapest thing on
+   the list the whole time. **It now names the three canonical files, the real `docs/` paths, the
+   `docs-private\` gitignore caveat, §77.12's opening checklist, `ship`'s gates and the rotate-gate
+   rule.** ⚠ **IT CARRIES A STALENESS TEST: if §0's live build is more than a few ahead of the one
+   named in the block's footer, say so at the top of the session and offer a fresh one.** The s55
+   block ran two builds stale for two sessions because nothing in it *looked* wrong.
+   *(the original entry, for the record:)* **PASTE THE PROJECT-INSTRUCTION BLOCK** from
+   `claude/PROJECT-INSTRUCTIONS-s55.md`. Until then every session is sent to a filename that does
+   not exist and to a `§16` that was never written (§77.9).
 5. **Cloudflare Workers Paid ($5/mo)** — a stated pre-event blocker. Free caps CPU at 10ms/request,
    which can break `slim=1` on a large case (§69.1).
 6. **THE CASE FILES PLAQUE (§13.4 / §46)** — cheap, high value, still not done. Fourth
