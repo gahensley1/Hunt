@@ -7,3 +7,6 @@ worker-v2_6_*.js
 worker-v2_*.js
 docs-private/
 _to_delete/
+# s57: local record of which build the battery last passed on (ship.cmd GATE 3).
+# Machine-local evidence, not a source of record - it must not travel between clones.
+test/.last-battery

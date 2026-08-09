@@ -156,7 +156,11 @@ is proven and should be reused for every future Worker change.
 
 | File | Size | SHA-256 | Purpose |
 |---|---|---|---|
-| `index.html` **🆕 33i — the plan on the PUBLISH page too, + the re-publish flag bug (§90.7). s57.** | 4,060,680 B | `eb5f9652d0e804bae1c3cd86128df73d2818d776d1ba2137d1c6dc03f6535c5d` | needs Worker **v2.6.13**, which is deployed and gate-verified |
+| `index.html` **🆕 33l — THE ZIP BAND (§91). s57.** | 4,068,353 B | `2f9cd80f4ec8fa678f4fd1acaeff8f4b4530f03203afd765994d2a80f0c3dc5d` | needs Worker **v2.6.13**. Carries 33k's caption + pin median tier, never separately shipped |
+| *(superseded on disk, NEVER SHIPPED)* `index.html` 33k — caption + pin median tier (§90.11) | 4,062,995 B | `15f4dc8edc806bad42b75e4bee82336f29124183649ec76eb84309fed5120280` | needs Worker **v2.6.13**, deployed and gate-verified |
+| *(superseded)* `index.html` 33j — was live s57, commit `12f9e02c`. TAP THE MAP TO MAGNIFY (§90.8). | 4,061,182 B | `628833f342e5b236197f5cb510998cc9de3e546561e47614923dcc10b6dd974a` | needs Worker **v2.6.13**, which is deployed and gate-verified. Battery green: STATIC · BEHAVIOUR 59/59 · SESSION 21/21 |
+| *(superseded)* `index.html` 33i — was live s57, commit `9abcb27e`. PLAN renamed MAP. | 4,060,601 B | `74a333afa485bb6fc3844abeaf48a16b229dcd5c864572a1c1f1ddc9e203182d` | — |
+| *(superseded, NEVER LIVE)* `index.html` 33i pre-rename — committed `1575e87f`, carried `View plan` | 4,060,680 B | `eb5f9652d0e804bae1c3cd86128df73d2818d776d1ba2137d1c6dc03f6535c5d` | shipped by mistake; see §90.9 |
 | *(superseded)* `index.html` 33h — was live s57, commit `e4906dd2`. THE SURVEYOR'S PLAN (§90). | 4,059,317 B | `c09f7377616bdb24a6ee70ca0509245f23f85a030135e06989041adcbbc45418` | needs Worker **v2.6.13** |
 | `worker-v2_6_13.js` **✅ THE LIVE WORKER, DEPLOYED AND VERIFIED s57 — root reads `(v2.6.13)`** | 99,952 B | — | `map:` keys are staff-only on PUT/DELETE; GET stays open (§90) |
 | *(superseded)* `index.html` 33g — was live s56, commit `9cd34d4d`. The CSV byte-order mark (§87). | 4,052,031 B | `ec6f29661d09ba89bc4214db7577608a791905cc928e2b1d48e687598ab91d30` | needs Worker **v2.6.12**, which is deployed |
@@ -1185,6 +1189,84 @@ verification depth to risk**; **keep ship summaries to ~3 lines + the hash**; **
 
 ---
 
+## ✅ §91 — A ZIP IS A MAIL ROUTE, NOT A NEIGHBOURHOOD. THE ZIP BAND. `33l`, s57.
+
+**Owner, s57: "when i type in the zip 31405 it says showing one and there are several pins on the
+screen … technically yes one in this zip but the zip code areas are small."**
+
+**THE DEFECT WAS TWO VIEWS OF ONE QUERY DISAGREEING.** `chartGoZip` frames the chart at a viewBox
+width of `1.5`, which covers far more ground than a ZIP polygon, while `coldFilter`'s `zip5` arm
+string-matched `e.zip`. Both were correct; they answered different questions. The map showed five
+pins and the list said one.
+
+### 91.1 WHY NO METRO TABLE — THE REASONING, SO IT IS NOT RE-OPENED
+
+A CBSA crosswalk is the "correct" answer and was rejected deliberately: **~100 KB on an already
+4 MB file, definitions that move every few years, and nothing at all to say about the many ZIPs
+inside no CBSA.** ZIP3 was rejected too — it is a mail-sorting hierarchy, not a geography (Atlanta
+spans 300, 301, 302, 303, 305, 306, 311; one rural prefix bundles unrelated towns).
+
+**AN EXPAND-UNTIL-YOU-FIND-ENOUGH RADIUS *IS* THE METRO AWARENESS.** ZIP area is inversely
+proportional to density, so a ladder that stops when it has enough self-tunes: sub-mile in
+Manhattan, single digits in Savannah, tens of miles in thin country. **No data shipped, no
+definitions to maintain, no coverage gaps.**
+
+### 91.2 WHAT WAS ALREADY THERE
+
+Nothing new had to be invented, which is why this was cheap:
+- **`GAZ5` is the full US gazetteer** — 33,791 ZIPs at 0.01° (±~0.8 km), so any typed ZIP resolves.
+- **`coldNear(e,q)`** already did radius filtering with the cos-latitude correction.
+- **A `near` mode** already existed in `coldFilter`. `zip5` simply never used any of it.
+
+### 91.3 THE BAND
+
+`ZIP_LADDER = [3,6,12,25,50]`, `ZIP_TARGET = 8`. New `zipnear` mode matches **exact ZIP OR within
+the band**. `zipBand()` mirrors `coldFilter`'s category step (`!e.cat`) **so the chip's figures and
+the list can never disagree** — the fault this section exists to fix.
+
+**THE EXACT COUNT IS THE HEADLINE AND IS NEVER LOST** (owner's choice): `SHOWING 3 IN ZIP 31401 ·
+2 MORE WITHIN 8 MILES`. A merged list would discard the one figure a player can walk to. When the
+band is empty the nearest is named anyway — `NEXT NEAREST 716 MILES` — so a thin region is never a
+dead end. Inside a band the list sorts exact-ZIP first, then strictly by distance.
+
+### 🔴 91.4 THE NOTE REPORTED THE RUNG, NOT THE DISTANCE — CAUGHT BY COMPUTING IT
+
+First cut announced **"5 MORE WITHIN 50 MILES"** for five cases all inside six. **With 35 cases on
+the shelf the ladder rarely reaches `ZIP_TARGET`, so it lands on the last rung and reported the
+radius SEARCHED rather than the radius that CONTAINS them.** True, and useless. `say` is now the
+farthest case actually in the band, rounded up. Verified against the real `BUILTIN_INDEX`:
+
+```
+SHOWING 3 IN ZIP 31401 · 2 MORE WITHIN 8 MILES
+SHOWING 0 IN ZIP 31405 · 5 MORE WITHIN 9 MILES
+SHOWING 0 IN ZIP 10001 · NEXT NEAREST 716 MILES
+```
+
+**This was found by running the ladder over the real data in the sandbox, not in a browser** — the
+cheapest verification available and it caught a copy defect no screenshot would have.
+
+### 🔴 91.5 AGENT D DRIFT: `ZIP_LADDER` — AND THE RIGHT WAY TO CLEAR IT
+
+`agents.py` Agent D balances **TAGS**, and a `<` immediately followed by an identifier reads to it
+as an opening tag. `for(var i=0;i<ZIP_LADDER.length;i++)` scored as drift. **`baseline.json` is a
+list of exactly these false hits and it was NOT grown** — the battery's own banner forbids it. The
+loop became `.some()` instead.
+
+**⚠ IT FAILED A SECOND TIME BECAUSE THE FIX'S COMMENT SPELLED THE PATTERN OUT IN PROSE.** Agent D
+reads the file, not the syntax tree. **Do not write the offending form into a comment either.**
+`baseline.json` closed the session at `5acde1a5…`, untouched.
+
+### ⚠ 91.6 WHAT WAS NOT DONE
+
+- **THE CHART STILL FRAMES A FIXED `w=1.5`, NOT THE BAND.** The chip now explains the extra pins,
+  which resolves the confusion — but the map and the list are still sized by different rules.
+  **Framing the chart to the band would close it properly** and is the obvious next move.
+- **No per-card distance.** "4 MORE WITHIN 6 MILES" carries it in aggregate; a distance on each
+  card is a visual change and was not asked for.
+- **NOT SEEN IN A BROWSER.** Chrome froze twice earlier (§90.10). Arithmetic verified in-sandbox.
+
+---
+
 ## ✅ §90 — THE SURVEYOR'S PLAN. A TERRITORY MAY CARRY A MAP. `33h` + Worker v2.6.13, s57.
 
 **Owner, s57: "i want to be able to add a map to the territories before we publish… there will be a
@@ -1286,6 +1368,98 @@ entry must be added THERE TOO, or re-publishing will erase it.** This one was ca
 the new field happened to be added in the same session; a later field would not be.
 
 **Buildmark `33i` / Cobalt `#3B6BA5`** — §8i's letters wrapped after `h` Rust.
+
+### ✅ 90.8 TAP THE MAP TO MAGNIFY — NO NEW ZOOM CODE. `33j`, s57.
+
+**Owner, s57: "map works! can the map be zoomed in on?"** — the first confirmation that the WRITE
+path works end to end, and the answer to the second half was already in the file.
+
+**`openLoupe()` ALREADY DOES PINCH, DRAG AND DOUBLE-TAP** for clue photos. It takes any object with
+a `.src`, and `safeImgSrc()` accepts a `data:image/(png|jpe?g|webp|gif|bmp);base64,…` URI — which is
+exactly what a map is. **So the map rides it: six lines, no zoom library, no gesture handling, no
+new state.** The image gets `cursor:zoom-in` and an `onclick` that calls
+`openLoupe({src:d})`.
+
+**THE LAYERING WORKS BY LUCK OF AN EARLIER FIX, AND IS WORTH KNOWING.** `#ov-loupe` is **700** and
+is explicitly NOT an `.overlay` — the §79-era z-index comment says so. `#ov-plan` is **521**. So the
+loupe paints over the map card that summoned it and its own `#loupe-x` stays reachable. Had the map
+card been given a number above 700 this would have failed silently.
+
+**⚠ NOT VERIFIED IN A BROWSER.** Chrome froze twice while trying (stubbing `Store` after boot leaves
+the app's in-flight reads hanging — see 90.10). STATIC clean and the battery green on `33j`, but
+**the zoom itself has been reasoned about, not watched.** The owner has it on the phone, which is
+the surface that matters: a 337px street plan is unreadable, which is why he asked.
+
+### ✅ 90.11 THE CAPTION TELLS YOU IT ZOOMS — AND THE PINS STOP JUMPING. `33k`, s57.
+
+**Two owner asks, both from the phone.**
+
+**(a) THE CAPTION. Owner copy, applied verbatim: `TAP MAP TO ZOOM IN & PAN`.** *(He first gave
+`(TAP MAP TO BE ABLE TO ZOOM IN & PAN)` and shortened it himself; the shorter line is the one that
+shipped.)* **His condition was "IT NEEDS TO FIT ON ONE LINE."**
+
+**🔴 AND THE FIRST ATTEMPT DID NOT, WHILE APPEARING TO.** At 11px the longer wording ran **359px
+inside a 337px card** — `nowrap` pushed it past the card edge, where `overflow:hidden` would have
+clipped both ends. **`scrollWidth === clientWidth` REPORTED CLEAN AND WAS WRONG: the element had
+already overflowed its PARENT, so it was measuring itself against itself.** The honest test is
+`cap.width <= modal.width`. §11a, again: a check that can only say "fine".
+
+Final, measured: **11px, one line, 342px cap in a 342px card, not clipped**; at a 320px phone the
+line runs 121px inside a 289px content box. **IF THE WORDING CHANGES, RE-MEASURE — a longer line
+clips silently rather than wrapping.**
+
+**(b) THE PINS — THREE TIERS, ARRIVED AT IN TWO PASSES, AND THE SECOND PASS IS THE LESSON.**
+
+`pinBoost` was `_vb.w<=0.5 ? 2.0 : _ramp` — 2.0x on the FINAL zoom step alone, so the pins **jumped**
+on the last press. First fix: widen the threshold so the two steps beneath max also got 2.0. **The
+owner looked at it and said "this is too large" — three consecutive steps of full-size pins swamped
+the chart.** Correct diagnosis, wrong remedy: the jump was real, but flattening it upward traded one
+fault for another.
+
+**HIS OWN SUGGESTION IS WHAT SHIPPED: a median tier.** The two steps below max take the midpoint
+between the ramp and 2.0, so the pins grow as a progression rather than a step.
+
+```
+pinBoost = _vb.w<=0.5 ? 2.0
+         : _vb.w<=2.5 ? (_ramp+2.0)/2
+         : _ramp;
+```
+
+`chartZoomIn` divides the viewBox width by 2.2 and floors at 0.5, so the ladder and the resulting
+boosts are:
+
+| viewBox `w` | 4.009 | 1.822 | 0.828 | 0.500 |
+|---|---|---|---|---|
+| `_ramp` | 0.816 | 0.886 | 0.955 | 1.000 |
+| **pinBoost** | **0.816** | **1.443** | **1.478** | **2.000** |
+
+**DO NOT re-round the 2.5 without re-deriving that ladder — 4.009 must stay outside it.** The code
+comment carries the same warning and the history, so the next session does not re-flatten it.
+
+**⚠ ARITHMETIC VERIFIED, APPEARANCE NOT.** The boosts above were computed, not watched. **The
+owner's screenshots are the check, and they are what caught the first attempt** — which is the
+argument for showing him pixels before shipping a visual change, not after.
+
+### 🔴 90.9 THE WRONG BUILD WENT LIVE, AND THE PROOF BLOCK SAID SO
+
+**`ship` committed the PRE-rename `33i` (`eb5f9652…`, `View plan` ×4) and it was recorded as done.**
+The rename was on disk; the commit was not. **`ship`'s proof block PRINTS THE COMMITTED
+`index.html` HASH — the evidence was on screen and neither of us read it**, because the ask had
+been "paste me Local/Origin" and that is all that was read.
+
+**THE RULE: READ ALL OF `ship`'s PROOF BLOCK — the hash and the buildmark, not just Local vs
+Origin.** Local == Origin only proves the push matched the commit; it says nothing about WHICH
+BUILD was committed. This is §77.11 in a second costume: the tool told the truth and the wrong line
+was read.
+
+### ⚠ 90.10 STUBBING `Store` AFTER BOOT FREEZES THE PAGE — TWICE IN ONE SESSION
+
+Replacing `Store.get`/`Store.base` from the console **after** the app has booted froze the renderer
+twice, each time killing the tab and costing a reload. **The app's own in-flight reads are already
+awaiting the real `Store`; swapping it mid-flight strands them.** `session_checks.py` avoids this by
+stubbing at a controlled point in `boot()`, 1100ms after `goto`. **From the console: stub via
+`add_init_script`-equivalent BEFORE load, or force `Store.base=()=>null` as the very first statement
+after `DOMContentLoaded` — never mid-session.**
 
 ---
 
@@ -1911,6 +2085,21 @@ separate Linux VM: `localhost:8000`, `127.0.0.1:8000`, `host.docker.internal:800
 finger (§77.2). Only BEHAVIOUR and SESSION need his machine.
 
 **4. HASH THE THREE SURFACES AND PROBE THE WORKER**, per §0 and the block. `curl` works in-sandbox.
+
+**🔴 5. KILL THE ROTATE GATE AS THE FIRST LINE OF EVERY SINGLE `javascript_tool` CALL, AND PROVE IT
+OFF.** Owner, s57, twice: *"you have portrait lock on you keep doing even though its a rule"* and
+*"make sure you pull the landscape mode off as a rule."* **It is not enough to do it once per
+session — a reload, a navigate or a fresh tab restores it, and s57 lost tabs to exactly that.**
+
+```
+document.documentElement.classList.add('rotlock-off');
+try{ localStorage.setItem('shco:rotlock','off'); }catch(e){}
+```
+
+**AND ASSERT IT, do not assume the class took:** `#ov-rotate` must compute `display:none` AND
+`rotlock-off` must be on `documentElement`. Report the boolean in the same result as the
+measurement, every time — a screenshot of the portrait panel wastes a round trip and reads, to him,
+like the rule being ignored.
 
 **THE SHELL: `cmd.exe`, NOT PowerShell** (§77.5) — `cd /d`, `del`, `certutil -hashfile`, `findstr`,
 `type`. **THE ONE EXCEPTION IS `serve.ps1`**, which is launched THROUGH PowerShell from `cmd`:

@@ -6,8 +6,8 @@ the cut was lost.
 
 **What changed from the s55 block**
 
-1. **The buildmark was two builds stale.** It said `33e` spent / `33f` next. Live is `33i`; next is
-   `33j` / Ochre.
+1. **The buildmark was two builds stale.** It said `33e` spent / `33f` next. Live is `33k`; next is
+   `33l` / Amethyst.
 2. **`SPEC-SERVICE-WORKER.md` is at `docs/`, not `claude/`.** The two commercial briefs are in
    `docs-private\`, which is **gitignored** — they are not repo files and a fresh clone will not
    have them. The old block listed all five as canonical repo docs.
@@ -60,7 +60,11 @@ Ask him to start the server ONLY when the work touches layout AND Chrome is conn
 `powershell -ExecutionPolicy Bypass -File C:\Users\tony\Documents\Hunt-backups\serve.ps1`
 -> `http://localhost:8000/index.html`. `file:///` does NOT work through the extension - it
 silently rewrites to `https://` and reports success. READ `location.href` BACK.
-Kill the rotate gate first: `document.documentElement.classList.add('rotlock-off')`.
+KILL THE ROTATE GATE AS THE FIRST LINE OF *EVERY* SCRIPT CALL - not once per session; a reload,
+a navigate or a new tab restores it (owner said this twice in s57):
+  document.documentElement.classList.add('rotlock-off');
+  try{ localStorage.setItem('shco:rotlock','off'); }catch(e){}
+AND ASSERT IT OFF in the same result: `#ov-rotate` must compute display:none. SS77.12 rule 5.
 Confirm the buildmark it serves; a right port can still serve a stale copy.
 
 === THE SHELL, AND SENDING HIM COMMANDS ===
@@ -114,8 +118,8 @@ figures -> the handoff, the moment they are given. The map maker was lost exactl
 SS1w A CORRECTION IS NOT DONE UNTIL EVERY COPY OF THE ERROR IS DEAD.
 SS8i BUILD MARKER. Every delivered `index.html` carries a new `#buildmark`. Colour rotates:
 a Cobalt #3B6BA5 - b Ochre #C88A2E - c Rose #B5566B - d Amethyst #7A5A98 - e Verdigris #4E9A87 -
-f Magenta #A8478F - g Lime #7FA33C - h Rust #B4532A, then wraps. `33i` / Cobalt IS SPENT;
-`33j` / Ochre IS NEXT. Tell him the number and colour on every ship. SS0 confirms it.
+f Magenta #A8478F - g Lime #7FA33C - h Rust #B4532A, then wraps. `33k` / Rose IS SPENT;
+`33l` / Amethyst #7A5A98 IS NEXT. Tell him the number and colour on every ship. SS0 confirms it.
 SS0 IS UPDATED IN THE SAME EDIT AS THE SHIP, NEVER AFTERWARDS.
 NEVER REUSE A SECTION NUMBER. Check it is free across all three files before using it.
 
@@ -134,4 +138,12 @@ Developer-facing writing is plain; only in-product UI copy is Victorian. No emoj
 in-product.
 
 Publishing link: https://github.com/gahensley1/Hunt/upload/main
+
+--------------------------------------------------------------------
+BLOCK PASTED: 2026-08-08 20:13 EDT  ·  session 57  ·  live build 33k
+IF THE LIVE BUILD IN SS0 IS MORE THAN A FEW BUILDS AHEAD OF THE ONE
+NAMED HERE, THIS BLOCK IS STALE - say so at the top of the session and
+offer a fresh one. The s55 block ran two builds stale for two sessions
+and nobody noticed because nothing in it looked wrong.
+--------------------------------------------------------------------
 ```

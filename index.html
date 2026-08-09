@@ -282,7 +282,7 @@
     #notify-card .nc-txt{font-size:14px}
   }
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#C88A2E;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#7A5A98;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -535,8 +535,20 @@
     color:var(--ink);font-size:17px;line-height:1;cursor:pointer;
     display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,.25)}
   .plan-x:hover{background:#fff}
-  .plan-cap{font-family:var(--type);font-size:11px;letter-spacing:1px;text-transform:uppercase;
-    text-align:center;padding:8px 10px;color:var(--ink);opacity:.75}
+  /* s57 - ONE LINE, ALWAYS (owner). The card is as narrow as 94vw on a phone, so the
+     size has to fall with it rather than wrap. nowrap forbids the wrap; clamp keeps it
+     legible; letter-spacing drops because the line is long. Same nowrap reasoning as
+     the ledger nav in SS79.4. */
+  /* s57 - ONE LINE, ALWAYS (owner). MEASURED, NOT GUESSED: at 11px this line runs 359px
+     and the card is 337 - nowrap pushed it PAST the card edge, where overflow:hidden
+     would have clipped both ends. `scrollWidth == clientWidth` did NOT catch that: the
+     element had already overflowed its parent, so it was measuring itself against
+     itself. 9.5px brings it to ~310px inside a 325px content box; the clamp keeps it
+     inside a 320px-wide phone too. IF THE WORDING CHANGES, RE-MEASURE - a longer line
+     will silently clip rather than wrap. */
+  .plan-cap{font-family:var(--type);font-size:clamp(8.5px,2.8vw,11px);letter-spacing:.4px;
+    text-transform:uppercase;white-space:nowrap;overflow:hidden;max-width:100%;
+    text-align:center;padding:7px 6px;color:var(--ink);opacity:.8}
   .plan-wait{padding:34px 16px;text-align:center;font-family:var(--serif);color:var(--ink)}
   .cplan-row{display:flex;gap:6px;align-items:center;margin:6px 0}
   #ov-crop{z-index:519}
@@ -1247,7 +1259,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">33j</p>
+      <p id="buildmark" aria-label="test build marker">33l</p>
     </div>
   </section>
 
@@ -2267,7 +2279,7 @@ async function openPlan(code){
   img.style.cursor="zoom-in";
   img.onclick=function(){ try{ openLoupe({src:d}); }catch(e){} };
   body.appendChild(img);
-  if(cap) cap.textContent="Map";
+  if(cap) cap.textContent="TAP MAP TO ZOOM IN & PAN";
 }
 function closePlan(){
   closeOverlay("ov-plan");
@@ -3784,7 +3796,18 @@ function chartScalePins(vpw){ const k=_vb.w/1000*2.6, sv=vpw?null:chartSvg();
   const _ramp=0.5+0.5*_pt;      // 0.5x wide -> 1.0x at max zoom. Sized so genuinely
                                 // separate cases resolve as separate pins instead of
                                 // needing displacement.
-  const pinBoost=_vb.w<=0.5?2.0:_ramp;  // hard step: 2.0x on the final zoom step only,
+  /* 🔴 s57 (owner) - THREE TIERS, NOT TWO. History, because the middle step matters:
+     ORIGINALLY `_vb.w<=0.5?2.0:_ramp` - 2.0x on the FINAL step alone, so the pins JUMPED
+     on the last press. Matching the two steps beneath it to 2.0 fixed the jump and was
+     "too large" (owner, with screenshots): three tiers of full-size pins swamped the
+     chart. THE ANSWER IS HIS: a median tier. The two steps below max take the midpoint
+     between the ramp and 2.0, so the growth reads as a progression instead of a step.
+     chartZoomIn divides the viewBox width by 2.2 and floors at 0.5, so the ladder runs
+     ... 4.009 - 1.822 - 0.828 - 0.5, and the boosts now run 0.816 - 1.443 - 1.478 - 2.0.
+     DO NOT re-round 2.5 without re-deriving that ladder: 4.009 must stay outside it. */
+  const pinBoost = _vb.w<=0.5 ? 2.0
+                 : _vb.w<=2.5 ? (_ramp+2.0)/2   // the median tier - the two steps below max
+                 : _ramp;
                                 // so the deepest view is actually tappable. Every zoom
                                 // below max is byte-for-byte unchanged.
   _pinR=0.013*W*pinBoost;   // on-screen pin radius, px - used by _pinsAt for tap maths
@@ -4105,9 +4128,25 @@ function coldSearch(){
   if(!q){ clearColdQ(); return; }
   const ql=q.toLowerCase(), up=q.toUpperCase(), idx=_coldIdx||[];
   const cap=function(s){ return String(s).replace(/\b\w/g,function(c){return c.toUpperCase();}); };
-  if(/^\d{5}$/.test(q)){ State.coldQ={mode:"zip5",value:q,label:"ZIP "+q}; renderColdList();
-    const n=coldFilter(idx).length, g=gazLookup(q);
-    if(g) chartGoZip(q,g.ll,g.w,dropHere(g.ll,coachShow,g.label));
+  if(/^\d{5}$/.test(q)){ const g=gazLookup(q);
+    if(g){ /* s57 (§91): the band. GAZ5 carries all 33,791 US zips, so this resolves anywhere. */
+      const b=zipBand(idx,q,g.ll);
+      State.coldQ={mode:"zipnear", value:q, label:"ZIP "+q,
+        lat:g.ll[0], lon:g.ll[1], mi:b.mi, exact:b.exact, near:b.near,
+        note: b.near ? (b.near+" MORE WITHIN "+b.say+" MILE"+(b.say===1?"":"S"))
+            : (b.nextMi!=null ? ("NEXT NEAREST "+Math.round(b.nextMi)+" MILES") : "")};
+      renderColdList();
+      chartGoZip(q,g.ll,g.w,dropHere(g.ll,coachShow,g.label));
+      toast(b.exact
+        ? (b.exact===1?"One case in zip "+q:b.exact+" cases in zip "+q)
+          + (b.near? ", and "+b.near+" more within "+b.say+" miles." : ".")
+        : (b.near? "None in zip "+q+" \u2014 "+b.near+" within "+b.say+" miles."
+                 : (b.nextMi!=null ? "No cases near zip "+q+". The nearest is "+Math.round(b.nextMi)+" miles away."
+                                   : "No cases filed in zip "+q+" yet.")));
+      return; }
+    /* fallback: a zip GAZ5 does not know. Exact match only, as before. */
+    State.coldQ={mode:"zip5",value:q,label:"ZIP "+q}; renderColdList();
+    const n=coldFilter(idx).length;
     toast(n? (n===1?"One case in zip "+q+".":n+" cases in zip "+q+".") : "No cases filed in zip "+q+" yet."); return; }
   if(/^\d{3}$/.test(q)){ State.coldQ={mode:"zip3",value:q,label:"ZIP "+q+"\u2013"}; renderColdList();
     const n=coldFilter(idx).length, g=gazLookup(q);
@@ -4146,12 +4185,65 @@ const PARK_NEAR_MI=25;
 function coldNear(e,q){ if(e.lat==null||e.lon==null) return false;
   const dy=(+e.lat-q.lat)*69, dx=(+e.lon-q.lon)*69*Math.cos((+e.lat+q.lat)/2*Math.PI/180);
   return Math.sqrt(dx*dx+dy*dy)<=q.mi; }
+/* ================= THE ZIP BAND (§91, s57) =================
+   Owner, s57: "when i type in the zip 31405 it says showing one and there are several
+   pins on the screen ... technically yes one in this zip but the zip code areas are
+   small." Exactly right. A ZIP is a MAIL ROUTE, not a neighbourhood, and its AREA IS
+   INVERSELY PROPORTIONAL TO DENSITY - which is why it fails hardest in a metro, where
+   a walkable radius crosses four of them.
+
+   NO METRO TABLE, DELIBERATELY. A CBSA crosswalk is ~100 KB on an already 4 MB file,
+   its definitions move every few years, and it still has nothing to say about the many
+   ZIPs inside no CBSA at all. AN EXPAND-UNTIL-YOU-FIND-ENOUGH RADIUS IS THE METRO
+   AWARENESS: because ZIP area tracks density inversely, the ladder stops sub-mile in
+   Manhattan, around 5 miles in Savannah, and 40 in thin country - automatically.
+
+   THE EXACT COUNT IS NEVER LOST. "1 IN ZIP 31405 - 4 MORE WITHIN 6 MILES" is true on
+   both halves; a merged list would throw away the one figure a player can walk to. */
+var ZIP_LADDER=[3,6,12,25,50], ZIP_TARGET=8;
+function zipMiles(ll,e){ if(e.lat==null||e.lon==null) return null;
+  var dy=(+e.lat-ll[0])*69, dx=(+e.lon-ll[1])*69*Math.cos((+e.lat+ll[0])/2*Math.PI/180);
+  return Math.sqrt(dx*dx+dy*dy); }
+/* Mirrors coldFilter's category step (`!e.cat`) so the chip's figures and the list can
+   never disagree - the search bar only exists at the top level, where cat is null. */
+function zipBand(idx,zip,ll){
+  var base=(idx||[]).filter(function(e){ return !e.cat; });
+  var z=String(zip), exact=0, d=[];
+  base.forEach(function(e){
+    if(String(e.zip||"")===z) exact++;
+    var m=zipMiles(ll,e); if(m!=null) d.push({e:e,mi:m});
+  });
+  d.sort(function(a,b){ return a.mi-b.mi; });
+  /* ⚠ .some(), NOT an index loop. Agent D balances TAGS, and a less-than followed
+     immediately by an identifier reads to it as an opening tag, so an index loop over
+     this array scored as drift against baseline.json. The baseline is a list of exactly
+     these false hits and must NOT be grown to silence a new one (battery banner: "do
+     NOT rebaseline to make it pass"). Avoid the pattern instead - and note THIS COMMENT
+     had to be reworded too, because spelling the pattern out in prose tripped it as
+     well. Agent D reads the file, not the syntax tree. */
+  var mi=ZIP_LADDER[ZIP_LADDER.length-1];
+  ZIP_LADDER.some(function(r){
+    mi=r;
+    return d.filter(function(x){ return x.mi<=r; }).length>=ZIP_TARGET;
+  });
+  var others=d.filter(function(x){ return String(x.e.zip||"")!==z; });
+  var inBand=others.filter(function(x){ return x.mi<=mi; });
+  /* 🔴 REPORT THE DISTANCE THAT HOLDS THEM, NOT THE RUNG WE SEARCHED TO. With the shelf
+     still small the ladder rarely reaches ZIP_TARGET, so it lands on the last rung and
+     would announce "5 MORE WITHIN 50 MILES" for five cases that are all inside six.
+     True, and useless. `say` is the farthest one actually in the band, rounded up. */
+  var say=0; inBand.forEach(function(x){ if(x.mi>say) say=x.mi; });
+  say=Math.max(1,Math.ceil(say));
+  return {mi:mi, say:say, exact:exact, near:inBand.length,
+          nextMi:(inBand.length?null:(others.length?others[0].mi:null))};
+}
 function coldFilter(idx){ const c=State.coldCat;
   let arr = c? (idx||[]).filter(function(e){ return e.cat===c; })
              : (idx||[]).filter(function(e){ return !e.cat; });
   const q=State.coldQ;
   if(q){ if(q.mode==="state") arr=arr.filter(function(e){ return entryState(e)===q.value; });
     else if(q.mode==="zip5") arr=arr.filter(function(e){ return String(e.zip||"")===q.value; });
+    else if(q.mode==="zipnear") arr=arr.filter(function(e){ return String(e.zip||"")===q.value || coldNear(e,q); });
     else if(q.mode==="zip3") arr=arr.filter(function(e){ return String(e.zip||"").slice(0,3)===q.value; });
     else if(q.mode==="city") arr=arr.filter(function(e){ return String(e.city||"").toLowerCase()===q.value; });
     else if(q.mode==="near") arr=arr.filter(function(e){ return coldNear(e,q); });
@@ -4207,7 +4299,14 @@ function renderColdChip(n){ const list=document.getElementById("cold-list"); if(
   let bar=document.getElementById("cold-filterbar");
   if(!State.coldQ){ if(bar) bar.remove(); return; }
   if(!bar){ bar=document.createElement("div"); bar.id="cold-filterbar"; bar.className="cold-filterbar"; list.parentNode.insertBefore(bar,list); }
-  bar.innerHTML='<span class="cfb-txt">SHOWING '+Number(n)+' IN '+escapeHtml(State.coldQ.label)+'</span>'
+  /* s57 (§91): for a zip band the headline number is the EXACT-zip count, not the list
+     length - "SHOWING 5 IN ZIP 31405" would be a lie when four of them are neighbours. */
+  var _q=State.coldQ, _head;
+  if(_q.mode==="zipnear"){
+    _head='SHOWING '+Number(_q.exact)+' IN '+escapeHtml(_q.label)
+        + (_q.note? ' \u00B7 '+escapeHtml(_q.note) : '');
+  } else { _head='SHOWING '+Number(n)+' IN '+escapeHtml(_q.label); }
+  bar.innerHTML='<span class="cfb-txt">'+_head+'</span>'
     +'<button class="cfb-x" onclick="clearColdQ()" aria-label="Clear filter">&#10005;</button>'; }
 function coldFilterToPlace(name,lat,lon){ if(!name) return;
   const q=document.getElementById("cold-q"); if(q) q.value=name;
@@ -4241,7 +4340,19 @@ function renderColdList(){
   try{ _coldAbort=new AbortController(); }catch(e){ _coldAbort=null; }
   const _sg=_coldAbort?_coldAbort.signal:undefined;
   list.innerHTML="";
-  const shown=coldFilter(_coldIdx).slice().sort(function(a,b){ return volumeRank(a.code)-volumeRank(b.code); });
+  /* s57 (§91): inside a zip band, order by "can I walk to it" - the exact-zip cases
+     first, then strictly by distance. Everywhere else the volume order is unchanged. */
+  const _zq=State.coldQ;
+  const shown=coldFilter(_coldIdx).slice().sort(
+    (_zq&&_zq.mode==="zipnear")
+      ? function(a,b){
+          const az=String(a.zip||"")===_zq.value?0:1, bz=String(b.zip||"")===_zq.value?0:1;
+          if(az!==bz) return az-bz;
+          const am=zipMiles([_zq.lat,_zq.lon],a), bm=zipMiles([_zq.lat,_zq.lon],b);
+          if(am==null&&bm==null) return volumeRank(a.code)-volumeRank(b.code);
+          if(am==null) return 1; if(bm==null) return -1;
+          return am-bm; }
+      : function(a,b){ return volumeRank(a.code)-volumeRank(b.code); });
   renderColdChip(shown.length);
   if(!shown.length){ const _k=COLD_CATS[State.coldCat]; list.innerHTML='<div class="empty"><img decoding="async" class="em-coin" src="'+COIN_CLD+'" alt="">'+(_k? "No cases are filed under "+escapeHtml(_k.label)+" yet.<br>The shelf is being stocked." : "The archive is being assembled.<br>Curated cases from Scavenger &amp; Hunt Co. will appear here.")+'</div>'; return; }
   for(const e of shown){

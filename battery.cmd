@@ -36,6 +36,21 @@ if errorlevel 1 echo   WARNING: node is not on PATH. Agent A ^(node --check^) wi
 
 echo.
 python test\run.py %1
+set "BATRC=%ERRORLEVEL%"
+
+REM s57: STAMP THE FILE THAT PASSED. ship.cmd's GATE 3 compares this against the
+REM index.html it is about to commit, so a build cannot be shipped on a green tick
+REM that belonged to a DIFFERENT build - which is how 33e, 33f and 33g all shipped
+REM untested. Only a full run counts: `battery some.html` skips SESSION, so it must
+REM not leave a stamp claiming the shelf build was tested.
+if not "%BATRC%"=="0" goto :nostamp
+if not "%~1"=="" goto :nostamp
+set "BH="
+for /f "delims=" %%H in ('certutil -hashfile index.html SHA256 ^| findstr /r "^[0-9a-f]"') do if not defined BH set "BH=%%H"
+set "BH=%BH: =%"
+> test\.last-battery echo %BH%
+echo   (recorded: the battery passed on %BH%)
+:nostamp
 echo.
 echo ===== READ THIS BEFORE BELIEVING IT =====
 echo   A green tick is an exit code, not a result.
