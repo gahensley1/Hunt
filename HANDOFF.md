@@ -156,7 +156,7 @@ is proven and should be reused for every future Worker change.
 
 | File | Size | SHA-256 | Purpose |
 |---|---|---|---|
-| `index.html` **🆕 33p — FIVE CHICAGO TERRITORIES (§96) AND THE COLD-FILTER FIX (§97). s58.** | 4,163,002 B | `729bffeafc61371e4062e8fae2034001acea9a3847427be14fc26830e3de153f` | needs Worker **v2.6.13**. Adds §96 and §97 |
+| `index.html` **🆕 34a — THE PRECINCT DEFAULT, CHART PINCH, THE STAMP ANCHOR (§98-§100). s58. **BUILDMARK ROTATION WRAPPED: h Rust was spent, so this is 34a Cobalt.**** | 4,172,954 B | `c6ac5c528f809095fd3f41662d52dfb1e95bd7ce6cd8c8a51bf67673240dd0a2` | needs Worker **v2.6.13**. Adds §98-§100 |
 | `index.html` **33n — LIVE, commit `165b7400`, 16:03Z 9 Aug 2026. THE CASE CLOSED STAMP (§94).** | 4,111,862 B | `1ac7f99edb1b8f2eec3fa5c8cabe02ef10cf90965fd0c7b4bbc4cfb0fc76b873` | needs Worker **v2.6.13**. 🔴 **THIS IS AN EARLY 33n. Stamp 250px, red `#B92230`. EIGHT LATER REVISIONS NEVER REACHED IT — see §94.10** |
 | *(superseded on disk, NEVER SHIPPED)* `index.html` 33m — THE HINT COIN IS EARNED, NEVER SOLD (§93). s58, Sun 9 Aug 2026.** | 4,071,402 B | `64c094c82543eb60e6fa0cc06515f481b5e0694f7ad42e8b2b5f1a86fb11bd44` | needs Worker **v2.6.13** |
 | *(superseded)* `index.html` 33l — was live s57, commit `3d49b6cd`. THE ZIP BAND (§91). | 4,068,353 B | `2f9cd80f4ec8fa678f4fd1acaeff8f4b4530f03203afd765994d2a80f0c3dc5d` | needs Worker **v2.6.13**. Carries 33k's caption + pin median tier, never separately shipped |
@@ -239,7 +239,7 @@ is proven and should be reused for every future Worker change.
 
 - **🔴 THE FIRST THING THE NEXT SESSION MUST DO IS RE-HASH ALL THREE SURFACES.** Expect
   **4,111,862 B / `1ac7f99e…` / `33n`** on raw and Pages, and the Worker root to read **`(v2.6.13)`**.
-  **4,163,002 B / `729bffea…` / `33p` once pushed.** *(Verified s57: all three identical, Worker confirmed. The line that stood here
+  **4,172,954 B / `c6ac5c52…` / `34a` once pushed.** *(Verified s57: all three identical, Worker confirmed. The line that stood here
   named **`32l`** — twelve builds dead — and before that **28e**. A stale instruction is worse than no
   instruction: it sends the session to verify a fact that stopped mattering. Re-write this line on
   every ship.)*
@@ -1240,6 +1240,26 @@ verification depth to risk**; **keep ship summaries to ~3 lines + the hash**; **
 
 | `index.html` **33o — LIVE, commit `0d077334`, 20:28Z 9 Aug 2026. THE MET BADGE (§95).** | 4,188,696 B | `941d67e93a8faee2721ea8460df6a49ab414a9c0c9c5166cd14799ee269f22f2` | 🔴 **Shipped BEFORE §96 and §97 existed. Chicago and the filter fix are NOT in it.** |
 
+| `index.html` **33p — LIVE, commit `f4ec2d35`, 21:03Z 9 Aug 2026. CHICAGO + THE FILTER FIX (§96, §97).** | 4,163,002 B | `729bffeafc61371e4062e8fae2034001acea9a3847427be14fc26830e3de153f` | 🔴 **Shipped before §98-§100 existed.** |
+
+## 🔴 §101 — THREE BUILDMARKS SPENT MID-FLIGHT IN ONE SESSION. `33n`, `33o`, `33p`.
+
+**Every one shipped a build that was already several revisions behind, and the mechanism was
+identical each time: Claude wrote a `ship` line, work continued, and the owner ran the line in front
+of him. That is correct of him and wrong of Claude.** §1y already said the ship line dies when the
+build moves and that Claude must say so **in the same reply as the next edit**. Claude did not do it
+once in three attempts.
+
+| mark | commit | carried | what it missed |
+|---|---|---|---|
+| `33n` | `165b7400` 16:03Z | `1ac7f99e` | 8 later revisions of the stamp |
+| `33o` | `0d077334` 20:28Z | `941d67e9` | Chicago, the filter fix |
+| `33p` | `f4ec2d35` 21:03Z | `729bffea` | §98-§100, both stamps, the anchor fix |
+
+**THE RULE IS NOW MECHANICAL, NOT A MATTER OF MEMORY: the moment `index.html` changes after a ship
+line has been written, the next reply opens by declaring that command dead and quoting the new hash.
+No exceptions, no matter how small the edit.**
+
 ## 🔴 §97 — THE COLD-CASE FILTER WAS DROPPED ON THE WAY BACK. FIXED `33p`, s58.
 
 **Owner report: filter the archive to `chicago`, open a case, come back — the list is Savannah
@@ -1261,6 +1281,60 @@ still 5 rows, same filter object, input intact. Before the patch it returned 40.
 
 **🔴 THE LESSON: WHEN ONE PIECE OF STATE HAS THREE VIEWS, RESET ALL THREE OR NONE.** A partial reset
 does not look like a bug, which is why this survived.
+
+---
+
+## ✅ §100 — THE STAMP IS ANCHORED TO THE CARD. `34a`, s58.
+
+**The plate hung off `.done-photowrap`, which is `width:208px` AND FIXED, while the thing that clips
+is the card, whose width varies by device.** One offset therefore meant a different thing on every
+screen: it cleared on a wide card and **sliced the stamp on a narrow one** - the owner saw it cut,
+Claude measured 15px of clearance and saw nothing wrong.
+
+`.done-photowrap` is now `position:static`, handing the containing block up to `.stamp-done`, which
+IS the card. **Verified at five card widths - 307, 337, 367, 397, 457 - ink gap 15px at every one,
+plate and hand aligned at every one.** Before the fix that number moved with the screen.
+
+**🔴 A FAILED FIRST ATTEMPT IS WORTH RECORDING: Claude moved the MARKUP out of the wrapper instead.
+The positioning rule is `.done-photowrap .stamp-img.done-stamp` - SCOPED TO THE WRAPPER - so the
+plate lost `position:absolute`, fell into the flow as a centred image, and the handwriting stayed
+behind. READ THE SELECTOR BEFORE MOVING THE ELEMENT IT MATCHES.**
+
+**The hand is never degraded with the plate.** It is live text at `z-index:6` with
+`isolation:isolate` over the stamp's `2`, so the ink lift cannot touch it. "Bolder" is an
+0.8px `-webkit-text-stroke` - Delafield ships one weight. **The date is MONTH/DAY**: it read `9/8`
+for 9 August, which is September the 8th to an American eye.
+
+**⚠ `elementsFromPoint` REPORTS HIT ORDER, NOT PAINT ORDER.** The hand has `pointer-events:none`, so
+it is invisible to hit testing while drawn on top. Claude quoted it as proof and was wrong.
+
+---
+
+## ✅ §99 — PINCH THE CHART. `34a`, s58.
+
+**`_ptrs = new Map()` was declared in the cold-case block and never referenced anywhere.** The hook
+was left and the gesture never written, so the chart only ever panned with one finger and zoomed by
+the +/- buttons. **It was not lost; it never existed** - the pinch the owner remembered is the
+loupe's, which has its own pointer map.
+
+Two-pointer tracking now drives `_vb`, anchored on the midpoint. `chartApply()` already clamps width
+to 0.5-1000, so pinch only sets width and origin. **`_lockScroll` is held while two fingers are down
+and released when the second lifts** - without it two fingers drag the page behind the map on iOS.
+Proven with synthetic PointerEvents: spread 1000 -> 333, pinch back to 1000. **Not yet proven with
+real fingers.**
+
+---
+
+## ✅ §98 — THE ARCHIVE OPENS ON YOUR OWN PRECINCT. `34a`, s58.
+
+**`precinctApply()` only ever drew the banner and the map marker.** It computed the count for
+"PRECINCT 60602 — 5 COLD CASES OPEN" and then rendered **the full national list underneath it** -
+the bar said one thing and the list did another, the same class of fault as §97.
+
+Opening the archive now defaults `State.coldQ` to a `near` filter on the registered zip.
+**THREE GUARDS:** never override a filter the hunter set, never when a category is open, and
+**never when the precinct has nothing in range** - Anchorage falls back to the full list rather than
+showing an empty archive. Tested: no precinct 10 rows, `60602` 5 rows, `99501` 10 rows.
 
 ---
 
