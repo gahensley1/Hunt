@@ -10,3 +10,11 @@ _to_delete/
 # s57: local record of which build the battery last passed on (ship.cmd GATE 3).
 # Machine-local evidence, not a source of record - it must not travel between clones.
 test/.last-battery
+# s58: SOURCE ART AND SCRATCH PREVIEWS STAY OUT OF THE PUBLIC REPO.
+# art/ was taken out of the tree at s56 (SS88) but was never ignored, so re-creating it
+# would have put 17 MB of source PNGs back in - `ship` runs `git add -A`. The delivered
+# artwork travels base64 inside index.html; art/ is the working source and belongs on
+# disk and in Hunt-backups only.
+art/
+_preview-*.html
+_diagram-*.png

@@ -156,7 +156,8 @@ is proven and should be reused for every future Worker change.
 
 | File | Size | SHA-256 | Purpose |
 |---|---|---|---|
-| `index.html` **🆕 33n — THE CASE CLOSED STAMP IS STRUCK AND SIGNED (§94). s58, Sun 9 Aug 2026.** | 4,111,862 B | `1ac7f99edb1b8f2eec3fa5c8cabe02ef10cf90965fd0c7b4bbc4cfb0fc76b873` | needs Worker **v2.6.13** |
+| `index.html` **🆕 33o — THE MET BADGE WEARS THE RANK (§95), ONE RED `#8B0000`, THE 1.5x ORDINAL, THE BEAT (§94.8–.10). s58.** | 4,188,696 B | `941d67e93a8faee2721ea8460df6a49ab414a9c0c9c5166cd14799ee269f22f2` | needs Worker **v2.6.13** |
+| `index.html` **33n — LIVE, commit `165b7400`, 16:03Z 9 Aug 2026. THE CASE CLOSED STAMP (§94).** | 4,111,862 B | `1ac7f99edb1b8f2eec3fa5c8cabe02ef10cf90965fd0c7b4bbc4cfb0fc76b873` | needs Worker **v2.6.13**. 🔴 **THIS IS AN EARLY 33n. Stamp 250px, red `#B92230`. EIGHT LATER REVISIONS NEVER REACHED IT — see §94.10** |
 | *(superseded on disk, NEVER SHIPPED)* `index.html` 33m — THE HINT COIN IS EARNED, NEVER SOLD (§93). s58, Sun 9 Aug 2026.** | 4,071,402 B | `64c094c82543eb60e6fa0cc06515f481b5e0694f7ad42e8b2b5f1a86fb11bd44` | needs Worker **v2.6.13** |
 | *(superseded)* `index.html` 33l — was live s57, commit `3d49b6cd`. THE ZIP BAND (§91). | 4,068,353 B | `2f9cd80f4ec8fa678f4fd1acaeff8f4b4530f03203afd765994d2a80f0c3dc5d` | needs Worker **v2.6.13**. Carries 33k's caption + pin median tier, never separately shipped |
 | *(superseded on disk, NEVER SHIPPED)* `index.html` 33k — caption + pin median tier (§90.11) | 4,062,995 B | `15f4dc8edc806bad42b75e4bee82336f29124183649ec76eb84309fed5120280` | needs Worker **v2.6.13**, deployed and gate-verified |
@@ -237,8 +238,8 @@ is proven and should be reused for every future Worker change.
 **🆕 SEPARATE PROPERTY — the marketing site (NOT in the Hunt repo, NOT on GitHub Pages).** See §44.
 
 - **🔴 THE FIRST THING THE NEXT SESSION MUST DO IS RE-HASH ALL THREE SURFACES.** Expect
-  **4,111,862 B / `1ac7f99e…` / `33n`** on local, raw and Pages alike, and the Worker root to read
-  **`(v2.6.13)`**. *(Verified s57: all three identical, Worker confirmed. The line that stood here
+  **4,111,862 B / `1ac7f99e…` / `33n`** on raw and Pages, and the Worker root to read **`(v2.6.13)`**.
+  **Expect this on local, raw and Pages alike once `33o` is pushed.** *(Verified s57: all three identical, Worker confirmed. The line that stood here
   named **`32l`** — twelve builds dead — and before that **28e**. A stale instruction is worse than no
   instruction: it sends the session to verify a fact that stopped mattering. Re-write this line on
   every ship.)*
@@ -335,6 +336,26 @@ moving it would have unpainted every buy stamp. **Read the rule, don't trust the
 ---
 
 ## §1 — HOW THE OWNER WORKS (read first)
+
+### 🔴 §1y — RE-HASH THE LIVE SURFACES FROM THE SHELL BEFORE YOU BELIEVE ANYTHING (owner rule, s58)
+
+**Owner: "never forget to look at shell i need to approve."**
+
+**"Shipped" is a claim until the bytes are fetched and hashed.** `33n` sat live for over an hour,
+eight revisions behind the disk, while Claude went on editing and quoting hashes — and nobody knew,
+because nobody looked.
+
+1. **Fetch and hash Pages and raw at the START of any ship conversation and again AFTER any ship**,
+   from the sandbox shell. Read `.git/refs/remotes/origin/main` as a plain file and check the atom
+   feed for the commit message and its `index.html`.
+2. **Two edges can disagree mid-deploy.** Differing sizes minutes apart is a deploy in flight, not a
+   cache-buster failure. Say so; do not average them into a conclusion.
+3. **ONE LIVE `ship` LINE AT A TIME.** An old command does not expire — the owner will run whichever
+   one is in front of him. **If the build moves after a `ship` line is written, say IN PLAIN WORDS
+   that the earlier command is dead and give the new hash.**
+4. **Confirm the buildmark is unspent before reusing it.** A buildmark that is already in the repo
+   cannot be reused, whatever `HANDOFF.md` says.
+5. **He approves the ship. Claude does not decide it is done.**
 
 ### 🔴 §1x — NO SHIP COMMAND UNTIL THE LOOK IS APPROVED (owner rule, s58)
 
@@ -1211,6 +1232,39 @@ verification depth to risk**; **keep ship summaries to ~3 lines + the hash**; **
 
 ---
 
+## ✅ §95 — THE BADGE WEARS THE RANK. `33o`, s58.
+
+**Owner-supplied art:** a Metropolitan Police helmet plate (VR cypher, king's crown) replaces the
+clan crest at `BADGE_MAC`. Source, full-res alpha cut and the 300x420 WebP (32,828 B) are all in
+`Documents\Hunt\art\`. **The white ground was cut by labelling near-white regions and keeping only
+those that touch the border, plus large ones in the top 27% — the crown's arch gaps.** A plain
+luminance threshold punched a hole in the medallion's specular highlight; `binary_fill_holes` filled
+the crown gaps solid white. Neither is right on its own.
+
+**The arcs now read `RETRIEVE CREDENTIALS` above and THE HUNTER'S RANK below** — so the medal is
+theirs, and it re-letters itself on promotion. `credBadgeSVG(rank)` takes the rank, upper-cases it and
+calls `_arcSize()` to fit the lower arc: **`ASSISTANT COMMISSIONER` is 22 characters against ~286
+units and drops to 18.6px; `DETECTIVE CONSTABLE` stays at the full 19.4px.** Measured, not assumed.
+
+**🔴 `refreshHomeBadge()` USED TO SKIP WHEN `innerHTML` WAS ALREADY SET.** That was harmless when the
+badge was static; with the rank on it, **a promotion would never have reached the medal.** It now
+redraws whenever `dataset.rank` differs.
+
+**The separate `RANK` stamp under the badge is gone** — `#home-rank-stamp`, its `::before` eyebrow and
+its length-based font sizing. The badge says it. **`#cred-rank` on the Credentials screen is a
+different element and was left alone.**
+
+**THE CHARTER'S CLOSE IS NOW A CIRCLE STRADDLING THE DOUBLE FRAME**, the commendation-card idiom
+(`.tg-x` on `#pr-card`). `.lic-cert` already carried a double frame — 2px brass border plus a 1px
+outline at 4px offset. The button moved INSIDE `.lic-cert` (which gains `position:relative`) at
+`left:10px top:-17px`. **`.lic-modal` has `overflow-y:auto`, which would have clipped the overhang,
+so it gains `padding-top:20px` — overflow clips at the padding box, so the circle sits in that
+space.** Measured live: centre within 2px of the border, not clipped.
+
+**Weight: +25,430 B.** The new plate is heavier than the crest it replaced.
+
+---
+
 ## ✅ §94 — THE CASE CLOSED STAMP IS STRUCK AND SIGNED. `33n`, s58.
 
 **Owner-supplied artwork** replaces the old CASE CLOSED wordmark on the Case Solved card: a full
@@ -1225,8 +1279,8 @@ distinguishes it from the postmark at a glance**; making both red would collapse
 The old asset was **340×235** — a wordmark. The new one is **721×720** — a circle. Dropped in at the
 inherited `width:319px` the stamp grew half again as tall, **covered "Nicely done, detective." and
 filled the whole card.** Caught in Chrome before shipping, not by arithmetic. **A same-scale swap is
-only same-scale when the aspect ratio matches.** Final numbers, set from the owner's own mark-up on a screenshot: **`250px`** (`207px` under 349px),
-`top:-58px` `right:-196px`, `opacity:.72` — it lands across the top-right corner of the record
+only same-scale when the aspect ratio matches.** Final numbers, set from the owner's own mark-up on a screenshot and then trimmed 15% TWICE:
+**`180px`** (`150px` under 349px), `top:-58px` `right:-187px`, `opacity:.72` — it lands across the top-right corner of the record
 photo and hangs off the card edge, clear of the heading. **An intermediate 196px pass was rejected
 as too small and too far left; he drew the target in yellow and that is what shipped.**
 
@@ -1237,7 +1291,10 @@ positioned box sharing the image's geometry and its `rotate(30deg)`, holding two
 printed rules by percentage. `stampTheDate(code)` reads **the coin ledger entry for that case** —
 the real moment it closed — and only falls back to the clock when no entry exists. Day/month, no
 year, no leading zeros. Initials are `B.B.`, Bonnie's, fixed. Both are revealed left-to-right by
-`inkWrite` after the stamp lands: date at `.62s`, initials at `1.62s`.
+`inkWrite` (1.2s) after the stamp lands (`stampDown` 0.68s): date at `1.45s`, initials at `2.85s`.
+**Slowed twice on owner instruction** — the first pass read as a flicker, and the writing then
+started too soon after the impression. **The pause between the stamp landing and the pen starting is
+the point**; it is what makes it read as a clerk signing rather than a graphic appearing.
 
 ### 🔴 94.3 A THIRD TYPEFACE — A DELIBERATE OVERRIDE OF `Branding-Guidelines.md`
 
@@ -1250,8 +1307,14 @@ took it.
 
 ### 94.4 THE RED
 
-Chosen from four darker candidates: **`#B92230`, post-office red.** `#ED2939` (Imperial Red) was
-tried first and judged too bright. **This is a second red in a palette whose only red was oxblood
+Chosen from four darker candidates over FOUR passes: `#ED2939` (Imperial Red), `#B92230`
+(post-office red), `#9E1B27` (carmine), and finally **`#82151F`, deep crimson — the one that
+shipped.** 🔴 **THE OWNER JUDGED EVERY ONE OF THEM ON A MONITOR HE SAYS IS HARD TO READ COLOUR ON,
+and his device of record is an iPHONE 15.** His words: *"my computer is a hard to read the colors so
+my mistake. on the phone it is different."* **Offer the darker end of any colour range first, and
+say out loud that a desktop screenshot is not the device that matters.** The local server cannot be
+reached from his phone, so a colour cannot be checked there until it is live — expect colour to be
+revisited AFTER a ship, and do not treat a desktop approval as final. **This is a second red in a palette whose only red was oxblood
 `#8A3324`** — recorded in the guidelines. Both stamp assets carry it. Recolouring works by rebuilding
 the ink as **flat colour with the grain carried in the alpha channel**; the first attempt mapped
 luminance into the hue instead and the grain glowed — do not do that again.
@@ -1263,6 +1326,104 @@ then 250px at `right:-186px` from the owner's own yellow mark-up, then ten pixel
 **Claude handed over `battery` and `ship` after the second of those**, on the strength of a green
 STATIC and a matching hash. **The owner stopped it.** The rule that came out of it is §1x: tests are
 not consent, and the `ship` line is not written until he has said yes to the appearance.
+
+### 94.7 `+tap here to add hidden hint` GOES OXBLOOD
+
+`.hint-toggle` was `var(--brass)` and is now `var(--oxblood)`. **One rule, both instances** —
+`#crop-hint-toggle` and `#tile-hint-toggle` share it, so the Builder's crop step and the tile editor
+change together. Brass is the accent/border colour; this control is a call to action on parchment
+and was reading as chrome.
+
+### 🔴 94.9 ONE RED. `--oxblood` IS NOW `#8B0000` AND THE STAMPS MATCH IT.
+
+**Owner: "can we make the ox blood and stamp colors match and start with adobe dark red #8b0000."**
+The house red was `#8A3324` and the stamps had been given their own — two reds a shade apart, which
+is worse than two reds that differ on purpose. **`--oxblood` is now `#8B0000` and both stamp assets
+are re-inked to the same value.** **THE SWEEP MATTERED (§1w): `#8A3324` was hard-coded in TEN places
+besides the variable** — the map pin, the crosshair and its three strokes, the loupe reticle,
+`.heretxt`, and twice in the commendation-card canvas. All eleven now read `#8B0000`. **Grep before
+declaring a colour change done; a CSS variable is not the whole story in this file.**
+**"Start with" is the owner's own word — expect this to move again, and it cannot be judged on a
+desktop (§94.4).**
+
+### 94.8 THE ORDINAL ON THE CASE SOLVED CARD
+
+`You finished 3rd!` — the **numeral** is `1.5em`, the suffix stays `1em`. `ordinalHTML(n)` wraps
+`ordinal(n)`'s own output rather than rebuilding the string, so the two can never drift; `rankEl`
+moved from `textContent` to `innerHTML` for the two lines that carry it. Measured: 31.5px against
+21px. **Both branches changed** — the finished line and the `Entry locked … currently Nth` line.
+
+## 🔴 §94.10 — `33n` SHIPPED EIGHT REVISIONS EARLY, AND THE SAME BUILDMARK NAMED TWO FILES
+
+**Found by re-hashing the live surfaces from the shell, not by being told.** Two Pages fetches
+minutes apart returned different builds (`33n` on one edge, `33l` on another — a deploy in flight),
+which is what prompted the check.
+
+**The sequence:**
+- **12:03 EDT** — `ship` ran. Disk held `1ac7f99e` (stamp 250px, red `#B92230`). Commit `165b7400`.
+- **12:51 EDT** — `battery` ran, and recorded `4d51d5a3`. **Forty-eight minutes AFTER the ship.**
+- Work continued past both. Disk reached `f5117c50`, still carrying the buildmark `33n`.
+
+**So `33n` named two different files: the one in the repo and the one on disk.** §8i exists to stop
+exactly that. The disk build was rebranded **`33o` / Lime `#7FA33C`**.
+
+**WHAT SHIPPED IN `33n` AND WHAT DID NOT.** Live: the round stamp at 250px in `#B92230`, the written
+date and initials, the recoloured postmark. **NOT live, all built after the commit:** `#82151F` then
+the one-red `#8B0000` sweep, the oxblood hint toggle, `HINT_CONFIRM_MS` 6s, the stamp 15% smaller and
+9px left, the beat before the handwriting, the 1.5x ordinal.
+
+**🔴 THE CAUSE WAS CLAUDE'S, AND IT IS THE FAILURE §1x WAS WRITTEN TO PREVENT — COMMITTED AFTER
+WRITING §1x.** A `ship` line was handed over three separate times while the build kept moving. **An
+old `ship` command does not expire; the owner will run the one in front of him.** See §1y.
+
+### ✅ §95.5 — THE BADGE FOLLOWS THE PLATE, NOT A CIRCLE. APPROVED s58.
+
+**The helmet plate is photographed foreshortened.** No circle can sit parallel to it, and every
+circular attempt drifted — the owner caught each one from a screenshot. **Measured from the artwork,
+one ray per degree, robust Fourier fit (k<=3) with outlier rejection:**
+
+| edge | kept | radius (units) |
+|---|---|---|
+| inner rim | 293/360 | **63.4 – 65.6** |
+| outer / shadow edge | 270/360 | **90.4 – 95.9** |
+
+**The band itself breathes, 27.0 to 31.8 units.** That is why the two legends reference DIFFERENT
+edges — tying both to one edge is exactly what produced the drift:
+
+- **Upper legend `RETRIEVE CREDENTIALS` = inner rim + 9.3**, constant. Sits ON its path.
+- **The RANK = outer/shadow edge − 8.2**, constant. HANGS from its path — cap-tops on the line.
+
+Against the inner rim the rank's gap to the shadow edge ran **6.3 to 11.2 units**, nearly double at
+one point versus another. The owner spotted it by eye before it was measured.
+
+`CB_RIM[]` and `CB_OUT[]` hold both curves at 3-degree steps; `_ringPath()` walks them. **A single
+circle is not good enough for this plate and must not be reinstated.** Type is Playfair 800 with a
+highlight layer offset 0.9 units beneath, so the letters read as struck.
+
+### ✅ §95.7 — THE REST OF THE HOME SCREEN, s58
+
+- **Postmark 1.2x** — `.seal-disc` 230px → 276px.
+- **`send the agency a message` 1.31x** — 10px → 13.1px, letter-spacing 1.6 → 2.1 so it does not
+  tighten as it grows. (Tried at 1.75x/17.5px and cut back 25% on the owner's call.)
+- **The gaps above and below the badge were halved and equalised to 16px each**, from 35 above and
+  29 below. Measured, not eyeballed. **🔴 `.seal-btn` carried a `margin-top` FOLLOWED BY a `margin`
+  shorthand in the same rule — the shorthand silently won**, so the first attempt moved the badge and
+  not the postmark. Both gaps must be measured; a screenshot would not have caught it.
+- **The CASE CLOSED stamp's ink was cut to 55% coverage** — multi-scale blotch noise so it drops out
+  in patches like a pad running dry, with thin ink lifting off entirely below a threshold. **The
+  threshold is solved for by bisection against a target, not guessed.**
+- **A `CASE FILES` brass plaque was built to replace the `CASE FILE RECORD` text image, then UNDONE
+  on the owner's call.** The revert was byte-exact — the original image had been extracted to the
+  scratch directory during the s58 stamps audit, so it was restored rather than rebuilt, and the hash
+  returned to its previous value exactly. **Extract before you overwrite a base64 asset.**
+
+### 🔴 §95.8 — `art/` WAS NEVER GITIGNORED, AND `ship` RUNS `git add -A`
+
+`art/` left the tree at s56 (§88) but **was never added to `.gitignore`**, so recreating it this
+session would have pushed **17 MB of source PNGs into the PUBLIC repo** — owner photographs, every
+scratch preview, the diagnostic diagrams. Now ignored, with `_preview-*.html` and `_diagram-*.png`.
+**The delivered artwork travels base64 inside `index.html`; `art/` is working source and belongs on
+disk and in Hunt-backups only.**
 
 ### 94.5 WEIGHT
 
@@ -1318,7 +1479,7 @@ function records why and what must never be done if it is ever wired back.
    comments.**
 2. **The spend is confirmed.** Two-state button in place — first tap arms it and relabels to *"Tap
    again to spend 1 coin · you hold N · your rank stands regardless"*, disarming itself after
-   `HINT_CONFIRM_MS` (4s). **NOT a double-tap gesture: the loupe already owns double-tap for zoom
+   `HINT_CONFIRM_MS` — **raised to 6s in `33n`; 4s was too quick to read (owner, s58).** **NOT a double-tap gesture: the loupe already owns double-tap for zoom
    (§90.8), and two meanings for one gesture is a collision.**
 3. **The balance and the reassurance are shown BEFORE the spend**, not after. The old toast said the
    right thing at the wrong moment.

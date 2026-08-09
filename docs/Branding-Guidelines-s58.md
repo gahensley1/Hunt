@@ -3,11 +3,12 @@
 *Updated this session: terminology correction ("A Stranger" retired) and one new reusable style pattern noted. Everything else unchanged from prior consolidation.*
 
 ## Palette
-**Post-office red `#B92230` — added s58 (§94), owner decision.** The stamped artwork only: the
-CASE CLOSED mark on the Case Solved card and the homepage postmark. Oxblood `#8A3324` remains the
-ceremony red everywhere else. `#ED2939` (Imperial Red) was tried and rejected as too bright.
+**ONE RED, s58 (§94.9), owner decision: `#8B0000`.** `--oxblood` was `#8A3324` and is now
+`#8B0000`; the CASE CLOSED stamp and the homepage postmark are inked to the same value. **There is
+no separate stamp red.** `#ED2939`, `#B92230`, `#9E1B27` and `#82151F` were each tried and passed
+over. `#8A3324` was hard-coded in ten places besides the variable — all swept.
 
-Hunter Green `#2E4739` / Deep Hunter `#1E3128`; Bright Brass `#D8AF63` / Antique Brass `#B8863B`; warm parchment & ink; oxblood for ceremony only. No pure `#FFF`/`#000`. Green is the field; brass is accent/border, never large fills. Textures as CSS vars (`--leather`, `--parch`).
+Hunter Green `#2E4739` / Deep Hunter `#1E3128`; Bright Brass `#D8AF63` / Antique Brass `#B8863B`; warm parchment & ink; oxblood `#8B0000` for ceremony only. No pure `#FFF`/`#000`. Green is the field; brass is accent/border, never large fills. Textures as CSS vars (`--leather`, `--parch`).
 
 ## Type
 Playfair Display (agency voice: titles, seals, ceremony) + Special Elite (paperwork voice: case files, clues, labels).
