@@ -282,7 +282,7 @@
     #notify-card .nc-txt{font-size:14px}
   }
   #buildmark{margin:6px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#3B6BA5;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#C88A2E;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -1247,7 +1247,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">33i</p>
+      <p id="buildmark" aria-label="test build marker">33j</p>
     </div>
   </section>
 
@@ -2258,6 +2258,14 @@ async function openPlan(code){
   body.className=""; body.innerHTML="";
   var img=document.createElement("img");
   img.id="plan-img"; img.alt="Map"; img.decoding="async"; img.src=d;
+  /* s57 (§90.8) - TAP THE MAP TO MAGNIFY. NO NEW ZOOM CODE: openLoupe() already does
+     pinch, drag and double-tap for clue photos, it accepts any object with a .src, and
+     safeImgSrc() passes a data:image/jpeg URI - which is exactly what a map is. The
+     loupe sits at z-index 700, above #ov-plan's 521, so it paints over this card and
+     its own close button is reachable. A map is a street plan: unreadable at 337px on
+     a phone, which is the whole reason to zoom. */
+  img.style.cursor="zoom-in";
+  img.onclick=function(){ try{ openLoupe({src:d}); }catch(e){} };
   body.appendChild(img);
   if(cap) cap.textContent="Map";
 }
