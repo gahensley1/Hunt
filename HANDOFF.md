@@ -156,7 +156,7 @@ is proven and should be reused for every future Worker change.
 
 | File | Size | SHA-256 | Purpose |
 |---|---|---|---|
-| `index.html` **🆕 33o — THE MET BADGE WEARS THE RANK (§95), ONE RED `#8B0000`, THE 1.5x ORDINAL, THE BEAT (§94.8–.10). s58.** | 4,188,696 B | `941d67e93a8faee2721ea8460df6a49ab414a9c0c9c5166cd14799ee269f22f2` | needs Worker **v2.6.13** |
+| `index.html` **🆕 33p — FIVE CHICAGO TERRITORIES (§96) AND THE COLD-FILTER FIX (§97). s58.** | 4,163,002 B | `729bffeafc61371e4062e8fae2034001acea9a3847427be14fc26830e3de153f` | needs Worker **v2.6.13**. Adds §96 and §97 |
 | `index.html` **33n — LIVE, commit `165b7400`, 16:03Z 9 Aug 2026. THE CASE CLOSED STAMP (§94).** | 4,111,862 B | `1ac7f99edb1b8f2eec3fa5c8cabe02ef10cf90965fd0c7b4bbc4cfb0fc76b873` | needs Worker **v2.6.13**. 🔴 **THIS IS AN EARLY 33n. Stamp 250px, red `#B92230`. EIGHT LATER REVISIONS NEVER REACHED IT — see §94.10** |
 | *(superseded on disk, NEVER SHIPPED)* `index.html` 33m — THE HINT COIN IS EARNED, NEVER SOLD (§93). s58, Sun 9 Aug 2026.** | 4,071,402 B | `64c094c82543eb60e6fa0cc06515f481b5e0694f7ad42e8b2b5f1a86fb11bd44` | needs Worker **v2.6.13** |
 | *(superseded)* `index.html` 33l — was live s57, commit `3d49b6cd`. THE ZIP BAND (§91). | 4,068,353 B | `2f9cd80f4ec8fa678f4fd1acaeff8f4b4530f03203afd765994d2a80f0c3dc5d` | needs Worker **v2.6.13**. Carries 33k's caption + pin median tier, never separately shipped |
@@ -239,7 +239,7 @@ is proven and should be reused for every future Worker change.
 
 - **🔴 THE FIRST THING THE NEXT SESSION MUST DO IS RE-HASH ALL THREE SURFACES.** Expect
   **4,111,862 B / `1ac7f99e…` / `33n`** on raw and Pages, and the Worker root to read **`(v2.6.13)`**.
-  **Expect this on local, raw and Pages alike once `33o` is pushed.** *(Verified s57: all three identical, Worker confirmed. The line that stood here
+  **4,163,002 B / `729bffea…` / `33p` once pushed.** *(Verified s57: all three identical, Worker confirmed. The line that stood here
   named **`32l`** — twelve builds dead — and before that **28e**. A stale instruction is worse than no
   instruction: it sends the session to verify a fact that stopped mattering. Re-write this line on
   every ship.)*
@@ -357,10 +357,16 @@ because nobody looked.
    cannot be reused, whatever `HANDOFF.md` says.
 5. **He approves the ship. Claude does not decide it is done.**
 
-### 🔴 §1x — NO SHIP COMMAND UNTIL THE LOOK IS APPROVED (owner rule, s58)
+### 🔴 §1x — GET THE LOOK RIGHT *BEFORE* SHIPPING, NOT ACROSS SHIPS (owner rule, s58)
 
-**Owner's instruction, verbatim: "No reason to ship until you get approval for the aesthetic that
-just... Pops us."**
+**Owner, verbatim: "No reason to ship until you get approval for the aesthetic that just... Pops
+us."** And, after two buildmarks were spent mid-iteration: **"i would rather get the look right
+before we ship ... this is important espically when we live."**
+
+**A ship is not a save point.** The instinct to push each approved step is wrong: it spends a
+buildmark, it puts a half-settled look in front of real players, and it leaves a dead `ship` line
+in the conversation that will be run later. **Settle the whole visual change, THEN ship once.**
+**This matters more, not less, now the app is live** — every intermediate state is seen.
 
 **A visual build is not finished when it is correct. It is finished when he has SEEN it and SAID
 YES.** Claude had a green STATIC, a matching hash and a §0 entry on `33n` and handed over `battery`
@@ -1229,6 +1235,66 @@ Then, every session: **`grep -c` each literal before editing** (**and `grep -o |
 matters**); **cap every grep and `sed`**; **`timeout N` every long python heredoc**; **match
 verification depth to risk**; **keep ship summaries to ~3 lines + the hash**; **encourage batching**;
 **do NOT trim verification or the handoff.**
+
+---
+
+| `index.html` **33o — LIVE, commit `0d077334`, 20:28Z 9 Aug 2026. THE MET BADGE (§95).** | 4,188,696 B | `941d67e93a8faee2721ea8460df6a49ab414a9c0c9c5166cd14799ee269f22f2` | 🔴 **Shipped BEFORE §96 and §97 existed. Chicago and the filter fix are NOT in it.** |
+
+## 🔴 §97 — THE COLD-CASE FILTER WAS DROPPED ON THE WAY BACK. FIXED `33p`, s58.
+
+**Owner report: filter the archive to `chicago`, open a case, come back — the list is Savannah
+again, while the search box still reads "chicago" and the chart still shows Chicago pins.**
+
+`openColdCases()` opened with `State.coldQ=null;` unconditionally, and `coldBack()` reaches it via
+`coldCatBack()`. **It clears the filter but NOT the input and NOT the pins**, so the screen showed
+three views of one piece of state and only one of them had been reset. The screen looked filtered.
+It was not. A player would conclude the Chicago cases had vanished, not that the filter had dropped.
+
+**🔴 TWO BUILDMARKS WERE SPENT EARLY IN ONE SESSION — `33n` AND `33o` — BOTH BECAUSE A SHIP LINE
+OUTLIVED THE BUILD IT NAMED (§1y).** `33o` shipped at 20:28Z carrying `941d67e9…`; work continued
+afterwards and became `33p`. **The rule is not "one ship line at a time" but "the ship line dies the
+moment the build moves" - say so out loud in the same reply as the next edit.**
+
+**The fix keeps `State.coldQ` for as long as the query that made it is still in the box; an empty box
+still clears.** Proven on the reported path: `chicago` gives 5 rows, open `606001`, `coldBack()` —
+still 5 rows, same filter object, input intact. Before the patch it returned 40.
+
+**🔴 THE LESSON: WHEN ONE PIECE OF STATE HAS THREE VIEWS, RESET ALL THREE OR NONE.** A partial reset
+does not look like a bug, which is why this survived.
+
+---
+
+## ✅ §96 — FIVE CHICAGO TERRITORIES. `33p`, s58.
+
+Built for the owner's travel week. **Codes `606001`-`606005`, all free — territories always are.
+Twelve tiles each, sixty in all, and SIXTY REAL HINTS: not one placeholder.**
+
+| code | case | territory | zip | diff |
+|---|---|---|---|---|
+| 606001 | The Millennium Park Enquiry | Millennium Park | 60602 | 2 |
+| 606002 | The Buckingham Waterworks | Buckingham Fountain & Grant Park | 60605 | 2 |
+| 606003 | The Cultural Hall Investigation | Chicago Cultural Center | 60602 | 1 |
+| 606004 | The Wooded Island Affair | Wooded Island & Osaka Garden | 60637 | 2 |
+| 606005 | The Pullman Enquiry | Pullman National Historical Park | 60628 | 2 |
+
+**Owner rule: every case must sit inside a 0.25-1 mile radius, no more.** Jackson Park as a whole was
+cut for this - Statue of the Republic to the Osaka Garden is 1.4 miles - and narrowed to the Wooded
+Island loop, which keeps the 1893 thread since the island IS fairground.
+
+**HOW THESE ARE BUILT, AND WHY NO WORKER ACCESS WAS NEEDED:** `BUILTIN_INDEX` entries accept
+`lat/lon/city/place/zip`, and `coldIndex()` merges the built-ins into the same list the map pins draw
+from — **so a baked-in case appears as a territory pin exactly like a curated Cold Case.** Modelled
+on the five Savannah entries (`3104xx`). Pattern: index entry + `BUILTIN_HUNTS[code]` with
+`cold:true, parAuto:true`, 12 tiles of `{id,type,emoji,clue,hint}`.
+
+**COPY RULES USED:** no proper nouns in the clues — a detective is told what to look for, not what it
+is called, which also means the clue survives a sponsor's name changing. **Hints may name streets;
+that is their job.** Nothing that moves: no food carts, no rotating gallery pieces, no ice rink that
+is a café in August. Pullman's Arcade Building is deliberately absent — demolished 1926, and no
+detective should be sent to photograph a gap.
+
+**🔴 UNWALKED. Sixty clues written about places Claude has only read about.** Walk one before trusting
+the set.
 
 ---
 
