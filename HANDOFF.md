@@ -156,7 +156,8 @@ is proven and should be reused for every future Worker change.
 
 | File | Size | SHA-256 | Purpose |
 |---|---|---|---|
-| `index.html` **🆕 33m — THE HINT COIN IS EARNED, NEVER SOLD (§93). s58, Sun 9 Aug 2026.** | 4,071,402 B | `64c094c82543eb60e6fa0cc06515f481b5e0694f7ad42e8b2b5f1a86fb11bd44` | needs Worker **v2.6.13** |
+| `index.html` **🆕 33n — THE CASE CLOSED STAMP IS STRUCK AND SIGNED (§94). s58, Sun 9 Aug 2026.** | 4,111,862 B | `1ac7f99edb1b8f2eec3fa5c8cabe02ef10cf90965fd0c7b4bbc4cfb0fc76b873` | needs Worker **v2.6.13** |
+| *(superseded on disk, NEVER SHIPPED)* `index.html` 33m — THE HINT COIN IS EARNED, NEVER SOLD (§93). s58, Sun 9 Aug 2026.** | 4,071,402 B | `64c094c82543eb60e6fa0cc06515f481b5e0694f7ad42e8b2b5f1a86fb11bd44` | needs Worker **v2.6.13** |
 | *(superseded)* `index.html` 33l — was live s57, commit `3d49b6cd`. THE ZIP BAND (§91). | 4,068,353 B | `2f9cd80f4ec8fa678f4fd1acaeff8f4b4530f03203afd765994d2a80f0c3dc5d` | needs Worker **v2.6.13**. Carries 33k's caption + pin median tier, never separately shipped |
 | *(superseded on disk, NEVER SHIPPED)* `index.html` 33k — caption + pin median tier (§90.11) | 4,062,995 B | `15f4dc8edc806bad42b75e4bee82336f29124183649ec76eb84309fed5120280` | needs Worker **v2.6.13**, deployed and gate-verified |
 | *(superseded)* `index.html` 33j — was live s57, commit `12f9e02c`. TAP THE MAP TO MAGNIFY (§90.8). | 4,061,182 B | `628833f342e5b236197f5cb510998cc9de3e546561e47614923dcc10b6dd974a` | needs Worker **v2.6.13**, which is deployed and gate-verified. Battery green: STATIC · BEHAVIOUR 59/59 · SESSION 21/21 |
@@ -236,8 +237,8 @@ is proven and should be reused for every future Worker change.
 **🆕 SEPARATE PROPERTY — the marketing site (NOT in the Hunt repo, NOT on GitHub Pages).** See §44.
 
 - **🔴 THE FIRST THING THE NEXT SESSION MUST DO IS RE-HASH ALL THREE SURFACES.** Expect
-  **4,052,031 B / `ec6f2966…` / `33g`** on local, raw and Pages alike, and the Worker root to read
-  **`(v2.6.12)`**. *(Verified s57: all three identical, Worker confirmed. The line that stood here
+  **4,111,862 B / `1ac7f99e…` / `33n`** on local, raw and Pages alike, and the Worker root to read
+  **`(v2.6.13)`**. *(Verified s57: all three identical, Worker confirmed. The line that stood here
   named **`32l`** — twelve builds dead — and before that **28e**. A stale instruction is worse than no
   instruction: it sends the session to verify a fact that stopped mattering. Re-write this line on
   every ship.)*
@@ -334,6 +335,26 @@ moving it would have unpainted every buy stamp. **Read the rule, don't trust the
 ---
 
 ## §1 — HOW THE OWNER WORKS (read first)
+
+### 🔴 §1x — NO SHIP COMMAND UNTIL THE LOOK IS APPROVED (owner rule, s58)
+
+**Owner's instruction, verbatim: "No reason to ship until you get approval for the aesthetic that
+just... Pops us."**
+
+**A visual build is not finished when it is correct. It is finished when he has SEEN it and SAID
+YES.** Claude had a green STATIC, a matching hash and a §0 entry on `33n` and handed over `battery`
+and `ship` — while the stamp had been nudged twice in as many messages and never approved in its
+final position. **Green tests are not consent.**
+
+1. **Do not write the `ship` line at all** until the owner has approved the appearance. Not as a
+   draft, not "when you are ready" — the presence of the command reads as "this is done."
+2. **`battery` may be offered earlier**; it proves nothing about the look and costs him little.
+3. **What earns approval is pixels**, at the real size, on the real screen, in the real card —
+   never an arithmetic argument that the numbers are right. His screenshots have caught what
+   correct arithmetic did not, twice in s58 alone (§94.1, §94.6).
+4. **After ANY visual nudge, however small, the approval resets.** Ten pixels is a change.
+5. **Say plainly what is still unapproved** when handing anything back.
+
 
 ### 🔴 §1w — A CORRECTION IS NOT DONE UNTIL EVERY COPY OF THE ERROR IS DEAD (owner rule, s54)
 
@@ -1187,6 +1208,66 @@ Then, every session: **`grep -c` each literal before editing** (**and `grep -o |
 matters**); **cap every grep and `sed`**; **`timeout N` every long python heredoc**; **match
 verification depth to risk**; **keep ship summaries to ~3 lines + the hash**; **encourage batching**;
 **do NOT trim verification or the handoff.**
+
+---
+
+## ✅ §94 — THE CASE CLOSED STAMP IS STRUCK AND SIGNED. `33n`, s58.
+
+**Owner-supplied artwork** replaces the old CASE CLOSED wordmark on the Case Solved card: a full
+round Scotland Yard / Victoria Embankment stamp with printed `DATE` and `INITIALS` rules. Source and
+the alpha cut are both in `Documents\Hunt\art\` (§1v). The homepage postmark was recoloured to
+match. **Two other stamped items were deliberately left alone** — `stamp-link` (CASE FILE RECORD)
+and `seal-replystamp` (REPLY WAITING). The reply stamp stays slate blue **because the blue is what
+distinguishes it from the postmark at a glance**; making both red would collapse two states into one.
+
+### 🔴 94.1 THE OLD MARK WAS WIDE; THE NEW ONE IS ROUND. THE POSITION DID NOT SURVIVE THE SWAP.
+
+The old asset was **340×235** — a wordmark. The new one is **721×720** — a circle. Dropped in at the
+inherited `width:319px` the stamp grew half again as tall, **covered "Nicely done, detective." and
+filled the whole card.** Caught in Chrome before shipping, not by arithmetic. **A same-scale swap is
+only same-scale when the aspect ratio matches.** Final numbers, set from the owner's own mark-up on a screenshot: **`250px`** (`207px` under 349px),
+`top:-58px` `right:-196px`, `opacity:.72` — it lands across the top-right corner of the record
+photo and hangs off the card edge, clear of the heading. **An intermediate 196px pass was rejected
+as too small and too far left; he drew the target in yellow and that is what shipped.**
+
+### 94.2 THE DATE AND THE INITIALS ARE WRITTEN ON, NOT BAKED IN
+
+The date is per-case, so it cannot live in the PNG. `.done-stampfill` is a second absolutely
+positioned box sharing the image's geometry and its `rotate(30deg)`, holding two spans placed on the
+printed rules by percentage. `stampTheDate(code)` reads **the coin ledger entry for that case** —
+the real moment it closed — and only falls back to the clock when no entry exists. Day/month, no
+year, no leading zeros. Initials are `B.B.`, Bonnie's, fixed. Both are revealed left-to-right by
+`inkWrite` after the stamp lands: date at `.62s`, initials at `1.62s`.
+
+### 🔴 94.3 A THIRD TYPEFACE — A DELIBERATE OVERRIDE OF `Branding-Guidelines.md`
+
+`docs/Branding-Guidelines.md` said **"Never a third face."** The written marks need a hand, so
+**Mrs Saint Delafield** (OFL) is embedded as `'Delafield'`, **subset to `0-9 / B .` — 2,220 B**.
+**THE OWNER WAS TOLD THE RULE WAS BEING BROKEN AND APPROVED IT EXPLICITLY.** The guidelines have been
+amended in the same session so a later reader does not "fix" this back. **It is a stamp-fill face
+only — it must not spread to UI copy.** Claude flagged the hairline risk at small sizes; the owner
+took it.
+
+### 94.4 THE RED
+
+Chosen from four darker candidates: **`#B92230`, post-office red.** `#ED2939` (Imperial Red) was
+tried first and judged too bright. **This is a second red in a palette whose only red was oxblood
+`#8A3324`** — recorded in the guidelines. Both stamp assets carry it. Recolouring works by rebuilding
+the ink as **flat colour with the grain carried in the alpha channel**; the first attempt mapped
+luminance into the hue instead and the grain glowed — do not do that again.
+
+### 🔴 94.6 THE SHIP COMMAND WENT OUT BEFORE THE LOOK WAS APPROVED — SEE §1x
+
+The stamp moved three times: 319px inherited (covered the card), 196px (too small, too far left),
+then 250px at `right:-186px` from the owner's own yellow mark-up, then ten pixels further right.
+**Claude handed over `battery` and `ship` after the second of those**, on the strength of a green
+STATIC and a matching hash. **The owner stopped it.** The rule that came out of it is §1x: tests are
+not consent, and the `ship` line is not written until he has said yes to the appearance.
+
+### 94.5 WEIGHT
+
+Stamp **78,036 B** WebP with alpha (the old PNG was ~24 KB), postmark **31,894 B** down from
+**64,898 B**, font **2,220 B**. Net **+43,515 B** on a 4 MB file.
 
 ---
 

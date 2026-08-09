@@ -1,0 +1,25 @@
+<!doctype html><meta charset="utf-8"><title>stamp preview</title>
+<style>
+@font-face{font-family:"MSD";src:url(art/msd-sub.woff2) format("woff2");font-display:block}
+body{margin:0;background:#EEE6D6;font-family:Georgia,serif;color:#3A332B}
+.wrap{padding:18px;display:flex;gap:40px;align-items:flex-start;justify-content:center;flex-wrap:wrap}
+.cell{position:relative;text-align:center;padding:40px 46px 0}
+.cell b{display:block;margin-top:44px;font:11px monospace;color:#7a6a55}
+.stampwrap{position:relative;margin:0 auto}
+.stampwrap img{display:block;width:100%;height:auto;opacity:.82;mix-blend-mode:multiply;animation:stampDown .5s cubic-bezier(.2,1.4,.4,1) both}
+.w251{width:251px}.w319{width:319px}
+@keyframes stampDown{from{transform:scale(1.6);opacity:0}to{transform:scale(1);opacity:.82}}
+.fill{position:absolute;font-family:"MSD",cursive;color:#1E1C1A;line-height:1;white-space:nowrap;text-align:center;display:block;
+      clip-path:inset(0 100% 0 0);animation:writeIn .9s steps(26,end) both}
+.fill.date{left:40.5%;width:32.7%;bottom:31.93%;animation-delay:.62s}
+.fill.init{left:52.0%;width:22.9%;bottom:23.87%;animation-delay:1.62s}
+@keyframes writeIn{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 -6% 0 0)}}
+.w251 .fill{font-size:23.6px}.w319 .fill{font-size:30px}
+.rot{transform:rotate(30deg)}
+button{position:fixed;right:10px;top:10px;font:12px monospace;padding:6px 10px;z-index:9}
+</style>
+<div class="wrap">
+<div class="cell"><div class="stampwrap w251 rot"><img src="art/case-closed-stamp-s58.webp"><span class="fill date">9/8</span><span class="fill init">B.B.</span></div><b>251px &mdash; phone, 30&deg;</b></div>
+<div class="cell"><div class="stampwrap w319 rot"><img src="art/case-closed-stamp-s58.webp"><span class="fill date">9/8</span><span class="fill init">B.B.</span></div><b>319px &mdash; desktop, 30&deg;</b></div>
+</div>
+<button onclick="document.querySelectorAll('.stampwrap *').forEach(function(e){e.style.animation='none';e.offsetHeight;e.style.animation='';});">replay</button>
