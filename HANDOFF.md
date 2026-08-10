@@ -1,5 +1,7 @@
 # HANDOFF.md — LIVE STATE, RULES AND WHAT IS OPEN
 
+### 🔴🔴 **s59: READ §112 FIRST — IT IS THE SESSION-59 CLOSE AND IT SUPERSEDES §109 AND §80's ORDER.** **LIVE: `34f` — 4,302,649 B / `e47ab146ba9f5e81…`, commit `8480ebb3`, Worker `v2.6.13`. NEXT MARK `34g` / Lime `#7FA33C`.** Everything below this line that names `34d`, `34e` or `33n` as live is history; §0's table is correct.
+
 ### 🔴🔴 **s55: THIS DOCUMENT WAS SPLIT IN THREE. `SUPER-HANDOFF.md` IS DEAD — do not resurrect it, do not look for it, and if the project-instruction block still names it, paste the revised block from `claude/PROJECT-INSTRUCTIONS-s55.md`.** The set is: **`HANDOFF.md`** (this file — live state, the rules, what is open; **READ IT IN FULL**) · **`HANDOFF-SPEC.md`** (how the app works; read the section you are touching) · **`HANDOFF-HISTORY.md`** (the build record; grep it, never read it whole). **NOTHING WAS COMPRESSED OR REWRITTEN — 5,250 lines went in and 5,250 came out, all 72 sections landed in exactly one file, verified by reconciliation, and the old file is preserved at `_to_delete\SUPER-HANDOFF.md.SPLIT-AT-s55` until the owner deletes it.** **🔴 A RULE LIVES IN EXACTLY ONE FILE; a rule found in two means one is a copy, and copies drift (§0.2, §1w).**
 ### 🔴 THIS IS ONE OF THREE FILES. THE SET IS THE DOCUMENT; NO ONE FILE IS.
 ### **READ THIS FILE IN FULL, EVERY SESSION.** It is the state of the world, the rules that bite, and the work that is owed.
@@ -2339,6 +2341,96 @@ argument alongside `code`.
 
 ---
 
+## 🔴 §112 — SESSION 59 CLOSE. READ THIS FIRST; IT SUPERSEDES §109 AND §80's ORDERING.
+
+**WHAT IS LIVE:** `index.html` **`34f`** — **4,302,649 B /
+`e47ab146ba9f5e818463b231df7400fd96381a0069b7d94674614e9ae32bec67`**, commit `8480ebb3`.
+Verified at close: **two cache-busted Pages fetches agreeing, raw at the commit SHA agreeing, disk
+agreeing, `local == origin`.** Worker **v2.6.13**, untouched all session. **`34f` / Magenta `#A8478F`
+IS SPENT. NEXT MARK `34g` / Lime `#7FA33C`.**
+
+**NOTHING IS UNSHIPPED EXCEPT THIS DOCUMENT.** `HANDOFF.md` carries §110, §111 and this section and
+has not been pushed. Everything else on disk is committed.
+
+### WHAT s59 DID
+1. **A review that found the documents lying, not the app.** §0 and §109 both said `34d` was live and
+   `34e` sat unshipped; `34e` had in fact been pushed after §109 was written. §0's "expect on
+   re-hash" line named `33n`, three builds dead. All corrected, and §109 now carries a note saying
+   why it read stale from the moment it was saved. **The app was clean the whole time.**
+2. **`34f` — §110, the precinct banner.** One function. The banner counted with a lat/lon box while
+   the chip and list counted with a 25-mile radius, and the banner ignored `e.cat` while
+   `coldFilter()` excluded it. Latent, never player-visible, found by Claude Code overnight and
+   confirmed against the code before a byte was changed. Battery green, 65/65, and the guard test
+   went green with no edit to the test.
+3. **§111 — the archive clerk.** Dead since 6 Aug on a hard-coded file list that had gone stale in
+   both directions. The list is now asked for at run time. Source art moved into `Hunt-backups`.
+4. **`art/` and `_preview-stamp.html` left the public repo** — gitignored since s58 but still
+   tracked, because **gitignore does not untrack what git already tracks.**
+5. **Docs housekeeping:** the stale `docs/Branding-Guidelines-s58.md` duplicate is out of the repo.
+
+### 🔴 OPEN, IN ORDER OF WHAT IT COSTS TO LEAVE IT
+1. **THE HOME-SCREEN INSTALL HAS STILL NEVER BEEN EXERCISED ON A PHONE.** It gates the whole
+   notification feature and no client change touches it. Everything server-side was verified clean
+   this session — manifest 200, `display:standalone`, all six icons 200 including
+   `icons/icon-180.png`, `sw.js` 200, `pushManager.subscribe` with the VAPID key. **What is untested
+   is whether iOS honours it.** Web push requires the installed copy; Safari itself proves nothing.
+   **The client has no `display-mode` or `navigator.standalone` check anywhere**, so the app cannot
+   report whether it is running installed — that is judged by eye, or a one-line readout is owed.
+2. **THE STORE CLOCK HAS NOT STARTED.** Organisation enrolment is 2–4 weeks on the Apple side; the
+   D-U-N-S is 1–5 business days to issue plus up to 2 to reach Apple, and **the registered name must
+   match the D-U-N-S record exactly.** The same D-U-N-S exempts a Google Play **organisation**
+   account from the 12-testers-for-14-days rule that personal accounts must serve. **Apply first;
+   listing copy is not on the critical path and can be written during the wait.**
+3. **THE PHONE PREVIEW.** `serve.ps1` binds to localhost, so every visual change still has to be
+   SHIPPED to be seen on the iPhone. Binding `0.0.0.0` is the single change that would most improve
+   the next session. Carried from §109 unchanged.
+4. **THE JOIN IS STILL 6 ROUND TRIPS DEEP** (§108), half fixed in `34e`.
+5. **THE SIXTY CHICAGO CLUES ARE UNWALKED** (§96). **⚠ `Chicago-Cold-Cases-plan.html` AND `.pdf` are
+   at the root of the PUBLIC repo** — unreleased case content, readable by anyone before a detective
+   walks it. An owner decision is owed: keep, or move to `Hunt-backups`.
+
+### THE HOME BADGE WAS NOT CHANGED
+A replacement for the home-screen badge was raised and **dropped at the owner's instruction. Nothing
+was built, nothing was edited, `index.html` is byte-identical to the shipped `34f`.** The scratch
+files are in `_to_delete\s59-badge\`. **The home badge remains Bonnie, 1195×896.** Do not revive this
+without him raising it first.
+
+---
+
+## 🔴 §111 — THE ARCHIVE CLERK FAILED FOR FOUR DAYS ON A STALE FILE LIST. s59.
+
+**The Monday 04:00 UTC run died on 10 Aug 2026. Last good snapshot: `archive-2026-08-06.json`.**
+Not the Worker, not the curator token — `backup.yml`'s hard-coded `FILES` list.
+
+- **It fetched 21 files that had left the repo** — `SUPER-HANDOFF.md` (dead at the s55 split), root
+  `behaviour.py` and `hunt-icon-v5.png` (s56 slim), all 20 `art/` paths (untracked s59). `curl -fsS`
+  on any one of them exits the step.
+- **31 files IN the repo were covered by nothing** — including **all three handoff files**, `docs/`,
+  `claude/`, `ship.cmd`, `battery.cmd`, `test/session_checks.py`.
+
+**🔴 THE DESIGN FLAW, AND IT IS THE REUSABLE PART: `drift_guard.py` RAN AFTER THE FETCH STEP.** The
+guard was written for exactly this failure and never got a turn, because the stale list killed the
+run upstream of the guard meant to catch the stale list. **A guard placed downstream of the thing it
+protects is not a guard.** Check the ORDER of a safety check, not just its logic.
+
+**THE FIX (owner's choice, s59): the list is asked for at run time,** from
+`api.github.com/repos/gahensley1/Hunt/git/trees/main?recursive=1`, skipping scratch (any path segment
+starting with `_`, or a `candidate-*` render copy). **Nothing to hand-edit means nothing to go
+stale.** `repo/` is now `rm -rf`'d and rebuilt each run, so a file deleted from the app repo also
+leaves the archive instead of lingering as a copy of something that no longer exists. Dry-run against
+the live tree: **48 blobs, 48 kept, all 48 serve 200 on raw.**
+
+**🔴 SOURCE ART HAD NO BACKUP AT ALL FOR PART OF s59.** `art/` was untracked from the PUBLIC repo
+(correctly — 19 MB of source PNGs and preview trials do not belong there, and `.gitignore` had said
+so since s58 without effect, because **gitignore does not untrack what git already tracks**). But the
+public repo was also where the clerk backed art up FROM, so for a few minutes it existed on one disk
+and nowhere else — **§1v, caused by the fix rather than caught by it.** All 36 files are now in
+`Hunt-backups\art\`, verified byte-identical with `diff -rq`; `.gitattributes` already marks `png`,
+`webp`, `gif` and `woff2` binary. **When something is removed from one place, ask what was reading it
+from there.**
+
+---
+
 ## ✅ §110 — THE PRECINCT BANNER COUNTED ON A DIFFERENT GEOMETRY FROM THE LIST. `34f`, s59.
 
 **Found by Claude Code overnight (report at `CLAUDE-CODE-s59-findings.md`), confirmed against the
@@ -2377,8 +2469,11 @@ const n=idx.filter(function(e){ if(e.cat||e.lat==null||e.lon==null) return false
 
 **THE TEST.** `test_cold_precinct_views` in `test/behaviour.py` (appended by Claude Code) asserts
 banner == chip == list for Chicago and Savannah and for a seeded case at 31 mi. It was **RED by
-design on `34e`** — `got=6 want=5`. It should go green on `34f` with no edit to the test. **If it
-does not, the fix is wrong and `34f` does not ship.**
+design on `34e`** — `got=6 want=5`. **✅ IT WENT GREEN ON `34f` WITH NO EDIT TO THE TEST: the ring
+assert reads `got=5`, BEHAVIOUR 65/65, SESSION 21/21, STATIC clean, battery stamped on
+`e47ab146…`.** Both controls still read 5, so agreement was not bought by breaking the count on real
+data — the other way this fix could have gone wrong. **The assert is now a standing guard: it will
+fail again the moment the three views are computed from two predicates.**
 
 ---
 
