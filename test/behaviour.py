@@ -311,6 +311,70 @@ async def test_terr_info(b, url):
     check("no page errors", errs, [])
     await pg.close()
 
+# --------------------------------------------------------------------------
+# Cold archive - THE PRECINCT BANNER, THE FILTER CHIP AND THE LIST ARE THREE
+# VIEWS OF ONE STATE (§97/§98).  s59, Claude Code.
+#
+# openColdCases() defaults State.coldQ to a NEAR filter on the hunter's
+# registered precinct (§98).  Three surfaces then describe "cases near you":
+#   1. #precinct-bar   drawn by precinctApply() - counts a lat/lon BOX
+#                      (|dlat|<=0.5, |dlon|<=0.65 ~ 34 mi half-extent)
+#   2. #cold-filterbar the chip - SHOWING n IN PRECINCT z, n = coldFilter length
+#   3. #cold-list      the rows - coldFilter near-mode = coldNear(), a 25-mi RADIUS
+# The box and the radius are DIFFERENT geometries, so a case in the 25-34 mi
+# ring is counted by the banner but excluded by the list.  The controls below
+# pass on shipped data (every real case sits inside 25 mi of its precinct); the
+# ring assertion FAILS on 34e and is the finding - see CLAUDE-CODE-s59-findings.md.
+# Seeding writes only to the stubbed Store (§11b); nothing reaches the Worker.
+# --------------------------------------------------------------------------
+async def _cold_views(pg, pz, seed_ring):
+    return await pg.evaluate("""async ([pz,seedRing])=>{
+      const g=gazLookup(pz); if(!g) return {err:'no gaz '+pz};
+      let arr=[];
+      if(seedRing) arr.push({code:"909090",title:"Ring Case",place:"North Ridge",
+        city:"Ringtown",zip:"00000",cat:"",paid:false,diff:1,lat:g.ll[0]+0.45,lon:g.ll[1]});
+      await Store.set("cold:index", JSON.stringify(arr), true);   // stubbed - never the Worker
+      localStorage.setItem("sh_precinct", pz);
+      const q=document.getElementById("cold-q"); if(q) q.value="";  // empty box, so §98 default fires
+      State.coldQ=null; State.coldCat=null;
+      await openColdCases();
+      await new Promise(r=>setTimeout(r,500));
+      const bar=document.getElementById("precinct-bar");
+      const chip=document.getElementById("cold-filterbar");
+      const barTxt=bar?bar.textContent:"";
+      const chipTxt=chip?((chip.querySelector('.cfb-txt')||{}).textContent||""):"";
+      const mB=barTxt.match(/(\\d+)\\s+COLD CASE/);
+      const mC=chipTxt.match(/SHOWING\\s+(\\d+)/);
+      return {banner: mB?+mB[1]:null, chip: mC?+mC[1]:null,
+              listRows: document.querySelectorAll("#cold-list .coldrow").length,
+              coldQ: State.coldQ?State.coldQ.mode:null};
+    }""", [pz, seed_ring])
+
+async def test_cold_precinct_views(b, url):
+    print("\nCold archive - precinct banner / filter chip / list are three views of one state (§98)")
+    # CONTROLS: shipped precincts whose real cases all sit inside PARK_NEAR_MI.
+    # These PASS - proof the invariant holds and the check is not vacuous (§11d rule 2).
+    pg, errs = await _boot(b, url)
+    v = await _cold_views(pg, "60602", False)
+    check("Chicago 60602: banner == list", v["banner"], v["listRows"])
+    check("Chicago 60602: chip == list",   v["chip"],   v["listRows"])
+    await pg.close()
+    pg, errs = await _boot(b, url)
+    v = await _cold_views(pg, "31401", False)
+    check("Savannah 31401: banner == list", v["banner"], v["listRows"])
+    check("Savannah 31401: chip == list",   v["chip"],   v["listRows"])
+    await pg.close()
+    # DEFECT: one extra case 31 mi north of the precinct - inside the banner's box,
+    # outside the list's 25-mi radius. Chicago keeps 5 real cases in range so the
+    # near-filter stays applied; the banner then over-counts. banner 6 vs list 5.
+    # RED on 34e BY DESIGN - it is the defect. Fix precinctApply() to count by
+    # coldNear()/PARK_NEAR_MI, then this goes green. (§98, CLAUDE-CODE-s59-findings.md)
+    pg, errs = await _boot(b, url)
+    v = await _cold_views(pg, "60602", True)
+    check("Chicago 60602 +31mi ring: banner == applied filter count", v["banner"], v["listRows"])
+    check("no page errors", errs, [])
+    await pg.close()
+
 async def main():
     url = "file://" + str(pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else DEFAULT).resolve())
     print("target:", url)
@@ -318,7 +382,7 @@ async def main():
         b = await pw.chromium.launch()
         for t in (test_purge, test_deed_guard, test_deed_gate,
                   test_capture_gate, test_hint_guide, test_particulars,
-                  test_terr_info, test_renders):
+                  test_terr_info, test_cold_precinct_views, test_renders):
             await t(b, url)
         await b.close()
     bad = RESULTS.count(False)
