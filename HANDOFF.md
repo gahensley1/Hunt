@@ -156,8 +156,8 @@ is proven and should be reused for every future Worker change.
 
 | File | Size | SHA-256 | Purpose |
 |---|---|---|---|
-| `index.html` **🆕 34e — THE WIPE CROP, THE ORDINAL, THE BADGE PRESS, THE JOIN LAG (§106-§108). s58.** | 4,302,603 B | `2adb51cf74344de5eb02f155f8b932cec661492d106f8478f69772bd39039357` | needs Worker **v2.6.13**. The wipe crop, the ordinal, the badge press, the join-lag reads and writes (§106-§108) |
-| `index.html` **33n — LIVE, commit `165b7400`, 16:03Z 9 Aug 2026. THE CASE CLOSED STAMP (§94).** | 4,111,862 B | `1ac7f99edb1b8f2eec3fa5c8cabe02ef10cf90965fd0c7b4bbc4cfb0fc76b873` | needs Worker **v2.6.13**. 🔴 **THIS IS AN EARLY 33n. Stamp 250px, red `#B92230`. EIGHT LATER REVISIONS NEVER REACHED IT — see §94.10** |
+| `index.html` **🆕 34e — LIVE, commit `f35b49de`. Verdigris. THE WIPE CROP, THE ORDINAL, THE BADGE PRESS, THE JOIN LAG (§106-§108). s58; re-verified s59: disk == origin == Pages == raw.** | 4,302,603 B | `2adb51cf74344de5eb02f155f8b932cec661492d106f8478f69772bd39039357` | needs Worker **v2.6.13**. The wipe crop, the ordinal, the badge press, the join-lag reads and writes (§106-§108) |
+| *(superseded)* `index.html` **33n — was live s58, commit `165b7400`, 16:03Z 9 Aug 2026. THE CASE CLOSED STAMP (§94).** | 4,111,862 B | `1ac7f99edb1b8f2eec3fa5c8cabe02ef10cf90965fd0c7b4bbc4cfb0fc76b873` | needs Worker **v2.6.13**. 🔴 **THIS IS AN EARLY 33n. Stamp 250px, red `#B92230`. EIGHT LATER REVISIONS NEVER REACHED IT — see §94.10** |
 | *(superseded on disk, NEVER SHIPPED)* `index.html` 33m — THE HINT COIN IS EARNED, NEVER SOLD (§93). s58, Sun 9 Aug 2026.** | 4,071,402 B | `64c094c82543eb60e6fa0cc06515f481b5e0694f7ad42e8b2b5f1a86fb11bd44` | needs Worker **v2.6.13** |
 | *(superseded)* `index.html` 33l — was live s57, commit `3d49b6cd`. THE ZIP BAND (§91). | 4,068,353 B | `2f9cd80f4ec8fa678f4fd1acaeff8f4b4530f03203afd765994d2a80f0c3dc5d` | needs Worker **v2.6.13**. Carries 33k's caption + pin median tier, never separately shipped |
 | *(superseded on disk, NEVER SHIPPED)* `index.html` 33k — caption + pin median tier (§90.11) | 4,062,995 B | `15f4dc8edc806bad42b75e4bee82336f29124183649ec76eb84309fed5120280` | needs Worker **v2.6.13**, deployed and gate-verified |
@@ -238,8 +238,8 @@ is proven and should be reused for every future Worker change.
 **🆕 SEPARATE PROPERTY — the marketing site (NOT in the Hunt repo, NOT on GitHub Pages).** See §44.
 
 - **🔴 THE FIRST THING THE NEXT SESSION MUST DO IS RE-HASH ALL THREE SURFACES.** Expect
-  **4,111,862 B / `1ac7f99e…` / `33n`** on raw and Pages, and the Worker root to read **`(v2.6.13)`**.
-  **4,302,603 B / `2adb51cf…` / `34e` once pushed.** *(Verified s57: all three identical, Worker confirmed. The line that stood here
+  **4,302,603 B / `2adb51cf…` / `34e`** on raw and Pages, and the Worker root to read **`(v2.6.13)`**.
+  *(Verified s59: disk == origin `f35b49de` == Pages == raw, two cache-busted fetches agreeing; Worker confirmed. The line that stood here
   named **`32l`** — twelve builds dead — and before that **28e**. A stale instruction is worse than no
   instruction: it sends the session to verify a fact that stopped mattering. Re-write this line on
   every ship.)*
@@ -2335,6 +2335,57 @@ sheet, so a year is one tap from wherever the reader stands, and **`email report
 screen** — month or year — through the same `_wireLedgEmail` (§83.2), which will need a `year`
 argument alongside `code`.
 **✅ s56: BUILT, AND THE COPY WAS PUT TO THE OWNER RATHER THAN SHIPPED.** He chose **`Annual report ›`** — Claude's `The whole year 2026 ›` placeholder was NOT used. See §86.
+
+---
+
+## 🔴 §109 — SESSION 58 CLOSE. READ THIS BEFORE §80.
+
+**WHAT IS LIVE:** 🔴 **CORRECTED s59 — `34e` IS LIVE, NOT `34d`.** Commit `f35b49de`; `34e` was
+pushed after this section was written, so it read stale from the moment it was saved. **4,302,603 B /
+`2adb51cf74344de5eb02f155f8b932cec661492d106f8478f69772bd39039357`** — disk == origin == Pages == raw,
+re-hashed s59 from the shell. Worker **v2.6.13**. `34e` is the join-lag work only — no pixels.
+**`34e` / Verdigris IS SPENT. NEXT MARK `34f` / Magenta `#A8478F`.**
+
+**NOTHING IS ON DISK UNSHIPPED, AND THE BATTERY DID RUN.** §109 said Gate 3 held `d4ab9a79`; that is
+also stale — `test\.last-battery` reads
+`2adb51cf74344de5eb02f155f8b932cec661492d106f8478f69772bd39039357`, which IS `34e`, so a full
+three-suite battery passed on the shipped build. STATIC re-run green in the sandbox s59.
+
+### WHAT SHIPPED TODAY, IN ORDER
+`33m` the hint coin · `33n` the CASE CLOSED stamp · `33o` the Met badge, one red `#8B0000`, the
+1.5x ordinal · `33p` five Chicago territories + the cold-filter fix · `34a` precinct default, chart
+pinch, the stamp anchor · `34b` the plate 25% smaller · `34c` the iOS compositing fixes ·
+`34d` the wipe crop, the 1.95em ordinal, the badge press.
+
+### 🔴 THE SESSION'S OWN LESSON — SIX MARKS SPENT MID-FLIGHT
+`33n`, `33o`, `33p`, `34c` all shipped builds that were already behind, plus `34d` shipping while
+`34e` sat on disk. **Every one had the same cause: Claude wrote a `ship` line, kept editing, and did
+not declare the old command dead.** §1x and §1y say exactly what to do and were written DURING this
+session. **`ship`'s three gates caught what discipline did not — Gate 1 on a stale §0, Gate 2 on an
+unbumped buildmark, Gate 3 on a stale battery. TRUST THE GATES; THEY ARE THE ONLY THING THAT WORKED.**
+
+### 🔴 OPEN, IN ORDER OF WHAT IT COSTS TO LEAVE IT
+1. **`docs/Branding-Guidelines.md` IS STALE AND DUPLICATED IN THE PUBLIC REPO.** The file is LOCKED
+   on the owner's disk — Claude's writes fail `PermissionError`, and `del` fails silently (OneDrive
+   or an open editor). `Branding-Guidelines-s58.md` sits beside it carrying a banner saying it
+   supersedes. **Two public documents disagree about the house red and the type rule.** Five ships
+   have gone out with this unresolved. Clear the lock, `del`, `ren`.
+2. **PUSH CANNOT WORK ON iOS UNTIL THE APP IS INSTALLED TO THE HOME SCREEN** (§80.1). The `push`
+   handler in `sw.js` is correct and fires with the app closed; `new Notification()` (5 sites) only
+   works on screen. **The install flow has still never been exercised.** This gates the whole
+   notification feature and no client change touches it.
+3. **THE JOIN IS STILL 12 STORE CALLS, 6 ROUND TRIPS DEEP** (§108). Half fixed in `34e`. The same
+   `sub:` key is still read four times; the reads at 1109ms and 4102ms come from the resume and
+   board-render path, not `joinCase`. Trace `saveHunterSub()` and the board render.
+4. **THE SIXTY CHICAGO CLUES ARE UNWALKED** (§96). `Chicago-Cold-Cases-plan.html` at the repo root
+   is the field document — a page per hunt, all twelve finds with hints, a plate for a photograph.
+   **Wikimedia Commons rate-limited (429) from the sandbox, so no pictures could be sourced.**
+5. **THE PHONE PREVIEW.** The owner had to SHIP TO SEE every visual change today. `serve.ps1` binds
+   to localhost; if it bound to `0.0.0.0` the iPhone could load a build over wifi before it went
+   near the repo. **This is the single change that would most improve the next session** (§104).
+
+### ✅ CONFIRMED BY THE OWNER THIS SESSION
+Chart pinch works with real fingers (§99). The handwriting crop is fixed (§106).
 
 ---
 
