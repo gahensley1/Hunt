@@ -156,7 +156,8 @@ is proven and should be reused for every future Worker change.
 
 | File | Size | SHA-256 | Purpose |
 |---|---|---|---|
-| `index.html` **🆕 34e — LIVE, commit `f35b49de`. Verdigris. THE WIPE CROP, THE ORDINAL, THE BADGE PRESS, THE JOIN LAG (§106-§108). s58; re-verified s59: disk == origin == Pages == raw.** | 4,302,603 B | `2adb51cf74344de5eb02f155f8b932cec661492d106f8478f69772bd39039357` | needs Worker **v2.6.13**. The wipe crop, the ordinal, the badge press, the join-lag reads and writes (§106-§108) |
+| `index.html` **🆕 34f — DELIVERED s59, Magenta `#A8478F`. THE PRECINCT BANNER COUNTS ON ONE GEOMETRY (§110).** | 4,302,649 B | `e47ab146ba9f5e818463b231df7400fd96381a0069b7d94674614e9ae32bec67` | needs Worker **v2.6.13**. One function changed, `precinctApply()`; no pixels, no mechanism |
+| *(superseded)* `index.html` **34e — was live s58-s59, commit `f35b49de`. Verdigris. THE WIPE CROP, THE ORDINAL, THE BADGE PRESS, THE JOIN LAG (§106-§108). s58; re-verified s59: disk == origin == Pages == raw.** | 4,302,603 B | `2adb51cf74344de5eb02f155f8b932cec661492d106f8478f69772bd39039357` | needs Worker **v2.6.13**. The wipe crop, the ordinal, the badge press, the join-lag reads and writes (§106-§108) |
 | *(superseded)* `index.html` **33n — was live s58, commit `165b7400`, 16:03Z 9 Aug 2026. THE CASE CLOSED STAMP (§94).** | 4,111,862 B | `1ac7f99edb1b8f2eec3fa5c8cabe02ef10cf90965fd0c7b4bbc4cfb0fc76b873` | needs Worker **v2.6.13**. 🔴 **THIS IS AN EARLY 33n. Stamp 250px, red `#B92230`. EIGHT LATER REVISIONS NEVER REACHED IT — see §94.10** |
 | *(superseded on disk, NEVER SHIPPED)* `index.html` 33m — THE HINT COIN IS EARNED, NEVER SOLD (§93). s58, Sun 9 Aug 2026.** | 4,071,402 B | `64c094c82543eb60e6fa0cc06515f481b5e0694f7ad42e8b2b5f1a86fb11bd44` | needs Worker **v2.6.13** |
 | *(superseded)* `index.html` 33l — was live s57, commit `3d49b6cd`. THE ZIP BAND (§91). | 4,068,353 B | `2f9cd80f4ec8fa678f4fd1acaeff8f4b4530f03203afd765994d2a80f0c3dc5d` | needs Worker **v2.6.13**. Carries 33k's caption + pin median tier, never separately shipped |
@@ -238,7 +239,7 @@ is proven and should be reused for every future Worker change.
 **🆕 SEPARATE PROPERTY — the marketing site (NOT in the Hunt repo, NOT on GitHub Pages).** See §44.
 
 - **🔴 THE FIRST THING THE NEXT SESSION MUST DO IS RE-HASH ALL THREE SURFACES.** Expect
-  **4,302,603 B / `2adb51cf…` / `34e`** on raw and Pages, and the Worker root to read **`(v2.6.13)`**.
+  **4,302,649 B / `e47ab146…` / `34f`** on raw and Pages, and the Worker root to read **`(v2.6.13)`**.
   *(Verified s59: disk == origin `f35b49de` == Pages == raw, two cache-busted fetches agreeing; Worker confirmed. The line that stood here
   named **`32l`** — twelve builds dead — and before that **28e**. A stale instruction is worse than no
   instruction: it sends the session to verify a fact that stopped mattering. Re-write this line on
@@ -2335,6 +2336,49 @@ sheet, so a year is one tap from wherever the reader stands, and **`email report
 screen** — month or year — through the same `_wireLedgEmail` (§83.2), which will need a `year`
 argument alongside `code`.
 **✅ s56: BUILT, AND THE COPY WAS PUT TO THE OWNER RATHER THAN SHIPPED.** He chose **`Annual report ›`** — Claude's `The whole year 2026 ›` placeholder was NOT used. See §86.
+
+---
+
+## ✅ §110 — THE PRECINCT BANNER COUNTED ON A DIFFERENT GEOMETRY FROM THE LIST. `34f`, s59.
+
+**Found by Claude Code overnight (report at `CLAUDE-CODE-s59-findings.md`), confirmed against the
+code, fixed here.** The §97 class again: **one piece of state, three views, and the third view was
+computed by a different predicate from the other two.**
+
+| surface | drawn by | counted by |
+|---|---|---|
+| `#precinct-bar` "PRECINCT z — N COLD CASES OPEN" | `precinctApply()` | a **box**, `\|Δlat\|≤0.5 && \|Δlon\|≤0.65`, and it ignored `e.cat` |
+| `#cold-filterbar` chip | `renderColdChip()` | `coldFilter()` |
+| `#cold-list` rows | `renderColdList()` | `coldFilter()` → `coldNear()`, a **25-mi radius**, base `.filter(e=>!e.cat)` |
+
+`±0.5°` lat ≈ ±34.5 mi and `±0.65°` lon ≈ ±33–38 mi, so the banner's box reached ~9 miles past the
+list's radius. **A case in the 25–34 mi ring was counted by the banner and excluded by the list.**
+Worse, where the ONLY nearby case sat in that ring, §98's guard set `State.coldQ=null` and the list
+showed the whole national archive while the banner still read "1 COLD CASE OPEN".
+
+**LATENT, NEVER PLAYER-VISIBLE.** All ten shipped cases (5 Savannah, 5 Chicago) sit 0.4–7.4 mi from
+their own precinct, well inside 25 mi. It needed a curated case 25–34 mi from a hunter's registered
+precinct — ordinary, just not yet present.
+
+**THE FIX — `precinctApply()` now counts with the same predicate the filter uses:**
+```js
+const n=idx.filter(function(e){ if(e.cat||e.lat==null||e.lon==null) return false;
+  var m=zipMiles(g.ll,e); return m!=null&&m<=PARK_NEAR_MI; }).length;
+```
+`zipMiles()` and `PARK_NEAR_MI` already existed and are exactly what `coldNear()` uses. No new code.
+
+**🔴 TWO THINGS THE FIRST DRAFT OF THIS FIX GOT WRONG, RECORDED BECAUSE BOTH ARE REUSABLE:**
+1. **It guarded `e.lat` and not `e.lon`.** `zipMiles()` returns `null` when either is missing, and
+   **`null <= 25` is `true` in JavaScript** — an entry with a latitude and no longitude would have
+   counted as nearby. **Never compare a possibly-null distance without testing the null first.**
+2. **It fixed the geometry and forgot the category.** The divergence had TWO axes; `coldFilter()`'s
+   base is `.filter(e=>!e.cat)` and the banner never filtered categories at all. **§1w: a correction
+   is not done until every copy of the error is dead — including the second axis of the same error.**
+
+**THE TEST.** `test_cold_precinct_views` in `test/behaviour.py` (appended by Claude Code) asserts
+banner == chip == list for Chicago and Savannah and for a seeded case at 31 mi. It was **RED by
+design on `34e`** — `got=6 want=5`. It should go green on `34f` with no edit to the test. **If it
+does not, the fix is wrong and `34f` does not ship.**
 
 ---
 
