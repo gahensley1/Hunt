@@ -1,6 +1,6 @@
 # HANDOFF.md — LIVE STATE, RULES AND WHAT IS OPEN
 
-### 🔴 **s60: §113 IS NEW — the power-up rule. The repo is 21 top-level entries, measured s60.**
+### 🔴🔴 **s60: READ §114 — `34g` IS DELIVERED AND SHIPPING: the S&H cypher badge. 4,304,247 B / `daee29ef…`. NEXT MARK `34h` / Rust `#B4532A`.** §113 is also new — the power-up rule. The repo is 21 top-level entries, measured s60.
 ### 🔴🔴 **s59: READ §112 FIRST — IT IS THE SESSION-59 CLOSE AND IT SUPERSEDES §109 AND §80's ORDER.** **LIVE: `34f` — 4,302,649 B / `e47ab146ba9f5e81…`, commit `8480ebb3`, Worker `v2.6.13`. NEXT MARK `34g` / Lime `#7FA33C`.** Everything below this line that names `34d`, `34e` or `33n` as live is history; §0's table is correct.
 
 ### 🔴🔴 **s55: THIS DOCUMENT WAS SPLIT IN THREE. `SUPER-HANDOFF.md` IS DEAD — do not resurrect it, do not look for it, and if the project-instruction block still names it, paste the revised block from `claude/PROJECT-INSTRUCTIONS-s55.md`.** The set is: **`HANDOFF.md`** (this file — live state, the rules, what is open; **READ IT IN FULL**) · **`HANDOFF-SPEC.md`** (how the app works; read the section you are touching) · **`HANDOFF-HISTORY.md`** (the build record; grep it, never read it whole). **NOTHING WAS COMPRESSED OR REWRITTEN — 5,250 lines went in and 5,250 came out, all 72 sections landed in exactly one file, verified by reconciliation, and the old file is preserved at `_to_delete\SUPER-HANDOFF.md.SPLIT-AT-s55` until the owner deletes it.** **🔴 A RULE LIVES IN EXACTLY ONE FILE; a rule found in two means one is a copy, and copies drift (§0.2, §1w).**
@@ -159,7 +159,8 @@ is proven and should be reused for every future Worker change.
 
 | File | Size | SHA-256 | Purpose |
 |---|---|---|---|
-| `index.html` **🆕 34f — DELIVERED s59, Magenta `#A8478F`. THE PRECINCT BANNER COUNTS ON ONE GEOMETRY (§110).** | 4,302,649 B | `e47ab146ba9f5e818463b231df7400fd96381a0069b7d94674614e9ae32bec67` | needs Worker **v2.6.13**. One function changed, `precinctApply()`; no pixels, no mechanism |
+| `index.html` **🆕 34g — DELIVERED s60, Lime `#7FA33C`. THE BADGE WEARS THE COMPANY CYPHER (§114).** | 4,304,247 B | `daee29ef03c8a2df22ff1bbe9ab9c8e9a41276cef511d96863244298ac2a9ce5` | needs Worker **v2.6.13**. S&H plate at `BADGE_MAC`, arcs re-measured, legends centred per degree, one text size for every rank, the pressing cast, the double self-press |
+| *(superseded)* `index.html` **34f — was live s59-s60, commit `8480ebb3`, Magenta `#A8478F`. THE PRECINCT BANNER COUNTS ON ONE GEOMETRY (§110).** | 4,302,649 B | `e47ab146ba9f5e818463b231df7400fd96381a0069b7d94674614e9ae32bec67` | needs Worker **v2.6.13**. One function changed, `precinctApply()`; no pixels, no mechanism |
 | *(superseded)* `index.html` **34e — was live s58-s59, commit `f35b49de`. Verdigris. THE WIPE CROP, THE ORDINAL, THE BADGE PRESS, THE JOIN LAG (§106-§108). s58; re-verified s59: disk == origin == Pages == raw.** | 4,302,603 B | `2adb51cf74344de5eb02f155f8b932cec661492d106f8478f69772bd39039357` | needs Worker **v2.6.13**. The wipe crop, the ordinal, the badge press, the join-lag reads and writes (§106-§108) |
 | *(superseded)* `index.html` **33n — was live s58, commit `165b7400`, 16:03Z 9 Aug 2026. THE CASE CLOSED STAMP (§94).** | 4,111,862 B | `1ac7f99edb1b8f2eec3fa5c8cabe02ef10cf90965fd0c7b4bbc4cfb0fc76b873` | needs Worker **v2.6.13**. 🔴 **THIS IS AN EARLY 33n. Stamp 250px, red `#B92230`. EIGHT LATER REVISIONS NEVER REACHED IT — see §94.10** |
 | *(superseded on disk, NEVER SHIPPED)* `index.html` 33m — THE HINT COIN IS EARNED, NEVER SOLD (§93). s58, Sun 9 Aug 2026.** | 4,071,402 B | `64c094c82543eb60e6fa0cc06515f481b5e0694f7ad42e8b2b5f1a86fb11bd44` | needs Worker **v2.6.13** |
@@ -242,7 +243,7 @@ is proven and should be reused for every future Worker change.
 **🆕 SEPARATE PROPERTY — the marketing site (NOT in the Hunt repo, NOT on GitHub Pages).** See §44.
 
 - **🔴 THE FIRST THING THE NEXT SESSION MUST DO IS RE-HASH ALL THREE SURFACES.** Expect
-  **4,302,649 B / `e47ab146…` / `34f`** on raw and Pages, and the Worker root to read **`(v2.6.13)`**.
+  **4,304,247 B / `daee29ef…` / `34g`** on raw and Pages, and the Worker root to read **`(v2.6.13)`**.
   *(Verified s59: disk == origin `f35b49de` == Pages == raw, two cache-busted fetches agreeing; Worker confirmed. The line that stood here
   named **`32l`** — twelve builds dead — and before that **28e**. A stale instruction is worse than no
   instruction: it sends the session to verify a fact that stopped mattering. Re-write this line on
@@ -2339,6 +2340,51 @@ sheet, so a year is one tap from wherever the reader stands, and **`email report
 screen** — month or year — through the same `_wireLedgEmail` (§83.2), which will need a `year`
 argument alongside `code`.
 **✅ s56: BUILT, AND THE COPY WAS PUT TO THE OWNER RATHER THAN SHIPPED.** He chose **`Annual report ›`** — Claude's `The whole year 2026 ›` placeholder was NOT used. See §86.
+
+---
+
+## ✅ §114 — THE BADGE WEARS THE COMPANY CYPHER. `34g`, s60.
+
+**Owner-supplied art** (upload `replace badge not as aged.png`, 874×1216): the helmet plate re-cut
+with the **S&H monogram, XX above, VI below**, replacing the King's GR VI at `BADGE_MAC`. Source,
+alpha cut and the 340×465 WebP (39,498 B, q88) are in **`Hunt-backups\art\`** as
+`shco-badge-not-as-aged-source-s60.png` · `shco-badge-alpha-s60.png` · `shco-badge-s60.webp` (§1v —
+note `Hunt-backups`, not `Hunt\art\`; the public-repo `art/` is dead since s59).
+
+**THE CUT (third attempt shipped).** Threshold 235 blunted the ray tips; threshold 249 alone left a
+white halo the owner caught against the dark ground. Shipped: **near-white ≥249 flood from the
+border** (plus enclosed crown-arch gaps in the top 27%), largest component only, then **2px erode to
+shed the fringe** and a 0.8σ soft edge. Tips crisp AND no halo — the two failures were opposite ends
+of one dial, and the erode is what let the high threshold stand.
+
+**THE ARCS, RE-MEASURED (§95.5 method).** Per-degree edge trace, robust Fourier k≤3:
+rim kept 337/360 sd 2.3px, shadow edge 332/360 sd 3.5px. New tables: **centre (97.5, 88.6), rim
+63.0–66.2, shadow edge 89.3–94.6** svg units. The plate is foreshortened; no circle fits it.
+
+**THE LEGENDS ARE CENTERED IN THE BAND, PER DEGREE** — `_bandPath()` computes
+`g=(out−rim−cap)/2` at every angle, so the air rim-to-glyphs equals glyphs-to-edge all the way
+round. Replaces §95.4's rim+9.3 / shadow−gap idiom. Owner iterated to this: first "tighten to the
+ring", then "cut the space in half so it is centered" — the centred form is what he approved.
+
+**🔴 ONE TEXT SIZE FOR EVERY RANK — owner rule, verbatim: "we cannot change font styles to fit
+assistant commisioner it breaks the story."** `fs=ts=16.2` fixed; the auto-shrink is gone from
+`credBadgeSVG` (`_arcSize` remains defined, uncalled). The centred arc holds 22 characters at full
+size (needs 234 units, has ~264), so nothing overflows. Weight stays **800** — owner picked A of
+A/800 B/650 C/500 shown side-by-side.
+
+**THE PRESS NOW MOVES EVERY SHADOW.** The baked cast copy inside the SVG (`.cb-cast`) presses with
+the badge: offset (5,14) closes to (2,4), opacity ×.55, same easing as the drop-shadows. Before
+this the CSS drop-shadows pressed and the baked cast sat still.
+
+**THE BADGE PRESSES ITSELF, TWICE, ON FULL REVEAL.** IntersectionObserver: fires at ratio ≥.98,
+two 230ms taps at +160ms and +560ms, re-arms below .5, skipped under `prefers-reduced-motion`.
+**⚠ UNPROVEN BY MEASUREMENT: Chrome suspends IO delivery in hidden tabs (`document.hidden` was
+true on every scripted probe), so the double-press was never observed by Claude — the owner's
+eyes on a real scroll are the proof. If it misbehaves, look there first.**
+
+**Battery/verification at delivery:** STATIC green in-sandbox on every edit (buildmark `34g`,
+drift NONE). BEHAVIOUR/SESSION owed on his machine at ship. Old badge asset survives in the s58
+webp files and inside shipped builds by commit SHA.
 
 ---
 
