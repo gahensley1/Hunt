@@ -1,5 +1,6 @@
 # HANDOFF.md — LIVE STATE, RULES AND WHAT IS OPEN
 
+### 🔴🔴 **s60: READ §115 — `34h` IS DELIVERED AND SHIPPING: the badge cast shadow re-weighted and the AUTOMATED tap halved. 4,304,630 B / `520617937cf8710cbbb2080277a24ea67f47d4353a7bed0ba2937b6aa4b86e1c`. NEXT MARK `34i` / Cobalt `#3B6BA5` (the rotation wraps after Rust).** Battery passed and was recorded against `520617937cf8710c…` — the same build, before the ship.
 ### 🔴🔴 **s60: READ §114 — `34g` IS DELIVERED AND SHIPPING: the S&H cypher badge. 4,304,247 B / `daee29ef…`. NEXT MARK `34h` / Rust `#B4532A`.** §113 is also new — the power-up rule. The repo is 21 top-level entries, measured s60.
 ### 🔴🔴 **s59: READ §112 FIRST — IT IS THE SESSION-59 CLOSE AND IT SUPERSEDES §109 AND §80's ORDER.** **LIVE: `34f` — 4,302,649 B / `e47ab146ba9f5e81…`, commit `8480ebb3`, Worker `v2.6.13`. NEXT MARK `34g` / Lime `#7FA33C`.** Everything below this line that names `34d`, `34e` or `33n` as live is history; §0's table is correct.
 
@@ -3044,3 +3045,62 @@ still hash before recording "pushed."** **(2) When Claude cannot execute somethi
 expected values are stated up front.**
 
 ---
+
+
+---
+
+# §115 — THE BADGE CAST SHADOW, AND THE HALF-DEPTH AUTOMATED TAP (s60, `34h`)
+
+**Owner asked for two things: a lighter cast shadow on the home credentials badge, and an automated
+tap that only depresses half way at the same rate of speed.** Both landed in `34h`. The look was
+settled across four revisions BEFORE anything shipped — §1x — so one buildmark covers the lot.
+
+## What the badge press actually is
+
+`.cred-badge` on the HOME screen (`#home-cred-badge`). There are THREE shadows, not one:
+
+1. **The baked cast** — a second `<image>` of `BADGE_MAC` inside the SVG, offset and pushed through
+   filter `#cbCast` (`feColorMatrix` + `feGaussianBlur stdDeviation="7.5"`). Its strength is the
+   ALPHA IN THE COLOUR MATRIX, not a CSS opacity. It is the only shadow that MOVES on press.
+2. **The near CSS drop-shadow** — `0 4px Npx`. This is what cuts the RIM. Edge crispness lives here.
+3. **The far CSS drop-shadow** — `0 10px 14px`. A soft ambient pool. It does almost nothing for the
+   edges; lightening it lightens the badge without touching definition.
+
+## The values, and how they moved
+
+| | `34g` | `34h` |
+|---|---|---|
+| baked cast alpha | `.78` | `.47` |
+| resting near | `0 4px 3px` @ `.6` | `0 4px 2px` @ `.52` |
+| resting far | `0 10px 14px` @ `.35` | `0 10px 14px` @ `.21` |
+| full press near / far | `.5` / `.28` | `.433` / `.17` |
+| auto-tap near / far | (used full press) | `.477` / `.19` |
+
+**🔴 THE HEADLINE NUMBER IS MISLEADING AND THE OWNER WAS TOLD SO AT THE TIME.** This began as
+"lighten by 50%", became 40%, and then the near shadow was pushed back UP twice for edge crispness.
+The near shadow ended only ~13% lighter than it started. **The lightening is real but it lives in the
+far pool and the baked cast, not at the rim.** Do not read "40% lighter" off this section and assume
+every number was scaled.
+
+**Blur, not opacity, is the crispness lever.** Dropping the near blur `3px` → `2px` did more for the
+edge than any opacity step. Past `.52` the near shadow starts reading as a halo. If more crispness is
+ever wanted, go to `1.5px` blur BEFORE adding opacity.
+
+## The automated tap is now decoupled from `:active`
+
+**Before `34h`, `.cb-selfpress` and `:active` shared one rule, so the demo tap and a real finger were
+the same press.** They are now two rules. A REAL TAP STILL GETS THE FULL DEPRESSION — owner call.
+The automated one is half: plate `translateY(.5px) scale(.9925)` (was `1px` / `.985`), baked cast
+`translate(-1.5px,-5px)` at opacity `.78` (was `-3px,-10px` at `.55`), brightness `1.02` (was `1.04`).
+
+**THE RHYTHM WAS NOT TOUCHED, ON EXPLICIT INSTRUCTION** — still `tap(160)` and `tap(560)` with a
+230 ms hold, still twice, still fired by the IntersectionObserver at ratio ≥ 0.98. "Keep same rate of
+speed" meant the DEPTH changed and the TIMING did not. If you halve the depth again, do not touch
+the transitions (`.08s` transform, `.12s` filter) either — they are the same for both presses.
+
+## Method note worth keeping
+
+The three shadow options were compared **in an injected harness inside the live page**, cloning the
+REAL badge node three ways — `index.html` was never touched during the exploration (§1x, and the s58
+lesson about unpicking six edits). The baked cast was a candidate for DELETION; it was kept because
+it is the shadow that carries the press parallax, and removing it flattens the press.

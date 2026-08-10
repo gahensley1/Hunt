@@ -783,17 +783,22 @@
   .btn-ghost.btn-big{font-size:15px;font-weight:700}
   .cred-badge{background:none;border:0;padding:0;display:block;margin:-10px auto 0;width:min(351px,100%);aspect-ratio:316/424;height:auto;cursor:pointer;-webkit-tap-highlight-color:transparent}
   .cred-badge svg{width:100%;height:100%;display:block;pointer-events:none;
-    filter:drop-shadow(0 4px 3px rgba(10,7,4,.6)) drop-shadow(0 10px 14px rgba(10,7,4,.35));
+    filter:drop-shadow(0 4px 2px rgba(10,7,4,.52)) drop-shadow(0 10px 14px rgba(10,7,4,.21));
     transition:transform .08s ease,filter .12s ease}
   /* SS107: the plaque idiom, applied to the medal. The cast shadow collapses and the plate
      settles a pixel down, so it reads as pressed INTO the paper rather than nudged across it.
      Matches .btn-plaque:active img exactly - one press behaviour for everything on this screen. */
-  .cred-badge:active svg,.cred-badge.cb-selfpress svg{transform:translateY(1px) scale(.985);
-    filter:drop-shadow(0 1px 1px rgba(10,7,4,.5)) drop-shadow(0 2px 3px rgba(10,7,4,.28)) brightness(1.04)}
+  .cred-badge:active svg{transform:translateY(1px) scale(.985);
+    filter:drop-shadow(0 1px 1px rgba(10,7,4,.433)) drop-shadow(0 2px 3px rgba(10,7,4,.17)) brightness(1.04)}
+  /* SS115: the AUTOMATED tap depresses HALF as far - a real finger still gets the full press
+     above. Same rhythm as before: 160ms, 560ms, 230ms hold. Owner call, s60. */
+  .cred-badge.cb-selfpress svg{transform:translateY(.5px) scale(.9925);
+    filter:drop-shadow(0 2.5px 2px rgba(10,7,4,.477)) drop-shadow(0 6px 8.5px rgba(10,7,4,.19)) brightness(1.02)}
   /* SS114: the baked cast copy inside the SVG presses too - offset 5,14 closes to 2,4 and
      it lightens, so EVERY shadow agrees the badge moved toward the surface */
   .cred-badge .cb-cast{transition:transform .08s ease,opacity .12s ease}
-  .cred-badge:active .cb-cast,.cred-badge.cb-selfpress .cb-cast{transform:translate(-3px,-10px);opacity:.55}
+  .cred-badge:active .cb-cast{transform:translate(-3px,-10px);opacity:.55}
+  .cred-badge.cb-selfpress .cb-cast{transform:translate(-1.5px,-5px);opacity:.78}
   .cred-badge text{font-family:var(--serif);font-weight:800;font-size:16.2px;letter-spacing:.6px;fill:#35322E}
   .cred-badge .cb-lip text{fill:rgba(255,255,255,.5)}
   #record-ov{position:fixed;inset:0;background:rgba(20,13,7,.88);z-index:520;display:flex;align-items:center;justify-content:center;padding:10px;overflow:hidden}
@@ -1333,7 +1338,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">34g</p>
+      <p id="buildmark" aria-label="test build marker">34h</p>
     </div>
   </section>
 
@@ -3514,7 +3519,7 @@ function credBadgeSVG(rank){
   /* SS95.1: the plate is big enough that its crown crosses the ring, so the upper legend is
      BROKEN either side of it - one arc, two texts anchored at 25% and 75%, which puts the gap
      at twelve o'clock by construction rather than by fiddling with offsets. */
-  return `<svg viewBox="-58 -152 316 424" aria-hidden="true"><defs><path id="cbTop" d="${dTop}"/><path id="cbBot" d="${dBot}"/><filter id="cbCast" x="-25%" y="-25%" width="150%" height="150%"><feColorMatrix type="matrix" values="0 0 0 0 0.03 0 0 0 0 0.02 0 0 0 0 0.015 0 0 0 .78 0"/><feGaussianBlur stdDeviation="7.5"/></filter></defs><image class="cb-cast" href="${BADGE_MAC}" x="-40" y="-129" width="290" height="406" preserveAspectRatio="xMidYMid meet" filter="url(#cbCast)"/><image href="${BADGE_MAC}" x="-45" y="-143" width="290" height="406" preserveAspectRatio="xMidYMid meet"/><g class="cb-lip" transform="translate(0,.9)"><text text-anchor="middle" style="font-size:${ts}px"><textPath href="#cbTop" startOffset="50%">RETRIEVE CREDENTIALS</textPath></text><text text-anchor="middle" style="font-size:${fs}px"><textPath href="#cbBot" startOffset="50%">${escapeHtml(r)}</textPath></text></g><text class="cb-die" text-anchor="middle" style="font-size:${ts}px"><textPath href="#cbTop" startOffset="50%">RETRIEVE CREDENTIALS</textPath></text><text class="cb-die" text-anchor="middle" style="font-size:${fs}px"><textPath href="#cbBot" startOffset="50%">${escapeHtml(r)}</textPath></text></svg>`;
+  return `<svg viewBox="-58 -152 316 424" aria-hidden="true"><defs><path id="cbTop" d="${dTop}"/><path id="cbBot" d="${dBot}"/><filter id="cbCast" x="-25%" y="-25%" width="150%" height="150%"><feColorMatrix type="matrix" values="0 0 0 0 0.03 0 0 0 0 0.02 0 0 0 0 0.015 0 0 0 .47 0"/><feGaussianBlur stdDeviation="7.5"/></filter></defs><image class="cb-cast" href="${BADGE_MAC}" x="-40" y="-129" width="290" height="406" preserveAspectRatio="xMidYMid meet" filter="url(#cbCast)"/><image href="${BADGE_MAC}" x="-45" y="-143" width="290" height="406" preserveAspectRatio="xMidYMid meet"/><g class="cb-lip" transform="translate(0,.9)"><text text-anchor="middle" style="font-size:${ts}px"><textPath href="#cbTop" startOffset="50%">RETRIEVE CREDENTIALS</textPath></text><text text-anchor="middle" style="font-size:${fs}px"><textPath href="#cbBot" startOffset="50%">${escapeHtml(r)}</textPath></text></g><text class="cb-die" text-anchor="middle" style="font-size:${ts}px"><textPath href="#cbTop" startOffset="50%">RETRIEVE CREDENTIALS</textPath></text><text class="cb-die" text-anchor="middle" style="font-size:${fs}px"><textPath href="#cbBot" startOffset="50%">${escapeHtml(r)}</textPath></text></svg>`;
 }
 /* SS114: the badge presses ITSELF once when the detective scrolls it fully into view -
    a silent demonstration that it can be pressed. Re-arms after it half-leaves the view.
