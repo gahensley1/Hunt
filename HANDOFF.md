@@ -1,5 +1,6 @@
 # HANDOFF.md — LIVE STATE, RULES AND WHAT IS OPEN
 
+### 🔴 **s60: §113 IS NEW — the power-up rule. The repo is 21 top-level entries, measured s60.**
 ### 🔴🔴 **s59: READ §112 FIRST — IT IS THE SESSION-59 CLOSE AND IT SUPERSEDES §109 AND §80's ORDER.** **LIVE: `34f` — 4,302,649 B / `e47ab146ba9f5e81…`, commit `8480ebb3`, Worker `v2.6.13`. NEXT MARK `34g` / Lime `#7FA33C`.** Everything below this line that names `34d`, `34e` or `33n` as live is history; §0's table is correct.
 
 ### 🔴🔴 **s55: THIS DOCUMENT WAS SPLIT IN THREE. `SUPER-HANDOFF.md` IS DEAD — do not resurrect it, do not look for it, and if the project-instruction block still names it, paste the revised block from `claude/PROJECT-INSTRUCTIONS-s55.md`.** The set is: **`HANDOFF.md`** (this file — live state, the rules, what is open; **READ IT IN FULL**) · **`HANDOFF-SPEC.md`** (how the app works; read the section you are touching) · **`HANDOFF-HISTORY.md`** (the build record; grep it, never read it whole). **NOTHING WAS COMPRESSED OR REWRITTEN — 5,250 lines went in and 5,250 came out, all 72 sections landed in exactly one file, verified by reconciliation, and the old file is preserved at `_to_delete\SUPER-HANDOFF.md.SPLIT-AT-s55` until the owner deletes it.** **🔴 A RULE LIVES IN EXACTLY ONE FILE; a rule found in two means one is a copy, and copies drift (§0.2, §1w).**
@@ -220,7 +221,7 @@ is proven and should be reused for every future Worker change.
 | `j.html` **(CHANGED since s30)** | 1,419 B | `bbf057e1f3225a0f…` | invitation landing page (§8n/§8o) |
 | `og-card.jpeg` | 246,070 B | `0067960541bec0ac…` | link-preview card |
 
-- **🔴 THE REPO IS EIGHTEEN TOP-LEVEL ENTRIES, MEASURED s57 FROM `api.github.com` (unchanged since s56):**
+- **🔴 THE REPO IS TWENTY-ONE TOP-LEVEL ENTRIES, MEASURED s60 FROM `api.github.com`:** the s57 eighteen **plus `CLAUDE-CODE-s59-findings.md`, `Chicago-Cold-Cases-plan.html` and `Chicago-Cold-Cases-plan.pdf`** — the two plan files are unreleased case content in a public repo and an owner decision on them is owed (§112.5). *(the s57 line, for the record:)* THE REPO IS EIGHTEEN TOP-LEVEL ENTRIES, MEASURED s57 FROM `api.github.com` (unchanged since s56):
   `.gitattributes` · `.gitignore` · `.nojekyll` · `HANDOFF.md` · `HANDOFF-SPEC.md` ·
   `HANDOFF-HISTORY.md` · `award-card.jpeg` · `battery.cmd` · `claude/` · `docs/` · `icons/` ·
   `index.html` · `j.html` · `manifest.webmanifest` · `og-card.jpeg` · `ship.cmd` · `sw.js` ·
@@ -2338,6 +2339,29 @@ sheet, so a year is one tap from wherever the reader stands, and **`email report
 screen** — month or year — through the same `_wireLedgEmail` (§83.2), which will need a `year`
 argument alongside `code`.
 **✅ s56: BUILT, AND THE COPY WAS PUT TO THE OWNER RATHER THAN SHIPPED.** He chose **`Annual report ›`** — Claude's `The whole year 2026 ›` placeholder was NOT used. See §86.
+
+---
+
+## 🔴 §113 — POWER UP BEFORE ANYTHING ELSE (owner rule, s60)
+
+**Owner, s60, verbatim: "do whatever you need and make it rule after your review to get pwered up."**
+
+At session open, unprompted, before reporting anything:
+
+1. **Mount `C:\Users\tony\Documents\Hunt` by path** — no folder-picker, no asking. Add
+   `Hunt-backups` if the work touches the archive, the clerk or `serve.ps1`.
+2. **`list_connected_browsers`.** `[]` means not connected; ask for the EXTENSION by name and
+   nothing else. When Chrome is up, Claude verifies results in it ITSELF before showing him.
+3. **STATIC in the sandbox** — `PYTHONUTF8=1 python3 test/agents.py index.html`.
+4. **Hash disk, origin and Pages and probe the Worker** — `.git/refs` read as plain files, the
+   atom feed for the SHA, raw fetched AT that SHA, a cache-buster and a User-Agent on the Worker.
+5. **Read §0, the newest session-close section, and §77.**
+
+**The point of the rule: he should never have to ask whether Claude can see a result.** Acquire
+every route Claude can hold (folder, Chrome, sandbox, the live surfaces), use them to check work
+before presenting it, and hand over paste-ready blocks ONLY for what truly needs his machine
+(`serve.ps1`, `ship`, `battery`, anything PowerShell/cmd). A blocker reported without the command
+that clears it is an unfinished answer (§77).
 
 ---
 
