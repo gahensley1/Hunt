@@ -1,5 +1,6 @@
 # HANDOFF.md — LIVE STATE, RULES AND WHAT IS OPEN
 
+### 🔴🔴 **s60: READ §117 — `34j` IS DELIVERED AND SHIPPING: the badge’s automated press is now ONE half press over TWICE the time, easing gently in and out. 4,309,442 B / `891d43269e06111e2692fa1ae88113c7a64e4a362b1a5890e98d576fe0b9f330`. NEXT MARK `34k` / Rose `#B5566B`.** A REAL FINGER IS UNCHANGED — still full depth at `.08s`. Battery recorded AFTER the build, same hash.
 ### 🔴🔴 **s60: READ §116 — `34i` IS DELIVERED AND SHIPPING: the AGENCY REPLY ALERT — an oxblood airmail toast on open, and the wax seal’s reply stamp pulsing when it scrolls into view. 4,308,716 B / `99c1a2473cab45693586016c74548f6ea090479306bdd697bf9dffb0d1849311`. NEXT MARK `34j` / Ochre `#C88A2E`.** CLIENT ONLY — no Worker change, no deploy, nothing to install. Battery recorded against the same build before the ship.
 ### 🔴🔴 **s60: READ §115 — `34h` IS DELIVERED AND SHIPPING: the badge cast shadow re-weighted and the AUTOMATED tap halved. 4,304,630 B / `520617937cf8710cbbb2080277a24ea67f47d4353a7bed0ba2937b6aa4b86e1c`. NEXT MARK `34i` / Cobalt `#3B6BA5` (the rotation wraps after Rust).** Battery passed and was recorded against `520617937cf8710c…` — the same build, before the ship.
 ### 🔴🔴 **s60: READ §114 — `34g` IS DELIVERED AND SHIPPING: the S&H cypher badge. 4,304,247 B / `daee29ef…`. NEXT MARK `34h` / Rust `#B4532A`.** §113 is also new — the power-up rule. The repo is 21 top-level entries, measured s60.
@@ -3174,3 +3175,43 @@ ruling stands and is available whenever push is built; nothing was shipped again
 oxblood is `#8A3324`, it is wrong. Owner copy verbatim: *"The Agency reply waits for you under seal,
 see below."* It was typed "see blow" and was queried TWICE rather than silently corrected; the owner
 confirmed "see below". **Query owner copy, never quietly fix it — but do query it.**
+
+
+---
+
+# §117 — THE BADGE PRESSES ONCE, GENTLY (s60, `34j`)
+
+**Owner: "the badge should not do 2 half pushes — change it to one half push, and do the same action
+in twice the time, gentle."** Shipped in `34j`. This is the third pass over the same twelve lines in
+one session; §114 built the self-press, §115 halved its depth, §117 makes it single and slow.
+
+## What changed
+
+| | `34i` | `34j` |
+|---|---|---|
+| presses | TWO, at 160 ms and 560 ms | **ONE**, at 160 ms |
+| hold | 230 ms | **460 ms** |
+| transition in/out | `.08s` / `.12s` | **`.16s` / `.24s`** |
+| a real finger (`:active`) | full depth, `.08s` | **unchanged** |
+
+Two presses at 230 ms read as a DOUBLE-TAP rather than a demonstration. One slow press reads as the
+badge showing you it can be pressed, which was always the point (§114).
+
+## 🔴 `cb-gentle` — WHY IT IS A SECOND CLASS, AND WHY IT OUTLIVES THE FIRST
+
+The transition lives on the BASE rule `.cred-badge svg`, which `:active` also uses. Slowing it there
+would have made a real tap sluggish — the exact thing §115 decoupled. So the slow easing is carried by
+`cb-gentle`, added alongside `cb-selfpress` and **removed 300 ms AFTER it**.
+
+**IF `cb-gentle` IS REMOVED WITH THE PRESS CLASS, THE BADGE EASES IN SLOWLY AND SNAPS BACK.** A
+transition is read at the moment the property changes; the release needs the slow rule STILL APPLYING.
+This is the whole reason for the nested timeout, and it will look like dead code to anyone tidying up.
+
+## Measuring it
+
+**A BACKGROUNDED TAB MADE THE FIRST MEASUREMENT A LIE.** `setTimeout` throttled to 1 s intervals and
+the computed transform read `matrix(1,0,0,1,0,0)` — identity — mid-transition, which looks exactly
+like "the press does nothing". It was frame 0, not a fault. **Measure a transitioned property with
+`transition:none !important` injected first, or read the RULE off `document.styleSheets` rather than
+the computed value.** Verified that way: press `matrix(0.9925,0,0,0.9925,0,0.5)`, cast
+`matrix(1,0,0,1,-1.5,-5)` at opacity `.78`, `:active` still `translateY(1px) scale(0.985)`.

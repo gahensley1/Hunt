@@ -792,6 +792,10 @@
     filter:drop-shadow(0 1px 1px rgba(10,7,4,.433)) drop-shadow(0 2px 3px rgba(10,7,4,.17)) brightness(1.04)}
   /* SS115: the AUTOMATED tap depresses HALF as far - a real finger still gets the full press
      above. Same rhythm as before: 160ms, 560ms, 230ms hold. Owner call, s60. */
+  /* SS117: the AUTOMATED press eases twice as slowly. Held by `cb-gentle`, which outlives the
+     press class so the RELEASE is gentle too. `:active` never sees it. */
+  .cred-badge.cb-gentle svg{transition:transform .16s ease,filter .24s ease}
+  .cred-badge.cb-gentle .cb-cast{transition:transform .16s ease,opacity .24s ease}
   .cred-badge.cb-selfpress svg{transform:translateY(.5px) scale(.9925);
     filter:drop-shadow(0 2.5px 2px rgba(10,7,4,.477)) drop-shadow(0 6px 8.5px rgba(10,7,4,.19)) brightness(1.02)}
   /* SS114: the baked cast copy inside the SVG presses too - offset 5,14 closes to 2,4 and
@@ -1352,7 +1356,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">34i</p>
+      <p id="buildmark" aria-label="test build marker">34j</p>
     </div>
   </section>
 
@@ -3548,9 +3552,17 @@ function credBadgeSVG(rank){
       es.forEach(function(e){
         if(e.intersectionRatio>=0.98 && ready){
           ready=false;
-          var tap=function(delay){ setTimeout(function(){ b.classList.add("cb-selfpress");
-            setTimeout(function(){ b.classList.remove("cb-selfpress"); },230); },delay); };
-          tap(160); tap(560);   /* it presses TWICE - owner call, s60 */
+          /* SS117: ONE half press, taking TWICE as long - owner, s60. It pressed twice at 230ms
+             each; that read as a double-tap rather than a demonstration. `cb-gentle` slows the
+             transition for the automated press ONLY, on the way in AND on the way out, so a real
+             finger keeps its crisp .08s response. */
+          setTimeout(function(){
+            b.classList.add("cb-gentle");
+            b.classList.add("cb-selfpress");
+            setTimeout(function(){ b.classList.remove("cb-selfpress");
+              setTimeout(function(){ b.classList.remove("cb-gentle"); },300);
+            },460);
+          },160);
         } else if(e.intersectionRatio<0.5){ ready=true; }
       });
     },{threshold:[0.5,0.98]}).observe(b);
