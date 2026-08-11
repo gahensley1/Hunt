@@ -1,5 +1,6 @@
 # HANDOFF.md — LIVE STATE, RULES AND WHAT IS OPEN
 
+### 🔴🔴 **s60: READ §116 — `34i` IS DELIVERED AND SHIPPING: the AGENCY REPLY ALERT — an oxblood airmail toast on open, and the wax seal’s reply stamp pulsing when it scrolls into view. 4,308,716 B / `99c1a2473cab45693586016c74548f6ea090479306bdd697bf9dffb0d1849311`. NEXT MARK `34j` / Ochre `#C88A2E`.** CLIENT ONLY — no Worker change, no deploy, nothing to install. Battery recorded against the same build before the ship.
 ### 🔴🔴 **s60: READ §115 — `34h` IS DELIVERED AND SHIPPING: the badge cast shadow re-weighted and the AUTOMATED tap halved. 4,304,630 B / `520617937cf8710cbbb2080277a24ea67f47d4353a7bed0ba2937b6aa4b86e1c`. NEXT MARK `34i` / Cobalt `#3B6BA5` (the rotation wraps after Rust).** Battery passed and was recorded against `520617937cf8710c…` — the same build, before the ship.
 ### 🔴🔴 **s60: READ §114 — `34g` IS DELIVERED AND SHIPPING: the S&H cypher badge. 4,304,247 B / `daee29ef…`. NEXT MARK `34h` / Rust `#B4532A`.** §113 is also new — the power-up rule. The repo is 21 top-level entries, measured s60.
 ### 🔴🔴 **s59: READ §112 FIRST — IT IS THE SESSION-59 CLOSE AND IT SUPERSEDES §109 AND §80's ORDER.** **LIVE: `34f` — 4,302,649 B / `e47ab146ba9f5e81…`, commit `8480ebb3`, Worker `v2.6.13`. NEXT MARK `34g` / Lime `#7FA33C`.** Everything below this line that names `34d`, `34e` or `33n` as live is history; §0's table is correct.
@@ -3104,3 +3105,72 @@ The three shadow options were compared **in an injected harness inside the live 
 REAL badge node three ways — `index.html` was never touched during the exploration (§1x, and the s58
 lesson about unpicking six edits). The baked cast was a candidate for DELETION; it was kept because
 it is the shadow that carries the press parallax, and removing it flattens the press.
+
+
+---
+
+# §116 — THE AGENCY REPLY ALERT (s60, `34i`)
+
+**Owner asked to be told when a detective’s letter to the Agency has been answered — a web push,
+maybe a toast, pointing them at the icon, the icon flashing until read. What SHIPPED is the toast and
+the pulsing seal. PUSH WAS DELIBERATELY NOT BUILT.** Read §116.3 before building it, because the
+groundwork is NOT the groundwork it looks like.
+
+## §116.1 — Most of this already existed. Look before building.
+
+The wax seal on the home screen (`.seal-btn`, `openAgencyMsg()`) ALREADY had an unread-reply state
+before this session: `.seal-btn.has-reply .seal-replystamp{display:block}`, set by `refreshSealDot()`
+reading `reply:<badge>` and cleared when the letter is opened. **The ask was two-thirds built.** Only
+the announcement and the motion were missing.
+
+## §116.2 — What `34i` added
+
+- **`toastReplyWaiting()`** — an oxblood toast carrying a DRAWN airmail envelope. It reuses the
+  existing `.toast.tip` (oxblood + brass border, built for the tour’s oxblood beat); the new
+  `.toast.tip-air` only makes it a flex row for the icon. **NO NEW TOAST STYLE WAS INVENTED.**
+- **The envelope is inline SVG, never an emoji.** No emoji in-product is standing, and `\u2709`
+  substitutes to the colour emoji on iOS — that is how an emoji reaches a product by accident.
+- **`refreshSealDot(announce)`** now returns the UNREAD COUNT and holds it on `State._replyUnread`.
+  It announces only on a FIRST look or a RISE in the count.
+- **The seal pulses on scroll-into-view** — `sp-pulse`, three beats of `sealPulse`, then stops.
+  IntersectionObserver at ≥0.98 re-arming below 0.5, skipped under `prefers-reduced-motion`. It is
+  the SS114 badge rig, reused. **Owner rejected a permanent animation: it reads as an error state
+  and costs battery. Re-arming gives "until read" without nagging.**
+- Announces from exactly TWO places: the home render, and `visibilitychange` on return to the app.
+  **NOTHING POLLS.**
+
+**🔴 THE TRAP THAT SHAPED THE DESIGN.** `openAgencyMsg()` marks entries `read:true` and WRITES THE
+SAME `reply:<badge>` KEY. Anything that fires on "a write to `reply:`" therefore fires every time the
+detective READS THEIR MAIL. The count test is what makes this safe — reading LOWERS the count, and a
+rise is the only thing that speaks. **Any future push hook has the identical problem and must diff
+the old value against the new, not react to the write.**
+
+## §116.3 — 🔴 WHY PUSH WAS NOT BUILT, AND WHAT IT ACTUALLY COSTS
+
+**The existing push subscription is keyed to a CASE, not a detective.** `pushSubscribe(code)` POSTs
+`{code, role:"builder"|"hunter"}` to `/push-sub`, which writes `push:<code>:<who>`. An Agency reply is
+addressed to a BADGE. **There is no subscription the Worker could look up to reach that person.** So
+"the push receiver already exists" is TRUE AND MISLEADING — `sw.js` can receive, but nothing can
+address it. A badge-keyed subscription is new work on BOTH sides:
+
+1. `/push-sub` must accept a badge form and write `push:badge:<badge>`. The `/kv/` gate already
+   refuses to read anything matching `^push:` to a non-curator, so the new key inherits that.
+2. A `reply:` hook in the `/kv/` PUT handler, mirroring the `sub:` hook that sends Word from the
+   Yard, using the existing `pushEncrypt` / `pushSend`. Tag `shco-reply` so a second reply
+   SUPERSEDES rather than stacks. **It must diff — see the trap above.**
+3. `sw.js` must route a reply tap to the Agency letter, not the roster. That is a THIRD file with
+   its own hash in §0.
+4. **iOS web push needs the home-screen install (§80.1).** Unreachable from a Safari tab.
+
+**Owner’s reasoning for stopping, and it is the right one: push only earns its keep when the app is
+CLOSED.** A toast on open covers everything else, works on iOS Safari today, and needs no deploy.
+§64.3 was AMENDED IN PRINCIPLE this session — the owner ruled a reply transactional and therefore in
+scope, being the answer to a letter the detective sent first, not a re-engagement nudge. **That
+ruling stands and is available whenever push is built; nothing was shipped against it.**
+
+## §116.4 — Notes
+
+`--oxblood` is `#8B0000`. **`#8A3324` appears NOWHERE in `index.html`** — if a session tells you the
+oxblood is `#8A3324`, it is wrong. Owner copy verbatim: *"The Agency reply waits for you under seal,
+see below."* It was typed "see blow" and was queried TWICE rather than silently corrected; the owner
+confirmed "see below". **Query owner copy, never quietly fix it — but do query it.**

@@ -1110,6 +1110,15 @@
   .stamp-link::before{content:"";position:absolute;inset:-8px 0} .stamp-link img{display:block;width:100%;height:auto} .stamp-link:active img{opacity:.85}
   .seal-replystamp{position:absolute;left:72%;top:86.2%;width:31.08%;filter:brightness(.5);transform:translate(-50%,-50%);display:none;pointer-events:none}
   .seal-btn.has-reply .seal-replystamp{display:block}
+  /* SS116: the reply stamp pulses WHEN THE SEAL SCROLLS INTO VIEW, three beats, then stops -
+     the badge idiom (SS114) applied to the seal. It re-arms, so it pulses again every time
+     the detective comes back to it, until the letter is read. Owner call, s60: no permanent
+     animation - that reads as an error state and costs battery.
+     The stamp is already translate(-50%,-50%); the keyframes MUST carry that or it jumps. */
+  @keyframes sealPulse{0%{transform:translate(-50%,-50%) scale(1)}
+    45%{transform:translate(-50%,-50%) scale(1.12)}
+    100%{transform:translate(-50%,-50%) scale(1)}}
+  .seal-btn.sp-pulse .seal-replystamp{animation:sealPulse .8s ease-in-out 3}
   /* By Order of the Commissioner — daily dispatch card */
   #commish-card{position:absolute;left:50%;transform:translateX(-50%);width:calc(100% - 28px);max-width:520px;display:flex;flex-direction:column;z-index:498;background:repeating-linear-gradient(180deg,transparent 0 25px,rgba(94,70,48,.10) 25px 26px),#F4EBD6;border:1px solid rgba(94,70,48,.55);border-radius:4px;box-shadow:0 14px 38px rgba(10,7,3,.55);padding:6px 16px 4px;text-align:center;overflow:hidden}
   #commish-card.hidden{display:none}
@@ -1228,6 +1237,11 @@
   .toast.show{opacity:1;transform:translateX(-50%) translateY(-4px)}
   .toast.err{background:var(--oxblood);color:var(--paper);font-size:20.25px;padding:16.5px 27px;max-width:92%}
   .toast.tip{background:var(--oxblood);color:var(--paper);border:1px solid #D8AF63}
+  /* SS116: the AIRMAIL toast - an oxblood tip carrying a drawn envelope. The envelope is
+     inline SVG, NOT an emoji: no emoji in-product, and a U+2709 glyph substitutes to the
+     colour emoji on iOS, which is how one gets into a product by accident. */
+  .toast.tip-air{display:flex;align-items:center;gap:10px;text-align:left;max-width:92%}
+  .toast.tip-air .tip-air-env{flex:none;width:34px;height:auto;display:block}
   /* Anchored beside the ADD CLUE tile. The bottom-centre default lands under the
      Finish bar on the build page and runs off frame; this parks it in the clear
      parchment next to the blank tile. Positioned from the tile rect at runtime. */
@@ -1338,7 +1352,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">34h</p>
+      <p id="buildmark" aria-label="test build marker">34i</p>
     </div>
   </section>
 
@@ -2228,7 +2242,7 @@ function refreshHomeBadge(){
     const b=document.getElementById("home-cred-badge");
     if(b){ const r=myRankName(); if(b.dataset.rank!==r){ b.innerHTML=credBadgeSVG(r); b.dataset.rank=r; } }
   }catch(e){}
-  try{ refreshSealDot(); }catch(e){}
+  try{ refreshSealDot(true); }catch(e){}
 }
 function toast(msg,ms,cls){
   const t=document.getElementById("toast"); t.textContent=msg; t.className="toast show"+(cls?" "+cls:"");
@@ -3543,6 +3557,34 @@ function credBadgeSVG(rank){
   }
   if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",arm);
   else arm();
+})();
+/* SS116: the SEAL pulses its reply stamp when it scrolls fully into view, and only while a
+   reply is unread. Same rig as the badge above - re-arms below 0.5, skipped under reduced
+   motion. The visibilitychange half is what catches a reply that landed while the detective
+   was in another app; it is the ONLY other place refreshSealDot announces. */
+(function(){
+  function armSeal(){
+    var b=document.querySelector(".seal-btn");
+    if(!b||!("IntersectionObserver" in window))return;
+    try{ if(matchMedia("(prefers-reduced-motion: reduce)").matches) return; }catch(e){}
+    var ready=true;
+    new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(e.intersectionRatio>=0.98 && ready){
+          ready=false;
+          if(b.classList.contains("has-reply")){
+            b.classList.add("sp-pulse");
+            setTimeout(function(){ b.classList.remove("sp-pulse"); },2500);
+          }
+        } else if(e.intersectionRatio<0.5){ ready=true; }
+      });
+    },{threshold:[0.5,0.98]}).observe(b);
+  }
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",armSeal);
+  else armSeal();
+  document.addEventListener("visibilitychange",function(){
+    if(!document.hidden){ try{ refreshSealDot(true); }catch(e){} }
+  });
 })();
 function credBadgeMedallionSVG(){
   return `<svg viewBox="-8 -8 216 216" aria-hidden="true"><defs><path id="cbTopM" d="M100,100 m-86,0 a86,86 0 0,1 172,0"/><path id="cbBotM" d="M100,100 m-92,0 a92,92 0 0,0 184,0"/></defs><image href="${BADGE_MAC}" x="36" y="24" width="128" height="152" preserveAspectRatio="xMidYMid meet"/><text text-anchor="middle"><textPath href="#cbTopM" startOffset="50%">SCAVENGER &amp; HUNT CO.</textPath></text><text text-anchor="middle"><textPath href="#cbBotM" startOffset="50%">FIELD DETECTIVE</textPath></text><circle cx="11" cy="100" r="1.7" fill="#4A3A22"/><circle cx="189" cy="100" r="1.7" fill="#4A3A22"/></svg>`;
@@ -6062,11 +6104,38 @@ async function sendMsgReply(){
   toast("Reply dispatched \u2014 it will reach them on the seal.", 3200);
   renderCurator();
 }
-async function refreshSealDot(){
-  try{ const btn=document.querySelector(".seal-btn"); if(!btn) return;
-    const bd=myCred()?fmtCred(myCred()):""; if(!bd){ btn.classList.remove("has-reply"); return; }
+/* SS116: returns the UNREAD count, and announces a rise in it. `announce` is passed on the
+   home render and on returning to the app - nowhere else, and nothing polls. The toast fires
+   on the FIRST look (was === -1) and whenever the count GOES UP, never on the write that marks
+   the letters read - that write lowers the count. */
+async function refreshSealDot(announce){
+  try{ const btn=document.querySelector(".seal-btn"); if(!btn) return 0;
+    const bd=myCred()?fmtCred(myCred()):""; if(!bd){ btn.classList.remove("has-reply"); State._replyUnread=0; return 0; }
     let arr=[]; const r=await Store.get("reply:"+bd,true); if(r){ try{ arr=JSON.parse(r)||[]; }catch(e){ arr=[]; } }
-    btn.classList.toggle("has-reply", arr.some(function(x){ return x&&!x.read; }));
+    const n=arr.filter(function(x){ return x&&!x.read; }).length;
+    btn.classList.toggle("has-reply", n>0);
+    const was=(typeof State._replyUnread==="number")?State._replyUnread:-1;
+    State._replyUnread=n;
+    if(n>0 && announce && (was<0 || n>was)) toastReplyWaiting();
+    return n;
+  }catch(e){ return 0; }
+}
+/* SS116: OWNER COPY, VERBATIM. The envelope is drawn, not typed. */
+function toastReplyWaiting(){
+  try{
+    const t=document.getElementById("toast"); if(!t) return;
+    t.innerHTML='<svg class="tip-air-env" viewBox="0 0 40 26" aria-hidden="true">'+
+      '<defs><pattern id="airStripe" width="12" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">'+
+      '<rect width="6" height="6" fill="#B3121D"></rect><rect x="6" width="6" height="6" fill="#1B3A8C"></rect>'+
+      '</pattern></defs>'+
+      '<rect x="1" y="1" width="38" height="24" rx="1.5" fill="url(#airStripe)"></rect>'+
+      '<rect x="4" y="4" width="32" height="18" fill="#F4EDDC"></rect>'+
+      '<path d="M4 4 L20 15 L36 4" fill="none" stroke="#6B3430" stroke-width="1.4"></path>'+
+      '</svg><span></span>';
+    t.querySelector("span").textContent="The Agency reply waits for you under seal, see below.";
+    t.className="toast show tip tip-air";
+    t.style.left=""; t.style.top=""; t.style.width="";
+    clearTimeout(t._t); t._t=setTimeout(function(){ t.classList.remove("show"); },4200);
   }catch(e){}
 }
 function curTab(t){ State.curTab=t; renderCurator(); }
