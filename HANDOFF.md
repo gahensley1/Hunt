@@ -1,84 +1,134 @@
 # HANDOFF.md — LIVE STATE, RULES AND WHAT IS OPEN
+### **SESSION-60 EDITION (Aug 11 2026). THIS RE-BASE SUPERSEDES THE ENTIRE PRIOR CHAIN.**
 
-### 🔴🔴 **s60: READ §119 — `34m` IS DELIVERED AND SHIPPING: THE MASTHEAD IS SIZED OFF THE HERO, not the viewport. It now fills 96-97.5% of the hero plaque at every width and never passes it. 4,311,999 B / `68d8f303aa3c9d583d4857dacf9994aa6b2d6017075438a09cf617baeb0000c5`. NEXT MARK `34n` / Magenta `#A8478F`.** THIS BUILD IS `34l` PLUS THREE CSS LINES - 14 diff lines total. The home-plate artwork explored this session is NOT in it.
-### 🔴🔴 **s60: READ §118 — `34l` IS DELIVERED AND SHIPPING: THE COLD CASES ARE NOW **AGENCY CASES** app-wide, CASE FILES IS NOW **CASE REVIEW**, and the home screen is a 2×2 grid of TEMPORARY line-art buttons. 4,311,514 B / `305afd1e9d2a5d5d6698319f9812c98eff93584872d07aa356c960548180bcf9`. NEXT MARK `34m` / Verdigris `#4E9A87`.** `test/behaviour.py` SHIPS WITH IT — its precinct parser had to follow the rename. Battery 65/65 + 21/21 on this hash.
-### 🔴🔴 **s60: READ §117 — `34j` IS DELIVERED AND SHIPPING: the badge’s automated press is now ONE half press over TWICE the time, easing gently in and out. 4,309,442 B / `891d43269e06111e2692fa1ae88113c7a64e4a362b1a5890e98d576fe0b9f330`. NEXT MARK `34k` / Rose `#B5566B`.** A REAL FINGER IS UNCHANGED — still full depth at `.08s`. Battery recorded AFTER the build, same hash.
-### 🔴🔴 **s60: READ §116 — `34i` IS DELIVERED AND SHIPPING: the AGENCY REPLY ALERT — an oxblood airmail toast on open, and the wax seal’s reply stamp pulsing when it scrolls into view. 4,308,716 B / `99c1a2473cab45693586016c74548f6ea090479306bdd697bf9dffb0d1849311`. NEXT MARK `34j` / Ochre `#C88A2E`.** CLIENT ONLY — no Worker change, no deploy, nothing to install. Battery recorded against the same build before the ship.
-### 🔴🔴 **s60: READ §115 — `34h` IS DELIVERED AND SHIPPING: the badge cast shadow re-weighted and the AUTOMATED tap halved. 4,304,630 B / `520617937cf8710cbbb2080277a24ea67f47d4353a7bed0ba2937b6aa4b86e1c`. NEXT MARK `34i` / Cobalt `#3B6BA5` (the rotation wraps after Rust).** Battery passed and was recorded against `520617937cf8710c…` — the same build, before the ship.
-### 🔴🔴 **s60: READ §114 — `34g` IS DELIVERED AND SHIPPING: the S&H cypher badge. 4,304,247 B / `daee29ef…`. NEXT MARK `34h` / Rust `#B4532A`.** §113 is also new — the power-up rule. The repo is 21 top-level entries, measured s60.
-### 🔴🔴 **s59: READ §112 FIRST — IT IS THE SESSION-59 CLOSE AND IT SUPERSEDES §109 AND §80's ORDER.** **LIVE: `34f` — 4,302,649 B / `e47ab146ba9f5e81…`, commit `8480ebb3`, Worker `v2.6.13`. NEXT MARK `34g` / Lime `#7FA33C`.** Everything below this line that names `34d`, `34e` or `33n` as live is history; §0's table is correct.
-
-### 🔴🔴 **s55: THIS DOCUMENT WAS SPLIT IN THREE. `SUPER-HANDOFF.md` IS DEAD — do not resurrect it, do not look for it, and if the project-instruction block still names it, paste the revised block from `claude/PROJECT-INSTRUCTIONS-s55.md`.** The set is: **`HANDOFF.md`** (this file — live state, the rules, what is open; **READ IT IN FULL**) · **`HANDOFF-SPEC.md`** (how the app works; read the section you are touching) · **`HANDOFF-HISTORY.md`** (the build record; grep it, never read it whole). **NOTHING WAS COMPRESSED OR REWRITTEN — 5,250 lines went in and 5,250 came out, all 72 sections landed in exactly one file, verified by reconciliation, and the old file is preserved at `_to_delete\SUPER-HANDOFF.md.SPLIT-AT-s55` until the owner deletes it.** **🔴 A RULE LIVES IN EXACTLY ONE FILE; a rule found in two means one is a copy, and copies drift (§0.2, §1w).**
 ### 🔴 THIS IS ONE OF THREE FILES. THE SET IS THE DOCUMENT; NO ONE FILE IS.
-### **READ THIS FILE IN FULL, EVERY SESSION.** It is the state of the world, the rules that bite, and the work that is owed.
-### The others: `HANDOFF-SPEC.md` (how the app works) · `HANDOFF-HISTORY.md` (what happened, build by build).
-### **SPLIT FROM `SUPER-HANDOFF.md` AT s55 CLOSE. NOTHING WAS COMPRESSED, SHORTENED OR**
-### **REWRITTEN — every line was MOVED, and the line count was reconciled to prove it (§4).**
-### 🔴 **A RULE LIVES IN EXACTLY ONE FILE. If you find the same rule in two, one is a copy**
-### **and copies drift (§0.2, §1w). Delete the copy; do not update both.**
+### **READ THIS FILE IN FULL, EVERY SESSION.** It is the state of the world, the rules that bite,
+### and the work that is owed. The others: `HANDOFF-SPEC.md` (how the app works) ·
+### `HANDOFF-HISTORY.md` (what happened, build by build — GREP IT, never read it whole).
+### 🔴 **A RULE LIVES IN EXACTLY ONE FILE.** If you find the same rule in two, one is a copy and
+### copies drift (§0.2, §1w). Delete the copy; do not update both.
+### `SUPER-HANDOFF.md` IS DEAD. Do not resurrect it, do not look for it.
 
-──────────────────────────────────────────────────────────────────────────────
-
-# SUPER-HANDOFF.md — The Deerstalker / Scavenger & Hunt Co.
-### Session-53 edition (Aug 6 2026) — supersedes the ENTIRE prior chain, including the session-52 edition.
-### 🔴🔴 **READ §77 BEFORE YOU MEASURE, RENDER, HASH, RUN THE BATTERY OR TOUCH GIT.** It is the tooling-facts section, written s55 on the owner's explicit instruction to record what was relearned. It holds: **the local server at `http://localhost:8000` (`Hunt-backups\serve.ps1`) — the primary measurement route, and it serves the real current build**; the three things that CANNOT work and must never be re-attempted (no browser in the sandbox, so **the §48 battery cannot be run there**; `file:///` is silently rewritten by the Chrome extension; `resize_window` does not change `innerWidth`); the **zero-rect trap** on hidden containers; the curator overlay's measured widths (**322px content at a 390px phone**); **the owner's shell is `cmd`, not PowerShell**; and **why git's messages must never be read in place of `.git/refs`**. Every item was learned by wasting time on the alternative.
-### ✅ **s56: `33g` IS LIVE — 4,052,031 B / `ec6f29661d09ba89…` / buildmark `33g` / Lime `#7FA33C`, commit `9cd34d4d`.** Pages hash-verified. **WORKER `v2.6.12` DEPLOYED AND VERIFIED — root reads `(v2.6.12)`, `/list` no token still 403.** **EVERY CSV NOW CARRIES A BYTE-ORDER MARK (§87)** — the emailed ones from the Worker, the downloaded ones from the client. Excel had been opening them as Windows-1252 and mangling every em dash since the first CSV shipped. **⚠ THE OWNER PUSHED THIS ONE THROUGH THE GITHUB WEB PAGE, SO HIS LOCAL CLONE IS BEHIND ORIGIN** — `git pull` before the next `ship`. **NEXT MARKER `33h` / Rust `#B4532A`.**
-### ✅ **s56: `33f` IS LIVE — 4,051,223 B / `437fdc409f3e1638…` / buildmark `33f` / Magenta `#A8478F`, commit `b7e348e7`.** Disk == raw == Pages, hash-verified. **THE YEAR'S DESK UI IS BUILT — §84.6 AND §80 ITEM 0 ARE CLOSED (§86).** `Annual report ›` on the Ledger AND every case sheet; the case-sheet nav gained the month it never named. **⚠ THE COMMIT MESSAGE MISNAMES IT** — `ship`'s `git add -A` swept 33f into the s55 docs commit, so the log reads `s55: docs rescued…`. **NEXT MARKER `33g` / Lime `#7FA33C`.**
-### 🔴🔴 **SESSION 55 CLOSE — READ §80 FOR WHAT IS OPEN, §84 FOR WHAT IS HALF-BUILT, §77 BEFORE TOUCHING A TOOL.** **LIVE NOW: `index.html` `33e` 4,037,814 B / `e1fffd5e…` (commit `37ec0128`, disk == raw == Pages) · Worker **v2.6.11** · `local == origin`.** s55 shipped **33a → 33e** and Worker **2.6.8 → 2.6.11**: the ledger nav levelled, `(office time)` struck, `email report` on the Ledger AND the case sheets, the emailed ledger FIXED and sending, per-case email, a professional CSV, and the YEAR routes. **THE ONE HALF-FINISHED THING: the year has no Desk UI (§84.6).** **THE BATTERY IS GREEN ON 33d, NOT 33e (§82).** **NEXT MARKER `33f` / Magenta `#A8478F`.**
-### ✅ **s55: `32z` IS LIVE — 4,034,407 B / `3300b442940c72fd…` / buildmark `32z` / Lime `#7FA33C`, commit `abc819d2`.** Disk == raw == Pages, hash-verified, and the fetched bytes were checked for both changes, not just the hash. **This push also carried the unpushed 32x and 32y.** Ledger nav levelled (§85.1); the Email button relabelled on the owner's verbatim call. **⚠ §85.2 is still owed — the button still sits below the sentence, and that is a known state.** **NEXT MARKER `33a` / Rust `#B4532A` — the letters ran out at `32z`.**
-### 🔴 **READ §65 FIRST — IT IS THE SESSION-53 CLOSE AND IT RANKS EVERYTHING THAT IS OWED.** §30 below is the s52 ordering and is superseded by it.
-### 🔎 **SESSION 53 BEGAN AS A REVIEW AND ENDED AS A BUILD.** The review: re-hashed all three surfaces, opened `Hunt-backups` for the first time since s30, fixed three clerk defects (§59), and corrected §0, which had been contradicting §58 inside the s52 edition (§0.2). Then three owner task files arrived and **32m shipped** — photographic seals, the builder's commendation card, four-second cards, the ×1.25 stamp (§60).
-### ✅ **`index.html` 32m IS LIVE ON PAGES.** **4,024,671 B / `811a118a332a76b2…` / buildmark `32m` / Ochre `#C88A2E`.** Base was 32l `bdfb0222…`. Hash-verified on Pages against the disk copy; raw was still serving 32l at the time, which §0 records as normal.
-### 🔴 **NEXT MARKER `32q`, Magenta `#A8478F`** — §8i: Ochre 32m · Rose 32n · Amethyst 32o · Verdigris 32p, so `f` Magenta is next.
-### ✅ **`index.html` 32p IS LIVE — AND §13 ITEM 6 IS FULLY CLOSED.** **4,009,521 B / `94d3b32dcf0cb09c…` / `32p` / Verdigris**, commit `1bf5b3b9`. **The web-app manifest shipped** with the Bonnie icon set: `short_name` **"S&H Co."**, six icons including a maskable pair (§63). **⚠ NOBODY HAS ACTUALLY INSTALLED IT — that still needs a phone.**
-### ✅ **`index.html` 32o IS LIVE.** **4,009,148 B / `94d747d244368deb…` / `32o` / Amethyst `#7A5A98`**, commit `9c2b6462`. Wax seal keeps its envelope — owner's decision with the pixels in front of him (§62). Verified on disk, raw and Pages, all three identical.
-### ✅ **`index.html` 32n IS LIVE.** **4,012,600 B / `cd46c7ad766e8ab1…` / buildmark `32n` / Rose `#B5566B`**, commit `050f7220`. Deerstalker re-cut, boot print pulled, **modulus 10** (§61). Verified on disk, raw and Pages — all three identical.
-### 🔁 **THIS EDITION IS A RE-BASE, NOT A NEW SESSION OF BUILDING.** The s30 edition described the app at 29a/29b. It opened at **32i** and closed with **32j live on Pages** and **32l delivered**. Session 52 re-measured the code and the live services, corrected the header, §0 and §13, and then built §54/§56/§57. **Sections §1–§51 were NOT rewritten** — every standing rule in them is preserved verbatim per the no-compression rule (§4). Where an untouched section's *status claims* conflict with §0 or §13, **§0 and §13 win**; where a *rule* conflicts, the rule stands.
-### ✅ **`index.html` 32j IS ON GITHUB.** **3,905,589 B / `a29d7438fc002494…` / buildmark `32j` / Slate `#4E6478`.** Base was 32i `a951bf6a…`. The owner uploaded it through the GitHub web page (`30723db`, re-uploaded `48fd903`) — **byte-identical to the local build, hash-verified s52.** See §54.
-### ✅ **`index.html` 32l IS LIVE ON PAGES.** **3,908,422 B / `bdfb02224e5084ef…` / buildmark `32l` / Plum `#7D4E6B`.** Carries the desktop masthead fix (§56) **and** the credentials-card side-slider fix (§57). Uploaded by the owner (`5c254ff`); **hash-verified against Pages at session close.** 32k was folded into it and never shipped alone.
-### ✅ **THE s52 HANDOFF LANDED — §58.2 IS DONE.** Fetched from raw s53: **200, 207,568 B, "Session-52 edition"**. The line here previously said it was "the last thing unpushed" and that GitHub still served the session-30 edition; **both had stopped being true.**
-### 🔴 **THIS s53 EDITION IS AGAIN UNPUSHED.** §0, §0.2, §13.2, §30.2, §30.8, §58 and the new §59 all changed on disk. **Push it, and replace the project-knowledge copy.** Only the owner can do either (§55, §A.1).
-### ✅ **NOTHING WAS PENDING PUSH AT SESSION OPEN.** Local clone `C:\Users\tony\Documents\Hunt` == GitHub == Pages, hash-verified s52: `index.html` **3,896,676 B / `a951bf6a60335954…`**, buildmark **`32i`**. HEAD `8a89e99`. No drift, for the first recorded session.
-### ✅ **§13.3 — THE TOP SECURITY ITEM IS CLOSED, BOTH HALVES.** `CURATOR_PASS` ×0 in the client; `CURATOR_WORD` is memory-only and typed at the desk; **and the secret HAS been rotated — `X-Curator-Token: BAKER221B` now returns 403 from the live Worker.** Carried as "top open item" for twenty-plus sessions; it is done.
-### ✅ **§13.6 — THE SERVICE WORKER SHIPPED.** `sw.js` is in the repo and 200 on Pages; `navigator.serviceWorker.register("./sw.js")` is live, https-gated, network-first for the document.
-### 🔴 **THE WORKER IS v2.6.1, NOT v2.3.** §A below still describes v2.3 and its version-specific claims are STALE. The v2.3 *history* and the standing rules in §A/§A.1 remain correct and are untouched. **A `/report` route now exists** (the ledger) that no prior edition documents.
-### 🔴 **THE REPO IS NO LONGER FIVE FILES — IT IS TEN ENTRIES, AND `SUPER-HANDOFF.md` IS NOW IN IT.** The s30 rule "the repo is FIVE files / the handoff is NOT in the repo" is factually dead. See §0. **The handoff is now public. Nothing secret may be written into it.**
-### ✅ **INSTRUMENTATION SHIPPED TOO — `ev()` / the Company Ledger.** Six event names, a `/ev` POST on the Worker, `keepalive`, `text/plain` to dodge preflight, fire-and-forget. **§13.6c/§49.3 is substantially CLOSED.** See §13 for the one real gap left (first-find).
-### 🔴 **STILL ABSENT, RE-VERIFIED s52:** client export (`exportAll`/`downloadBackup`/`exportCase` ×0) and a web-app **manifest** (`manifest` ×0 — the SW shipped without one).
-### 🔴🔴 **READ §53.1 BEFORE TRUSTING ANY ABSENCE CLAIM IN THIS DOCUMENT — INCLUDING THE ONES ADDED THIS SESSION.** The s52 re-base itself asserted "no instrumentation" on the strength of four greps and was WRONG. The feature was there under a name nobody grepped for.
-### Delete the session-30 file from project knowledge; everything in it is carried here.
+### 🔴🔴 **THIS RE-BASE WAS MADE MECHANICALLY, NOT FROM MEMORY.** Only the front matter and §0 were
+### rewritten. **EVERY OTHER SECTION WAS MOVED VERBATIM** and the line count was reconciled to prove
+### it — the same method as the s55 three-way split (§4). A handoff composed from recollection at the
+### end of a long session is how rules get lost; that is why this one was not.
 
 ---
 
-# 📌 OWNER ACTION — DO THIS WHEN YOU SEE A NEW EDITION
+# 📌 OWNER ACTION — REPLACE THE PROJECT-KNOWLEDGE COPY
 
-**Claude can now fully manage this file on disk: overwrite it AND delete it.** Deletion was enabled
-for the `Hunt` folder at s52, so **there will only ever be one handoff at the repo root** and no
-session needs to ask you to tidy up stray copies. **You do not have to do anything about the file
-in the folder.**
+Claude can overwrite and delete this file on disk, so there is only ever one handoff at the repo
+root and no session needs you to tidy up. **The one thing only you can do is replace the copy
+attached to the project** — it is outside the folder and read-only to Claude. If it is not replaced,
+the next session opens a stale edition and believes it. That is how the s30 edition survived nine
+builds past its expiry, and how the s57 instruction block ran SEVEN builds stale.
 
-**THE ONE THING ONLY YOU CAN DO — REPLACE THE PROJECT-KNOWLEDGE COPY.**
-The copy attached to the Claude.ai project is **outside the folder and read-only to Claude.** If it
-is not replaced, the next session opens a stale edition, believes it, and the whole re-base is
-wasted — which is exactly how the s30 edition survived nine builds past its expiry.
+> **🔁 REPLACE THE PROJECT-KNOWLEDGE HANDOFF.** Remove the *session-59* edition and upload this
+> `HANDOFF.md` from `C:\Users\tony\Documents\Hunt`. Takes about a minute.
 
-**When a session hands you a new edition it will say so in one line, in this form:**
-
-> **🔁 REPLACE THE PROJECT-KNOWLEDGE HANDOFF.** Remove the *session-NN* edition, upload the new
-> `SUPER-HANDOFF.md` from `C:\Users\tony\Documents\Hunt`. Takes about a minute.
-
-**If a session does NOT say that line, it did not change the handoff and you need do nothing.**
-**A session must never ask you to delete a file from the folder itself** — if one does, it has hit
-something it should have handled, and §53.2 is the rule it broke.
-
-**🔁 THIS EDITION (s52) NEEDS THAT REPLACEMENT.** Remove the **session-30** edition from project
-knowledge and upload this one.
+**🔴 THE PROJECT-INSTRUCTION BLOCK IS ALSO STALE** — it still names live build `33k`. A replacement
+block was written at s60; paste it over the instruction field.
 
 ---
 
-Canonical orientation + rules registry. Restates **every standing rule in full** (never compressed to
-pointers — rules were lost once that way). A fresh session should work correctly from this document
-plus the delivered `index.html` alone.
+## §0 — CANONICAL FILE STATE (ground truth, s60 close)
+
+**🔴 §0 IS UPDATED IN THE SAME EDIT AS THE SHIP, NEVER AFTERWARDS. `ship` GATE 1 REFUSES IF §0 DOES
+NOT CONTAIN THE HASH — WRITE ALL 64 CHARACTERS, never `abc123…`.** An abbreviated hash cost a round
+trip at s60.
+
+| file | bytes | sha256 | state |
+|---|---|---|---|
+| `index.html` | 4,311,999 | `68d8f303aa3c9d583d4857dacf9994aa6b2d6017075438a09cf617baeb0000c5` | **✅ LIVE — `34m` / Verdigris `#4E9A87`, commit `e9de06ac`. Disk == raw == Pages == commit, hash-verified s60.** |
+| `sw.js` | 5,532 | `7a1682bd276e3bdba985270e7e36e5dea2f26ad696db53280d65a5c2cc80f45c` | ✅ LIVE. `notificationclick` + the `push` receiver. |
+| `HANDOFF.md` | *(this file)* | — | 🔴 **s60 edition — UNPUSHED until the next ship.** |
+| `HANDOFF-SPEC.md` | — | — | how the app works. |
+| `HANDOFF-HISTORY.md` | — | — | the build record. |
+| `worker-v2_6_13.js` | 99,952 | — | **THE LIVE WORKER, v2.6.13.** On disk, GITIGNORED, never committed. **READ IT THERE — do not ask him to paste it.** |
+| `test/` | — | — | `agents.py` (STATIC), `behaviour.py`, `session_checks.py`, `.last-battery`. |
+
+**BUILDMARK: `34m` / Verdigris IS SPENT. NEXT IS `34n` / Magenta `#A8478F`.**
+Rotation (§8i): a Cobalt `#3B6BA5` · b Ochre `#C88A2E` · c Rose `#B5566B` · d Amethyst `#7A5A98` ·
+e Verdigris `#4E9A87` · f Magenta `#A8478F` · g Lime `#7FA33C` · h Rust `#B4532A`, then wraps.
+**A MARK IS SPENT ONLY WHEN A BUILD IS DELIVERED.** Revisions on disk cost nothing — four passes over
+the badge shadow all rode one mark at s60. `34n` was built twice at s60 and shipped neither time.
+
+**WHAT SHIPPED AT s60, in order:** `34g` the cypher badge (§114) · `34h` badge cast shadow and the
+half-depth auto-tap (§115) · `34i` the Agency reply alert (§116) · `34j` the badge presses once,
+gently (§117) · `34l` the Agency Cases rename and the temporary home grid (§118) · `34m` the
+masthead sized off the hero (§119).
+
+**🔴 `test/.last-battery` HOLDS THE HASH THE BATTERY PASSED ON.** Read it and compare its mtime to
+`index.html`'s instead of asking him to paste the output. A green battery that PRE-DATES the build
+gates nothing (s58).
+
+---
+
+# 📑 RULES REGISTRY — WHERE EVERY SECTION LIVES
+
+**Every section below is preserved verbatim from the prior edition. Nothing was compressed to a
+pointer; the bodies follow in full.**
+
+- **§A** — THE WORKER. **⚠ THIS SECTION DESCRIBES v2.3. THE LIVE WORKER IS v2.6.3 — AND ITS FULL SOURCE IS NOW ON DISK AT `Hunt\worker-v2_6_3.js` (§70.4). READ THE SOURCE, NOT THIS SECTION.**
+- **§0.2** — THE `32i` ROW: A DOC THAT CONTRADICTED ITSELF IN ONE EDITION (found s53)
+- **§0.1** — INHERITED DOC ERRORS. THREE FOUND IN 24–25; ALL RE-VERIFIED CLEAN IN 26, 27 AND 28.
+- **§1** — HOW THE OWNER WORKS (read first)
+- **§2** — SESSION LENGTH & HANDOFF PROTOCOL
+- **§3** — SESSION PROTOCOL
+- **§4** — SOURCE-OF-TRUTH HIERARCHY
+- **§5** — FILE ACCESS & EDIT SAFETY
+- **§7** — BRAND & VOICE (fixed — draw from, don't invent)
+- **§10** — OWNER DECISIONS — do NOT revisit
+- **§11** — EDIT-SAFETY & BATTERY PROTOCOL
+- **§13** — STANDING OPEN ITEMS (RE-RANKED AND RE-MEASURED, SESSION 52)
+- **§14** — HOMEWORK (owner-side, unblocks Claude)
+- **§32** — EFFICIENCY BOOTSTRAP (run once at session start)
+- **§101** — THREE BUILDMARKS SPENT MID-FLIGHT IN ONE SESSION. `33n`, `33o`, `33p`.
+- **§97** — THE COLD-CASE FILTER WAS DROPPED ON THE WAY BACK. FIXED `33p`, s58.
+- **§102** — FOUR LAYER-FORMING PROPERTIES, INVISIBLE ON DESKTOP, WRONG ON iOS. `34c`, s58.
+- **§108** — THE JOIN LAG. PART FIXED, THE REST MEASURED. `34d`, s58.
+- **§100** — THE STAMP IS ANCHORED TO THE CARD. `34a`, s58.
+- **§99** — PINCH THE CHART. `34a`, s58.
+- **§98** — THE ARCHIVE OPENS ON YOUR OWN PRECINCT. `34a`, s58.
+- **§96** — FIVE CHICAGO TERRITORIES. `33p`, s58.
+- **§95** — THE BADGE WEARS THE RANK. `33o`, s58.
+- **§94** — THE CASE CLOSED STAMP IS STRUCK AND SIGNED. `33n`, s58.
+- **§94.10** — `33n` SHIPPED EIGHT REVISIONS EARLY, AND THE SAME BUILDMARK NAMED TWO FILES
+- **§93** — THE HINT COIN IS EARNED, NEVER SOLD. OWNER DECISION, s57.
+- **§92** — `ship` NOW REFUSES THINGS. THREE GATES, TWO PROVEN TO BITE. s57.
+- **§91** — A ZIP IS A MAIL ROUTE, NOT A NEIGHBOURHOOD. THE ZIP BAND. `33l`, s57.
+- **§90** — THE SURVEYOR'S PLAN. A TERRITORY MAY CARRY A MAP. `33h` + Worker v2.6.13, s57.
+- **§89** — `GET /null 404` ON BOOT. RESOLVED — IT WAS THE HARNESS, NOT THE APP. (s57)
+- **§88** — THE REPO WAS SLIMMED. 22 MB OF IT WAS NEVER SERVED. s56.
+- **§87** — THE BYTE-ORDER MARK. EVERY CSV HAS BEEN WRONG SINCE THE FIRST ONE. `33g` + Worker v2.6.12, s56.
+- **§86** — THE ANNUAL REPORT REACHED THE DESK. `33f`, s56.
+- **§84** — THE YEAR. **CLOSED s56 — THE DESK UI SHIPPED IN `33f`. SEE §86.** (written s55 close)
+- **§114** — THE BADGE WEARS THE COMPANY CYPHER. `34g`, s60.
+- **§113** — POWER UP BEFORE ANYTHING ELSE (owner rule, s60)
+- **§112** — SESSION 59 CLOSE. READ THIS FIRST; IT SUPERSEDES §109 AND §80's ORDERING.
+- **§111** — THE ARCHIVE CLERK FAILED FOR FOUR DAYS ON A STALE FILE LIST. s59.
+- **§110** — THE PRECINCT BANNER COUNTED ON A DIFFERENT GEOMETRY FROM THE LIST. `34f`, s59.
+- **§109** — SESSION 58 CLOSE. READ THIS BEFORE §80.
+- **§80** — THE OPEN-TASK REGISTER, RE-AUDITED AT s55 CLOSE. THIS SUPERSEDES §65's ORDER.
+- **§77** — THE TOOLING FACTS. READ THIS BEFORE YOU TRY TO MEASURE ANYTHING. (s55)
+- **§115** — THE BADGE CAST SHADOW, AND THE HALF-DEPTH AUTOMATED TAP (s60, `34h`)
+- **§116** — THE AGENCY REPLY ALERT (s60, `34i`)
+- **§116.1** — Most of this already existed. Look before building.
+- **§116.2** — What `34i` added
+- **§116.3** — 🔴 WHY PUSH WAS NOT BUILT, AND WHAT IT ACTUALLY COSTS
+- **§116.4** — Notes
+- **§117** — THE BADGE PRESSES ONCE, GENTLY (s60, `34j`)
+- **§118** — THE AGENCY CASES RENAME, AND THE TEMPORARY HOME GRID (s60, `34l`)
+- **§118.1** — 🔴 LABELS MOVED. IDENTIFIERS DID NOT. THIS IS THE WHOLE RULE.
+- **§118.2** — What the rename touched
+- **§118.3** — 🔴 THE RENAME BROKE A TEST, AND THE TEST WAS RIGHT
+- **§118.4** — The home grid, and the constant that matters
+- **§119** — THE MASTHEAD, SIZED OFF THE HERO (s60, `34m`)
+- **§119.1** — 🔴 THE TWO FACTS THAT EXPLAIN IT
+- **§119.2** — The fix: a container, not a viewport unit
+- **§119.3** — 🔴 A max-width WRAPPER CANNOT MEASURE ANY OF THIS, AND IT PRODUCED A FALSE FAULT
+- **§119.4** — What is NOT in this build, and where it is
 
 ---
 
@@ -157,141 +207,6 @@ is proven and should be reused for every future Worker change.
 
 **Worker edit path:** dash.cloudflare.com → **Compute (Workers)** → **Workers & Pages** →
 **deerstalker** → **Edit Code** → select all → paste → **Deploy**.
-
----
-
-## §0 — CANONICAL FILE STATE (ground truth)
-
-| File | Size | SHA-256 | Purpose |
-|---|---|---|---|
-| `index.html` **🆕 34g — DELIVERED s60, Lime `#7FA33C`. THE BADGE WEARS THE COMPANY CYPHER (§114).** | 4,304,247 B | `daee29ef03c8a2df22ff1bbe9ab9c8e9a41276cef511d96863244298ac2a9ce5` | needs Worker **v2.6.13**. S&H plate at `BADGE_MAC`, arcs re-measured, legends centred per degree, one text size for every rank, the pressing cast, the double self-press |
-| *(superseded)* `index.html` **34f — was live s59-s60, commit `8480ebb3`, Magenta `#A8478F`. THE PRECINCT BANNER COUNTS ON ONE GEOMETRY (§110).** | 4,302,649 B | `e47ab146ba9f5e818463b231df7400fd96381a0069b7d94674614e9ae32bec67` | needs Worker **v2.6.13**. One function changed, `precinctApply()`; no pixels, no mechanism |
-| *(superseded)* `index.html` **34e — was live s58-s59, commit `f35b49de`. Verdigris. THE WIPE CROP, THE ORDINAL, THE BADGE PRESS, THE JOIN LAG (§106-§108). s58; re-verified s59: disk == origin == Pages == raw.** | 4,302,603 B | `2adb51cf74344de5eb02f155f8b932cec661492d106f8478f69772bd39039357` | needs Worker **v2.6.13**. The wipe crop, the ordinal, the badge press, the join-lag reads and writes (§106-§108) |
-| *(superseded)* `index.html` **33n — was live s58, commit `165b7400`, 16:03Z 9 Aug 2026. THE CASE CLOSED STAMP (§94).** | 4,111,862 B | `1ac7f99edb1b8f2eec3fa5c8cabe02ef10cf90965fd0c7b4bbc4cfb0fc76b873` | needs Worker **v2.6.13**. 🔴 **THIS IS AN EARLY 33n. Stamp 250px, red `#B92230`. EIGHT LATER REVISIONS NEVER REACHED IT — see §94.10** |
-| *(superseded on disk, NEVER SHIPPED)* `index.html` 33m — THE HINT COIN IS EARNED, NEVER SOLD (§93). s58, Sun 9 Aug 2026.** | 4,071,402 B | `64c094c82543eb60e6fa0cc06515f481b5e0694f7ad42e8b2b5f1a86fb11bd44` | needs Worker **v2.6.13** |
-| *(superseded)* `index.html` 33l — was live s57, commit `3d49b6cd`. THE ZIP BAND (§91). | 4,068,353 B | `2f9cd80f4ec8fa678f4fd1acaeff8f4b4530f03203afd765994d2a80f0c3dc5d` | needs Worker **v2.6.13**. Carries 33k's caption + pin median tier, never separately shipped |
-| *(superseded on disk, NEVER SHIPPED)* `index.html` 33k — caption + pin median tier (§90.11) | 4,062,995 B | `15f4dc8edc806bad42b75e4bee82336f29124183649ec76eb84309fed5120280` | needs Worker **v2.6.13**, deployed and gate-verified |
-| *(superseded)* `index.html` 33j — was live s57, commit `12f9e02c`. TAP THE MAP TO MAGNIFY (§90.8). | 4,061,182 B | `628833f342e5b236197f5cb510998cc9de3e546561e47614923dcc10b6dd974a` | needs Worker **v2.6.13**, which is deployed and gate-verified. Battery green: STATIC · BEHAVIOUR 59/59 · SESSION 21/21 |
-| *(superseded)* `index.html` 33i — was live s57, commit `9abcb27e`. PLAN renamed MAP. | 4,060,601 B | `74a333afa485bb6fc3844abeaf48a16b229dcd5c864572a1c1f1ddc9e203182d` | — |
-| *(superseded, NEVER LIVE)* `index.html` 33i pre-rename — committed `1575e87f`, carried `View plan` | 4,060,680 B | `eb5f9652d0e804bae1c3cd86128df73d2818d776d1ba2137d1c6dc03f6535c5d` | shipped by mistake; see §90.9 |
-| *(superseded)* `index.html` 33h — was live s57, commit `e4906dd2`. THE SURVEYOR'S PLAN (§90). | 4,059,317 B | `c09f7377616bdb24a6ee70ca0509245f23f85a030135e06989041adcbbc45418` | needs Worker **v2.6.13** |
-| `worker-v2_6_13.js` **✅ THE LIVE WORKER, DEPLOYED AND VERIFIED s57 — root reads `(v2.6.13)`** | 99,952 B | — | `map:` keys are staff-only on PUT/DELETE; GET stays open (§90) |
-| *(superseded)* `index.html` 33g — was live s56, commit `9cd34d4d`. The CSV byte-order mark (§87). | 4,052,031 B | `ec6f29661d09ba89bc4214db7577608a791905cc928e2b1d48e687598ab91d30` | needs Worker **v2.6.12**, which is deployed |
-| *(superseded)* `index.html` 33f — was live s56, commit `b7e348e7`. THE ANNUAL REPORT (§86) | 4,051,223 B | `437fdc409f3e163831a062994da151638c985cc166f7fdcc599d50e401c90fc8` | needs Worker **v2.6.11**, which is deployed |
-| *(superseded)* `index.html` 33e — was live s55, commit `37ec0128` | 4,037,814 B | `e1fffd5e9fc6be3ed23b26ef061a53fc78d67bfcda1fdfc8ae4fa9a8f8d900af` | needs Worker **v2.6.9**, which is deployed |
-| `worker-v2_6_12.js` **✅ THE LIVE WORKER, DEPLOYED AND VERIFIED s56 — root reads `(v2.6.12)`** | 98,430 B | `e3b17467b27301cf448840ccfb24dcf8695830c0db0818746e799fac2a665586` | **THE BYTE-ORDER MARK** — one `csvBytes()` helper, three attachment sites (§87) |
-| *(superseded)* `worker-v2_6_11.js` — was live s55 | 97,885 B | `7dacce07977efdc466af0fbf5b59b04e02e678204403024a5ba38bdf890fce74` | **THE YEAR** — `?year=` for the company and per case, by GET and by post (§84). Carries v2.6.10's CSV header + `Aug 1` labels |
-| *(superseded)* `worker-v2_6_10.js` | 82,800 B | `b6d5dfe2da7715736c3ca06b24c968bd8addb20a1d22f31d2e061a1450478244` | the case CSV became a document; fixed the empty `day` column (§84.4) |
-| *(superseded)* `worker-v2_6_9.js` — was deployed s55 | 79,906 B | `5c48441c54e377b7a3ed15fa470c1855807b2131accd1948de36dfdfe0b78c83` | `/report-email?…&code=` sends ONE case sheet + its day CSV (§83) |
-| *(superseded)* `index.html` 33d — was live s55 | 4,037,229 B | `6f3d5f62779d1bd4ebdc912ed295967fef1fc45a65007866a6c4192fab3d08e2` | `(office time)` struck; the nav row fits one line (§79.5) |
-| *(superseded on disk)* 33c | 4,036,625 B | `91bf9fcca34126ba5b9525b929f893f532582f1edc74eb9df788fb6ff1600a15` | nav buttons `nowrap` — the real "later is up" fix (§79.4) |
-| *(superseded on disk)* 33b | 4,036,031 B | `6ee4f535e4cb6e280828d97df7d3d1da378b715cca17e073ae8c68787dd0e052` | `email report` on the CASE SHEETS via one shared handler (§79) |
-| *(superseded)* `index.html` 33a — LIVE, hash-verified s55, commit `fd9f2eb1` | 4,034,680 B | `a9cba68133408851e20745a3b61b004dbbc9c37858c2dc196008517d4683d260` | `email report` under the month; the compiled/sealed sentence STRUCK; `.ledg-meta-row` CSS deleted (§78). **§85.2 CLOSED.** |
-| *(superseded)* `index.html` 32z — LIVE earlier in s55, commit `abc819d2` | 4,034,407 B | `3300b442940c72fddf1b0bf3b510401687e2eca6e3eaec3522ac2ae54aa4fbbc` | ledger nav levelled + button relabelled `Email` (§85) |
-| *(superseded on disk, committed as `9b10257` but NEVER pushed)* `index.html` 32y | 4,034,030 B | `a5a4a801890747287346285de6b83e1014103edb899087ba046778dab85a2771` | the ledger button + paired tips |
-| *(superseded on disk)* `index.html` 32w | 4,031,642 B | `7fa2a89c406de3f7b34b1ce1ef24a94467126e792cfcfc54bc903905ad9350d8` | the first-sleuth ask (§74); carries 32u web push + 32v |
-| `index.html` *(LIVE on Pages: 32u)* | 4,023,779 B | `7d7a0598d49c6ef742956476d0dd1e057136e9ec778d17cdbb5ffdd0ab03a049` | **32t** — the live roster watcher (§68) |
-| *(superseded on disk)* `index.html` 32s | 4,017,670 B | `54385a7bb5fc041e7de244e37fca40ac32fbc29061356ca0b3fcf7e48c31a540` | **32s** — the slim poll against Worker v2.6.3 (§67) |
-| *(superseded on disk)* `index.html` 32r | 4,014,420 B | `21c7d6aa60f1a1a16267b56a8381a39e014aec83626834ec7fdf0c325647712f` | **32r** — notification priming card, cold ask killed, notifications routed through the SW (§66) |
-| *(was LIVE at s53 open)* `index.html` 32q | 4,010,286 B | `df13a8f7cfcc483ac10908c2d86d5b942dba02f9c860b6d99bb17a508bca79ab` | **32q** — buildmark `32q` Magenta `#A8478F`; ceremony crest + icon darkened (§64) |
-| *(historical)* `index.html` 32p | 4,009,521 B | `94d3b32dcf0cb09cc0529324148a37c857e38e63c5b19bd8a1a8c0539944a67a` | the web-app manifest + icon set (§63) |
-| `manifest.webmanifest` **🆕 s53** | 941 B | — | name/short_name/display/theme; **`icons/` holds six PNGs** — 1024·512·192·180 standard, 512·192 maskable (§63) |
-| *(historical)* `index.html` 32o | 4,009,148 B | `94d747d244368debc937396e2a7fc164526966867212797b846c8d1dc636add8` | wax seal keeps its envelope (§62) |
-| *(historical)* `index.html` 32n | 4,012,600 B | `cd46c7ad766e8ab1421ef9ee9bc96ffd0b081418e4dddab30aae43c6763e8964` | deerstalker re-cut, boot print pulled, modulus 10 (§61) |
-| *(historical)* `index.html` 32m | 4,024,671 B | `811a118a332a76b222c4261f95bf53370195941e60daeb87f79fc261e81ae1c3` | photographic seals + the builder's commendation card (§60) |
-| *(historical)* `index.html` 32l | 3,908,422 B | `bdfb02224e5084ef055fb8f871bde21fbfe56aac4d8a05768978667e0081f1bc` | credentials-card side slider (§57) |
-| ~~`candidate-32m.html` / `_candidate-32m.html`~~ **✅ GONE — BOTH 404 ON RAW, verified s55 and again s57. The deletion order that stood here is DISCHARGED (§80.9).** | 4,024,671 B each | `811a118a…` | Render-check copies pushed so GitHub Pages could serve them (§60.5). **They are byte-identical to the shipped `index.html` and serve no purpose now. The sandbox cannot delete — the owner must.** |
-| *(historical)* `index.html` 32i | 3,896,676 B | `a951bf6a603359545a7ccb14c42ac8b0bbe4957c832281ffa9e1a995ddd7ef1c` | agency licence minting (`8a89e99`) — **this row said "LIVE" for three builds after it stopped being true. See §0.2.** |
-| `sw.js` **✅ LIVE — RE-MEASURED s57, disk == Pages** | 5,532 B | `7a1682bd276e3bdba985270e7e36e5dea2f26ad696db53280d65a5c2cc80f45c` | `notificationclick` + the **`push` receiver** (§66, §70.4); `CACHE` = `shco-v2` |
-| *(was LIVE at s53 open)* `sw.js` — **🔴 §0 HAD THIS WRONG: it said 3,435 B / `61a93b05…`. MEASURED s54: disk == raw == Pages at 3,349 B / `54127008f4ff0bdb…`.** A fourth inherited doc error (§0.1). | 3,349 B | `54127008f4ff0bdbc057…` | the service worker (§13.6, CLOSED) |
-| `award-card.jpeg` **🆕 in repo** | 180,855 B | `3ef3ac34795c8708…` | commendation card (§8r) |
-| ~~`hunt-icon-v5.png`~~ **⚠ NO LONGER IN THE REPO — moved to `_to_delete\s56-repo-slim\` at s56 (§88). Hash kept for the record.** | 67,899 B | `969262cefd3c431e…` | app icon |
-| ~~`behaviour.py` (repo ROOT)~~ **✅ GONE — the stray root copy left the tree at s56 (§88). `test/behaviour.py` is the only copy. Hash kept for the record.** | 18,003 B | `473b385d3b122c6e…` | **byte-identical to `test/behaviour.py`.** One of the two should go; the root copy is the accident. |
-| `.nojekyll` **🆕 s54 (LIVE)** | 0 B | — | Pages publishes statically; no Jekyll step to fail (§70.2) |
-| 🔴 `HANDOFF.md` **+ `HANDOFF-SPEC.md` + `HANDOFF-HISTORY.md` — ALL THREE IN THE PUBLIC REPO** | 136,233 B · 78,607 B · 179,610 B (LF, as stored) | — | the canonical document, split from `SUPER-HANDOFF.md` at s55 close. `SUPER-HANDOFF.md` IS DEAD and is in no repo. **🔴 s57: `HANDOFF-SPEC.md` and `HANDOFF-HISTORY.md` were MISSING FROM THE WORKING CLONE while present in the repo — `ship.cmd`'s `git add -A` would have committed their deletion. Restored. CHECK ALL THREE ARE ON DISK AT EVERY SESSION OPEN.** The working clone is CRLF and the repo is LF (`.gitattributes`); hash disk against raw only after stripping `\r`. |
-| ~~`art/`~~ **⚠ NO LONGER IN THE REPO — left the tree at s56 (§88); source art lives on disk.** | — | — | `bonnie-icon-source.png` + `icon-C/` (adaptive-background-432, adaptive-foreground-432, icon-1024, icon-180-appletouch, icon-512) |
-| *(historical)* `index.html` 29a | 3,690,652 B | `26d31f08192fbd47…` | the s30 edition's "live" build — nine builds stale |
-| `privacy.html` **(🆕 REBUILT s30 — for scavengerandhunt.com, NOT the repo)** | 5,364 B | `6298d38db9060f9575619709ffab02951c2b7606c74c7fd49441124e6e94391c` | DRAFT banner; §45.4 language verbatim (§44.2b) |
-| `parch.jpg` **(🆕 RE-EXTRACTED s30 — byte-identical to s28's)** | 49,029 B | `118d98d0b52f27b5aa746a94ecb3f7ad0ff707e9a153ec41d0d8e43ac77d011d` | site background texture |
-| `Hunt-backups-starter.zip` **(🆕 s30 — for the NEW private repo)** | ~4.3 KB | `backup.py 218f390e…` · `backup.yml f90d9df6…` · `README 09782b3c…` | the archive clerk (§51.3) |
-| `test/run.py` **🆕 REWRITTEN s57 — THREE SUITES, NOT TWO** | — | — | now runs **SESSION** as well as STATIC and BEHAVIOUR; **refuses SESSION for a candidate build** (it always loads `.\index.html` and would report a pass for a file it never opened); every parent `print` is `say()` with `flush=True` (§77.11). *(was 698 B, two suites — battery runner, §48)* |
-| `test/find-null.py` **🆕 s57 — DIAGNOSTIC, NOT PART OF THE BATTERY. §89 RESOLVED WITH IT.** | — | — | takes a **mode arg** `A`/`B`/`C`/`D` toggling the stub and gate independently. Cell C fired: **the harness stub, not the app, requested `/null`** — `page.evaluate(STUB)` returns the last statement's value, the assigned `window.fetch` fn, which Playwright invokes with `null`. Kept as the record of the mechanism (§89) |
-| `test/agents.py` `behaviour.py` `baseline.json` `README.md` ✅ ALL PUSHED (verified 200 on raw, s30) | — | — | (§48) |
-| `worker-v2_6_8.js` **🆕 ✅ DEPLOYED AND VERIFIED s55 — root reads `(v2.6.8)`. THE EMAILED LEDGER SENDS (§81).** | 75,522 B | `afd9b47751d836b307c4d5dc11e0a86baaa15ff6d3403cda9b570fc6076577bb` | `LEDGER_FROM` moved to the ROOT domain — the one-line fix |
-| `worker-v2_6_7.js` **(deployed s55, superseded within the session)** | 74,802 B | — | the emailed ledger, sending as an unverified identity |
-| `worker-v2_6_6.js` **🆕 s54 — WRITTEN, NOT DEPLOYED. Fixes the take rate (§73)** | 66,001 B | `c959cb36ec463b93d87621ce461122ae56976b13f047b93b9128445b5d37ffc5` | — |
-| `worker-v2_6_5.js` **(deployed s54; superseded by 2.6.6)** | 64,222 B | `04ca5309e6d9e7fe17f83b605a87e2164e170103f11f2d06fc5e6edd01ef90a1` | — |
-| `worker-v2_6_4.js` **(DEPLOYED s54 — ⚠ CARRIES THE §72 HOLE, SUPERSEDE IT)** | 62,827 B | `23d81339e37ff3ff889e14286f44a175be17fa5d5602ae23e50f906b1012e429` | — |
-| `worker-v2_6_3.js` **(deployed; source of record)** | 50,531 B | `92a66f9bc3ba3a0bdc8886ca19fd19d95b112ada9ae9159de621359eb4968edd` | adds `slim=1` on values listings (§67.1). Root: `... (v2.6.3)` |
-| *(historical)* `worker-v2.6.1` | — | — | **live root string: `Scavenger & Hunt Co. — case-file sync is OPERATIONAL. (v2.6.1)` / `The game is afoot.`** Host: **`deerstalker.tony-13f.workers.dev`**. `worker-v2.3.js` is history (§A). |
-| `j.html` **(CHANGED since s30)** | 1,419 B | `bbf057e1f3225a0f…` | invitation landing page (§8n/§8o) |
-| `og-card.jpeg` | 246,070 B | `0067960541bec0ac…` | link-preview card |
-
-- **🔴 THE REPO IS TWENTY-ONE TOP-LEVEL ENTRIES, MEASURED s60 FROM `api.github.com`:** the s57 eighteen **plus `CLAUDE-CODE-s59-findings.md`, `Chicago-Cold-Cases-plan.html` and `Chicago-Cold-Cases-plan.pdf`** — the two plan files are unreleased case content in a public repo and an owner decision on them is owed (§112.5). *(the s57 line, for the record:)* THE REPO IS EIGHTEEN TOP-LEVEL ENTRIES, MEASURED s57 FROM `api.github.com` (unchanged since s56):
-  `.gitattributes` · `.gitignore` · `.nojekyll` · `HANDOFF.md` · `HANDOFF-SPEC.md` ·
-  `HANDOFF-HISTORY.md` · `award-card.jpeg` · `battery.cmd` · `claude/` · `docs/` · `icons/` ·
-  `index.html` · `j.html` · `manifest.webmanifest` · `og-card.jpeg` · `ship.cmd` · `sw.js` ·
-  `test/`. **The "five files" rule is dead and so is "ten" — the count went 5 → 10 → 15 → 18 with a
-  doc entry only twice. AUDIT IT EVERY SESSION.**
-- **🔴 THE HANDOFF SET IS IN THE PUBLIC REPO** — all three files. Every edition before s52 said it was not.
-  **Consequence: this document is world-readable. Never write a secret, a token, a curator word or a
-  personal detail into it.** (The old `BAKER221B` references throughout are harmless — that word is
-  now rotated and dead as a token; it survives in the client only as `CURATOR_NAME`, the public
-  nameplate on the desk door.) **Owner decision owed: keep it public, or move it to `Hunt-backups`.**
-- **✅ `behaviour.py` NO LONGER EXISTS TWICE** — the root copy left the tree at s56 (§88) and is
-  confirmed absent from the working clone s57. `test/behaviour.py` (18,003 B) is the only copy.
-- **Push queue for the owner:** (1) `index.html` 29b → repo → replace project-knowledge copy is N/A
-  (project knowledge holds only this handoff — correct state). (2) `privacy.html` + `parch.jpg` →
-  **GoDaddy, scavengerandhunt.com** — a DIFFERENT destination from the repo. (3) The backup zip →
-  the new **private** `Hunt-backups` repo (§51.3 setup steps).
-
-**🆕 SEPARATE PROPERTY — the marketing site (NOT in the Hunt repo, NOT on GitHub Pages).** See §44.
-
-- **🔴 THE FIRST THING THE NEXT SESSION MUST DO IS RE-HASH ALL THREE SURFACES.** Expect
-  **4,304,247 B / `daee29ef…` / `34g`** on raw and Pages, and the Worker root to read **`(v2.6.13)`**.
-  *(Verified s59: disk == origin `f35b49de` == Pages == raw, two cache-busted fetches agreeing; Worker confirmed. The line that stood here
-  named **`32l`** — twelve builds dead — and before that **28e**. A stale instruction is worse than no
-  instruction: it sends the session to verify a fact that stopped mattering. Re-write this line on
-  every ship.)*
-- **🔴 ⚠ VERIFY A PUSH AGAINST `gahensley1.github.io`, NOT `raw.githubusercontent.com`.**
-  raw's CDN served the OLD file for over two minutes after a successful push in session 25, and a
-  cache-buster query did not defeat it. **Pages is authoritative; raw lagging is normal and harmless.**
-- **⚠ THE WORKER SOURCE IS NOT A REPO FILE.** Pasted into the Cloudflare dashboard, never pushed.
-  **Do not add it to the repo — the repo is public.** This rule survives the file-count change intact.
-- **⚠ AUDIT THE FILE LIST EVERY SESSION — the count changes without ceremony.** It went 5 → 10 between s30 and s52 with no doc entry. Use the `api.github.com/repos/gahensley1/Hunt/contents/` listing in-sandbox; it worked s52.
-- **⚠ `index.html` AND `og-card.jpeg` ARE A MATCHED PAIR AND MUST BE PUSHED TOGETHER** (§8q). Same for
-  `index.html` + `award-card.jpeg` (§8r). **After any card ship, `curl` every repo file and compare
-  HASHES, not just sizes.** *(28e changed neither card, so 28e ships alone.)*
-- **⚠ `index.html` is TOO LARGE for project knowledge (~3.7 MB) — by design NOT stored there.**
-- **The live `index.html` is ground truth.** When any doc and the code disagree, **the code wins.**
-- **✅ FILE-IN-HAND:** `curl -sSL https://gahensley1.github.io/Hunt/index.html`. Egress to
-  raw.githubusercontent.com, github.com, gahensley1.github.io, scavengerandhunt.com, the Worker and
-  developers.cloudflare.com all work in-sandbox. `api.github.com` is rate-limited (403). Repo listing:
-  `curl -sSL https://github.com/gahensley1/Hunt | grep -o '"name":"[^"]*"' | sort -u`.
-  **Older commits by SHA:** the atom feed `https://github.com/gahensley1/Hunt/commits/main.atom` gives
-  SHAs; `https://raw.githubusercontent.com/gahensley1/Hunt/<sha>/index.html` fetches that revision.
-- **🆕 s52 lineage note:** builds **30 → 32i** were shipped without handoff entries. Git records them
-  as fourteen-plus `Add files via upload` commits (Aug 1–4) plus three named ones: `07f6bef` service
-  worker, `0386384` Bonnie icon + option-C icon set, `8a89e99` **32i agency licence minting,
-  badge-bound keys with expiry**. **Per-build hashes for 30–32h were never recorded and are now only
-  recoverable from git.** Recover with `git log --format=%h` + `git show <sha>:index.html | sha256sum`.
-- **🆕 s53 lineage:** 32i 3,896,676 `a951bf6a…` → 32j 3,905,589 (licence terms + register, §54) →
-  32k (desktop masthead clip, §56) → **32l 3,908,422 · `bdfb0222…` · uploaded `5c254ff` (LIVE)**.
-  32k and 32l shipped as one delivery, so **no separate 32k hash exists.** Verified s53 on local,
-  raw and Pages — **all three identical.** Local `HEAD` = `origin/main` = `318503c2`; nothing ahead.
-- **Session-29 lineage:** 28e 3,687,318 `bcfbf057…` (live base, hash-verified on **Pages and raw** at
-  session start) → **29a 3,690,652 · `26d31f08…` (DELIVERED)**. One ship; the deed checkbox was added
-  to 29a in place rather than cut as 29b, so **only one 29-series hash exists.**
-- **Session-28 lineage:** 27c 3,684,488 `f1c7e782…` (live base, hash-verified at session start) →
-  **28a 3,684,837 `83a1c9f1…`** → **28b 3,686,974** → **28c 3,687,291 `651b09a3…`** →
-  **28d 3,687,307 `f2cc3f10…`** → **28e 3,687,318 · `bcfbf057…` (DELIVERED)** →
-  *28f 3,689,128 `8784e335…` — **BUILT THEN UNDONE BY THE OWNER**, see §46.*
-- **Older lineage:** 26h 3,681,807 `0573e763…`; 25c 3,682,380 `c0637d66…`; 24d 3,680,871 `3bf5ded3…`;
-  23d `d78955f8…`; 23c `1d9a0dcb…`; **pre-volume commit `f667edc9` 3,671,858 `e439c3f2…`**;
-  22b **3,670,397 · `9575527a…`**; 21u **3,663,852 · `e13dfd34…`**; 20h `787d7299…`; session-20 final
-  **3,559,279 · `b9719c66…`**; 19 `d9a6a4cd…`; 18 `a3773d73…`; 17 `f03a7dee…`; 16 `c4527c8a…`;
-  15 `200f6c…`; 13 `57cc95bf…`; 12 `eb8fe5cc…`; 11 `362d13eb…`; 10 `a7493aca…`; 9 `25dcd26d…`
-  (begun from owner-uploaded `d1fa7777…`, **never diffed** — §13); 8 `747b8963…`.
 
 ---
 
@@ -3354,3 +3269,33 @@ every letter against every other before building it in.**
 **CUTTING OUT A WHITE-FIELD PLATE:** flood-fill the alpha FROM THE BORDER ONLY. The enamel field is
 white and so was the background; a global white-to-alpha punches the plate hollow. The black frame
 stops a border fill. Same rule saved the letter counters on the bronze set.
+
+
+---
+
+# §120 — HOW THE s60 RE-BASE WAS MADE, AND HOW TO MAKE THE NEXT ONE
+
+**Owner asked for a FULL handoff. It was produced MECHANICALLY.** Only the front matter and §0 —
+the two blocks that are STATE rather than RULES — were rewritten. Every other section was moved
+verbatim by script, and the result was verified before it was written:
+
+| check | result |
+|---|---|
+| preserved lines compared line-by-line | **3,138 checked, 0 missing** |
+| headings before / after | **72 / 72** |
+| headings deliberately replaced | 3 — the dead `SUPER-HANDOFF.md` title, the owner-action block, the old §0 |
+
+**🔴 DO IT THIS WAY AGAIN.** A master handoff composed from recollection at the end of a long
+session is the documented way rules are lost — the document warns of it twice, and s55 avoided it
+only by reconciling the line count (§4). **Rewrite the state layer; MOVE the rest and prove it.**
+The proof is cheap: hold the preserved lines in a set and assert every one survives.
+
+A **RULES REGISTRY** now sits in the front matter — every section and its one-line subject,
+generated FROM THE HEADINGS rather than typed, so it cannot drift from the bodies. Regenerate it,
+never hand-edit it.
+
+The prior edition is at `/tmp/HANDOFF.pre-s60-full.md` on the sandbox and **will not survive the
+session**; the durable copy is the previous commit.
+
+`HANDOFF-SPEC.md` (1,166 lines) and `HANDOFF-HISTORY.md` (2,728 lines) were **not touched** — they
+hold how-it-works and what-happened, neither of which went stale this session.
