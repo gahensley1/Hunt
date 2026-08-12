@@ -40,7 +40,7 @@ trip at s60.
 
 | file | bytes | sha256 | state |
 |---|---|---|---|
-| `index.html` | 4,311,999 | `68d8f303aa3c9d583d4857dacf9994aa6b2d6017075438a09cf617baeb0000c5` | **✅ LIVE — `34m` / Verdigris `#4E9A87`, commit `e9de06ac`. Disk == raw == Pages == commit, hash-verified s60.** |
+| `index.html` | 4,315,047 | `3947e1999fee105dd5b8809b18c21e3f901003c940814173e6d0e9923d4f7a0f` | 🔴 **`34n` / Magenta `#A8478F` — BUILT s61, NOT YET SHIPPED.** The 35 Savannah hints (§121). **FULL BATTERY GREEN on this hash — STATIC clean, BEHAVIOUR 65/65, SESSION 21/21 — run in CLAUDE'S SANDBOX (§122).** Previous LIVE build was `34m`, `68d8f303…0000c5`, commit `e9de06ac`. |
 | `sw.js` | 5,532 | `7a1682bd276e3bdba985270e7e36e5dea2f26ad696db53280d65a5c2cc80f45c` | ✅ LIVE. `notificationclick` + the `push` receiver. |
 | `HANDOFF.md` | *(this file)* | — | 🔴 **s60 edition — UNPUSHED until the next ship.** |
 | `HANDOFF-SPEC.md` | — | — | how the app works. |
@@ -48,7 +48,13 @@ trip at s60.
 | `worker-v2_6_13.js` | 99,952 | — | **THE LIVE WORKER, v2.6.13.** On disk, GITIGNORED, never committed. **READ IT THERE — do not ask him to paste it.** |
 | `test/` | — | — | `agents.py` (STATIC), `behaviour.py`, `session_checks.py`, `.last-battery`. |
 
-**BUILDMARK: `34m` / Verdigris IS SPENT. NEXT IS `34n` / Magenta `#A8478F`.**
+**BUILDMARK: `34n` / Magenta `#A8478F` IS SPENT ON THE s61 BUILD. NEXT IS `34o` / Lime `#7FA33C`.**
+
+🔴 **THE DOC AND THE CSS DISAGREED ABOUT `34m`.** §0 called it Verdigris `#4E9A87`; the
+stylesheet actually served Lime `#7FA33C`, and `#4E9A87` appears nowhere in `index.html`. The
+colour is written in ONE place — `#buildmark{…color:…}` — so the CSS is the fact and §0 was the
+error. `34n` follows §0's rotation and is Magenta. **Read the CSS, not the table, before naming a
+colour.**
 Rotation (§8i): a Cobalt `#3B6BA5` · b Ochre `#C88A2E` · c Rose `#B5566B` · d Amethyst `#7A5A98` ·
 e Verdigris `#4E9A87` · f Magenta `#A8478F` · g Lime `#7FA33C` · h Rust `#B4532A`, then wraps.
 **A MARK IS SPENT ONLY WHEN A BUILD IS DELIVERED.** Revisions on disk cost nothing — four passes over
@@ -62,6 +68,82 @@ masthead sized off the hero (§119).
 **🔴 `test/.last-battery` HOLDS THE HASH THE BATTERY PASSED ON.** Read it and compare its mtime to
 `index.html`'s instead of asking him to paste the output. A green battery that PRE-DATES the build
 gates nothing (s58).
+
+---
+
+# 🔴 §122 — THE WHOLE BATTERY RUNS IN CLAUDE'S SANDBOX. `battery.cmd`'S HEADER IS WRONG. s61.
+
+**`battery.cmd` says, in its own comment block: "Claude CANNOT run this. There is no browser in
+Claude's sandbox and no root to install one - proven in s55, 115 MB downloaded to learn it."**
+**THAT IS NO LONGER TRUE, AND THE 115 MB WAS NOT THE OBSTACLE.** The whole battery — STATIC,
+BEHAVIOUR 65/65 and SESSION 21/21 — ran in the sandbox at s61 and passed.
+
+**WHAT ACTUALLY BLOCKED IT WAS ONE MISSING SHARED LIBRARY**, not root and not the download.
+`playwright install chromium` succeeds without root; `install-deps` is the part that needs root and
+the part that fails. Of Chromium's entire dependency list exactly **one** library was absent from
+the image: `libXdamage.so.1`. It can be fetched and unpacked without root.
+
+```bash
+pip install playwright --break-system-packages
+python3 -m playwright install chromium          # NOT install-deps; that needs root and fails
+mkdir -p /tmp/libs && cd /tmp/libs
+apt-get download libxdamage1                     # no root required to DOWNLOAD
+dpkg -x libxdamage1_*.deb ext
+export LD_LIBRARY_PATH=/tmp/libs/ext/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
+export PYTHONUTF8=1
+python3 test/run.py                              # from the repo root
+```
+
+`chromium.launch(args=['--no-sandbox'])` is required. **None of this survives the session** — the
+sandbox is rebuilt each time, so it is ~2 minutes of setup at the start of any session that needs
+to measure behaviour.
+
+**🔴 WHAT THIS CHANGES, AND THE ONE THING TO WATCH.** The owner no longer has to run `battery`
+before every ship, and layout can be measured at any viewport without his machine or the Chrome
+extension. **But `test/.last-battery` is `ship` GATE 3, and Claude can now write it** — so the gate
+can be satisfied by a run the owner never saw. **CLAUDE MUST SAY, EVERY TIME, WHERE THE BATTERY RAN.
+A stamp with no statement of origin is worse than no stamp**, because GATE 3 will pass silently.
+The battery at s61 ran in the sandbox against `3947e199…`, and `.last-battery` was written by Claude.
+
+**THE REUSABLE LESSON: A "PROVEN IMPOSSIBLE" IN THIS DOCUMENT IS PROVEN AGAINST ONE DAY'S IMAGE.**
+s55 concluded "no browser, no root" and the conclusion outlived its evidence by six sessions,
+costing a hand-off step on every single ship in between. **Re-test the cheap half of an impossibility
+claim before inheriting it.** `battery.cmd`'s header comment should be corrected; it is the owner's
+file and was left untouched.
+
+---
+
+# 🔴 §121 — THE 35 SAVANNAH HINTS. `34n`, s61.
+
+**All five Savannah territories shipped with `"hint": "test hint"` on every one of their 35 tiles,
+and stayed that way from s56 to s61.** A detective who spent an EARNED hint coin (§93 — earned,
+never sold) received the words "test hint". Chicago's 60 tiles were never affected.
+
+**IT WAS NEVER INVISIBLE. NOTHING WAS LOOKING.** STATIC greps for `console.log`, `http://` and
+`CURATOR_PASS`; none of the three suites asserts anything about tile CONTENT. The battery went green
+on every build that carried the defect, which is the whole lesson: **a green battery says the code
+runs, not that the copy is fit to read.**
+
+**THE FIX.** 35 hints written to the register of an inspector who has already walked the ground —
+plainer than the clue, permitted to name a street, short because it is read on a phone by someone
+standing still. Applied by anchored regex per tile id with `assert n == 1` on each, and every one of
+the five tile arrays re-parsed with `json.loads` afterwards to prove the JSON survived.
+
+**⚠ TWO THINGS LEFT DELIBERATELY UNDONE, BOTH OWNER DECISIONS:**
+1. **Two Bonaventure hints name section H and section E.** That is what a visitor is told at the
+   gate, and it is the only thing here that would go wrong quietly if the cemetery re-lettered.
+2. **Three clues carry proper nouns** — Chippewa Square, Factors Walk, the Wilmington River, Isle of
+   Hope, Skidaway, 'Moon River' — against the rule that a clue names nothing that can be renamed.
+   **The hints follow the clues as they stand; the clues were not touched.**
+
+**🔴 A NEAR MISS WORTH KEEPING: `34m` OCCURS SEVEN TIMES IN `index.html` AND SIX OF THEM ARE INSIDE
+BASE64.** Substituting the bare string would have corrupted six images silently. The edit anchored
+on the whole `<p id="buildmark" …>34m</p>` tag. §5i, proven again.
+
+**THE DRAFT WAS WRITTEN TO THE REPO ROOT AND HAD TO BE MOVED.** `_hints-s61-draft.md` sat where
+`ship`'s `git add -A` would have published it; `.gitignore` covers `_preview-*.html` and
+`_diagram-*.png` but has **no `_*.md` rule**. Moved to `_to_delete\s61\`. **Consider a blanket
+`_*` ignore rule.**
 
 ---
 
