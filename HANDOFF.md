@@ -40,7 +40,7 @@ trip at s60.
 
 | file | bytes | sha256 | state |
 |---|---|---|---|
-| `index.html` | 4,315,047 | `3947e1999fee105dd5b8809b18c21e3f901003c940814173e6d0e9923d4f7a0f` | 🔴 **`34n` / Magenta `#A8478F` — BUILT s61, NOT YET SHIPPED.** The 35 Savannah hints (§121). **FULL BATTERY GREEN on this hash — STATIC clean, BEHAVIOUR 65/65, SESSION 21/21 — run in CLAUDE'S SANDBOX (§122).** Previous LIVE build was `34m`, `68d8f303…0000c5`, commit `e9de06ac`. |
+| `index.html` | 4,315,150 | `af946f3c96138df7ac21887285ba6b0b70d2ac0b84ab3a1f39a7be02c0e461bb` | 🔴 **`34n` / Magenta `#A8478F` — BUILT s61, NOT YET SHIPPED.** The 35 Savannah hints (§121) AND the home-button scale (§123). **FULL BATTERY GREEN on this hash — STATIC clean, BEHAVIOUR 65/65, SESSION 21/21 — run in CLAUDE'S SANDBOX (§122).** Previous LIVE build was `34m`, `68d8f303…0000c5`, commit `e9de06ac`. |
 | `sw.js` | 5,532 | `7a1682bd276e3bdba985270e7e36e5dea2f26ad696db53280d65a5c2cc80f45c` | ✅ LIVE. `notificationclick` + the `push` receiver. |
 | `HANDOFF.md` | *(this file)* | — | 🔴 **s60 edition — UNPUSHED until the next ship.** |
 | `HANDOFF-SPEC.md` | — | — | how the app works. |
@@ -68,6 +68,75 @@ masthead sized off the hero (§119).
 **🔴 `test/.last-battery` HOLDS THE HASH THE BATTERY PASSED ON.** Read it and compare its mtime to
 `index.html`'s instead of asking him to paste the output. A green battery that PRE-DATES the build
 gates nothing (s58).
+
+---
+
+# §123 — THE HOME BUTTONS RESCALED, AND A 4px DRIFT FOUND WHILE MEASURING. s61.
+
+**Owner asked for: `font-size 25px · line-height 1.28 · letter-spacing 0.2px · padding 8px 2px ·
+gap 14px`, then: "use 390 x 844 and scale the buttons and text proportionally."**
+**FOUR OF THE FIVE VALUES WERE ALREADY EXACTLY THAT** — only the padding differed (`18px 10px`).
+
+**🔴 THE SCALING UNIT, AND WHY IT IS NOT `vw`.** `#app` is `max-width:480px`, so past a 480px
+viewport the layout stops growing and any `vw` metric keeps growing — §119.3's trap, which produced a
+false fault once already. The grid therefore defines ONE unit and everything is a multiple of it:
+
+```css
+.homegrid{ --u: min(.25641vw, 1.2459px); }     /* = 1px at a 390 viewport; caps with #app */
+.hg-btn  { font-size: calc(25*var(--u)); padding: calc(8*var(--u)) calc(2*var(--u));
+           letter-spacing: calc(.2*var(--u)); }
+.homegrid{ gap: calc(14*var(--u)); }
+```
+
+`0.25641vw` is `1/390` of the viewport; the `min()` freezes it where `#app` freezes. **Border stays a
+fixed 2px** — a hairline that scales stops reading as a rule. `line-height:1.28` is unitless and
+scales itself.
+
+**MEASURED AT SEVEN WIDTHS, ALL FOUR BUTTONS, `scrollWidth <= clientWidth` THROUGHOUT:**
+
+| viewport | font | padding | gap | button |
+|---|---|---|---|---|
+| 320 | 20.51px | 6.56 / 1.64 | 11.49 | 124.3 x 69.6 |
+| 360 | 23.08px | 7.38 / 1.85 | 12.92 | 143.5 x 77.8 |
+| **390** | **25.00px** | **8.00 / 2.00** | **14.00** | **158.0 x 84.0** |
+| 414 | 26.54px | 8.49 / 2.12 | 14.86 | 169.6 x 88.9 |
+| 430 | 27.56px | 8.82 / 2.21 | 15.44 | 177.3 x 92.2 |
+| 480 | 30.77px | 9.85 / 2.46 | 17.23 | 201.4 x 102.4 |
+| 800 | 31.15px | 9.97 / 2.49 | 17.44 | 201.3 x 103.6 |
+
+**390 lands on the owner's numbers exactly, and 800 proves the cap holds.** §118.4's "height is FIXED
+at 103.6px" is superseded — height is now proportional, 69.6 to 103.6 across the range. **One width
+proves nothing: this was measured at seven.**
+
+**WHAT IT DID TO THE GEOMETRY.** §118.4 recorded the button height as **FIXED at 103.6px**
+(2 lines x 32px + 18px padding top and bottom + 2px borders). With 8px padding it is now
+**84.0px** — 64 + 16 + 4 — measured identical at 320, 360, 390, 414 and 430. Grid height
+182px = 2 x 84 + 14 gap. **§118.4's 103.6 figure is superseded; the arithmetic behind it still
+holds.** Button widths are unchanged (123 / 143 / 158 / 170 / 178). **No label overflows at any of
+the five widths** — `scrollWidth <= clientWidth` on all four buttons throughout; the narrower side
+padding (10px to 2px) gives the labels 16px more room at 320, where it was tightest.
+
+**🔴 THE DRIFT, FOUND WHILE MEASURING AND NOT CHANGED: THE GRID NO LONGER LINES UP WITH THE HERO.**
+§118.4 derived `margin:0 -4px` from a hero plaque of `viewport - 36`, with `.stack` padding 22px.
+**The hero is no longer that plaque.** Since §114/§119 the hero is the cypher badge, and it measures
+**322px at a 390 viewport — `viewport - 68`, not `viewport - 36`.** So at 390:
+
+| element | left | right | width |
+|---|---|---|---|
+| `.homegrid` | 30.0 | 360.0 | 330.0 |
+| hero `.cred-badge` | 34.0 | 356.0 | 322.0 |
+
+**The grid overhangs the badge by 4px on each side.** The pull-out that made it flush with the old
+plaque is exactly what now breaks flushness with the new hero: `margin:0 -4px` should be `margin:0`.
+**PRE-EXISTING — it arrived with the s60 badge work, not with this change, and the padding edit does
+not affect horizontal geometry at all.** **NOT CHANGED: aesthetics are not altered without asking.**
+
+**⚠ THE RENDER WAS NOT SHOWN, AND THE REASON MATTERS.** An element screenshot of `.homegrid` came
+back painting the join copy instead of the buttons — `s-home` is the only active screen, so the grid
+is presumably not displayed to an unregistered hunter. **The rects above are real layout values and
+stand; the picture was not obtained.** Forcing app state to manufacture one was refused
+(do not stub `Store` after boot). **A screenshot that disagrees with a measurement is a warning, not
+a rounding error.**
 
 ---
 
