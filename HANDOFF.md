@@ -1,5 +1,6 @@
 # HANDOFF.md — LIVE STATE, RULES AND WHAT IS OPEN
 
+### 🔴🔴 **s60: READ §119 — `34n` IS DELIVERED AND SHIPPING: THE BRONZE PLAQUES ARE IN. Four cast-bronze plates replace the placeholder line-art buttons, the masthead was scaled to FIT, and the ornamental rule was centred. 4,514,733 B / `955e99354ac8d232c23e1bf7f4376b47adc0fb5b1c2e399576df9c8c718855d4`. NEXT MARK `34o` / Lime `#7FA33C`.** `34m` (the rule spacing) was never shipped on its own — it is carried inside this build.
 ### 🔴🔴 **s60: READ §118 — `34l` IS DELIVERED AND SHIPPING: THE COLD CASES ARE NOW **AGENCY CASES** app-wide, CASE FILES IS NOW **CASE REVIEW**, and the home screen is a 2×2 grid of TEMPORARY line-art buttons. 4,311,514 B / `305afd1e9d2a5d5d6698319f9812c98eff93584872d07aa356c960548180bcf9`. NEXT MARK `34m` / Verdigris `#4E9A87`.** `test/behaviour.py` SHIPS WITH IT — its precinct parser had to follow the rename. Battery 65/65 + 21/21 on this hash.
 ### 🔴🔴 **s60: READ §117 — `34j` IS DELIVERED AND SHIPPING: the badge’s automated press is now ONE half press over TWICE the time, easing gently in and out. 4,309,442 B / `891d43269e06111e2692fa1ae88113c7a64e4a362b1a5890e98d576fe0b9f330`. NEXT MARK `34k` / Rose `#B5566B`.** A REAL FINGER IS UNCHANGED — still full depth at `.08s`. Battery recorded AFTER the build, same hash.
 ### 🔴🔴 **s60: READ §116 — `34i` IS DELIVERED AND SHIPPING: the AGENCY REPLY ALERT — an oxblood airmail toast on open, and the wax seal’s reply stamp pulsing when it scrolls into view. 4,308,716 B / `99c1a2473cab45693586016c74548f6ea090479306bdd697bf9dffb0d1849311`. NEXT MARK `34j` / Ochre `#C88A2E`.** CLIENT ONLY — no Worker change, no deploy, nothing to install. Battery recorded against the same build before the ship.
@@ -3284,3 +3285,59 @@ height track the width.** Owner has not chosen yet.
 `.btn-plaque` sets an explicit `display`, which beats `[hidden]`'s user-agent rule. The line that
 actually hides them is `.stack .btn-plaque[hidden],.stack .stamp-link[hidden]{display:none !important}`.
 The first attempt looked correct and rendered both the grid and the plaques.
+
+
+---
+
+# §119 — THE BRONZE PLAQUES, THE MASTHEAD THAT NEVER FITTED, AND THE RULE (s60, `34m`/`34n`)
+
+## §119.1 — The plaques
+
+Owner delivered four cast-bronze plates — CASE BUILDER · THE HUNT · CASE REVIEW · AGENCY CASES —
+replacing the temporary line art of §118. **THE PLAQUE IS THE BUTTON**: no border, no fill, no text
+node. The lettering is IN the artwork, so it scales with the plate at every width — owner's
+instruction, "if you scale, scale the words also".
+
+**Sources arrived as 1408x768 PNGs ON OPAQUE WHITE.** They would have printed white rectangles on
+the paper. Cut out by flood-filling near-white FROM THE BORDER ONLY — a global white-to-alpha would
+have punched holes through the counters of B, R, A and G. Trimmed to **1106x624, aspect 1.772**,
+consistent across all four to within a pixel.
+
+`art/plaque-*-source-s60.png` (originals) · `-alpha-s60.png` (cut out) · `-s60.webp` (600x339, the
+shipped size). **`art/` IS GITIGNORED — the delivered plates travel BASE64 INSIDE `index.html`**, so a
+fresh clone needs nothing. Cost: **+203 KB**, 4.31 MB -> 4.51 MB.
+
+`aspect-ratio:1106/624` on `.hg-btn` — height tracks width, so the plate is **never cropped or
+letterboxed on any handset**. Button is 139x78 at 320, 170x96 at 390, 194x109 at 430.
+
+**CONTACT SHADOW, owner's pick ("the wide one but darker"):**
+`drop-shadow(0 1px 1px rgba(10,7,4,.82)) drop-shadow(0 6px 10px rgba(10,7,4,.52))`. The tight dark
+line is the CONTACT — it says the plate is touching the paper; the wide pool is the lift. Pressed,
+the contact holds and the pool COLLAPSES (`0 2px 4px .3`) — the plate settles INTO the page. Same
+idiom as `.btn-plaque:active` and the credentials badge.
+
+## §119.2 — 🔴 THE MASTHEAD NEVER FITTED, AND A max-width WRAPPER CANNOT PROVE IT
+
+`.brand` is `white-space:nowrap` at `clamp(26px,7.6vw,42px)`. **The ink was WIDER THAN THE SCREEN at
+every size** — overhanging the right by 49.9px at 320, 19.5px at 390, 12.7px at 430. It looked
+off-centre; **it was not a centring fault.** Centring cannot fix what does not fit, and the proof is
+that the moment it fits, the gaps come out exactly equal (3.0/3.0 at 390 on a 7.0vw ramp).
+
+**🔴 THE MEASURING TRAP, AND IT PRODUCED A FALSE FAULT FIRST TIME.** Simulating a phone with
+`#s-home{max-width:390px}` **DOES NOT CHANGE `vw`**, so `clamp()` and every media query still resolve
+against the 1707px desktop window. That reported a 36.4px font in a 354px box and an overflow that
+was pure artefact. **USE AN IFRAME** — `_preview-phone.html` and `_preview-vw.html` load `index.html`
+at 320/390/430 and give a REAL viewport. Anything involving `vw`, `vh`, `clamp()`, `dvh` or a media
+query MUST be measured in a frame, never a max-width wrapper.
+
+**The fix scaled the WHOLE masthead by one factor, 6.6/7.6 = 0.868:** brand
+`clamp(22.6px,6.6vw,36.5px)`, sub-line `clamp(9.1px,2.87vw,13.9px)`, its letter-spacing
+`clamp(1.3px,0.74vw,4.34px)`. **Scale the sub-line and its tracking by the SAME factor or the
+masthead drifts apart.** It now fits at 320 by 1.7px a side — no room for a longer word, ever.
+
+## §119.3 — The ornamental rule (`34m`)
+
+It sat **12.4px under the tagline ink and 20px above the grid** — 8px of unequal air, and the owner
+saw it. `.rule-orn` margin-bottom `14px -> 6px` gives 12.4/12.0. `.hero` padding-bottom and `.stack`
+padding-top were already 6 and 6, so that ONE value was the whole fault. `34m` was built and measured
+but never shipped alone; it rides inside `34n`.
