@@ -1,5 +1,6 @@
 # HANDOFF.md — LIVE STATE, RULES AND WHAT IS OPEN
 
+### 🔴🔴 **s60: READ §118 — `34l` IS DELIVERED AND SHIPPING: THE COLD CASES ARE NOW **AGENCY CASES** app-wide, CASE FILES IS NOW **CASE REVIEW**, and the home screen is a 2×2 grid of TEMPORARY line-art buttons. 4,311,514 B / `305afd1e9d2a5d5d6698319f9812c98eff93584872d07aa356c960548180bcf9`. NEXT MARK `34m` / Verdigris `#4E9A87`.** `test/behaviour.py` SHIPS WITH IT — its precinct parser had to follow the rename. Battery 65/65 + 21/21 on this hash.
 ### 🔴🔴 **s60: READ §117 — `34j` IS DELIVERED AND SHIPPING: the badge’s automated press is now ONE half press over TWICE the time, easing gently in and out. 4,309,442 B / `891d43269e06111e2692fa1ae88113c7a64e4a362b1a5890e98d576fe0b9f330`. NEXT MARK `34k` / Rose `#B5566B`.** A REAL FINGER IS UNCHANGED — still full depth at `.08s`. Battery recorded AFTER the build, same hash.
 ### 🔴🔴 **s60: READ §116 — `34i` IS DELIVERED AND SHIPPING: the AGENCY REPLY ALERT — an oxblood airmail toast on open, and the wax seal’s reply stamp pulsing when it scrolls into view. 4,308,716 B / `99c1a2473cab45693586016c74548f6ea090479306bdd697bf9dffb0d1849311`. NEXT MARK `34j` / Ochre `#C88A2E`.** CLIENT ONLY — no Worker change, no deploy, nothing to install. Battery recorded against the same build before the ship.
 ### 🔴🔴 **s60: READ §115 — `34h` IS DELIVERED AND SHIPPING: the badge cast shadow re-weighted and the AUTOMATED tap halved. 4,304,630 B / `520617937cf8710cbbb2080277a24ea67f47d4353a7bed0ba2937b6aa4b86e1c`. NEXT MARK `34i` / Cobalt `#3B6BA5` (the rotation wraps after Rust).** Battery passed and was recorded against `520617937cf8710c…` — the same build, before the ship.
@@ -3215,3 +3216,71 @@ like "the press does nothing". It was frame 0, not a fault. **Measure a transiti
 `transition:none !important` injected first, or read the RULE off `document.styleSheets` rather than
 the computed value.** Verified that way: press `matrix(0.9925,0,0,0.9925,0,0.5)`, cast
 `matrix(1,0,0,1,-1.5,-5)` at opacity `.78`, `:active` still `translateY(1px) scale(0.985)`.
+
+
+---
+
+# §118 — THE AGENCY CASES RENAME, AND THE TEMPORARY HOME GRID (s60, `34l`)
+
+Two owner asks in one build: **rename every user-facing "Cold Case" to "Agency Case" and every
+"Case Files" to "Case Review"**, and **replace the three painted home plaques with a 2×2 grid of plain
+line-art buttons** while the artwork is redrawn.
+
+## §118.1 — 🔴 LABELS MOVED. IDENTIFIERS DID NOT. THIS IS THE WHOLE RULE.
+
+`cold` is load-bearing: `cold:index`, `coldstat:`, `crate:`, `openColdCases()`, `closeColdCases()`,
+`joinColdCase()`, `coldCaseRating()`, `rateColdCase()`, `State.coldQ`, `State.coldCat`, `_coldIdx`,
+`PLQ_COLD`, `COIN_CLD`, `#cold-ov`, `.coldstamp`, `.coldsamp`, `.cold-scroll`, `sh_seencold`.
+**THE WORKER GATES ARCHIVE DELETION ON `/^cold(stat)?:/`** — renaming those keys would hand the
+curator's permissions to anyone holding a case code. Every edit was made with a script that asserted
+23 identifier counts unchanged and REFUSED TO WRITE if any moved. Do it that way again.
+
+## §118.2 — What the rename touched
+
+44 occurrences of "cold case" went to **zero**. 16 navigation strings, then a second pass over the
+ceremony and the copy. Three changed MEANING and were owner-flagged:
+
+- **The archive card stamp now reads `UNSOLVED`**, not COLD CASE. It sits opposite `CASE CLOSED`, so
+  it must name a STATE; "AGENCY CASE" opposite "CASE CLOSED" is not a pair.
+- **The precinct bar dropped the adjective** — "PRECINCT 31401 — 3 CASES OPEN". "3 AGENCY CASES OPEN"
+  risked wrapping at 320.
+- **Two of the 23 Commissioner's jokes were REWRITTEN, not substituted.** "the grounds have thawed"
+  played on *cold*; it is now "the grounds are open". "Open a Cold Case & lend The Agency a hand"
+  would have read "Agency Case … The Agency"; it is now "Take up an Agency Case & lend us a hand."
+  The other 21 are the owner's lines with the name swapped and the articles corrected to "an".
+
+One vestigial `.replace("Case Files, ","")` survives in `buyEverything()`. **It matches no volume
+label** (they are The Almanac / The Parlour / The Grounds) — dead, not wrong. Left alone.
+
+## §118.3 — 🔴 THE RENAME BROKE A TEST, AND THE TEST WAS RIGHT
+
+`test/behaviour.py` parsed the precinct banner with `/(\d+)\s+COLD CASE/`. After the rename it matched
+nothing and returned `null`, and **three §98 checks failed — two of them CONTROLS that had passed that
+morning.** The fix was the PARSER, now `/(\d+)\s+CASES?\s+OPEN/`; the assertion `banner == list` was
+never touched. **THAT DISTINCTION IS THE POINT — moving a parser to follow renamed copy is legitimate;
+moving an assertion to make a red test green is rebaselining, and is forbidden.**
+The ring check then returned **5, not 6**, so the §98 box-vs-radius defect is NOT present.
+
+## §118.4 — The home grid, and the constant that matters
+
+`.homegrid` / `.hg-btn`, four buttons: CASE BUILDER · THE HUNT · CASE REVIEW · AGENCY CASES, wired to
+`startBuild()` `openJoin()` `openCaseFiles()` `openColdCases()`. Owner: **these are TEMPORARY line art**,
+to be redrawn.
+
+**ALIGNMENT: the grid must sit flush with the hero plaque. The plaque is `viewport - 36` (18px in from
+each screen edge); `.stack` pads 22px; so the grid is pulled out by exactly `margin:0 -4px`.**
+🔴 A FIXED PULL-OUT MEASURED AT ONE WIDTH IS THE TRAP. `-27px` aligned perfectly at 390 and
+**overhung the plaque by 46px at 320**. It was only caught by measuring at five widths. Measure the
+alignment at 320, 360, 390, 414 AND 430 — one width proves nothing.
+
+**Dimensions for the artwork:** button width `(viewport - 50) / 2` — 135 at 320, 155 at 360, **170 at
+390**, 182 at 414, 190 at 430. **Height is FIXED at 103.6px** (2 lines x 32px + 18px padding top and
+bottom + 2px borders). `gap:14px` drives BOTH axes from one value. Aspect swings 1.30 -> 1.84, so a
+fixed-ratio plaque will crop or letterbox somewhere: **9-slice it, or set `aspect-ratio` and let the
+height track the width.** Owner has not chosen yet.
+
+**The old plaques and the `.stamp-link` STAY IN THE DOM, hidden.** `PLQ_BUILD` reads the Build plaque's
+`<img>` src at boot and a missing node breaks it. 🔴 **THE BARE `hidden` ATTRIBUTE IS NOT ENOUGH** —
+`.btn-plaque` sets an explicit `display`, which beats `[hidden]`'s user-agent rule. The line that
+actually hides them is `.stack .btn-plaque[hidden],.stack .stamp-link[hidden]{display:none !important}`.
+The first attempt looked correct and rendered both the grid and the plaques.

@@ -343,7 +343,10 @@ async def _cold_views(pg, pz, seed_ring):
       const chip=document.getElementById("cold-filterbar");
       const barTxt=bar?bar.textContent:"";
       const chipTxt=chip?((chip.querySelector('.cfb-txt')||{}).textContent||""):"";
-      const mB=barTxt.match(/(\\d+)\\s+COLD CASE/);
+      /* s60: the banner reads "PRECINCT z - n CASES OPEN" since the Agency Cases rename
+         (34k). It said "n COLD CASE(S) OPEN" before. ONLY THE PARSER MOVED - the
+         assertion below is still banner == list, unchanged. */
+      const mB=barTxt.match(/(\\d+)\\s+CASES?\\s+OPEN/);
       const mC=chipTxt.match(/SHOWING\\s+(\\d+)/);
       return {banner: mB?+mB[1]:null, chip: mC?+mC[1]:null,
               listRows: document.querySelectorAll("#cold-list .coldrow").length,
