@@ -26,7 +26,7 @@ NOT CONTAIN THE HASH — WRITE ALL 64 CHARACTERS, never `abc123…`.**
 
 | file | bytes | sha256 | state |
 |---|---|---|---|
-| `index.html` | 4,373,999 | `27f588c5b2b4f5065dc4398f9d59a51e7f060d6431b24d505bd206e5b6e40e8b` | **✅ SHIPPED s62 — `34p` / Rust `#B4532A`. The met badge recut and rematted (§128). Battery passed on THIS hash, on HIS machine, before the ship. Disk == the battery's recorded hash; raw/Pages/commit to be verified after the push.** |
+| `index.html` | 4,390,402 | `d5700cba298ac2ef8f256705e687742e7cb2aa1f2275213c6a91c584427694f7` | **⚠ BUILT — `34q` / Cobalt `#3B6BA5`. Plates rematted with the PADDING fix, given the badge's cast rig, and undraggable; the badge repassed too (§129). STATIC green in the sandbox. THE FULL BATTERY IS OWED ON HIS MACHINE BEFORE THE SHIP.** |
 | `sw.js` | 5,532 | `7a1682bd276e3bdba985270e7e36e5dea2f26ad696db53280d65a5c2cc80f45c` | ✅ LIVE. Network-first for the document, so it CANNOT pin a hunter to an old build. |
 | `HANDOFF.md` | *(this file)* | — | 🔴 **s61 edition — UNPUSHED until the next ship.** |
 | `HANDOFF-SPEC.md` | — | — | how the app works. Untouched at s61. |
@@ -35,7 +35,9 @@ NOT CONTAIN THE HASH — WRITE ALL 64 CHARACTERS, never `abc123…`.**
 | `test/` | — | — | `agents.py` (STATIC), `behaviour.py`, `session_checks.py`, `run.py`, `.last-battery`. |
 | `art/` | — | — | 🔴 **GITIGNORED AND ON ONE DISK.** The s61 enamel source lives ONLY at `art\plate-enamel-source-s61.png`; the copy to `Hunt-backups\art\` returned **Permission denied**. §1v forming; a manual copy is owed. |
 
-**BUILDMARK: `34p` / Rust `#B4532A` IS SPENT AND SHIPPED AT s62. NEXT IS `34q` / Cobalt `#3B6BA5`.**
+**BUILDMARK: `34q` / Cobalt `#3B6BA5` IS WRITTEN INTO THE BUILD AND NOT YET DELIVERED. A MARK IS
+SPENT ONLY WHEN A BUILD IS DELIVERED — IF THIS BUILD IS SCRAPPED, `34q` GOES BACK. NEXT AFTER IT IS
+`34r` / Ochre `#C88A2E`.**
 Rotation (§8i): a Cobalt `#3B6BA5` · b Ochre `#C88A2E` · c Rose `#B5566B` · d Amethyst `#7A5A98` ·
 e Verdigris `#4E9A87` · f Magenta `#A8478F` · g Lime `#7FA33C` · h Rust `#B4532A`, then wraps.
 **A MARK IS SPENT ONLY WHEN A BUILD IS DELIVERED.** The plates, the shadow and the filter fix all
@@ -235,6 +237,66 @@ does not. **The next build proves it, and the printed transition is the proof to
 A TOOL THAT CANNOT SEE THE CHANGE ARE INDISTINGUISHABLE FROM THE OUTSIDE.** GATE 2 is a green tick
 that is an exit code, inverted. When a gate refuses, prove what it actually read before believing it.
 
+
+# 🔴 §129 — THE FOUR PLATES GET THE BADGE'S RIG, AND THE HALO WAS ON THEM TOO. `34q`, s63.
+
+**Owner: "the 4 green enamel buttons need to ahve push action and a bigger cast shadow a bit barker
+under use the badge as an example", then "i need you to tighten the alpha mask on the edges to get rid
+of the white outlines".** Option C of four was chosen from a rendered preview.
+
+**🔴 §128'S HALO WAS ON THE PLATES AS WELL, SHIPPED SINCE `34o`, AND NOBODY HAD LOOKED.** Same cause,
+same fix. Measured on the payloads actually embedded in `34p`:
+
+| plate | edge lum before | edge lum after | core |
+|---|---|---|---|
+| builder | 129.5 | **73.9** | 91.0 |
+| hunt | 124.2 | **71.7** | 83.3 |
+| review | 132.6 | **66.8** | 85.8 |
+| agency | 124.2 | **66.3** | 81.6 |
+
+Edges were ~40 luminance ABOVE their cores; they now sit 12-19 BELOW. **WHEN A CUTOUT FAULT IS FOUND,
+CHECK EVERY ASSET CUT THE SAME WAY IN THE SAME SESSION FAMILY — §1w.** Cost: 34.2 -> 42.1 KB across
+the four.
+
+**THE PUSH IS A SEPARATE CAST LAYER, NOT A FILTER.** A `drop-shadow` shadow cannot move independently
+of the thing casting it, so a filter can only shrink on press. The badge has always had a real
+`.cb-cast` image behind it that slides back underneath as the badge goes down; the plates now carry the
+same rig. **The cast is a CLONE of the plate image built at runtime, so the second copy costs NOTHING
+in the document** — written as markup it would have been +34 KB of duplicated base64.
+
+Chosen values (option C): cast `translate(3px,10px)`, `brightness(0) blur(9px)`, opacity `.66`;
+on press cast to `translate(1px,4px)` opacity `.80`, plate `translateY(2px) scale(.982)` with
+`brightness(1.05)`.
+
+**🔴 THE PLATES COULD BE DRAGGED OFF THE PAGE AND THE BADGE COULD NOT — THE OWNER FOUND IT.**
+The badge is an `<svg>` at `pointer-events:none`, so the button takes the click and there is nothing to
+grab. The plates are real `<img>` elements with browser-default drag, so they tore off as a ghost.
+Matched to the badge: `pointer-events:none` + `-webkit-user-drag:none` + `draggable="false"`.
+**THE BUTTON STILL FIRES — the click was never on the image.**
+
+**🔴 THE MATTE HAD A BORDER BUG AND THE OWNER FOUND IT BY DRAWING ON A SCREENSHOT.** After the
+rematte the plates still wore a white line along their bottom edge. Cause: **`distance_transform_edt`
+treats everything outside the array as OPAQUE, so a pixel sitting ON the image border is never seen as
+an edge pixel** and keeps its white. The plates' alpha ran right to the bottom row of the bitmap, so
+that row was skipped. Measured on `plate-builder`: bottom rows **153.8 and 235.1** luminance before,
+**41.0 and 41.2** after. **THE FIX IS ONE LINE — `np.pad(a, ((2,2),(2,2),(0,0)), constant_values=0)`
+BEFORE THE DISTANCE TRANSFORM.** §128's badge was repassed through the corrected matte for the same
+reason.
+
+**⚠ AND A MISREAD WORTH KEEPING.** The first measurement of "the hottest bottom row" returned 209 both
+before and after the fix, which looked like the fix had failed. **It had not: 209 is the plate's WHITE
+PAINTED BORDER, a design feature well inside the silhouette.** The fault was in the last two rows of
+the bitmap, which that statistic averaged away. **A SUMMARY STATISTIC CAN HIDE A ONE-PIXEL FAULT —
+PRINT THE ROWS, AND CROP AND LOOK BEFORE CONCLUDING.**
+
+**⚠ A `<` FOLLOWED BY A LETTER IN NEW JAVASCRIPT TRIPS AGENT D.** `for(var i=0;i<bs.length;i++)`
+registered as an opening `<bs` tag and Agent D reported `{'svg': -1, 'bs': 1}`. **THE FIX IS A SPACE
+AFTER THE `<`, NOT A REBASELINE.** Agent D was right; the code was ambiguous.
+
+**⚠ STILL OWED: THE BADGE'S OWN CAST IS `.47`** against the plates' new weight (§128). He asked for
+darker at s62, shipped `34p` without choosing, and has not chosen since.
+
+---
 
 # 🔴 §128 — THE MET BADGE RECUT AND REMATTED, AND WHAT THE CUTOUT RULE WAS MISSING. `34p`, s62.
 
