@@ -1,5 +1,5 @@
 # HANDOFF.md — LIVE STATE, RULES AND WHAT IS OPEN
-### **SESSION-60 EDITION (Aug 11 2026). THIS RE-BASE SUPERSEDES THE ENTIRE PRIOR CHAIN.**
+### **SESSION-61 EDITION (Aug 12 2026). SUPERSEDES THE s60 EDITION AND THE ENTIRE PRIOR CHAIN.**
 
 ### 🔴 THIS IS ONE OF THREE FILES. THE SET IS THE DOCUMENT; NO ONE FILE IS.
 ### **READ THIS FILE IN FULL, EVERY SESSION.** It is the state of the world, the rules that bite,
@@ -9,65 +9,155 @@
 ### copies drift (§0.2, §1w). Delete the copy; do not update both.
 ### `SUPER-HANDOFF.md` IS DEAD. Do not resurrect it, do not look for it.
 
-### 🔴🔴 **THIS RE-BASE WAS MADE MECHANICALLY, NOT FROM MEMORY.** Only the front matter and §0 were
-### rewritten. **EVERY OTHER SECTION WAS MOVED VERBATIM** and the line count was reconciled to prove
-### it — the same method as the s55 three-way split (§4). A handoff composed from recollection at the
-### end of a long session is how rules get lost; that is why this one was not.
+### 🔴🔴 **THIS EDITION WAS MADE MECHANICALLY, NOT FROM MEMORY (§120).** Only the front matter and
+### §0 were rewritten. Everything else was MOVED VERBATIM by script and the move was PROVEN before
+### the file was written — every preserved line held in a set and asserted present afterwards.
+### 🔴 **THE FIRST ATTEMPT AT THIS REBASE DESTROYED §121-§126** because it treated everything above
+### the registry as front matter, and those six sections sat there. The proof did not cover them.
+### **THE MOVED REGION IS EVERYTHING FROM THE FIRST SECTION AFTER §0 TO THE END — verify a named
+### section survives, not just a line count.**
 
 ---
 
-# 📌 OWNER ACTION — REPLACE THE PROJECT-KNOWLEDGE COPY
-
-Claude can overwrite and delete this file on disk, so there is only ever one handoff at the repo
-root and no session needs you to tidy up. **The one thing only you can do is replace the copy
-attached to the project** — it is outside the folder and read-only to Claude. If it is not replaced,
-the next session opens a stale edition and believes it. That is how the s30 edition survived nine
-builds past its expiry, and how the s57 instruction block ran SEVEN builds stale.
-
-> **🔁 REPLACE THE PROJECT-KNOWLEDGE HANDOFF.** Remove the *session-59* edition and upload this
-> `HANDOFF.md` from `C:\Users\tony\Documents\Hunt`. Takes about a minute.
-
-**🔴 THE PROJECT-INSTRUCTION BLOCK IS ALSO STALE** — it still names live build `33k`. A replacement
-block was written at s60; paste it over the instruction field.
-
----
-
-## §0 — CANONICAL FILE STATE (ground truth, s60 close)
+## §0 — CANONICAL FILE STATE (ground truth, s61 close)
 
 **🔴 §0 IS UPDATED IN THE SAME EDIT AS THE SHIP, NEVER AFTERWARDS. `ship` GATE 1 REFUSES IF §0 DOES
-NOT CONTAIN THE HASH — WRITE ALL 64 CHARACTERS, never `abc123…`.** An abbreviated hash cost a round
-trip at s60.
+NOT CONTAIN THE HASH — WRITE ALL 64 CHARACTERS, never `abc123…`.**
 
 | file | bytes | sha256 | state |
 |---|---|---|---|
-| `index.html` | 4,359,771 | `40e0f2044470674bc64bbf43c814dcc7bf92fe0833cc584e5b9167098f7d9bb3` | 🔴 **`34o` / Lime `#7FA33C` — BUILT s61, NOT YET SHIPPED.** The four enamel plates (§125) AND the placeless-case filter fix (§126). Full battery green on this hash, run in Claude's sandbox (§122). Previous LIVE was `34n` / Magenta, `af946f3c…`, commit `3c5508b3` — The 35 Savannah hints (§121) and the home-button scale (§123). **Disk == raw-at-SHA == Pages == commit, hash-verified s61**, and `test hint` counts ZERO on the copy Pages serves. Full battery green on this hash — STATIC clean, BEHAVIOUR 65/65, SESSION 21/21 — run in CLAUDE'S SANDBOX (§122). Worker v2.6.13, untouched. Previous LIVE build was `34m`, `68d8f303…0000c5`, commit `e9de06ac`. |
-| `sw.js` | 5,532 | `7a1682bd276e3bdba985270e7e36e5dea2f26ad696db53280d65a5c2cc80f45c` | ✅ LIVE. `notificationclick` + the `push` receiver. |
-| `HANDOFF.md` | *(this file)* | — | 🔴 **s60 edition — UNPUSHED until the next ship.** |
-| `HANDOFF-SPEC.md` | — | — | how the app works. |
-| `HANDOFF-HISTORY.md` | — | — | the build record. |
-| `worker-v2_6_13.js` | 99,952 | — | **THE LIVE WORKER, v2.6.13.** On disk, GITIGNORED, never committed. **READ IT THERE — do not ask him to paste it.** |
-| `test/` | — | — | `agents.py` (STATIC), `behaviour.py`, `session_checks.py`, `.last-battery`. |
+| `index.html` | 4,373,999 | `27f588c5b2b4f5065dc4398f9d59a51e7f060d6431b24d505bd206e5b6e40e8b` | **✅ SHIPPED s62 — `34p` / Rust `#B4532A`. The met badge recut and rematted (§128). Battery passed on THIS hash, on HIS machine, before the ship. Disk == the battery's recorded hash; raw/Pages/commit to be verified after the push.** |
+| `sw.js` | 5,532 | `7a1682bd276e3bdba985270e7e36e5dea2f26ad696db53280d65a5c2cc80f45c` | ✅ LIVE. Network-first for the document, so it CANNOT pin a hunter to an old build. |
+| `HANDOFF.md` | *(this file)* | — | 🔴 **s61 edition — UNPUSHED until the next ship.** |
+| `HANDOFF-SPEC.md` | — | — | how the app works. Untouched at s61. |
+| `HANDOFF-HISTORY.md` | — | — | the build record. Untouched at s61. |
+| `worker-v2_6_13.js` | 99,952 | — | **THE LIVE WORKER, v2.6.13.** On disk, GITIGNORED, never committed. Untouched at s61. |
+| `test/` | — | — | `agents.py` (STATIC), `behaviour.py`, `session_checks.py`, `run.py`, `.last-battery`. |
+| `art/` | — | — | 🔴 **GITIGNORED AND ON ONE DISK.** The s61 enamel source lives ONLY at `art\plate-enamel-source-s61.png`; the copy to `Hunt-backups\art\` returned **Permission denied**. §1v forming; a manual copy is owed. |
 
-**BUILDMARK: `34o` / Lime `#7FA33C` IS SPENT ON THE s61 PLATE BUILD. NEXT IS `34p` / Rust `#B4532A`.**
-
-🔴 **THE DOC AND THE CSS DISAGREED ABOUT `34m`.** §0 called it Verdigris `#4E9A87`; the
-stylesheet actually served Lime `#7FA33C`, and `#4E9A87` appears nowhere in `index.html`. The
-colour is written in ONE place — `#buildmark{…color:…}` — so the CSS is the fact and §0 was the
-error. `34n` follows §0's rotation and is Magenta. **Read the CSS, not the table, before naming a
-colour.**
+**BUILDMARK: `34p` / Rust `#B4532A` IS SPENT AND SHIPPED AT s62. NEXT IS `34q` / Cobalt `#3B6BA5`.**
 Rotation (§8i): a Cobalt `#3B6BA5` · b Ochre `#C88A2E` · c Rose `#B5566B` · d Amethyst `#7A5A98` ·
 e Verdigris `#4E9A87` · f Magenta `#A8478F` · g Lime `#7FA33C` · h Rust `#B4532A`, then wraps.
-**A MARK IS SPENT ONLY WHEN A BUILD IS DELIVERED.** Revisions on disk cost nothing — four passes over
-the badge shadow all rode one mark at s60. `34n` was built twice at s60 and shipped neither time.
+**A MARK IS SPENT ONLY WHEN A BUILD IS DELIVERED.** The plates, the shadow and the filter fix all
+rode `34o`. **⚠ THE COLOUR IS WRITTEN IN ONE PLACE, `#buildmark{…color:…}` — READ THE CSS, NOT THIS
+TABLE.** At s61 the two disagreed about `34m` and the CSS was right.
 
-**WHAT SHIPPED AT s60, in order:** `34g` the cypher badge (§114) · `34h` badge cast shadow and the
-half-depth auto-tap (§115) · `34i` the Agency reply alert (§116) · `34j` the badge presses once,
-gently (§117) · `34l` the Agency Cases rename and the temporary home grid (§118) · `34m` the
-masthead sized off the hero (§119).
+**WHAT SHIPPED AT s62:** `34p` — the met badge recut (crown voids opened) and rematted against its
+white background, killing a 48%-bright halo on every star point (§128). Battery passed on his machine
+on `27f588c5`, before the ship. **THE BADGE CAST SHADOW IS STILL `.47` AGAINST THE PLATES' `.52`/`.21`
+— THE OWNER ASKED FOR DARKER, CHOSE TO SHIP WITHOUT IT, AND IT IS OWED AT `34q`.**
 
-**🔴 `test/.last-battery` HOLDS THE HASH THE BATTERY PASSED ON.** Read it and compare its mtime to
-`index.html`'s instead of asking him to paste the output. A green battery that PRE-DATES the build
-gates nothing (s58).
+**WHAT SHIPPED AT s61:** `34n` — the 35 Savannah hints (§121) and the home-button proportional
+scale (§123), commit `3c5508b3`. `34o` — the four enamel plates (§125), the badge-weight contact
+shadow, and the placeless-case filter fix (§126), commit `4288d6f0`.
+
+**🔴 THIS WAS WRONG AND IS CORRECTED AT s62 (§128). CLAUDE CANNOT RUN THE WHOLE BATTERY.**
+STATIC runs in the sandbox. **BEHAVIOUR AND SESSION CANNOT AND WILL NOT** — `playwright` installs, its
+Chromium installs, then headless dies on `libXdamage.so.1` and the sandbox is not root, so the
+`apt-get` that would fix it is refused. **THE FULL BATTERY IS THE OWNER'S TO RUN.**
+`test/.last-battery` holds the hash it passed on. **CLAUDE MUST SAY WHERE THE BATTERY RAN, EVERY TIME.**
+
+**🔴 `ship` GATE 2 IS BROKEN AND WILL REFUSE EVERY SHIP (§127).** `34n` and `34o` both shipped with
+`/force`. The fix is two lines and is OWED.
+
+### §0.3 — THE THREE OPEN ITEMS AT s61 CLOSE, IN ORDER
+
+1. **`ship` GATE 2** — broken, forces every ship (§127). Two-line fix, owner's file, permission asked twice.
+2. **THE ART IS ON ONE DISK** — `art\` is gitignored and the backup copy is permission-denied.
+3. **THE GRID vs THE BADGE AT 430px** — flush at 320 and 390 to 0.0px; at 430 the badge caps at
+   `min(351px,100%)` and insets 5.5px while the grid keeps growing (§126).
+
+Also standing, unchanged from s60: home-screen install never exercised on a phone; the store clock
+has not started; `serve.ps1` binds localhost only; `Chicago-Cold-Cases-plan.html`/`.pdf` still
+serve 200 from the public repo root.
+
+---
+
+# 📑 RULES REGISTRY — WHERE EVERY SECTION LIVES
+
+**Generated from the headings below, not typed, so it cannot drift from the bodies.**
+Regenerate it; never hand-edit it.
+
+- **§126** — "MY CASES ARE GONE." THEY WERE FILTERED, NOT DELETED. 34o, s61.
+- **§127** — ship GATE 2 IS BROKEN. IT REFUSES EVERY SHIP, AND THE FIX IS TWO LINES. s61.
+- **§125** — THE FOUR ENAMEL PLATES. 34o, s61.
+- **§123** — THE HOME BUTTONS RESCALED, AND A 4px DRIFT FOUND WHILE MEASURING. s61.
+- **§122** — THE WHOLE BATTERY RUNS IN CLAUDE'S SANDBOX. battery.cmd'S HEADER IS WRONG. s61.
+- **§121** — THE 35 SAVANNAH HINTS. 34n, s61.
+- **§A** — THE WORKER. **⚠ THIS SECTION DESCRIBES v2.3. THE LIVE WORKER IS v2.6.3 — AND ITS FULL SOURCE IS NOW ON DISK AT Hunt\worker-v2_6_3.js (§70.4). READ THE
+- **§A.1** — CLAUDE HAS NEVER HAD, AND MUST NEVER BE GIVEN, WORKER ACCESS
+- **§0.2** — THE 32i ROW: A DOC THAT CONTRADICTED ITSELF IN ONE EDITION (found s53)
+- **§0.1** — INHERITED DOC ERRORS. THREE FOUND IN 24–25; ALL RE-VERIFIED CLEAN IN 26, 27 AND 28.
+- **§1** — HOW THE OWNER WORKS (read first)
+- **§1y** — RE-HASH THE LIVE SURFACES FROM THE SHELL BEFORE YOU BELIEVE ANYTHING (owner rule, s58)
+- **§1x** — GET THE LOOK RIGHT *BEFORE* SHIPPING, NOT ACROSS SHIPS (owner rule, s58)
+- **§1w** — A CORRECTION IS NOT DONE UNTIL EVERY COPY OF THE ERROR IS DEAD (owner rule, s54)
+- **§2** — SESSION LENGTH & HANDOFF PROTOCOL
+- **§3** — SESSION PROTOCOL
+- **§4** — SOURCE-OF-TRUTH HIERARCHY
+- **§5** — FILE ACCESS & EDIT SAFETY
+- **§7** — BRAND & VOICE (fixed — draw from, don't invent)
+- **§10** — OWNER DECISIONS — do NOT revisit
+- **§11** — EDIT-SAFETY & BATTERY PROTOCOL
+- **§11.R** — **NO SHUTTER WITHOUT A CLEAN AUDIT**
+- **§11d** — TEST-HARNESS RULES. WRITTEN s57, AFTER THE HARNESS FAKED A BUG FOR MANY BUILDS.
+- **§11a** — ⚠ VERIFICATION METHODS THAT GAVE FALSE ANSWERS
+- **§11b** — 🔴 TESTS MUST NEVER WRITE TO THE LIVE WORKER
+- **§11c** — 🔴 NEVER INFER; VALIDATE, OR LABEL IT
+- **§13** — STANDING OPEN ITEMS (RE-RANKED AND RE-MEASURED, SESSION 52)
+- **§14** — HOMEWORK (owner-side, unblocks Claude)
+- **§32** — EFFICIENCY BOOTSTRAP (run once at session start)
+- **§101** — THREE BUILDMARKS SPENT MID-FLIGHT IN ONE SESSION. 33n, 33o, 33p.
+- **§97** — THE COLD-CASE FILTER WAS DROPPED ON THE WAY BACK. FIXED 33p, s58.
+- **§102** — FOUR LAYER-FORMING PROPERTIES, INVISIBLE ON DESKTOP, WRONG ON iOS. 34c, s58.
+- **§103** — THE 30 DEGREES IS BAKED INTO THE ART
+- **§104** — CLAUDE CANNOT SEE THIS CLASS OF BUG
+- **§108** — THE JOIN LAG. PART FIXED, THE REST MEASURED. 34d, s58.
+- **§100** — THE STAMP IS ANCHORED TO THE CARD. 34a, s58.
+- **§99** — PINCH THE CHART. 34a, s58.
+- **§98** — THE ARCHIVE OPENS ON YOUR OWN PRECINCT. 34a, s58.
+- **§96** — FIVE CHICAGO TERRITORIES. 33p, s58.
+- **§95** — THE BADGE WEARS THE RANK. 33o, s58.
+- **§94** — THE CASE CLOSED STAMP IS STRUCK AND SIGNED. 33n, s58.
+- **§94.10** — 33n SHIPPED EIGHT REVISIONS EARLY, AND THE SAME BUILDMARK NAMED TWO FILES
+- **§95.5** — THE BADGE FOLLOWS THE PLATE, NOT A CIRCLE. APPROVED s58.
+- **§95.7** — THE REST OF THE HOME SCREEN, s58
+- **§95.8** — art/ WAS NEVER GITIGNORED, AND ship RUNS git add -A
+- **§93** — THE HINT COIN IS EARNED, NEVER SOLD. OWNER DECISION, s57.
+- **§92** — ship NOW REFUSES THINGS. THREE GATES, TWO PROVEN TO BITE. s57.
+- **§91** — A ZIP IS A MAIL ROUTE, NOT A NEIGHBOURHOOD. THE ZIP BAND. 33l, s57.
+- **§90** — THE SURVEYOR'S PLAN. A TERRITORY MAY CARRY A MAP. 33h + Worker v2.6.13, s57.
+- **§89** — GET /null 404 ON BOOT. RESOLVED — IT WAS THE HARNESS, NOT THE APP. (s57)
+- **§88** — THE REPO WAS SLIMMED. 22 MB OF IT WAS NEVER SERVED. s56.
+- **§87** — THE BYTE-ORDER MARK. EVERY CSV HAS BEEN WRONG SINCE THE FIRST ONE. 33g + Worker v2.6.12, s56.
+- **§86** — THE ANNUAL REPORT REACHED THE DESK. 33f, s56.
+- **§84** — THE YEAR. **CLOSED s56 — THE DESK UI SHIPPED IN 33f. SEE §86.** (written s55 close)
+- **§114** — THE BADGE WEARS THE COMPANY CYPHER. 34g, s60.
+- **§113** — POWER UP BEFORE ANYTHING ELSE (owner rule, s60)
+- **§112** — SESSION 59 CLOSE. READ THIS FIRST; IT SUPERSEDES §109 AND §80's ORDERING.
+- **§111** — THE ARCHIVE CLERK FAILED FOR FOUR DAYS ON A STALE FILE LIST. s59.
+- **§110** — THE PRECINCT BANNER COUNTED ON A DIFFERENT GEOMETRY FROM THE LIST. 34f, s59.
+- **§109** — SESSION 58 CLOSE. READ THIS BEFORE §80.
+- **§80** — THE OPEN-TASK REGISTER, RE-AUDITED AT s55 CLOSE. THIS SUPERSEDES §65's ORDER.
+- **§77** — THE TOOLING FACTS. READ THIS BEFORE YOU TRY TO MEASURE ANYTHING. (s55)
+- **§115** — THE BADGE CAST SHADOW, AND THE HALF-DEPTH AUTOMATED TAP (s60, 34h)
+- **§116** — THE AGENCY REPLY ALERT (s60, 34i)
+- **§116.1** — Most of this already existed. Look before building.
+- **§116.2** — What 34i added
+- **§116.3** — 🔴 WHY PUSH WAS NOT BUILT, AND WHAT IT ACTUALLY COSTS
+- **§116.4** — Notes
+- **§117** — THE BADGE PRESSES ONCE, GENTLY (s60, 34j)
+- **§118** — THE AGENCY CASES RENAME, AND THE TEMPORARY HOME GRID (s60, 34l)
+- **§118.1** — 🔴 LABELS MOVED. IDENTIFIERS DID NOT. THIS IS THE WHOLE RULE.
+- **§118.2** — What the rename touched
+- **§118.3** — 🔴 THE RENAME BROKE A TEST, AND THE TEST WAS RIGHT
+- **§118.4** — The home grid, and the constant that matters
+- **§119** — THE MASTHEAD, SIZED OFF THE HERO (s60, 34m)
+- **§119.1** — 🔴 THE TWO FACTS THAT EXPLAIN IT
+- **§119.2** — The fix: a container, not a viewport unit
+- **§119.3** — 🔴 A max-width WRAPPER CANNOT MEASURE ANY OF THIS, AND IT PRODUCED A FALSE FAULT
+- **§119.4** — What is NOT in this build, and where it is
+- **§120** — HOW THE s60 RE-BASE WAS MADE, AND HOW TO MAKE THE NEXT ONE
 
 ---
 
@@ -112,6 +202,88 @@ exact where the badge is fluid and diverges once it caps. **Owner decision owed 
 
 **NO NEW BUILDMARK WAS SPENT.** `34o` was already built and unshipped, and revisions on disk cost
 nothing (§0).
+
+---
+
+# 🔴 §127 — `ship` GATE 2 IS BROKEN. IT REFUSES EVERY SHIP, AND THE FIX IS TWO LINES. s61.
+
+**GATE 2 refused `34n` AND `34o`, both of which carried a correct, changed buildmark.** Both shipped
+with `/force`. **This will refuse every future ship until it is fixed.**
+
+**WHY — AND THE FIRST ANSWER WAS WRONG.** Claude asserted the cause was `findstr` being unable to
+read past `index.html`'s 506,884-character base64 line. **THAT IS CONTRADICTED BY THE SCRIPT'S OWN
+PROOF BLOCK**, which greps the same marker with `findstr` on line 156 and printed
+`Buildmark: <p id="buildmark" …>34n</p>` perfectly. **findstr CAN read the marker. THE CAUSE IS
+UNPROVEN.** Two candidates remain, both untested: the value contains `<` and `>` and is being set
+inside a parenthesised `if` block under delayed expansion, and the `PREVHASH` line above it carries
+an **unbalanced quote** (`set "PREVHASH=%%H`).
+
+**🔴 THE REAL LESSON IS THE ONE CLAUDE KEEPS RE-LEARNING: A PLAUSIBLE CAUSE STATED CONFIDENTLY IS
+STILL A GUESS.** It was written into this document as fact and would have been inherited as fact.
+
+**THE FIX, APPLIED s61 with the owner's permission.** `test\buildmark.py` reads the mark and prints
+it (`34o`), or prints `UNREADABLE` and exits 2. GATE 2 now calls it for both files instead of
+`findstr`, and **a read failure takes a SEPARATE branch with a DIFFERENT message** —
+*"the buildmark could NOT BE READ … this is NOT 'the buildmark did not change'"* — so the two can
+never again be confused. The success line now prints the transition: `GATE 2 ok - buildmark 34n -> 34o`.
+**The pre-patch script is at `ship-s61-backup.cmd`.** `ship.cmd` is LF, not CRLF, despite §77.0.
+
+**⚠ NOT YET EXERCISED.** The new path only runs when `index.html` differs from HEAD; at s61 close it
+does not. **The next build proves it, and the printed transition is the proof to read.**
+
+**🔴 THE RULE, AND IT IS THE SECOND TIME IN ONE SESSION (§122): A TOOL THAT REPORTS "NO CHANGE" AND
+A TOOL THAT CANNOT SEE THE CHANGE ARE INDISTINGUISHABLE FROM THE OUTSIDE.** GATE 2 is a green tick
+that is an exit code, inverted. When a gate refuses, prove what it actually read before believing it.
+
+
+# 🔴 §128 — THE MET BADGE RECUT AND REMATTED, AND WHAT THE CUTOUT RULE WAS MISSING. `34p`, s62.
+
+**Owner supplied a badge image and said "update badge with this one".** It was BYTE-IDENTICAL to
+`art\met-badge-source-s60b.png`, the file the live badge was already made from - so the swap as asked
+would have changed nothing. **CHECK THAT A SUPPLIED ASSET IS ACTUALLY NEW BEFORE BUILDING ON IT:** one
+`ImageChops.difference(...).getbbox() is None` would have said so, and it did.
+
+**WHAT HE ACTUALLY WANTED WAS THE CUTOUT, AND THE §125 RULE WAS ONLY HALF THE JOB.**
+
+**1. A BORDER FLOOD FILL NEVER REACHES AN ENCLOSED VOID.** §125 says fill the alpha from the border
+only, and that is right - but the crown's arches are holes the outside cannot walk into, so they
+stayed plugged with white. **The check that reported "0 interior holes" was a PASS FOR THE BORDER AND
+SAID NOTHING ABOUT ENCLOSED BACKGROUND, and it was believed.** Fix: enumerate the interior near-white
+components, print size and bbox, clear only the large ones inside the region that should be open. The
+two crown voids were **2158 and 1577 px**; every genuine highlight was under 260, so a size floor of
+250 separated them cleanly. **3994 px cleared, 0.40% of the frame.** Three floors were rendered as a
+contact sheet and looked at before one was chosen.
+
+**2. 🔴 A BINARY ALPHA IS A WHITE HALO. MATTE, DO NOT MASK.** A flood fill gives alpha of only 0 and
+255, so every antialiased pixel where the artwork met its white background stayed OPAQUE. Measured
+around the silhouette:
+
+| | edge ring | core |
+|---|---|---|
+| after the flood fill | **194.5** | 131.1 |
+| after the matte | **126.9** | 131.1 |
+
+**A ring 48% brighter than the metal it wrapped, all the way round, worst on the sawtooth points where
+the perimeter is longest. THE OWNER SAW IT BEFORE ANY TEST DID** - he sent the original beside the
+render and said the edges looked odd. Nothing in the battery looks at pixels.
+
+**The fix is a real matte, not a feather:** estimate the true foreground from the nearest core pixel
+(`distance_transform_edt(..., return_indices=True)`), solve `alpha = mean((255-observed)/(255-F))` in a
+3px band, and write `F` back to decontaminate the colour. **Afterwards the edge must sit slightly
+DARKER than the core and alpha must carry hundreds of levels, not two - ASSERT BOTH.** Here: 226
+levels, edge 4 below core. Cost 44.8 -> 50.2 KB, and **WebP needs `quality>=92, exact=True`** or the
+default crushes the alpha detail that was just won.
+
+**⚠ THE CAST SHADOW IS STILL `.47` AND IS OWED.** The owner's words: *"Darker than button shadows."*
+The plates carry `.52` contact + `.21` ambient (§125); the badge's `#cbCast` is a single `.47` pass at
+blur 7.5, so it sits LIGHTER than objects a third its size under the same lamp. Options `.62` / `.75`
+/ `.88` were rendered and put to him; he shipped `34p` without choosing. **PICK IT UP AT `34q`.**
+
+**⚠ SCREENSHOTS DIED MID-SESSION AND IT WAS NOT THE EXTENSION.** `Page.captureScreenshot` timed out at
+30s, "renderer may be frozen", while `javascript_tool` answered instantly - because `document.hidden`
+was `true`. **READ `document.hidden` BEFORE BLAMING THE BRIDGE.** A fresh tab from `tabs_create_mcp`
+painted when the old one would not; note it lands on `chrome://newtab` and must be `navigate`d before
+any script will run.
 
 ---
 
@@ -307,72 +479,6 @@ on the whole `<p id="buildmark" …>34m</p>` tag. §5i, proven again.
 
 ---
 
-# 📑 RULES REGISTRY — WHERE EVERY SECTION LIVES
-
-**Every section below is preserved verbatim from the prior edition. Nothing was compressed to a
-pointer; the bodies follow in full.**
-
-- **§A** — THE WORKER. **⚠ THIS SECTION DESCRIBES v2.3. THE LIVE WORKER IS v2.6.3 — AND ITS FULL SOURCE IS NOW ON DISK AT `Hunt\worker-v2_6_3.js` (§70.4). READ THE SOURCE, NOT THIS SECTION.**
-- **§0.2** — THE `32i` ROW: A DOC THAT CONTRADICTED ITSELF IN ONE EDITION (found s53)
-- **§0.1** — INHERITED DOC ERRORS. THREE FOUND IN 24–25; ALL RE-VERIFIED CLEAN IN 26, 27 AND 28.
-- **§1** — HOW THE OWNER WORKS (read first)
-- **§2** — SESSION LENGTH & HANDOFF PROTOCOL
-- **§3** — SESSION PROTOCOL
-- **§4** — SOURCE-OF-TRUTH HIERARCHY
-- **§5** — FILE ACCESS & EDIT SAFETY
-- **§7** — BRAND & VOICE (fixed — draw from, don't invent)
-- **§10** — OWNER DECISIONS — do NOT revisit
-- **§11** — EDIT-SAFETY & BATTERY PROTOCOL
-- **§13** — STANDING OPEN ITEMS (RE-RANKED AND RE-MEASURED, SESSION 52)
-- **§14** — HOMEWORK (owner-side, unblocks Claude)
-- **§32** — EFFICIENCY BOOTSTRAP (run once at session start)
-- **§101** — THREE BUILDMARKS SPENT MID-FLIGHT IN ONE SESSION. `33n`, `33o`, `33p`.
-- **§97** — THE COLD-CASE FILTER WAS DROPPED ON THE WAY BACK. FIXED `33p`, s58.
-- **§102** — FOUR LAYER-FORMING PROPERTIES, INVISIBLE ON DESKTOP, WRONG ON iOS. `34c`, s58.
-- **§108** — THE JOIN LAG. PART FIXED, THE REST MEASURED. `34d`, s58.
-- **§100** — THE STAMP IS ANCHORED TO THE CARD. `34a`, s58.
-- **§99** — PINCH THE CHART. `34a`, s58.
-- **§98** — THE ARCHIVE OPENS ON YOUR OWN PRECINCT. `34a`, s58.
-- **§96** — FIVE CHICAGO TERRITORIES. `33p`, s58.
-- **§95** — THE BADGE WEARS THE RANK. `33o`, s58.
-- **§94** — THE CASE CLOSED STAMP IS STRUCK AND SIGNED. `33n`, s58.
-- **§94.10** — `33n` SHIPPED EIGHT REVISIONS EARLY, AND THE SAME BUILDMARK NAMED TWO FILES
-- **§93** — THE HINT COIN IS EARNED, NEVER SOLD. OWNER DECISION, s57.
-- **§92** — `ship` NOW REFUSES THINGS. THREE GATES, TWO PROVEN TO BITE. s57.
-- **§91** — A ZIP IS A MAIL ROUTE, NOT A NEIGHBOURHOOD. THE ZIP BAND. `33l`, s57.
-- **§90** — THE SURVEYOR'S PLAN. A TERRITORY MAY CARRY A MAP. `33h` + Worker v2.6.13, s57.
-- **§89** — `GET /null 404` ON BOOT. RESOLVED — IT WAS THE HARNESS, NOT THE APP. (s57)
-- **§88** — THE REPO WAS SLIMMED. 22 MB OF IT WAS NEVER SERVED. s56.
-- **§87** — THE BYTE-ORDER MARK. EVERY CSV HAS BEEN WRONG SINCE THE FIRST ONE. `33g` + Worker v2.6.12, s56.
-- **§86** — THE ANNUAL REPORT REACHED THE DESK. `33f`, s56.
-- **§84** — THE YEAR. **CLOSED s56 — THE DESK UI SHIPPED IN `33f`. SEE §86.** (written s55 close)
-- **§114** — THE BADGE WEARS THE COMPANY CYPHER. `34g`, s60.
-- **§113** — POWER UP BEFORE ANYTHING ELSE (owner rule, s60)
-- **§112** — SESSION 59 CLOSE. READ THIS FIRST; IT SUPERSEDES §109 AND §80's ORDERING.
-- **§111** — THE ARCHIVE CLERK FAILED FOR FOUR DAYS ON A STALE FILE LIST. s59.
-- **§110** — THE PRECINCT BANNER COUNTED ON A DIFFERENT GEOMETRY FROM THE LIST. `34f`, s59.
-- **§109** — SESSION 58 CLOSE. READ THIS BEFORE §80.
-- **§80** — THE OPEN-TASK REGISTER, RE-AUDITED AT s55 CLOSE. THIS SUPERSEDES §65's ORDER.
-- **§77** — THE TOOLING FACTS. READ THIS BEFORE YOU TRY TO MEASURE ANYTHING. (s55)
-- **§115** — THE BADGE CAST SHADOW, AND THE HALF-DEPTH AUTOMATED TAP (s60, `34h`)
-- **§116** — THE AGENCY REPLY ALERT (s60, `34i`)
-- **§116.1** — Most of this already existed. Look before building.
-- **§116.2** — What `34i` added
-- **§116.3** — 🔴 WHY PUSH WAS NOT BUILT, AND WHAT IT ACTUALLY COSTS
-- **§116.4** — Notes
-- **§117** — THE BADGE PRESSES ONCE, GENTLY (s60, `34j`)
-- **§118** — THE AGENCY CASES RENAME, AND THE TEMPORARY HOME GRID (s60, `34l`)
-- **§118.1** — 🔴 LABELS MOVED. IDENTIFIERS DID NOT. THIS IS THE WHOLE RULE.
-- **§118.2** — What the rename touched
-- **§118.3** — 🔴 THE RENAME BROKE A TEST, AND THE TEST WAS RIGHT
-- **§118.4** — The home grid, and the constant that matters
-- **§119** — THE MASTHEAD, SIZED OFF THE HERO (s60, `34m`)
-- **§119.1** — 🔴 THE TWO FACTS THAT EXPLAIN IT
-- **§119.2** — The fix: a container, not a viewport unit
-- **§119.3** — 🔴 A max-width WRAPPER CANNOT MEASURE ANY OF THIS, AND IT PRODUCED A FALSE FAULT
-- **§119.4** — What is NOT in this build, and where it is
-
----
 
 # 🟢 §A — THE WORKER. **⚠ THIS SECTION DESCRIBES v2.3. THE LIVE WORKER IS v2.6.3 — AND ITS FULL SOURCE IS NOW ON DISK AT `Hunt\worker-v2_6_3.js` (§70.4). READ THE SOURCE, NOT THIS SECTION.**
 

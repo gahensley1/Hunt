@@ -78,17 +78,8 @@ if exist "%TEMP%\shco_prev.html" (
   if not "!PREVHASH!"=="%HASH%" (
     set "BMNOW="
     set "BMWAS="
-    REM s61 (SS127): READ THE MARK WITH PYTHON, NOT findstr. index.html holds a
-    REM 506,884-character base64 line; findstr cannot get past it and returned NOTHING
-    REM for BOTH files, so the gate compared empty to empty and refused every ship.
-    for /f "delims=" %%B in ('python "%~dp0test\buildmark.py" index.html') do if not defined BMNOW set "BMNOW=%%B"
-    for /f "delims=" %%B in ('python "%~dp0test\buildmark.py" "%TEMP%\shco_prev.html"') do if not defined BMWAS set "BMWAS=%%B"
-    REM A READ FAILURE IS NOT A RESULT. Refuse with a DIFFERENT message so it can never
-    REM be mistaken for "the buildmark did not change".
-    if "!BMNOW!"=="" set "BMNOW=UNREADABLE"
-    if "!BMWAS!"=="" set "BMWAS=UNREADABLE"
-    if "!BMNOW!"=="UNREADABLE" goto :bmunread
-    if "!BMWAS!"=="UNREADABLE" goto :bmunread
+    for /f "delims=" %%B in ('findstr /c:"test build marker" index.html') do if not defined BMNOW set "BMNOW=%%B"
+    for /f "delims=" %%B in ('findstr /c:"test build marker" "%TEMP%\shco_prev.html"') do if not defined BMWAS set "BMWAS=%%B"
     if "!BMNOW!"=="!BMWAS!" (
       echo.
       echo ***** REFUSED - GATE 2: index.html changed but the buildmark did not.
@@ -98,7 +89,7 @@ if exist "%TEMP%\shco_prev.html" (
       del "%TEMP%\shco_prev.html" >nul 2>&1
       goto :end
     )
-    echo   GATE 2  ok - buildmark !BMWAS! -^> !BMNOW!
+    echo   GATE 2  ok - index.html changed and the buildmark changed with it
   ) else (
     echo   GATE 2  n/a - index.html unchanged since the last commit
   )
@@ -166,16 +157,6 @@ goto :end
 
 :cancelled
 echo Cancelled. Nothing staged, nothing committed.
-
-:bmunread
-echo.
-echo ***** REFUSED - GATE 2: the buildmark could NOT BE READ.
-echo       This is NOT "the buildmark did not change" - the check itself failed.
-echo       working copy: !BMNOW!    HEAD copy: !BMWAS!
-echo       Try:  python test\buildmark.py index.html
-echo       If python is missing, install it or override with:  ship /force "..."
-del "%TEMP%\shco_prev.html" >nul 2>&1
-goto :end
 
 :end
 echo.
