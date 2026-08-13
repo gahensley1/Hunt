@@ -40,7 +40,7 @@ trip at s60.
 
 | file | bytes | sha256 | state |
 |---|---|---|---|
-| `index.html` | 4,315,150 | `af946f3c96138df7ac21887285ba6b0b70d2ac0b84ab3a1f39a7be02c0e461bb` | 🔴 **`34n` / Magenta `#A8478F` — BUILT s61, NOT YET SHIPPED.** The 35 Savannah hints (§121) AND the home-button scale (§123). **FULL BATTERY GREEN on this hash — STATIC clean, BEHAVIOUR 65/65, SESSION 21/21 — run in CLAUDE'S SANDBOX (§122).** Previous LIVE build was `34m`, `68d8f303…0000c5`, commit `e9de06ac`. |
+| `index.html` | 4,359,770 | `406f075bb2bd722dcd4a2aaf5dd4eb6131db1fab8cec5993ddbf4bf837be08ef` | 🔴 **`34o` / Lime `#7FA33C` — BUILT s61, NOT YET SHIPPED.** The four enamel plates (§125) AND the placeless-case filter fix (§126). Full battery green on this hash, run in Claude's sandbox (§122). Previous LIVE was `34n` / Magenta, `af946f3c…`, commit `3c5508b3` — The 35 Savannah hints (§121) and the home-button scale (§123). **Disk == raw-at-SHA == Pages == commit, hash-verified s61**, and `test hint` counts ZERO on the copy Pages serves. Full battery green on this hash — STATIC clean, BEHAVIOUR 65/65, SESSION 21/21 — run in CLAUDE'S SANDBOX (§122). Worker v2.6.13, untouched. Previous LIVE build was `34m`, `68d8f303…0000c5`, commit `e9de06ac`. |
 | `sw.js` | 5,532 | `7a1682bd276e3bdba985270e7e36e5dea2f26ad696db53280d65a5c2cc80f45c` | ✅ LIVE. `notificationclick` + the `push` receiver. |
 | `HANDOFF.md` | *(this file)* | — | 🔴 **s60 edition — UNPUSHED until the next ship.** |
 | `HANDOFF-SPEC.md` | — | — | how the app works. |
@@ -48,7 +48,7 @@ trip at s60.
 | `worker-v2_6_13.js` | 99,952 | — | **THE LIVE WORKER, v2.6.13.** On disk, GITIGNORED, never committed. **READ IT THERE — do not ask him to paste it.** |
 | `test/` | — | — | `agents.py` (STATIC), `behaviour.py`, `session_checks.py`, `.last-battery`. |
 
-**BUILDMARK: `34n` / Magenta `#A8478F` IS SPENT ON THE s61 BUILD. NEXT IS `34o` / Lime `#7FA33C`.**
+**BUILDMARK: `34o` / Lime `#7FA33C` IS SPENT ON THE s61 PLATE BUILD. NEXT IS `34p` / Rust `#B4532A`.**
 
 🔴 **THE DOC AND THE CSS DISAGREED ABOUT `34m`.** §0 called it Verdigris `#4E9A87`; the
 stylesheet actually served Lime `#7FA33C`, and `#4E9A87` appears nowhere in `index.html`. The
@@ -68,6 +68,95 @@ masthead sized off the hero (§119).
 **🔴 `test/.last-battery` HOLDS THE HASH THE BATTERY PASSED ON.** Read it and compare its mtime to
 `index.html`'s instead of asking him to paste the output. A green battery that PRE-DATES the build
 gates nothing (s58).
+
+---
+
+# 🔴 §126 — "MY CASES ARE GONE." THEY WERE FILTERED, NOT DELETED. `34o`, s61.
+
+**THE REPORT: the Almanac, the Parlour and the Grounds were empty on the owner's iPhone, and he
+believed the hint edit had deleted them.** They had not been touched. What the screen actually
+said - and it said it plainly, in the screenshot, before any of the investigation below -
+was **`SHOWING 0 IN PRECINCT 31405`**.
+
+**THE FAULT.** `coldFilter()` applied the geographic query to EVERY shelf. **The Almanac is
+seasonal and the Parlour is indoors; their cases carry no zip, no city and no fix.** A precinct
+therefore excluded all of them, every time, and the empty state read
+*"No cases are filed under The Parlour yet. The shelf is being stocked."* - **indistinguishable
+from data loss.**
+
+**THE FIX, one rule: A CASE WITH NO PLACE CANNOT BE FILTERED BY PLACE.** New `hasPlace(e)` guard
+on the six geographic modes (`state`, `zip5`, `zipnear`, `zip3`, `city`, `near`); placeless cases
+are always shown. `text` search is untouched - that is a search, not a place.
+
+| with precinct 31405 | before | after |
+|---|---|---|
+| Almanac | **0** | **10** |
+| Parlour | **0** | **10** |
+| Grounds | **0** | **10** |
+| Territories | 0 | 0 (correct - they DO have places, and are not in 31405) |
+
+**🔴 WHAT THIS COST, AND THE LESSON.** Claude spent the better part of an hour proving the
+data was intact - the Worker read (35 entries, HTTP 200), the 6 Aug backup (the same 35), a
+headless browser, and the owner's own Chrome - then blamed the service worker and the iOS cache,
+and asked the owner to clear his phone. **THE ANSWER WAS PRINTED ON THE SCREEN THE WHOLE TIME.**
+Two errors compounded it: a headless probe with no session returned exactly the built-ins and was
+read as proof the shelves were fine, and a character count was compared against a byte count.
+**READ WHAT THE APP IS SAYING BEFORE INTERROGATING WHAT IT IS STORING. Ask for the screenshot first.**
+
+**ALSO IN THIS BUILD: THE GRID IS FLUSH WITH THE HERO.** §118.4's `margin:0 -4px` came from the
+OLD plaque at `viewport-36`; the hero has been the cypher badge since §114 at `viewport-68`, so the
+pull-out overhung it. `margin:0` now. Measured: **320 and 390 align to 0.0px on both edges.**
+**⚠ AT 430 THE BADGE ITSELF INSETS BY 5.5px** (badge 39.5..390.5, grid 34..396) because the badge
+is `width:min(351px,100%)` and stops growing. One width proves nothing (§118.4): the alignment is
+exact where the badge is fluid and diverges once it caps. **Owner decision owed if 430 matters.**
+
+**NO NEW BUILDMARK WAS SPENT.** `34o` was already built and unshipped, and revisions on disk cost
+nothing (§0).
+
+---
+
+# 🔴 §125 — THE FOUR ENAMEL PLATES. `34o`, s61.
+
+**Owner supplied one 1304x816 sheet of four dark-green enamel plates with the labels PAINTED INTO
+THE ART.** They replace the §118.4 line-art buttons. Source: `art\plate-enamel-source-s61.png`;
+the four cut plates beside it as `plate-{builder,hunt,review,agency}-s61.png` and `-2x.webp`.
+
+**THE CUTOUT: FLOOD-FILL THE ALPHA FROM THE BORDER ONLY.** The enamel highlight on each plate is
+white and so was the background; a global white-to-alpha punches holes through the frames and the
+letter counters. Border fill cleared 0.7-1.1% per tile - the outside and nothing else. Same rule as
+the s60 bronze set, proven again.
+
+**WEBP IS WORTH 10x HERE.** Four plates at 316px wide (2x the 158px button): **PNG 329 KB, WEBP
+31 KB.** Base64 in `index.html` costs **+41 KB total**. Always try WebP before accepting a PNG
+payload into the document.
+
+**GEOMETRY: THE PLATES ARE 1.72-1.81, THE OLD BUTTON WAS 1.88.** Cropping baked lettering is not an
+option, so the button now carries `aspect-ratio:1.75` with `object-fit:contain` - nothing clips at
+any width. Height therefore TRACKS THE WIDTH and §123's fixed proportional height is superseded:
+
+| viewport | 320 | 360 | 390 | 414 | 430 |
+|---|---|---|---|---|---|
+| button | 124.3 x 71.0 | 143.5 x 82.0 | **158.0 x 90.3** | 169.6 x 96.9 | 177.3 x 101.3 |
+
+All four images load at all five widths, no horizontal overflow, no page errors.
+
+**CONTACT SHADOW: THE HOUSE PAIR FROM §115.** A tight contact shadow anchoring the plate to the
+leather plus a wide ambient one - `drop-shadow(0 2px 1.5px rgba(10,7,4,.52))` +
+`drop-shadow(0 7px 10px rgba(10,7,4,.22))`. **On press the contact TIGHTENS** (1px/3px), which is
+what a real plate pressed into leather does; the plate also keeps §117's 1px travel.
+
+**🔴 THE LABEL IS NOW IN THE ARTWORK, AND THAT HAS A PRICE.** The buttons carry NO text -
+`aria-label` is the only accessible name, and it is now load-bearing rather than decorative.
+**RENAMING A BUTTON NOW MEANS NEW ART.** §118.1's rule still holds and is why nothing broke:
+labels moved, identifiers did not - `startBuild()` `openJoin()` `openCaseFiles()` `openColdCases()`
+are untouched, and Agent B still resolves all 112 handlers.
+
+**⚠ THE GRID STILL OVERHANGS THE HERO BY 4px** (grid 30..360 against badge 34..356 at 390).
+Unchanged from §123, still an owner decision, still a one-line fix: `margin:0 -4px` to `margin:0`.
+
+**⚠ THE ART EXISTS ON ONE DISK.** `cp` to `Hunt-backups\art\` returned **Permission denied**,
+so the source sheet is in `Hunt\art\` only - and `art\` is gitignored, so the repo does not hold
+it either. **§1v in the making; the owner was told and a manual copy is owed.**
 
 ---
 
