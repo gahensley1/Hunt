@@ -40,7 +40,7 @@ trip at s60.
 
 | file | bytes | sha256 | state |
 |---|---|---|---|
-| `index.html` | 4,359,770 | `406f075bb2bd722dcd4a2aaf5dd4eb6131db1fab8cec5993ddbf4bf837be08ef` | 🔴 **`34o` / Lime `#7FA33C` — BUILT s61, NOT YET SHIPPED.** The four enamel plates (§125) AND the placeless-case filter fix (§126). Full battery green on this hash, run in Claude's sandbox (§122). Previous LIVE was `34n` / Magenta, `af946f3c…`, commit `3c5508b3` — The 35 Savannah hints (§121) and the home-button scale (§123). **Disk == raw-at-SHA == Pages == commit, hash-verified s61**, and `test hint` counts ZERO on the copy Pages serves. Full battery green on this hash — STATIC clean, BEHAVIOUR 65/65, SESSION 21/21 — run in CLAUDE'S SANDBOX (§122). Worker v2.6.13, untouched. Previous LIVE build was `34m`, `68d8f303…0000c5`, commit `e9de06ac`. |
+| `index.html` | 4,359,771 | `40e0f2044470674bc64bbf43c814dcc7bf92fe0833cc584e5b9167098f7d9bb3` | 🔴 **`34o` / Lime `#7FA33C` — BUILT s61, NOT YET SHIPPED.** The four enamel plates (§125) AND the placeless-case filter fix (§126). Full battery green on this hash, run in Claude's sandbox (§122). Previous LIVE was `34n` / Magenta, `af946f3c…`, commit `3c5508b3` — The 35 Savannah hints (§121) and the home-button scale (§123). **Disk == raw-at-SHA == Pages == commit, hash-verified s61**, and `test hint` counts ZERO on the copy Pages serves. Full battery green on this hash — STATIC clean, BEHAVIOUR 65/65, SESSION 21/21 — run in CLAUDE'S SANDBOX (§122). Worker v2.6.13, untouched. Previous LIVE build was `34m`, `68d8f303…0000c5`, commit `e9de06ac`. |
 | `sw.js` | 5,532 | `7a1682bd276e3bdba985270e7e36e5dea2f26ad696db53280d65a5c2cc80f45c` | ✅ LIVE. `notificationclick` + the `push` receiver. |
 | `HANDOFF.md` | *(this file)* | — | 🔴 **s60 edition — UNPUSHED until the next ship.** |
 | `HANDOFF-SPEC.md` | — | — | how the app works. |
@@ -140,9 +140,11 @@ any width. Height therefore TRACKS THE WIDTH and §123's fixed proportional heig
 
 All four images load at all five widths, no horizontal overflow, no page errors.
 
-**CONTACT SHADOW: THE HOUSE PAIR FROM §115.** A tight contact shadow anchoring the plate to the
-leather plus a wide ambient one - `drop-shadow(0 2px 1.5px rgba(10,7,4,.52))` +
-`drop-shadow(0 7px 10px rgba(10,7,4,.22))`. **On press the contact TIGHTENS** (1px/3px), which is
+**CONTACT SHADOW: THE BADGE'S OWN VALUES, NOT A SCALED COPY.** Claude first scaled §115's pair down
+because the plates are a third of the badge's size; the owner compared three weights side by side and
+chose **the badge weight exactly** - `drop-shadow(0 4px 2px rgba(10,7,4,.52))` +
+`drop-shadow(0 10px 14px rgba(10,7,4,.21))`. **ONE LIGHT SOURCE, ONE SHADOW LANGUAGE: a smaller
+object under the same lamp does not get a smaller shadow, and scaling it read as floating.** **On press the contact TIGHTENS** (1px/3px), which is
 what a real plate pressed into leather does; the plate also keeps §117's 1px travel.
 
 **🔴 THE LABEL IS NOW IN THE ARTWORK, AND THAT HAS A PRICE.** The buttons carry NO text -
