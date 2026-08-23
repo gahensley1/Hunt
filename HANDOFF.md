@@ -26,7 +26,7 @@ NOT CONTAIN THE HASH — WRITE ALL 64 CHARACTERS, never `abc123…`.**
 
 | file | bytes | sha256 | state |
 |---|---|---|---|
-| `index.html` | 4,394,738 | `3854dfe9e596ce982e222b4eb0d8416f9cca7f7fc5bc692d44177a042af420c8` | **✅ LIVE — `34t` / Amethyst `#7A5A98`, commit `886e0ea4`. §133. Battery PASSED ON HIS MACHINE on this exact hash before the ship. Verified against the COMMIT SHA and Pages — both return this hash, buildmark `34t`, colour `#7A5A98`, and all of §130 / §132 / §133 present.**<br>`34s` shipped at s65, commit `9be8116d`. |
+| `index.html` | 4,399,045 | `97c75302c254719c662985962a687fcf8e81b73419c19e7239b2a24a1e728ac5` | **⚠ BUILT — `34u` / Verdigris `#4E9A87`. THE SIZE CEILING (§136): a 413 is no longer queued, a case is weighed before it is sent, and photographs are budgeted as they are added. STATIC green in the sandbox; ALL FIVE CASES PROVEN IN CHROME on `localhost:8010`. THE FULL BATTERY IS OWED ON HIS MACHINE BEFORE THE SHIP.**<br>`34t` shipped at s66, commit `886e0ea4`, hash `3854dfe9e596ce982e222b4eb0d8416f9cca7f7fc5bc692d44177a042af420c8`. |
 | `sw.js` | 5,532 | `7a1682bd276e3bdba985270e7e36e5dea2f26ad696db53280d65a5c2cc80f45c` | ✅ LIVE. Network-first for the document, so it CANNOT pin a hunter to an old build. |
 | `HANDOFF.md` | *(this file)* | — | 🔴 **s61 edition — UNPUSHED until the next ship.** |
 | `HANDOFF-SPEC.md` | — | — | how the app works. Untouched at s61. |
@@ -35,8 +35,9 @@ NOT CONTAIN THE HASH — WRITE ALL 64 CHARACTERS, never `abc123…`.**
 | `test/` | — | — | `agents.py` (STATIC), `behaviour.py`, `session_checks.py`, `run.py`, `.last-battery`. |
 | `art/` | — | — | 🔴 **GITIGNORED AND ON ONE DISK.** The s61 enamel source lives ONLY at `art\plate-enamel-source-s61.png`; the copy to `Hunt-backups\art\` returned **Permission denied**. §1v forming; a manual copy is owed. |
 
-**BUILDMARK: `34t` / Amethyst `#7A5A98` IS SPENT — DELIVERED AT s66. A MARK IS
-SPENT ONLY WHEN A BUILD IS DELIVERED — NEXT IS `34u` / Verdigris `#4E9A87`.**
+**BUILDMARK: `34u` / Verdigris `#4E9A87` IS WRITTEN INTO THE BUILD AND NOT YET DELIVERED. `34t` IS SPENT. A MARK IS
+SPENT ONLY WHEN A BUILD IS DELIVERED — IF THIS BUILD IS SCRAPPED, `34u` GOES BACK. NEXT AFTER IT IS
+`34v` / Magenta `#A8478F`.**
 Rotation (§8i): a Cobalt `#3B6BA5` · b Ochre `#C88A2E` · c Rose `#B5566B` · d Amethyst `#7A5A98` ·
 e Verdigris `#4E9A87` · f Magenta `#A8478F` · g Lime `#7FA33C` · h Rust `#B4532A`, then wraps.
 **A MARK IS SPENT ONLY WHEN A BUILD IS DELIVERED.** The plates, the shadow and the filter fix all
@@ -258,6 +259,93 @@ A TOOL THAT CANNOT SEE THE CHANGE ARE INDISTINGUISHABLE FROM THE OUTSIDE.** GATE
 that is an exit code, inverted. When a gate refuses, prove what it actually read before believing it.
 
 
+# 🔴 §136 — IT WAS THE SIZE. THE OWNER ASKED THE QUESTION THAT FOUND IT. `34u`, s67.
+
+**§132 SAID "IT WAS A TRANSIENT FAILURE ON A PHONE — IT WAS NOT SIZE." THAT WAS WRONG, AND IT WAS
+WRONG BECAUSE OF A BAD READ.** Claude checked the *object*-tile literal
+(`{id,type,emoji,clue,hint}`), saw no image, and generalised to every tile. **A PHOTO TILE CARRIES
+THE PICTURE INLINE:**
+
+```js
+const nt={id:uid(),type:"photo",src:dataUrl,clue:(clue||"")};
+State.build.tiles.push(nt);
+```
+
+**The owner asked "could it have been the 48 images loaded into the hunt?" — and it was.**
+§132.1's "it is not size" line is **WITHDRAWN**. The rest of §132 stands: the write path was lying
+as well, and both had to be fixed.
+
+## §136.1 THE CEILING, MEASURED
+
+Probed against the live Worker, throwaway key, deleted and re-probed to 404 afterwards:
+
+| body | answer |
+|---|---|
+| 2,048 KB (exactly 2 MiB) | **200 ok** |
+| 2,100 KB | **413 "too large"** |
+| 5 / 10 / 25 MB | 413 |
+
+**THE LIMIT IS 2 MB AND IT IS ALMOST CERTAINLY OUR OWN, NOT CLOUDFLARE'S** — the body reads
+`too large`, which is custom code, and Cloudflare's own request limit is 100 MB. **The number lives
+in `worker-v2_6_13.js`, which Claude has never seen.** Raising it is a live option and was put to
+the owner.
+
+## §136.2 WHY 48 PHOTOGRAPHS CAN BE 200 KB OR 3.8 MB
+
+A clue photo is cropped to **320x320, JPEG quality 0.72** — the downsizing is already aggressive.
+**THE VARIABLE IS NOT THE DIMENSIONS, IT IS THE CONTENT.** Measured at those exact settings, inline
+as base64:
+
+| subject | each | fit in 2 MB |
+|---|---|---|
+| flat wall, sky, plain door | ~3 KB | ~660 |
+| ordinary subject | ~9 KB | ~230 |
+| foliage, brick, gravel, bark | 45-79 KB | **25-44** |
+
+**FORSYTH PARK IS THE BOTTOM ROW.** 48 photographs of trees and brick is 2-3.8 MB. Case 784051 was
+over the ceiling and was refused **413 on every single attempt** — which is also why its author
+reopening the app on signal recovered nothing. **NO AMOUNT OF SIGNAL WOULD EVER HAVE SAVED IT.**
+
+**A COUNT CANNOT BE THE GUARD.** Twenty-five times the bytes at identical dimensions. **THE BUDGET
+IS BYTES.**
+
+## §136.3 THE THREE FIXES
+
+1. **A REFUSAL IS NOT A NETWORK FAILURE.** `Store.set` no longer queues a 4xx (413 and friends);
+   **408 and 429 stay on the queued path** because those are worth retrying. Since §133 stopped the
+   queue expiring, a queued 413 would otherwise have retried **for ever**, silently — §133 made this
+   worse before §136 caught it.
+2. **`_finishBuild` WEIGHS THE CASE BEFORE SENDING IT** against `SHARED_MAX_BYTES` (2,000,000 — a
+   deliberate margin under 2,097,152, since headers ride with the body). Over the line: no write is
+   attempted, the case is marked in a local oversize register, the submission overlay stays shut, and
+   the builder is told the actual size in MB.
+3. **PHOTOGRAPHS ARE BUDGETED AS THEY ARE ADDED** (owner ruling: "warn and block"). One warning at
+   80%, then the next photograph is **refused** — so a case that cannot be filed can no longer be
+   built. **NO COUNT CAP WAS SET; the owner has not named a number and it is a one-line change.**
+
+**CASE FILES NOW HAS THREE STATES, NOT TWO:** `TOO LARGE` (never resolves, the builder must act),
+`NOT SENT` (resolves itself on signal), `OFFLINE?` (the archive is unreachable).
+
+## §136.4 PROVEN IN CHROME
+
+`localhost:8010`, buildmark `34u`, colour `rgb(78,154,135)`.
+
+| case | result |
+|---|---|
+| PUT answered **413** | returned false, **NOT queued** |
+| PUT answered **503** | returned false, **queued** — the distinction can fail, and does not |
+| oversize case at Finish | **zero PUTs attempted**, marked, overlay shut, toast named "2.1 MB against a limit of 2 MB" |
+| adding photographs, 5 attempts | 4 accepted (1,600,368 b), **one** 80% warning, 5th **refused** |
+
+**A FIRST ATTEMPT AT THE LAST ROW PROVED NOTHING** — three 500 KB photographs never reached either
+threshold, so it passed without exercising the code. Re-run with sizes chosen to cross both.
+
+## §136.5 THE REAL ANSWER IS STILL OWED
+
+**PHOTOGRAPHS SHOULD NOT LIVE INSIDE THE CASE BODY AT ALL.** One key per photograph would keep the
+body small for ever and remove the ceiling from the builder's path entirely. That is a data-shape
+change needing back-compat for every case already live, and it is **A SEPARATE SHIP.**
+
 # 🟢 §135 — `ship`'s PROOF NOW READS THE COMMIT. §131 IS CLOSED. s66.
 
 **§131 SAID THE PROOF BLOCK COULD ONLY EVER CONFIRM WHAT WAS ON DISK. IT NOW READS THE FILE BACK OUT
@@ -384,12 +472,14 @@ the server's honest verdict since §45.2; `set()` never did.
 - **The Worker is not refusing these writes.** An unauthenticated `PUT /kv/hunt:…` returns **200**
   and reads back. A **200 KB** body is accepted. Probe keys were deleted afterwards and re-probed to
   404. **No curator token is needed for a builder write.**
-- **It is not size.** A builder tile is `{id,type,emoji,clue,hint}` — **no photograph, no dataURL,
-  ever** — so a case body is small text.
+- ~~**It is not size.** A builder tile is `{id,type,emoji,clue,hint}` — no photograph, no dataURL,
+  ever — so a case body is small text.~~ **🔴 THIS IS WRONG AND IS WITHDRAWN AT s67 (§136). A PHOTO
+  TILE CARRIES `src:dataUrl` INLINE. IT WAS THE SIZE.** The claim came from reading the object-tile
+  literal and generalising — the exact failure §5i and "never infer" exist to prevent.
 
-**IT WAS A TRANSIENT FAILURE ON A PHONE.** A dropped connection or the 12s `NET_MS` timeout, in a
-park, on a handset. **THAT CANNOT BE ENGINEERED AWAY. WHAT COULD BE FIXED IS THAT EVERY NET BEHIND
-IT WAS BLIND.**
+**THE CONCLUSION DRAWN HERE — "a transient failure on a phone" — IS SUPERSEDED BY §136: the body was
+over the 2 MB ceiling and was refused every time.** What this section got right stands on its own:
+**every net behind the write was blind**, and that had to be fixed whatever the cause.
 
 ## §132.2 THE THREE FIXES
 
