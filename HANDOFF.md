@@ -26,7 +26,7 @@ NOT CONTAIN THE HASH — WRITE ALL 64 CHARACTERS, never `abc123…`.**
 
 | file | bytes | sha256 | state |
 |---|---|---|---|
-| `index.html` | 4,391,118 | `d7c160c37ce7e2672d93288348c65de534415e191db9e51e0939e1bc1b7b7f01` | **⚠ BUILT — `34r` / Ochre `#C88A2E`. The `subTerrFile()` orphan-submission guard (§130). STATIC green in the sandbox; BOTH BRANCHES PROVEN IN CHROME on `localhost:8010`. THE FULL BATTERY IS OWED ON HIS MACHINE BEFORE THE SHIP.** |
+| `index.html` | 4,393,115 | `a87c58a6f7bc5631c3187859768824c29c6a3a54de888738c0d0237c9c14afbd` | **⚠ BUILT — `34s` / Rose `#B5566B`. The write path made honest: `Store.set` returns the server's verdict, `flush()` merges, `_finishBuild` believes it (§132). STATIC green in the sandbox; ALL FOUR CASES PROVEN IN CHROME on `localhost:8010`, INCLUDING A CONTROL THAT FAILS ON THE OLD CODE. THE FULL BATTERY IS OWED ON HIS MACHINE BEFORE THE SHIP.**<br>`34r` / Ochre `#C88A2E` shipped at s64 on commit `ae06816b`, hash `d7c160c37ce7e2672d93288348c65de534415e191db9e51e0939e1bc1b7b7f01`. |
 | `sw.js` | 5,532 | `7a1682bd276e3bdba985270e7e36e5dea2f26ad696db53280d65a5c2cc80f45c` | ✅ LIVE. Network-first for the document, so it CANNOT pin a hunter to an old build. |
 | `HANDOFF.md` | *(this file)* | — | 🔴 **s61 edition — UNPUSHED until the next ship.** |
 | `HANDOFF-SPEC.md` | — | — | how the app works. Untouched at s61. |
@@ -35,9 +35,9 @@ NOT CONTAIN THE HASH — WRITE ALL 64 CHARACTERS, never `abc123…`.**
 | `test/` | — | — | `agents.py` (STATIC), `behaviour.py`, `session_checks.py`, `run.py`, `.last-battery`. |
 | `art/` | — | — | 🔴 **GITIGNORED AND ON ONE DISK.** The s61 enamel source lives ONLY at `art\plate-enamel-source-s61.png`; the copy to `Hunt-backups\art\` returned **Permission denied**. §1v forming; a manual copy is owed. |
 
-**BUILDMARK: `34r` / Ochre `#C88A2E` IS WRITTEN INTO THE BUILD AND NOT YET DELIVERED. A MARK IS
-SPENT ONLY WHEN A BUILD IS DELIVERED — IF THIS BUILD IS SCRAPPED, `34r` GOES BACK. NEXT AFTER IT IS
-`34s` / Rose `#B5566B`.**
+**BUILDMARK: `34s` / Rose `#B5566B` IS WRITTEN INTO THE BUILD AND NOT YET DELIVERED. `34r` IS SPENT. A MARK IS
+SPENT ONLY WHEN A BUILD IS DELIVERED — IF THIS BUILD IS SCRAPPED, `34s` GOES BACK. NEXT AFTER IT IS
+`34t` / Amethyst `#7A5A98`.**
 Rotation (§8i): a Cobalt `#3B6BA5` · b Ochre `#C88A2E` · c Rose `#B5566B` · d Amethyst `#7A5A98` ·
 e Verdigris `#4E9A87` · f Magenta `#A8478F` · g Lime `#7FA33C` · h Rust `#B4532A`, then wraps.
 **A MARK IS SPENT ONLY WHEN A BUILD IS DELIVERED.** The plates, the shadow and the filter fix all
@@ -48,6 +48,10 @@ TABLE.** At s61 the two disagreed about `34m` and the CSS was right.
 white background, killing a 48%-bright halo on every star point (§128). Battery passed on his machine
 on `27f588c5`, before the ship. **THE BADGE CAST SHADOW IS STILL `.47` AGAINST THE PLATES' `.52`/`.21`
 — THE OWNER ASKED FOR DARKER, CHOSE TO SHIP WITHOUT IT, AND IT IS OWED AT `34q`.**
+
+**WHAT SHIPPED AT s64:** `34r` — the `subTerrFile()` orphan-submission guard (§130), commit
+`ae06816b`. Battery green on `d7c160c3…` BEFORE the ship. **THE FIRST SHIP ATTEMPT PUSHED NOTHING
+AND PRINTED A PERFECT PROOF ANYWAY (§131).**
 
 **WHAT SHIPPED AT s63:** `34q` — the four plates rigged and rematted (§129), commit
 `849099d5`. **§0 CARRIED "BUILT, NOT YET DELIVERED" FOR NINE DAYS AFTER IT WENT LIVE.** It was
@@ -246,6 +250,99 @@ does not. **The next build proves it, and the printed transition is the proof to
 A TOOL THAT CANNOT SEE THE CHANGE ARE INDISTINGUISHABLE FROM THE OUTSIDE.** GATE 2 is a green tick
 that is an exit code, inverted. When a gate refuses, prove what it actually read before believing it.
 
+
+# 🔴 §132 — THE WRITE PATH LIED TO EVERY CALLER IN THE APP. `34s`, s65.
+
+**"WHY WAS `hunt:784051` NOT WRITTEN" HAS AN ANSWER, AND IT IS NOT `finishBuild`.**
+
+`_finishBuild` **does** await its write:
+```js
+await Store.set("hunt:"+code, JSON.stringify(State.build), true);
+```
+**`Store.set` RETURNED `true` WHETHER OR NOT THE WRITE REACHED THE YARD.** On failure it queued the
+value and then fell through to the local branches, every one of which ends `return true`. **49 CALL
+SITES, NOT ONE OF THEM CHECKING — because there was never anything to check.** `del()` has returned
+the server's honest verdict since §45.2; `set()` never did.
+
+## §132.1 WHAT WAS RULED OUT, BY PROBE NOT BY REASONING
+
+- **The Worker is not refusing these writes.** An unauthenticated `PUT /kv/hunt:…` returns **200**
+  and reads back. A **200 KB** body is accepted. Probe keys were deleted afterwards and re-probed to
+  404. **No curator token is needed for a builder write.**
+- **It is not size.** A builder tile is `{id,type,emoji,clue,hint}` — **no photograph, no dataURL,
+  ever** — so a case body is small text.
+
+**IT WAS A TRANSIENT FAILURE ON A PHONE.** A dropped connection or the 12s `NET_MS` timeout, in a
+park, on a handset. **THAT CANNOT BE ENGINEERED AWAY. WHAT COULD BE FIXED IS THAT EVERY NET BEHIND
+IT WAS BLIND.**
+
+## §132.2 THE THREE FIXES
+
+1. **`set()` RETURNS HONESTLY** for shared writes, and **retries once** before giving up. The value
+   is still kept locally and queued; the caller is simply told the truth.
+2. **`flush()` MERGES INSTEAD OF OVERWRITING.** It snapshotted the queue, awaited its fetches, then
+   ran `qWrite(keep)` — **anything `qPush`-ed during that await window was destroyed in silence.**
+   It now re-reads, drops only what this pass actually sent, and lets the newer entry win per key.
+3. **`_finishBuild` BELIEVES THE VERDICT.** If the body did not land the case is still saved to the
+   device and the replay queue, but **the territory-submission overlay does not open** — a case the
+   Yard has not got cannot be offered for filing. The builder is told.
+
+## §132.3 PROVEN IN CHROME, WITH A CONTROL
+
+`localhost:8010`, buildmark `34s`, colour `rgb(181,86,107)` read off the served page.
+
+| case | result |
+|---|---|
+| shared PUT fails | `set()` returned **`false`**, value queued |
+| write queued DURING a flush | **survives** — queue holds both |
+| **CONTROL: the OLD `qWrite(keep)` line, same race** | **LOSES IT** — queue holds one |
+| body fails in `_finishBuild` | toast shown, **overlay stayed shut**, `_pendingSub` unset, body queued under `hunt:` |
+| body lands | overlay opens, submission proceeds, queue empty |
+
+**THE CONTROL IS THE POINT.** §128: before believing a green result, say what it would have to see to
+fail. The old line was run against the same race and lost the write — so the pass is not a pass for
+the wrong reason.
+
+## §132.4 STILL OPEN
+
+- **`QUEUE_MAX_AGE` DROPS AT 14 DAYS IN SILENCE.** That is why Piggy reopening the app recovered
+  nothing. Policy unchanged this ship; **nothing anywhere surfaces `qPending()` to a builder or to
+  the Desk.** A pending-writes indicator is owed.
+- **`subDismiss`** still carries the §130.5 shape.
+- **`ship.cmd`'s proof block** still reads the working file (§131).
+
+# 🔴 §131 — `ship`'s PROOF BLOCK READS THE WORKING FILE, NOT THE COMMIT. s64.
+
+**THE ONE CHECK THAT EXISTS TO STOP A WRONG-BUILD SHIP CANNOT SEE THE COMMIT AT ALL.**
+
+At s64 a **stale `.git/index.lock`** (zero bytes, hours old, not created this session) made `git add`
+fail twice. `ship` printed `(nothing new to commit - this usually means it was already committed)`,
+then `Everything up-to-date`, and then this:
+
+```
+  Local  HEAD:   849099d5      <- the 34q commit, nine days old
+  Origin HEAD:   849099d5
+  index.html COMMITTED:  d7c160c3...   <- THE NEW BUILD. NOTHING HAD BEEN COMMITTED.
+  Buildmark:  34r
+```
+
+**EVERY LINE OF THE PROOF WAS GREEN AND NOTHING HAD SHIPPED.** `ship.cmd` line 46 hashes the
+**working** `index.html` into `%HASH%`; line 151 prints that same variable under the heading
+`index.html COMMITTED`. The buildmark line runs `findstr` over the working file too. **The block can
+only ever confirm what is on disk — the thing you already know.** It reads `git show HEAD:index.html`
+at line 73 for the gate-2 comparison and then does not use it in the proof.
+
+**THE FIX IS THE HASH IT ALREADY HAS:** hash `git show HEAD:index.html` after the commit and print
+*that*, and read the buildmark from the same extracted file. **OWED. Not done at s64 — one fix, one
+ship.**
+
+**UNTIL IT IS FIXED, `ship`'s PROOF BLOCK IS NOT PROOF.** Read `Local HEAD` and check the SHA moved.
+Claude verifies a ship by fetching `raw.githubusercontent.com/gahensley1/Hunt/<sha>/index.html` and
+hashing it — **the commit SHA is the only source that has never lied.** Pages agreed this time
+(same hash, immediately); it has not always.
+
+**A STALE LOCK IS CLEARED WITH `del C:\Users\tony\Documents\Hunt\.git\index.lock`.** Claude never
+runs `git` from the sandbox precisely because it strands this file — but this one was not Claude's.
 
 # 🔴 §130 — A SUBMISSION WAS FILED AGAINST A CASE THAT DID NOT EXIST. `34r`, s64.
 

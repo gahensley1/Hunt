@@ -283,7 +283,7 @@
     #notify-card .nc-txt{font-size:14px}
   }
   #buildmark{margin:4px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#C88A2E;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#B5566B;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -1409,7 +1409,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">34r</p>
+      <p id="buildmark" aria-label="test build marker">34s</p>
     </div>
   </section>
 
@@ -2036,24 +2036,48 @@ const Store = {
         }catch(e){ ok=false; }
         if(ok) done++; else keep.push(it);
       }
-      this.qWrite(keep);
+      /* MERGE, NEVER OVERWRITE. The queue was snapshotted before the awaits above;
+         anything qPush-ed DURING them is in storage but not in that snapshot, and
+         a plain qWrite(keep) destroyed it silently. Re-read, drop only what this
+         pass actually sent, and let the newer entry win per key. */
+      const _sentKeys={};
+      a.forEach(function(x){ _sentKeys[x.key]=x.at; });
+      const _live=this.qRead().filter(function(x){
+        return x && x.key && x.at>cutoff && _sentKeys[x.key]!==x.at;
+      });
+      const _merged={};
+      keep.concat(_live).forEach(function(x){
+        const p=_merged[x.key]; if(!p || x.at>=p.at) _merged[x.key]=x;
+      });
+      this.qWrite(Object.keys(_merged).map(function(k){ return _merged[k]; }));
     }catch(e){}
     this._flushing=false;
     return done;
   },
+  /* RETURNS HONESTLY, like del(). A shared PUT that never reached the Yard used to
+     return true exactly like one that landed, and all 49 call sites believed it -
+     there was nothing to believe otherwise. That is how case 784051 lost its body
+     while its submission was filed against it (see 130, 132). The value is still
+     kept locally and queued for replay; the CALLER is simply told the truth.
+     One retry first: the loss was a transient failure on a phone, not a refusal -
+     the Worker accepts these writes unauthenticated, probed at s65. */
   async set(key,val,shared=false,sig){
+    let sharedFailed=false;
     if(shared && this.base()){
       let sent=false;
-      try{
-        const r=await fetch(this.base()+"/kv/"+encodeURIComponent(key),{method:"PUT",body:val,headers:Object.assign({},_curHdr()),signal:_sig(NET_MS,sig)});
-        sent=!!r.ok;
-      }catch(e){ sent=false; }
+      for(let _a=0; _a<2 && !sent; _a++){
+        try{
+          const r=await fetch(this.base()+"/kv/"+encodeURIComponent(key),{method:"PUT",body:val,headers:Object.assign({},_curHdr()),signal:_sig(NET_MS,sig)});
+          sent=!!r.ok;
+        }catch(e){ sent=false; }
+      }
       if(sent){ if(this.qPending()) this.flush(); return true; }
       this.qPush(key,val);
+      sharedFailed=true;
     }
-    if(this.ok){ try{await window.storage.set(key,val,shared); return true;}catch(e){/*fallthrough*/} }
+    if(this.ok){ try{await window.storage.set(key,val,shared); return !sharedFailed;}catch(e){/*fallthrough*/} }
     if(!shared && this.ls){ try{ this.ls.setItem(this.lsKey(key), val); return true; }catch(e){} }
-    this.mem.set(this.k(key,shared),val); return true;
+    this.mem.set(this.k(key,shared),val); return !sharedFailed;
   },
   async list(prefix,shared=false,sig){
     if(shared && this.base()){
@@ -7078,7 +7102,12 @@ async function _finishBuild(){
      Stamped on the record so it survives reload and sync; retireCold() must not
      clear it - a retired case stays Desk-only (owner ruling, s38). */
   if(State._curatorBuildFlow) State.build.desk=true;
-  await Store.set("hunt:"+code, JSON.stringify(State.build), true);
+  /* THE BODY IS THE CASE. If this did not reach the Yard the case exists on this
+     device only: no hunter can join it by code, and it must not be offered for
+     territorial filing - that is precisely how 784051 became a submission with
+     nothing behind it (130). The work is NOT discarded; it stays in the builder's
+     files and in the replay queue. */
+  const _landed = await Store.set("hunt:"+code, JSON.stringify(State.build), true);
   // legacy single-case licence is spent when a NEW case is filed (never on an edit)
   if(!editing){ try{ if(localStorage.getItem("shco:lic")==="SINGLE") localStorage.setItem("shco:lic","SINGLE-USED"); }catch(e){} }
   // record in my cases
@@ -7086,8 +7115,9 @@ async function _finishBuild(){
   if(!mine.includes(code)){ mine.unshift(code); await Store.set("mycases",JSON.stringify(mine)); }
   if(State.build && State.build.desk){ try{ await deskAdd(code); }catch(e){} }
   // Agency Case submission — builder-initiated territorial review queue
+  if(!_landed){ toast("This case is safe on your device, but the Company has not received it. It cannot be filed until it has \u2014 try again when you have signal.", 5200); }
   try{ const _chk=document.getElementById("cold-submit-chk");
-    if(_chk && _chk.checked && !(State.build&&State.build.fromArchive)){
+    if(_landed && _chk && _chk.checked && !(State.build&&State.build.fromArchive)){
       State._pendingSub={code, title:State.build.title||"Untitled Case"};
       openSubTerritory();
     } }catch(e){}
