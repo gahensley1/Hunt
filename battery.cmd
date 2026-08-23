@@ -35,8 +35,17 @@ where node >nul 2>&1
 if errorlevel 1 echo   WARNING: node is not on PATH. Agent A ^(node --check^) will fail. winget install OpenJS.NodeJS.LTS
 
 echo.
-python test\run.py %1
+REM s66: THE WHOLE RUN IS WRITTEN TO test\.last-battery.log AND THEN PRINTED.
+REM WHY: Claude cannot run this suite and cannot see this window, so every result
+REM reached him by hand-pasting - and twice a paste arrived clipped (a "21/21" that
+REM read as "1/21", and a BEHAVIOUR block that never came at all). The log sits in a
+REM connected folder, so he reads the run himself, in full, and a clipped paste can
+REM no longer decide whether something shipped. Redirection is safe: run.py flushes
+REM every parent print for exactly this reason (see its header).
+REM THE LOG IS GITIGNORED. It is evidence for one run, not a repo file.
+> test\.last-battery.log 2>&1 python test\run.py %1
 set "BATRC=%ERRORLEVEL%"
+type test\.last-battery.log
 
 REM s57: STAMP THE FILE THAT PASSED. ship.cmd's GATE 3 compares this against the
 REM index.html it is about to commit, so a build cannot be shipped on a green tick

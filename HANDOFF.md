@@ -26,7 +26,7 @@ NOT CONTAIN THE HASH — WRITE ALL 64 CHARACTERS, never `abc123…`.**
 
 | file | bytes | sha256 | state |
 |---|---|---|---|
-| `index.html` | 4,393,115 | `a87c58a6f7bc5631c3187859768824c29c6a3a54de888738c0d0237c9c14afbd` | **⚠ BUILT — `34s` / Rose `#B5566B`. The write path made honest: `Store.set` returns the server's verdict, `flush()` merges, `_finishBuild` believes it (§132). STATIC green in the sandbox; ALL FOUR CASES PROVEN IN CHROME on `localhost:8010`, INCLUDING A CONTROL THAT FAILS ON THE OLD CODE. THE FULL BATTERY IS OWED ON HIS MACHINE BEFORE THE SHIP.**<br>`34r` / Ochre `#C88A2E` shipped at s64 on commit `ae06816b`, hash `d7c160c37ce7e2672d93288348c65de534415e191db9e51e0939e1bc1b7b7f01`. |
+| `index.html` | 4,394,738 | `3854dfe9e596ce982e222b4eb0d8416f9cca7f7fc5bc692d44177a042af420c8` | **⚠ BUILT — `34t` / Amethyst `#7A5A98`. The queue stops discarding, and Case Files says which case has not left the device (§133). STATIC green in the sandbox; PROVEN IN CHROME on `localhost:8010`. THE FULL BATTERY IS OWED ON HIS MACHINE BEFORE THE SHIP.**<br>`34s` shipped at s65, commit `9be8116d`, hash `a87c58a6f7bc5631c3187859768824c29c6a3a54de888738c0d0237c9c14afbd`. |
 | `sw.js` | 5,532 | `7a1682bd276e3bdba985270e7e36e5dea2f26ad696db53280d65a5c2cc80f45c` | ✅ LIVE. Network-first for the document, so it CANNOT pin a hunter to an old build. |
 | `HANDOFF.md` | *(this file)* | — | 🔴 **s61 edition — UNPUSHED until the next ship.** |
 | `HANDOFF-SPEC.md` | — | — | how the app works. Untouched at s61. |
@@ -35,9 +35,9 @@ NOT CONTAIN THE HASH — WRITE ALL 64 CHARACTERS, never `abc123…`.**
 | `test/` | — | — | `agents.py` (STATIC), `behaviour.py`, `session_checks.py`, `run.py`, `.last-battery`. |
 | `art/` | — | — | 🔴 **GITIGNORED AND ON ONE DISK.** The s61 enamel source lives ONLY at `art\plate-enamel-source-s61.png`; the copy to `Hunt-backups\art\` returned **Permission denied**. §1v forming; a manual copy is owed. |
 
-**BUILDMARK: `34s` / Rose `#B5566B` IS WRITTEN INTO THE BUILD AND NOT YET DELIVERED. `34r` IS SPENT. A MARK IS
-SPENT ONLY WHEN A BUILD IS DELIVERED — IF THIS BUILD IS SCRAPPED, `34s` GOES BACK. NEXT AFTER IT IS
-`34t` / Amethyst `#7A5A98`.**
+**BUILDMARK: `34t` / Amethyst `#7A5A98` IS WRITTEN INTO THE BUILD AND NOT YET DELIVERED. `34s` IS SPENT. A MARK IS
+SPENT ONLY WHEN A BUILD IS DELIVERED — IF THIS BUILD IS SCRAPPED, `34t` GOES BACK. NEXT AFTER IT IS
+`34u` / Verdigris `#4E9A87`.**
 Rotation (§8i): a Cobalt `#3B6BA5` · b Ochre `#C88A2E` · c Rose `#B5566B` · d Amethyst `#7A5A98` ·
 e Verdigris `#4E9A87` · f Magenta `#A8478F` · g Lime `#7FA33C` · h Rust `#B4532A`, then wraps.
 **A MARK IS SPENT ONLY WHEN A BUILD IS DELIVERED.** The plates, the shadow and the filter fix all
@@ -48,6 +48,11 @@ TABLE.** At s61 the two disagreed about `34m` and the CSS was right.
 white background, killing a 48%-bright halo on every star point (§128). Battery passed on his machine
 on `27f588c5`, before the ship. **THE BADGE CAST SHADOW IS STILL `.47` AGAINST THE PLATES' `.52`/`.21`
 — THE OWNER ASKED FOR DARKER, CHOSE TO SHIP WITHOUT IT, AND IT IS OWED AT `34q`.**
+
+**WHAT SHIPPED AT s65:** `34s` — the honest write path (§132), commit `9be8116d`. Battery green
+on `a87c58a6…` before the ship. **THE BEHAVIOUR BLOCK WAS ASKED FOR AND NOT SUPPLIED; the exit code
+is all that gates this one, and `run.py` ORs every suite, so rc==0 means SESSION and BEHAVIOUR both
+exited clean. THE PER-CHECK DETAIL WAS NOT READ.**
 
 **WHAT SHIPPED AT s64:** `34r` — the `subTerrFile()` orphan-submission guard (§130), commit
 `ae06816b`. Battery green on `d7c160c3…` BEFORE the ship. **THE FIRST SHIP ATTEMPT PUSHED NOTHING
@@ -250,6 +255,48 @@ does not. **The next build proves it, and the printed transition is the proof to
 A TOOL THAT CANNOT SEE THE CHANGE ARE INDISTINGUISHABLE FROM THE OUTSIDE.** GATE 2 is a green tick
 that is an exit code, inverted. When a gate refuses, prove what it actually read before believing it.
 
+
+# 🔴 §133 — THE QUEUE STOPS THROWING CASES AWAY, AND CASE FILES SAYS WHICH ONE IS STRANDED. `34t`, s66.
+
+**§132 STOPPED THE WRITE PATH LYING. THIS STOPS THE CONSEQUENCE.** Two owner rulings at s66.
+
+## §133.1 NOTHING IS DROPPED BY AGE. EVER.
+
+`flush()` discarded any queued entry older than `QUEUE_MAX_AGE` (14 days) **in silence**. That is
+the reason case 784051 could not be recovered when its author reopened the app on signal — **the
+only copy of the body had already been thrown away, and nobody was ever told.** A case body is a few
+kilobytes of text with no photographs in it (§132.1). **IT NOW STAYS QUEUED UNTIL IT LANDS.**
+`QUEUE_MAX_AGE` survives as a constant and no longer governs anything.
+
+## §133.2 "OFFLINE?" WAS COVERING FOR TWO DIFFERENT STATES
+
+Case Files drew the same row whether the archive was unreachable **or** the app was sitting on the
+only copy of the case. **Telling a builder to "check connection" about a case the app itself is
+holding is a lie by omission.** New `Store.qCodes()` reports the case numbers whose body is still
+queued, read ONCE per render. A queued case draws **`NOT SENT`**; a genuinely unreachable one still
+draws `OFFLINE?`. A case whose body reads fine but has a newer version queued — an amend made
+without signal — carries a `not sent yet` note on its row. **Copy is Claude's draft, awaiting the
+owner.**
+
+## §133.3 PROVEN IN CHROME
+
+`localhost:8010`, buildmark `34t`, colour `rgb(122,90,152)` read off the served page.
+
+| case | result |
+|---|---|
+| a **40-DAY-OLD** queued entry, flush fails | **SURVIVES** — the old code dropped it at 14 |
+| `qCodes()` | reports exactly the queued case number |
+| stranded case in Case Files | pill **`NOT SENT`**, "still on this device …" |
+| unreachable case, nothing queued | pill `OFFLINE?`, unchanged wording |
+
+**BOTH ROWS WERE UNREACHABLE.** If the mark were driven by reachability rather than by the queue,
+both would read the same — so the test can fail, and does not.
+
+## §133.4 STILL OPEN
+
+- **Nothing surfaces the queue on the DESK.** The owner chose the case row; an Agency-wide count was
+  offered and not taken. If a builder never reopens Case Files, nobody sees it.
+- **`subDismiss`** (§130.5) and **`ship.cmd`'s proof block** (§131) are both untouched.
 
 # 🔴 §132 — THE WRITE PATH LIED TO EVERY CALLER IN THE APP. `34s`, s65.
 
