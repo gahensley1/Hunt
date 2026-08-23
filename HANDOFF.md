@@ -26,7 +26,7 @@ NOT CONTAIN THE HASH — WRITE ALL 64 CHARACTERS, never `abc123…`.**
 
 | file | bytes | sha256 | state |
 |---|---|---|---|
-| `index.html` | 4,390,402 | `d5700cba298ac2ef8f256705e687742e7cb2aa1f2275213c6a91c584427694f7` | **⚠ BUILT — `34q` / Cobalt `#3B6BA5`. Plates rematted with the PADDING fix, given the badge's cast rig, and undraggable; the badge repassed too (§129). STATIC green in the sandbox. THE FULL BATTERY IS OWED ON HIS MACHINE BEFORE THE SHIP.** |
+| `index.html` | 4,391,118 | `d7c160c37ce7e2672d93288348c65de534415e191db9e51e0939e1bc1b7b7f01` | **⚠ BUILT — `34r` / Ochre `#C88A2E`. The `subTerrFile()` orphan-submission guard (§130). STATIC green in the sandbox; BOTH BRANCHES PROVEN IN CHROME on `localhost:8010`. THE FULL BATTERY IS OWED ON HIS MACHINE BEFORE THE SHIP.** |
 | `sw.js` | 5,532 | `7a1682bd276e3bdba985270e7e36e5dea2f26ad696db53280d65a5c2cc80f45c` | ✅ LIVE. Network-first for the document, so it CANNOT pin a hunter to an old build. |
 | `HANDOFF.md` | *(this file)* | — | 🔴 **s61 edition — UNPUSHED until the next ship.** |
 | `HANDOFF-SPEC.md` | — | — | how the app works. Untouched at s61. |
@@ -35,9 +35,9 @@ NOT CONTAIN THE HASH — WRITE ALL 64 CHARACTERS, never `abc123…`.**
 | `test/` | — | — | `agents.py` (STATIC), `behaviour.py`, `session_checks.py`, `run.py`, `.last-battery`. |
 | `art/` | — | — | 🔴 **GITIGNORED AND ON ONE DISK.** The s61 enamel source lives ONLY at `art\plate-enamel-source-s61.png`; the copy to `Hunt-backups\art\` returned **Permission denied**. §1v forming; a manual copy is owed. |
 
-**BUILDMARK: `34q` / Cobalt `#3B6BA5` IS WRITTEN INTO THE BUILD AND NOT YET DELIVERED. A MARK IS
-SPENT ONLY WHEN A BUILD IS DELIVERED — IF THIS BUILD IS SCRAPPED, `34q` GOES BACK. NEXT AFTER IT IS
-`34r` / Ochre `#C88A2E`.**
+**BUILDMARK: `34r` / Ochre `#C88A2E` IS WRITTEN INTO THE BUILD AND NOT YET DELIVERED. A MARK IS
+SPENT ONLY WHEN A BUILD IS DELIVERED — IF THIS BUILD IS SCRAPPED, `34r` GOES BACK. NEXT AFTER IT IS
+`34s` / Rose `#B5566B`.**
 Rotation (§8i): a Cobalt `#3B6BA5` · b Ochre `#C88A2E` · c Rose `#B5566B` · d Amethyst `#7A5A98` ·
 e Verdigris `#4E9A87` · f Magenta `#A8478F` · g Lime `#7FA33C` · h Rust `#B4532A`, then wraps.
 **A MARK IS SPENT ONLY WHEN A BUILD IS DELIVERED.** The plates, the shadow and the filter fix all
@@ -49,6 +49,12 @@ white background, killing a 48%-bright halo on every star point (§128). Battery
 on `27f588c5`, before the ship. **THE BADGE CAST SHADOW IS STILL `.47` AGAINST THE PLATES' `.52`/`.21`
 — THE OWNER ASKED FOR DARKER, CHOSE TO SHIP WITHOUT IT, AND IT IS OWED AT `34q`.**
 
+**WHAT SHIPPED AT s63:** `34q` — the four plates rigged and rematted (§129), commit
+`849099d5`. **§0 CARRIED "BUILT, NOT YET DELIVERED" FOR NINE DAYS AFTER IT WENT LIVE.** It was
+not an ungated ship — `test/.last-battery` holds `d5700cba…`, the exact hash that shipped, and that
+file is only written by `battery` on his machine. **THE GATE HELD; THE RECORD DID NOT. §0 IS
+UPDATED IN THE SAME EDIT AS THE SHIP, NEVER AFTERWARDS — THIS IS WHAT "AFTERWARDS" LOOKS LIKE.**
+
 **WHAT SHIPPED AT s61:** `34n` — the 35 Savannah hints (§121) and the home-button proportional
 scale (§123), commit `3c5508b3`. `34o` — the four enamel plates (§125), the badge-weight contact
 shadow, and the placeless-case filter fix (§126), commit `4288d6f0`.
@@ -59,8 +65,11 @@ Chromium installs, then headless dies on `libXdamage.so.1` and the sandbox is no
 `apt-get` that would fix it is refused. **THE FULL BATTERY IS THE OWNER'S TO RUN.**
 `test/.last-battery` holds the hash it passed on. **CLAUDE MUST SAY WHERE THE BATTERY RAN, EVERY TIME.**
 
-**🔴 `ship` GATE 2 IS BROKEN AND WILL REFUSE EVERY SHIP (§127).** `34n` and `34o` both shipped with
-`/force`. The fix is two lines and is OWED.
+**✅ `ship` GATE 2 IS NOT BROKEN. THE §127 CLAIM IS WITHDRAWN AT s64.** At the `34r` ship it printed
+`GATE 2  ok - buildmark 34q -> 34r`. Whatever bit `34n` and `34o` into `/force` is either fixed or was
+never gate 2. **GATE 3 IS THE ONE THAT BITES** — it refuses when the battery last passed on a
+different hash, which is exactly its job. **RUN `battery` BEFORE `ship`, NEVER `/force` PAST IT.**
+`33e`, `33f` and `33g` all shipped untested by forcing this gate.
 
 ### §0.3 — THE THREE OPEN ITEMS AT s61 CLOSE, IN ORDER
 
@@ -237,6 +246,70 @@ does not. **The next build proves it, and the printed transition is the proof to
 A TOOL THAT CANNOT SEE THE CHANGE ARE INDISTINGUISHABLE FROM THE OUTSIDE.** GATE 2 is a green tick
 that is an exit code, inverted. When a gate refuses, prove what it actually read before believing it.
 
+
+# 🔴 §130 — A SUBMISSION WAS FILED AGAINST A CASE THAT DID NOT EXIST. `34r`, s64.
+
+**CASE 784 051, "Forsyth Park Hunt", BY PIGGY. THE PAPERWORK SURVIVED; THE CASE DID NOT.** Probed
+read-only against the live Worker (v2.6.13), twice, days apart:
+
+```
+/kv/submission%3A784051  → 200, 314 bytes   (Piggy, Forsyth Park, 31401, diff 4)
+/kv/hunt%3A784051        → 404 "not found"
+```
+
+**`subTerrFile()` WROTE THE SUBMISSION FIRST AND UNCONDITIONALLY**, then merely *read* `hunt:<code>`
+to stamp the deed. A missing body made `if(_hr)` false, the block was skipped in silence, the
+`catch` swallowed anything thrown, and the builder was told **"Filed for consideration in the Agency
+Cases"** either way.
+
+**NOTHING ON A DESK CARD COMES FROM THE BODY.** Title, difficulty stars and the par note are all
+drawn from the 314-byte submission record, so the row renders as fully actionable and every path
+behind it then fails on the same missing key — `curEditCase`, `saveTerrInfo`, `publishCold` and the
+hunter's join link. Recovery was attempted (the submitter reopened the app on signal to trigger
+`Store.flush()`); re-probing still returned 404. **UNRECOVERABLE. THE CLUE TEXT IS GONE.**
+
+## §130.1 THE FIX — THE ORDER IS REVERSED
+
+Read the body, seal the body, and **only then** write the submission. If either step fails, write
+nothing and say so. Both toast strings are **the owner's wording, chosen by him at s64**; Claude
+drafted three options and he picked.
+
+## §130.2 PROVEN IN CHROME, NOT BY A GREEN SUITE
+
+`localhost:8010`, buildmark confirmed `34r` and its colour `rgb(200,138,46)` read off the served
+page, rotate gate asserted `display:none`.
+
+- **BODY MISSING** (code `990417`, both keys 404 before and after): Store saw exactly two calls,
+  `get myName` and `get hunt:…` — **ZERO WRITES**. The toast rendered. The overlay stayed open and
+  `State._pendingSub` was kept, so the builder can fix and file again. **The Worker was re-probed
+  afterwards: still 404. No orphan was created.**
+- **BODY PRESENT** (fully stubbed, no write could reach the Worker): two writes, `hunt:` first
+  carrying `deeded=true`, `submission:` second. Normal filing is intact — the guard does not block
+  a good case.
+
+## §130.3 ⚠ THIS DOES NOT FIX THE ORPHAN. IT FIXES THE FILING.
+
+**WHY `hunt:784051` WENT MISSING IS STILL UNKNOWN.** `subTerrFile()` never writes the body; it
+assumes `finishBuild()` already did. **DO NOT READ A GREEN BATTERY ON `34r` AS "THE ORPHAN BUG IS
+FIXED."** Next: read `finishBuild()` and establish whether its `hunt:` write is awaited, whether a
+failure reaches `Store.qPush`, and whether it can report success without the shared write landing.
+
+## §130.4 `<code>` IN A COMMENT IS AN HTML TAG
+
+The fix as briefed carried `hunt:<code>` in its comment. **Agent D flagged a tag-balance drift
+immediately** — inside a `<script>` it is still markup to a tag counter. Reworded to `the hunt: key`.
+**The baseline was NOT grown to silence it.**
+
+## §130.5 OPEN, LOGGED, NOT TOUCHED HERE
+
+- **`subDismiss` CARRIES THE SAME SHAPE.** `Store.del("submission:")` runs first and unconditionally,
+  then `if(_hr)` silently skips the un-deeding when the body is absent — so dismissing a bodyless
+  case leaves a stale `deeded` flag on any body that later reappears. Lower severity, same root
+  habit. **ONE FIX, ONE SHIP.** `subDismiss` IS correctly `async` (line 6397); the s63 claim that it
+  was not is **withdrawn**.
+- **CLEAR THE ORPHAN** via the Desk's own dismiss path, never by hand-editing D1.
+- **NOTIFY PIGGY.** "Forsyth Park Hunt" must be rebuilt from scratch. **THIS IS OUR FAULT, NOT
+  HERS.**
 
 # 🔴 §129 — THE FOUR PLATES GET THE BADGE'S RIG, AND THE HALO WAS ON THEM TOO. `34q`, s63.
 
