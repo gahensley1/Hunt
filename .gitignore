@@ -21,3 +21,4 @@ _diagram-*.png
 
 # s66: one run's evidence, not a repo file - Claude reads it from the folder.
 test/.last-battery.log
+test/.shipped.html

@@ -26,7 +26,7 @@ NOT CONTAIN THE HASH — WRITE ALL 64 CHARACTERS, never `abc123…`.**
 
 | file | bytes | sha256 | state |
 |---|---|---|---|
-| `index.html` | 4,394,738 | `3854dfe9e596ce982e222b4eb0d8416f9cca7f7fc5bc692d44177a042af420c8` | **⚠ BUILT — `34t` / Amethyst `#7A5A98`. The queue stops discarding, and Case Files says which case has not left the device (§133). STATIC green in the sandbox; PROVEN IN CHROME on `localhost:8010`. THE FULL BATTERY IS OWED ON HIS MACHINE BEFORE THE SHIP.**<br>`34s` shipped at s65, commit `9be8116d`, hash `a87c58a6f7bc5631c3187859768824c29c6a3a54de888738c0d0237c9c14afbd`. |
+| `index.html` | 4,394,738 | `3854dfe9e596ce982e222b4eb0d8416f9cca7f7fc5bc692d44177a042af420c8` | **✅ LIVE — `34t` / Amethyst `#7A5A98`, commit `886e0ea4`. §133. Battery PASSED ON HIS MACHINE on this exact hash before the ship. Verified against the COMMIT SHA and Pages — both return this hash, buildmark `34t`, colour `#7A5A98`, and all of §130 / §132 / §133 present.**<br>`34s` shipped at s65, commit `9be8116d`. |
 | `sw.js` | 5,532 | `7a1682bd276e3bdba985270e7e36e5dea2f26ad696db53280d65a5c2cc80f45c` | ✅ LIVE. Network-first for the document, so it CANNOT pin a hunter to an old build. |
 | `HANDOFF.md` | *(this file)* | — | 🔴 **s61 edition — UNPUSHED until the next ship.** |
 | `HANDOFF-SPEC.md` | — | — | how the app works. Untouched at s61. |
@@ -35,9 +35,8 @@ NOT CONTAIN THE HASH — WRITE ALL 64 CHARACTERS, never `abc123…`.**
 | `test/` | — | — | `agents.py` (STATIC), `behaviour.py`, `session_checks.py`, `run.py`, `.last-battery`. |
 | `art/` | — | — | 🔴 **GITIGNORED AND ON ONE DISK.** The s61 enamel source lives ONLY at `art\plate-enamel-source-s61.png`; the copy to `Hunt-backups\art\` returned **Permission denied**. §1v forming; a manual copy is owed. |
 
-**BUILDMARK: `34t` / Amethyst `#7A5A98` IS WRITTEN INTO THE BUILD AND NOT YET DELIVERED. `34s` IS SPENT. A MARK IS
-SPENT ONLY WHEN A BUILD IS DELIVERED — IF THIS BUILD IS SCRAPPED, `34t` GOES BACK. NEXT AFTER IT IS
-`34u` / Verdigris `#4E9A87`.**
+**BUILDMARK: `34t` / Amethyst `#7A5A98` IS SPENT — DELIVERED AT s66. A MARK IS
+SPENT ONLY WHEN A BUILD IS DELIVERED — NEXT IS `34u` / Verdigris `#4E9A87`.**
 Rotation (§8i): a Cobalt `#3B6BA5` · b Ochre `#C88A2E` · c Rose `#B5566B` · d Amethyst `#7A5A98` ·
 e Verdigris `#4E9A87` · f Magenta `#A8478F` · g Lime `#7FA33C` · h Rust `#B4532A`, then wraps.
 **A MARK IS SPENT ONLY WHEN A BUILD IS DELIVERED.** The plates, the shadow and the filter fix all
@@ -48,6 +47,9 @@ TABLE.** At s61 the two disagreed about `34m` and the CSS was right.
 white background, killing a 48%-bright halo on every star point (§128). Battery passed on his machine
 on `27f588c5`, before the ship. **THE BADGE CAST SHADOW IS STILL `.47` AGAINST THE PLATES' `.52`/`.21`
 — THE OWNER ASKED FOR DARKER, CHOSE TO SHIP WITHOUT IT, AND IT IS OWED AT `34q`.**
+
+**WHAT SHIPPED AT s66:** `34t` — §133, commit `886e0ea4`. Battery green on `3854dfe9…` before
+the ship. **`battery` NOW WRITES THE WHOLE RUN TO `test\.last-battery.log` AND PRINTS IT (§134).**
 
 **WHAT SHIPPED AT s65:** `34s` — the honest write path (§132), commit `9be8116d`. Battery green
 on `a87c58a6…` before the ship. **THE BEHAVIOUR BLOCK WAS ASKED FOR AND NOT SUPPLIED; the exit code
@@ -256,6 +258,72 @@ A TOOL THAT CANNOT SEE THE CHANGE ARE INDISTINGUISHABLE FROM THE OUTSIDE.** GATE
 that is an exit code, inverted. When a gate refuses, prove what it actually read before believing it.
 
 
+# 🟢 §135 — `ship`'s PROOF NOW READS THE COMMIT. §131 IS CLOSED. s66.
+
+**§131 SAID THE PROOF BLOCK COULD ONLY EVER CONFIRM WHAT WAS ON DISK. IT NOW READS THE FILE BACK OUT
+OF THE COMMIT AND COMPARES.**
+
+What changed in `ship.cmd`:
+
+- After the push it runs `git show HEAD:index.html` into `%TEMP%`, hashes **that**, and prints it as
+  *"index.html READ BACK OUT OF THE COMMIT"* beside the disk hash. **THE COMPARISON IS THE PROOF.**
+  `Local==Origin` is still printed and still means only that the push agreed with the commit.
+- The buildmark is read from the **extracted commit file**, with `test\buildmark.py`, not off the
+  working file with `findstr`.
+- A mismatch jumps to `:notcommitted`, which says plainly that nothing tested is live and names the
+  commonest cause — **a stale `.git\index.lock`, with the `del` command to clear it.**
+- The commit step no longer reassures. `(nothing new to commit)` now reads as something to VERIFY
+  below, because at s64 that exact line was false.
+
+## §135.1 THE COMPARISON IS EOL-NORMALISED, ON PURPOSE
+
+`.gitattributes` carries `* text=auto`, so on a Windows clone `git show` can hand the blob back as
+CRLF while the file on disk is LF. A raw `certutil` comparison would then differ **after a perfectly
+good ship**. New `test\commithash.py` hashes both sides with `\r\n` normalised to `\n`.
+**A GATE THAT CRIES WOLF GETS FORCED PAST, WHICH IS WORSE THAN NO GATE.** It returns `UNREADABLE`
+(exit 1) on an empty or missing file, and `UNREADABLE` is treated as a failure, never as a hash —
+an empty `git show` means the path is not in the commit.
+
+The raw disk hash is still printed as well, since that is what gates 1-3 compared.
+
+## §135.2 THE FIRST CUT USED A %TEMP% FILE AND DID NOT WORK
+
+**FIRST LIVE EXERCISE: the s66 docs ship — and it failed, exactly as a new gate should when it is
+wrong.** cmd answered **"The filename, directory name, or volume label syntax is incorrect"**, the
+`git show` redirect produced no file, and the proof read `UNREADABLE` against a perfectly good
+`index.html` on disk. **THE GATE'S BEHAVIOUR WAS CORRECT — UNREADABLE IS TREATED AS FAILURE, NOT AS
+A HASH — but the cause was the plumbing, not the ship.** Why `%TEMP%` failed there when gate 2 has
+used it for sessions is NOT ESTABLISHED, and is not worth establishing.
+
+**THE HASH IS NOW PIPED, NOT REDIRECTED:**
+```
+git show HEAD:index.html ^| python test\commithash.py -
+```
+`commithash.py` reads stdin when the path is `-`. **A PIPE HAS NO FILENAME TO GET WRONG.** An empty
+pipe still returns `UNREADABLE` and still fails the check. The buildmark line needs a path, so it
+writes a scratch copy inside the repo (`test\.shipped.html`, gitignored) rather than to `%TEMP%`.
+
+**GATE 2 STILL USES `%TEMP%\shco_prev.html` AND IS UNTOUCHED.** It has worked for sessions and there
+was no reason to disturb it in the same change that was already failing.
+
+# 🟢 §134 — `battery` WRITES ITS RUN TO A FILE CLAUDE CAN READ. s66.
+
+**THE OWNER ASKED WHY CLAUDE CANNOT JUST RUN THE BATTERY. HE CANNOT, AND THAT IS SETTLED (§128) —
+the browser half needs a machine, and his is the only one. WHAT WAS REMOVABLE WAS THE PASTING.**
+
+`battery.cmd` now runs `> test\.last-battery.log 2>&1 python test\run.py %1` and `type`s the log
+afterwards, so the window reads exactly as before. **The log sits in a connected folder, so Claude
+reads the whole run himself.**
+
+**WHY IT MATTERS: TWICE IN ONE DAY A PASTE DECIDED A SHIP.** At s65 a `21/21` arrived clipped to
+`1/21` and had to be resolved by reading `run.py` to prove `BATTERY PASSED` could not coexist with a
+failing suite; the BEHAVIOUR block was then asked for twice and never sent. **A clipped paste can no
+longer decide whether something shipped.**
+
+Redirection is safe here: `run.py` flushes every parent print for precisely this reason (its own
+header, s57). **THE LOG IS GITIGNORED** — evidence for one run, not a repo file. `test/.last-battery`
+(the hash stamp `ship` gate 3 reads) is unchanged and is a different file.
+
 # 🔴 §133 — THE QUEUE STOPS THROWING CASES AWAY, AND CASE FILES SAYS WHICH ONE IS STRANDED. `34t`, s66.
 
 **§132 STOPPED THE WRITE PATH LYING. THIS STOPS THE CONSEQUENCE.** Two owner rulings at s66.
@@ -356,7 +424,7 @@ the wrong reason.
   nothing. Policy unchanged this ship; **nothing anywhere surfaces `qPending()` to a builder or to
   the Desk.** A pending-writes indicator is owed.
 - **`subDismiss`** still carries the §130.5 shape.
-- **`ship.cmd`'s proof block** still reads the working file (§131).
+- **`ship.cmd`'s proof block** was fixed at s66 (§135).
 
 # 🔴 §131 — `ship`'s PROOF BLOCK READS THE WORKING FILE, NOT THE COMMIT. s64.
 
@@ -380,10 +448,10 @@ only ever confirm what is on disk — the thing you already know.** It reads `gi
 at line 73 for the gate-2 comparison and then does not use it in the proof.
 
 **THE FIX IS THE HASH IT ALREADY HAS:** hash `git show HEAD:index.html` after the commit and print
-*that*, and read the buildmark from the same extracted file. **OWED. Not done at s64 — one fix, one
-ship.**
+*that*, and read the buildmark from the same extracted file. **DONE AT s66 — SEE §135. THIS SECTION
+IS HISTORY, NOT AN OPEN ITEM.**
 
-**UNTIL IT IS FIXED, `ship`'s PROOF BLOCK IS NOT PROOF.** Read `Local HEAD` and check the SHA moved.
+**BEFORE §135, `ship`'s PROOF BLOCK WAS NOT PROOF.** Read `Local HEAD` and check the SHA moved.
 Claude verifies a ship by fetching `raw.githubusercontent.com/gahensley1/Hunt/<sha>/index.html` and
 hashing it — **the commit SHA is the only source that has never lied.** Pages agreed this time
 (same hash, immediately); it has not always.

@@ -136,7 +136,8 @@ if errorlevel 2 goto :cancelled
 
 git add -A
 git commit -m "%MSG%"
-if errorlevel 1 echo   (nothing new to commit - this usually means it was already committed)
+if errorlevel 1 echo   (commit reported nothing to do - VERIFY THIS BELOW. A stale
+if errorlevel 1 echo    .git\index.lock makes `git add` fail and produces this same line.)
 git push origin main
 if errorlevel 1 goto :pushfailed
 
@@ -147,16 +148,54 @@ git rev-parse HEAD
 echo   Origin HEAD:
 git rev-parse origin/main
 echo.
-echo   index.html COMMITTED:
+REM s66 (SS135): THIS BLOCK USED TO PRINT %HASH% - THE HASH OF THE FILE ON DISK -
+REM under the heading "COMMITTED", and read the buildmark off the working file too.
+REM It could therefore only ever confirm what you already knew. At s64 a stale
+REM .git\index.lock made `git add` fail, NOTHING was committed, and this block
+REM printed a flawless green proof anyway. It now reads the file BACK OUT OF THE
+REM COMMIT and compares. THE COMPARISON IS THE PROOF.
+REM PIPED, NOT REDIRECTED TO A TEMP FILE. The first cut of this wrote `git show`
+REM to %TEMP% and cmd answered "The filename, directory name, or volume label
+REM syntax is incorrect" - no file was produced, so the proof cried UNREADABLE on
+REM a ship that was perfectly fine. A pipe has no filename to get wrong.
+REM Both sides are hashed with line endings NORMALISED - `.gitattributes` carries
+REM `* text=auto`, so git may hand the blob back as CRLF while disk is LF. A raw
+REM hash would then differ after a PERFECTLY GOOD ship, and a gate that cries wolf
+REM gets forced past. See test\commithash.py.
+set "COMMITHASH="
+set "DISKHASH="
+for /f "delims=" %%H in ('git show HEAD:index.html ^| python "%~dp0test\commithash.py" -') do if not defined COMMITHASH set "COMMITHASH=%%H"
+for /f "delims=" %%H in ('python "%~dp0test\commithash.py" index.html') do if not defined DISKHASH set "DISKHASH=%%H"
+if "%COMMITHASH%"=="" set "COMMITHASH=UNREADABLE"
+if "%DISKHASH%"=="" set "DISKHASH=UNREADABLE"
+echo   index.html READ BACK OUT OF THE COMMIT:
+echo   %COMMITHASH%
+echo   index.html on disk (same normalising):
+echo   %DISKHASH%
+echo   index.html on disk (raw, as the gates above read it):
 echo   %HASH%
-echo   ^^ READ THIS LINE. Local==Origin only proves the push matched the commit.
-echo      It says NOTHING about which build was committed (s57, SS90.9).
+if "%COMMITHASH%"=="UNREADABLE" goto :notcommitted
+if not "%COMMITHASH%"=="%DISKHASH%" goto :notcommitted
+echo   THEY MATCH. This is the proof. Local==Origin is not - it only says the
+echo   push agreed with the commit, never which build the commit carried.
 echo.
-echo   Buildmark:
-findstr /c:"test build marker" index.html | findstr /r /c:">3[0-9][a-z]<"
+echo   Buildmark IN THE COMMIT:
+REM buildmark.py takes a path, so the commit is piped through a scratch file INSIDE
+REM the repo (gitignored) rather than %TEMP%, for the same reason as above.
+git show HEAD:index.html > "%~dp0test\.shipped.html" 2>nul
+for /f "delims=" %%B in ('python "%~dp0test\buildmark.py" "%~dp0test\.shipped.html"') do echo      %%B
 echo.
 echo   Pages can lag a minute. Ask Claude to hash Pages and probe the Worker
 echo   before recording it as live.
+goto :end
+
+:notcommitted
+echo.
+echo ***** THE COMMIT DOES NOT CARRY THE FILE ON DISK. NOTHING YOU TESTED IS LIVE.
+echo       The two hashes above disagree, so whatever was pushed, it was not this
+echo       build. COMMONEST CAUSE: a stale lock made `git add` fail silently.
+echo       Clear it:   del C:\Users\tony\Documents\Hunt\.git\index.lock
+echo       then run ship again. Do NOT record this as shipped.
 goto :end
 
 :pushfailed
