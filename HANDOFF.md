@@ -26,18 +26,17 @@ NOT CONTAIN THE HASH — WRITE ALL 64 CHARACTERS, never `abc123…`.**
 
 | file | bytes | sha256 | state |
 |---|---|---|---|
-| `index.html` | 4,399,045 | `97c75302c254719c662985962a687fcf8e81b73419c19e7239b2a24a1e728ac5` | **⚠ BUILT — `34u` / Verdigris `#4E9A87`. THE SIZE CEILING (§136): a 413 is no longer queued, a case is weighed before it is sent, and photographs are budgeted as they are added. STATIC green in the sandbox; ALL FIVE CASES PROVEN IN CHROME on `localhost:8010`. THE FULL BATTERY IS OWED ON HIS MACHINE BEFORE THE SHIP.**<br>`34t` shipped at s66, commit `886e0ea4`, hash `3854dfe9e596ce982e222b4eb0d8416f9cca7f7fc5bc692d44177a042af420c8`. |
+| `index.html` | 4,399,045 | `97c75302c254719c662985962a687fcf8e81b73419c19e7239b2a24a1e728ac5` | **✅ LIVE — `34u` / Verdigris `#4E9A87`, commit `6ec02bd5`. The size ceiling (§136). Battery PASSED ON HIS MACHINE on this exact hash before the ship. Verified against the COMMIT SHA and Pages — both return this hash, buildmark `34u`, colour `#4E9A87`, and every marker of §130 / §132 / §133 / §136 present.**<br>`34t` shipped at s66, commit `886e0ea4`. |
 | `sw.js` | 5,532 | `7a1682bd276e3bdba985270e7e36e5dea2f26ad696db53280d65a5c2cc80f45c` | ✅ LIVE. Network-first for the document, so it CANNOT pin a hunter to an old build. |
 | `HANDOFF.md` | *(this file)* | — | 🔴 **s61 edition — UNPUSHED until the next ship.** |
 | `HANDOFF-SPEC.md` | — | — | how the app works. Untouched at s61. |
 | `HANDOFF-HISTORY.md` | — | — | the build record. Untouched at s61. |
 | `worker-v2_6_13.js` | 99,952 | — | **THE LIVE WORKER, v2.6.13.** On disk, GITIGNORED, never committed. Untouched at s61. |
 | `test/` | — | — | `agents.py` (STATIC), `behaviour.py`, `session_checks.py`, `run.py`, `.last-battery`. |
-| `art/` | — | — | 🔴 **GITIGNORED AND ON ONE DISK.** The s61 enamel source lives ONLY at `art\plate-enamel-source-s61.png`; the copy to `Hunt-backups\art\` returned **Permission denied**. §1v forming; a manual copy is owed. |
+| `art/` | — | — | 🔴 **GITIGNORED AND ON ONE DISK.** s67: Bonnie's colour master and the four other supplied references ARE COPIED to `Hunt-backups\art\case-book\characters\` — the copy that failed at s61 succeeded this time. **THE REST OF `art\` IS STILL ONE-DISK.** The s61 enamel source lives ONLY at `art\plate-enamel-source-s61.png`; the copy to `Hunt-backups\art\` returned **Permission denied**. §1v forming; a manual copy is owed. |
 
-**BUILDMARK: `34u` / Verdigris `#4E9A87` IS WRITTEN INTO THE BUILD AND NOT YET DELIVERED. `34t` IS SPENT. A MARK IS
-SPENT ONLY WHEN A BUILD IS DELIVERED — IF THIS BUILD IS SCRAPPED, `34u` GOES BACK. NEXT AFTER IT IS
-`34v` / Magenta `#A8478F`.**
+**BUILDMARK: `34u` / Verdigris `#4E9A87` IS SPENT — DELIVERED AT s67. A MARK IS
+SPENT ONLY WHEN A BUILD IS DELIVERED — NEXT IS `34v` / Magenta `#A8478F`.**
 Rotation (§8i): a Cobalt `#3B6BA5` · b Ochre `#C88A2E` · c Rose `#B5566B` · d Amethyst `#7A5A98` ·
 e Verdigris `#4E9A87` · f Magenta `#A8478F` · g Lime `#7FA33C` · h Rust `#B4532A`, then wraps.
 **A MARK IS SPENT ONLY WHEN A BUILD IS DELIVERED.** The plates, the shadow and the filter fix all
@@ -48,6 +47,10 @@ TABLE.** At s61 the two disagreed about `34m` and the CSS was right.
 white background, killing a 48%-bright halo on every star point (§128). Battery passed on his machine
 on `27f588c5`, before the ship. **THE BADGE CAST SHADOW IS STILL `.47` AGAINST THE PLATES' `.52`/`.21`
 — THE OWNER ASKED FOR DARKER, CHOSE TO SHIP WITHOUT IT, AND IT IS OWED AT `34q`.**
+
+**WHAT SHIPPED AT s67:** `34u` — the size ceiling (§136), commit `6ec02bd5`. Battery green on
+`97c75302…` before the ship. **THE OWNER'S QUESTION — "could it have been the 48 images?" — IS WHAT
+FOUND THE REAL CAUSE.**
 
 **WHAT SHIPPED AT s66:** `34t` — §133, commit `886e0ea4`. Battery green on `3854dfe9…` before
 the ship. **`battery` NOW WRITES THE WHOLE RUN TO `test\.last-battery.log` AND PRINTS IT (§134).**
@@ -258,6 +261,55 @@ does not. **The next build proves it, and the printed transition is the proof to
 A TOOL THAT CANNOT SEE THE CHANGE ARE INDISTINGUISHABLE FROM THE OUTSIDE.** GATE 2 is a green tick
 that is an exit code, inverted. When a gate refuses, prove what it actually read before believing it.
 
+
+# 🟢 §137 — BONNIE IS A REAL DOG. THE DOCUMENT DESCRIBES HER, IT DOES NOT DESIGN HER. s67.
+
+**OWNER: *"we are not changing the character she exist as such and is sitting beside me now."***
+
+Claude had just presented two "contradictions for the owner to rule on" — a tail, and an ear
+colour. **NEITHER WAS A DECISION. ONE WAS A FACT ABOUT A LIVING ANIMAL AND THE OTHER WAS A
+MISREADING OF LIGHT.** The standing rule now written into `CHARACTER-bonnie.md`: **where the
+document and the dog disagree, THE DOG WINS** — then the art, then the words.
+
+- **THE "NO VISIBLE TAIL — LOCKED" LINE IS STRUCK.** It was written when the only art was
+  bust-framed: **it recorded the absence of a reference and mistook it for a fact about the dog.**
+  She has a long, raised, curving tail, in two of the new references. Checked: that claim appears
+  nowhere else in `case-book\`.
+- **THE EAR FIGURES NEVER CONFLICTED.** The master is lit from the front, so `#5E3728` is the
+  unlit ear; the written terracotta `#A85C42` is the same ear with a lamp behind it, which that
+  section already said. Both stand. One real error: her coat was called **"fawn"** — **it is a warm
+  grizzled brown**, corrected.
+
+## §137.1 FIVE REFERENCES SAVED, NONE OF WHICH EXISTED ON DISK
+
+All five were new — **no hash matched anything already in `art\`** — so all five were one chat
+away from being lost (§1v, the map maker). Saved to `art\case-book\characters\` and copied to
+`Hunt-backups\`.
+
+**`BONNIE-COLOUR-REFERENCE-baker-street-frame.png` IS THE COLOUR MASTER.** Owner: *"her coloring
+is in the brass frame."* Palette measured off it — dome `#3D271A`, muzzle `#886350`, unlit inner
+ear `#5E3728`, iris `#70493A`, nose `#57372A`, deerstalker `#624537`.
+
+**THE FIRST SAMPLING PASS WAS THROWN AWAY.** It guessed coordinates and returned a catchlight for
+an iris and a value lighter than the muzzle for a "cheek shadow". **The crop was rendered and
+LOOKED AT, then the features sampled** — §128, and the reason `BONNIE-palette-s67.png` exists.
+
+## §137.2 SHE IS NOT A YOUNG DOG, AND THE WHITE IS HOW YOU KNOW
+
+Owner: *"the white is important she isnt young but the illustration to see it best."* The greyed
+muzzle, brow patches, chin and throat are **AN AGE MARK, NOT A HIGHLIGHT** — muzzle `#937263`,
+nose bridge `#98765B`, brow `#896B60`, brightest face values `#DFCBB8`-`#E9D7C3`. **A value shift
+inside her own warm brown, never a cool grey, never pure white. IT MUST NEVER BE LIT AWAY, EVENED
+OUT OR "CORRECTED" — a render that returns her to an even brown coat has drawn a younger dog.**
+This sits with the ear set as an identity mark. It reads clearest in the pencil turnaround.
+
+## §137.3 A REQUIRED LINE, RECORDED BUT NOT PLACED
+
+**"THERE IS SOMETHING IN THE MIST" IS TO BE SPOKEN IN THE WEB SERIES**, verbatim, as an homage to
+*The Mist* (owner, s67). It is **not** in the Halloween draft and no episode has been chosen.
+Recorded in `art\case-book\README.md` under CANON so it cannot be lost; **placing it is a writing
+decision and is the owner's.** It must land as spoken dialogue, not narration or a title card, or
+it is not the homage.
 
 # 🔴 §136 — IT WAS THE SIZE. THE OWNER ASKED THE QUESTION THAT FOUND IT. `34u`, s67.
 
