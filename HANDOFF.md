@@ -26,17 +26,18 @@ NOT CONTAIN THE HASH — WRITE ALL 64 CHARACTERS, never `abc123…`.**
 
 | file | bytes | sha256 | state |
 |---|---|---|---|
-| `index.html` | 4,399,045 | `97c75302c254719c662985962a687fcf8e81b73419c19e7239b2a24a1e728ac5` | **✅ LIVE — `34u` / Verdigris `#4E9A87`, commit `6ec02bd5`. The size ceiling (§136). Battery PASSED ON HIS MACHINE on this exact hash before the ship. Verified against the COMMIT SHA and Pages — both return this hash, buildmark `34u`, colour `#4E9A87`, and every marker of §130 / §132 / §133 / §136 present.**<br>`34t` shipped at s66, commit `886e0ea4`. |
+| `index.html` | 4,399,531 | `dd6be1e5e1ada91420575114fbe868ba8bf63c3b3c774978e6f82856350eb03b` | **⚠ BUILT — `34v` / Magenta `#A8478F`. `SHARED_MAX_BYTES` 2,000,000 → 3,900,000 to match Worker **v2.6.15** (§138). STATIC green in the sandbox; **FIFTY PHOTOGRAPHS PROVEN TO FIT IN CHROME.** THE FULL BATTERY IS OWED ON HIS MACHINE BEFORE THE SHIP.**<br>`34u` shipped at s67, commit `6ec02bd5`, hash `97c75302c254719c662985962a687fcf8e81b73419c19e7239b2a24a1e728ac5`. |
 | `sw.js` | 5,532 | `7a1682bd276e3bdba985270e7e36e5dea2f26ad696db53280d65a5c2cc80f45c` | ✅ LIVE. Network-first for the document, so it CANNOT pin a hunter to an old build. |
 | `HANDOFF.md` | *(this file)* | — | 🔴 **s61 edition — UNPUSHED until the next ship.** |
 | `HANDOFF-SPEC.md` | — | — | how the app works. Untouched at s61. |
 | `HANDOFF-HISTORY.md` | — | — | the build record. Untouched at s61. |
-| `worker-v2_6_13.js` | 99,952 | — | **THE LIVE WORKER, v2.6.13.** On disk, GITIGNORED, never committed. Untouched at s61. |
+| `worker-v2_6_15.js` | — | — | **THE LIVE WORKER, v2.6.15** (§138). On disk, GITIGNORED, NEVER COMMITTED. `MAX_VALUE` 2 MB → 3.75 MiB. **`worker-v2_6_14.js` IS A DEAD END — NEVER DEPLOY IT** (4 MiB threw a 500 at the boundary). `_6_13` kept as the rollback. |
 | `test/` | — | — | `agents.py` (STATIC), `behaviour.py`, `session_checks.py`, `run.py`, `.last-battery`. |
 | `art/` | — | — | 🔴 **GITIGNORED AND ON ONE DISK.** s67: Bonnie's colour master and the four other supplied references ARE COPIED to `Hunt-backups\art\case-book\characters\` — the copy that failed at s61 succeeded this time. **THE REST OF `art\` IS STILL ONE-DISK.** The s61 enamel source lives ONLY at `art\plate-enamel-source-s61.png`; the copy to `Hunt-backups\art\` returned **Permission denied**. §1v forming; a manual copy is owed. |
 
-**BUILDMARK: `34u` / Verdigris `#4E9A87` IS SPENT — DELIVERED AT s67. A MARK IS
-SPENT ONLY WHEN A BUILD IS DELIVERED — NEXT IS `34v` / Magenta `#A8478F`.**
+**BUILDMARK: `34v` / Magenta `#A8478F` IS WRITTEN INTO THE BUILD AND NOT YET DELIVERED. `34u` IS SPENT. A MARK IS
+SPENT ONLY WHEN A BUILD IS DELIVERED — IF THIS BUILD IS SCRAPPED, `34v` GOES BACK. NEXT AFTER IT IS
+`34w` / Lime `#7FA33C`.**
 Rotation (§8i): a Cobalt `#3B6BA5` · b Ochre `#C88A2E` · c Rose `#B5566B` · d Amethyst `#7A5A98` ·
 e Verdigris `#4E9A87` · f Magenta `#A8478F` · g Lime `#7FA33C` · h Rust `#B4532A`, then wraps.
 **A MARK IS SPENT ONLY WHEN A BUILD IS DELIVERED.** The plates, the shadow and the filter fix all
@@ -261,6 +262,83 @@ does not. **The next build proves it, and the printed transition is the proof to
 A TOOL THAT CANNOT SEE THE CHANGE ARE INDISTINGUISHABLE FROM THE OUTSIDE.** GATE 2 is a green tick
 that is an exit code, inverted. When a gate refuses, prove what it actually read before believing it.
 
+
+# 🔴 §138 — THE CAP WAS THE PROBLEM. WORKER v2.6.15, AND FIFTY PHOTOGRAPHS FIT. `34v`, s67.
+
+**THE OWNER'S REPORT: "editing more than twenty five images in the submissions, I cannot reach all
+fifty... even if I delete one, it doesn't repopulate... I'm not sure what's publishing either."**
+
+**NOTHING WAS BROKEN ON THE DESK. 25 WAS ALL THAT EXISTED.** Read off the live Worker, case
+`hunt:335785` "Forsyth Park Hunt" (Piggy's rebuild, created 03:08 UTC, deeded 03:10):
+
+| | |
+|---|---|
+| body | 1,723,941 B (1.64 MB) |
+| tiles | **25**, every one a photo |
+| photo bytes | median **71,879** each, max 84,939 |
+| clue text | **0 of 25** |
+| hints | **0 of 25** |
+
+At that median, **30 photographs was already 2.16 MB — over the old 2 MB cap. FIFTY WAS NEVER
+STORABLE.** Everything past ~28 was refused 413, silently, before §136 shipped. `curEditCase` reads
+`hunt:<code>` **from the server**, so the Desk was showing the truth; `renderBuild` draws every tile
+it is given and there is no 25 anywhere in the code. **AND `subAccept` PUBLISHES THE SERVER COPY —
+so 25 tiles is what would have gone live.**
+
+## §138.1 THE CHEAP FIX WAS THE RIGHT ONE
+
+Splitting photographs out of the case body was planned and **NOT DONE.** The blast radius: 9 write
+sites, 5 read sites, `purgeCase` going from deleting 1 key to 26, `makeItYours` cloning them, and
+both data shapes readable for ever. **AND IT WOULD HAVE MADE THE APP WORSE OFFLINE** — today one
+body carries its photographs, so a hunter who has the case has everything; split, that is 25 extra
+fetches in a park with bad signal, which is the exact situation this product lives in. **THE
+ARCHITECTURE CHANGE REMAINS AVAILABLE AND REMAINS UNNECESSARY.**
+
+`MAX_VALUE` was **our own number**, in our own Worker, with the comment *"2 MB per entry (photo
+boards fit comfortably)"* — an assumption, and a wrong one.
+
+## §138.2 v2.6.14 IS A DEAD END. NEVER DEPLOY IT.
+
+The first pass set `MAX_VALUE = 4 MiB`. **A body of EXACTLY 4,194,304 B then returned HTTP 500
+"error code: 1101" — three times out of three — while 4,150,000 B wrote fine.** The guard is
+`v.length > MAX_VALUE`, so a body of exactly the cap passes the check and the store underneath
+throws.
+
+**THAT IS THE DANGEROUS FAILURE, NOT AN UNTIDY ONE: a 500 is a 5xx, and §136 deliberately QUEUES
+AND RETRIES 5xx.** Such a case would have retried for ever. **v2.6.15 sets the cap at 3.75 MiB
+(3,932,160 B), well clear of the throw, so an over-large body always gets a clean 413 — which §136
+refuses to queue.**
+
+## §138.3 MEASURED ON THE DEPLOYED v2.6.15
+
+| body | answer |
+|---|---|
+| 3,593,950 B (fifty of her photographs) | **200** |
+| 3,932,160 B (exactly the cap) | **200** — the size that threw on v2.6.14 |
+| 3,932,161 B (one byte over) | clean **413** |
+| 4,194,304 B | clean **413**, no exception |
+
+Client `SHARED_MAX_BYTES` 2,000,000 → **3,900,000**, deliberately **32,160 B under the Worker** —
+headers and the URL ride with the body. **NEVER RAISE IT TO MEET THE WORKER'S NUMBER EXACTLY.**
+
+**PROVEN IN CHROME on `34v`:** fifty photographs at the real measured median were added through the
+live `onFileChosen` path — **50 tiles, 3,596,617 bytes, accepted**, one 80% warning, no refusal.
+Ceiling is now ~54 of her photographs. *(The run was driving on to 52 when Claude nulled
+`State.build` from another call and stalled it at 51 — Claude's interference, not the code. The
+50-tile result was recorded before that.)*
+
+## §138.4 STILL TRUE, AND WORSE THAN THE COUNT
+
+**CASE 335785 HAS NO CLUE TEXT AND NO HINTS ON ANY OF ITS 25 TILES.** Whatever the photo limit, it
+cannot be accepted as it stands — a hunter would receive 25 photographs and no instruction
+(cf. §121, the 35 tiles that shipped reading "test hint"). **THE OWNER MUST NOT ACCEPT IT UNTIL THE
+CLUES ARE WRITTEN.**
+
+**AND ONE THING DOES NOT ADD UP.** The owner reports the builder was warned at **48** photographs.
+On `34u` the warning fires at 80% of 2 MB and the block at 2 MB — with her photographs that is a
+warning near 22 and a hard stop near 28. **SHE SHOULD NOT HAVE REACHED 48.** Either she is on an
+older build or a cached copy, or those 48 were much smaller than the 25 that stored.
+**UNRESOLVED — ask her what buildmark is at the foot of her screen.**
 
 # 🟢 §137 — BONNIE IS A REAL DOG. THE DOCUMENT DESCRIBES HER, IT DOES NOT DESIGN HER. s67.
 

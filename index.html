@@ -283,7 +283,7 @@
     #notify-card .nc-txt{font-size:14px}
   }
   #buildmark{margin:4px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#4E9A87;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#A8478F;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -1409,7 +1409,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">34u</p>
+      <p id="buildmark" aria-label="test build marker">34v</p>
     </div>
   </section>
 
@@ -1980,13 +1980,19 @@ function _sig(ms, outer){
 
 /* ---------- tiny storage layer (worker sync → window.storage → memory) ---------- */
 const QUEUE_MAX_AGE = 14*24*60*60*1000;   // KEPT FOR REFERENCE ONLY - nothing is dropped by age (133)
-/* MEASURED, NOT GUESSED (s67, 136). The deployed Worker takes a body of exactly
-   2,097,152 bytes and refuses 2,150,400 with 413 "too large". The margin below is
-   deliberate: the fetch body is the JSON, but headers and the URL ride with it.
-   A CLUE PHOTO IS 320x320 JPEG q0.72 STORED INLINE AS BASE64 - about 25-40 KB each
-   once base64 inflates it - SO A 48-PHOTO CASE LANDS AT 1.5-2 MB AND SITS ON THIS
-   LINE. That is what happened to case 784051. */
-const SHARED_MAX_BYTES = 2000000;
+/* MEASURED, NOT GUESSED, TWICE (s67, 136 and 138). Worker v2.6.15 takes a body of
+   exactly 3,932,160 bytes and refuses 3,932,161 with a clean 413 "too large".
+   THE CAP WAS 2 MB UNTIL s67 AND THAT WAS THE WHOLE BUG: a clue photo is 320x320
+   JPEG q0.72 stored INLINE as base64, and of foliage or brick that is 45-85 KB
+   EACH - so case 335785 (Forsyth Park, 50 intended) stuck at 25 photographs and
+   every write past it was refused in silence. Fifty of those measure 3,593,950 B
+   and now fit.
+   THE MARGIN BELOW IS DELIBERATE and must never be raised to meet the Worker's
+   number exactly: the fetch body is the JSON, but headers and the URL ride with
+   it. v2.6.14 briefly set the Worker to 4 MiB and a body of EXACTLY 4 MiB threw a
+   500 rather than refusing - and a 500 is a 5xx, which this client QUEUES AND
+   RETRIES FOR EVER. Stay under the cap and the answer is always a clean 413. */
+const SHARED_MAX_BYTES = 3900000;
 const Store = {
   ok: (typeof window!=="undefined" && window.storage && typeof window.storage.set==="function"),
   ls: (function(){ try{ return typeof localStorage!=="undefined" && localStorage; }catch(e){ return null; } })(),
@@ -7182,7 +7188,7 @@ async function _finishBuild(){
   if(State.build && State.build.desk){ try{ await deskAdd(code); }catch(e){} }
   // Agency Case submission — builder-initiated territorial review queue
   if(_tooBig){
-    toast("This case is too large to send \u2014 "+Math.round(_payload.length/100000)/10+" MB against a limit of 2 MB. It is safe on your device. Remove a few photographs and file it again.", 6200);
+    toast("This case is too large to send \u2014 "+Math.round(_payload.length/100000)/10+" MB against a limit of "+Math.round(SHARED_MAX_BYTES/100000)/10+" MB. It is safe on your device. Remove a few photographs and file it again.", 6200);
   } else if(!_landed){
     toast("This case is safe on your device, but the Company has not received it. It cannot be filed until it has \u2014 try again when you have signal.", 5200);
   }
