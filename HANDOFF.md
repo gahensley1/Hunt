@@ -31,7 +31,7 @@ NOT CONTAIN THE HASH — WRITE ALL 64 CHARACTERS, never `abc123…`.**
 | `HANDOFF.md` | *(this file)* | — | **s68 edition. §139 added; §A's DELETE line struck; §0.3 superseded by §139.6.** UNPUSHED until this ship. |
 | `HANDOFF-SPEC.md` | — | — | how the app works. Untouched at s61. |
 | `HANDOFF-HISTORY.md` | — | — | the build record. Untouched at s61. |
-| `worker-v2_6_15.js` | — | — | **THE LIVE WORKER, v2.6.15** (§138). On disk, GITIGNORED, NEVER COMMITTED. `MAX_VALUE` 2 MB → 3.75 MiB. **`worker-v2_6_14.js` IS A DEAD END — NEVER DEPLOY IT** (4 MiB threw a 500 at the boundary). `_6_13` kept as the rollback. |
+| `worker-v2_6_16.js` | — | — | **THE LIVE WORKER, v2.6.16** (§140) — SOFT DELETE. Deployed and externally verified at s68. On disk, GITIGNORED, NEVER COMMITTED. Adds a tombstone on DELETE; `MAX_VALUE` still 3.75 MiB. **`_6_15` kept as the rollback; `worker-v2_6_14.js` IS A DEAD END — NEVER DEPLOY IT** (4 MiB threw a 500 at the boundary). |
 | `test/` | — | — | `agents.py` (STATIC), `behaviour.py`, `session_checks.py`, `run.py`, `.last-battery`. |
 | `art/` | — | — | 🔴 **GITIGNORED AND ON ONE DISK.** s67: Bonnie's colour master and the four other supplied references ARE COPIED to `Hunt-backups\art\case-book\characters\` — the copy that failed at s61 succeeded this time. **THE REST OF `art\` IS STILL ONE-DISK.** The s61 enamel source lives ONLY at `art\plate-enamel-source-s61.png`; the copy to `Hunt-backups\art\` returned **Permission denied**. §1v forming; a manual copy is owed. |
 
@@ -271,6 +271,55 @@ does not. **The next build proves it, and the printed transition is the proof to
 A TOOL THAT CANNOT SEE THE CHANGE ARE INDISTINGUISHABLE FROM THE OUTSIDE.** GATE 2 is a green tick
 that is an exit code, inverted. When a gate refuses, prove what it actually read before believing it.
 
+
+# 🟢 §140 — SOFT DELETE. A DESTROYED CASE IS RECOVERABLE NOW. WORKER v2.6.16, s68.
+
+**NO BUILDMARK SPENT. `index.html` UNTOUCHED — the delete path is unchanged for players.** This is a
+Worker-only change; `34v` / Magenta stays live and `34w` / Lime stays next.
+
+## §140.1 WHAT IT DOES AND WHY
+
+**Before v2.6.16, a `DELETE /kv/` destroyed the row outright and it was gone for ever.** §139.3 proved
+how sharp that was — a mistaken DELETE erased a live case, recovered only because a copy happened to be
+in scratch. And §139.4: builder-built cases are backed up NOWHERE (the weekly Action snapshots archive
+holdings only). Open deletion + no net = irreversible loss of a real builder's work.
+
+**v2.6.16 makes DELETE a soft delete.** It copies the row to `gone:<key>` — `{orig, deletedAt, v}` —
+before removing it. Recovery is a curator read of `gone:<key>` and a PUT of its `.v` back to `<key>`.
+Three safeguards, all deliberate:
+- **BEST-EFFORT.** The tombstone save is wrapped in try/catch and an over-cap body is skipped; whatever
+  happens, the `DELETE FROM kv` still runs. A tombstone must NEVER block the delete it protects — the
+  v2.6.14 lesson (no throw at a boundary), and the app's own "a push never fails its write" pattern.
+- **`gone:` IS CURATOR-ONLY** in every direction through `/kv/` — a player cannot read, overwrite or
+  purge another builder's deleted work. Written only server-side by the DELETE branch, never via `/kv/`.
+- **SELF-LIMITING.** `scheduled()` purges `gone:` rows older than `GONE_KEEP_DAYS = 30`. A tombstone is
+  a net, not an archive.
+
+## §140.2 PROVEN ON THE DEPLOYED v2.6.16
+
+External probes (sandbox, no token — Claude has none and must not):
+- Root reads **v2.6.16**, three cache-busted probes.
+- PUT a throwaway case → 200; **DELETE → 200; the original then GETs 404** — the delete still works.
+- `gone:<key>` GET and DELETE without a token → **403** each — the gate holds.
+- DELETE of a non-existent key → clean **200**, no tombstone, no error.
+
+Owner-confirmed (one authenticated GET from his machine; the token never reached Claude): the tombstone
+held the **full original body** — `{"orig":"hunt:990016test","deletedAt":...,"v":"...the case..."}`.
+**The recovery loop is proven end to end.** The test tombstone is left to the 30-day sweep.
+
+## §140.3 🔴 A SECRET WAS EXPOSED IN CHAT AT s68
+
+During the owner-side check the **curator token was pasted into the conversation.** Claude did not store
+or use it and it is NOT written anywhere (least of all here — this file is the public repo). **The owner
+was advised to ROTATE it:** the Cloudflare `CURATOR_TOKEN` secret, the matching GitHub Actions secret in
+Hunt-backups (or the Monday backup 403s), and the word he types into the Curator's Desk. Nothing ships
+in the client, so no redeploy of `index.html`. **Recorded as OWED until confirmed rotated.**
+
+## §140.4 STILL OPEN AFTER §140
+- **ROTATE THE CURATOR TOKEN** (§140.3) — exposed in chat, owed.
+- The soft delete protects against loss but does not change that builder cases still aren't in the weekly
+  snapshot. The tombstone is a 30-day net, not a backup. Extending `backup.py` remains available and was
+  judged lower value than this (owner call, s68).
 
 # 🟢 §139 — THE PHONE CAN SEE THE WORKING COPY, AND THE CAP IS PROVEN AT 48. s68.
 
