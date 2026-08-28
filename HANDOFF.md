@@ -1,5 +1,5 @@
 # HANDOFF.md — LIVE STATE, RULES AND WHAT IS OPEN
-### **SESSION-61 EDITION (Aug 12 2026). SUPERSEDES THE s60 EDITION AND THE ENTIRE PRIOR CHAIN.**
+### **SESSION-68 EDITION (Aug 27 2026). SUPERSEDES THE s61 EDITION AND THE ENTIRE PRIOR CHAIN.**
 
 ### 🔴 THIS IS ONE OF THREE FILES. THE SET IS THE DOCUMENT; NO ONE FILE IS.
 ### **READ THIS FILE IN FULL, EVERY SESSION.** It is the state of the world, the rules that bite,
@@ -26,18 +26,17 @@ NOT CONTAIN THE HASH — WRITE ALL 64 CHARACTERS, never `abc123…`.**
 
 | file | bytes | sha256 | state |
 |---|---|---|---|
-| `index.html` | 4,399,531 | `dd6be1e5e1ada91420575114fbe868ba8bf63c3b3c774978e6f82856350eb03b` | **⚠ BUILT — `34v` / Magenta `#A8478F`. `SHARED_MAX_BYTES` 2,000,000 → 3,900,000 to match Worker **v2.6.15** (§138). STATIC green in the sandbox; **FIFTY PHOTOGRAPHS PROVEN TO FIT IN CHROME.** THE FULL BATTERY IS OWED ON HIS MACHINE BEFORE THE SHIP.**<br>`34u` shipped at s67, commit `6ec02bd5`, hash `97c75302c254719c662985962a687fcf8e81b73419c19e7239b2a24a1e728ac5`. |
+| `index.html` | 4,399,531 | `dd6be1e5e1ada91420575114fbe868ba8bf63c3b3c774978e6f82856350eb03b` | **✅ LIVE — `34v` / Magenta `#A8478F`, commit `6cc826d8`. `SHARED_MAX_BYTES` 2,000,000 → 3,900,000 to match Worker **v2.6.15** (§138). Full battery PASSED ON HIS MACHINE on this exact hash BEFORE the ship — STATIC clean, BEHAVIOUR 65/65, SESSION 21/21, and **Claude read the whole log himself off `test\.last-battery.log` (§134), no pasting.** Verified against the COMMIT SHA: same hash, buildmark `34v`, `SHARED_MAX_BYTES = 3900000` in the committed file.**<br>`34u` shipped at s67, commit `6ec02bd5`, hash `97c75302c254719c662985962a687fcf8e81b73419c19e7239b2a24a1e728ac5`. |
 | `sw.js` | 5,532 | `7a1682bd276e3bdba985270e7e36e5dea2f26ad696db53280d65a5c2cc80f45c` | ✅ LIVE. Network-first for the document, so it CANNOT pin a hunter to an old build. |
-| `HANDOFF.md` | *(this file)* | — | 🔴 **s61 edition — UNPUSHED until the next ship.** |
+| `HANDOFF.md` | *(this file)* | — | **s68 edition. §139 added; §A's DELETE line struck; §0.3 superseded by §139.6.** UNPUSHED until this ship. |
 | `HANDOFF-SPEC.md` | — | — | how the app works. Untouched at s61. |
 | `HANDOFF-HISTORY.md` | — | — | the build record. Untouched at s61. |
 | `worker-v2_6_15.js` | — | — | **THE LIVE WORKER, v2.6.15** (§138). On disk, GITIGNORED, NEVER COMMITTED. `MAX_VALUE` 2 MB → 3.75 MiB. **`worker-v2_6_14.js` IS A DEAD END — NEVER DEPLOY IT** (4 MiB threw a 500 at the boundary). `_6_13` kept as the rollback. |
 | `test/` | — | — | `agents.py` (STATIC), `behaviour.py`, `session_checks.py`, `run.py`, `.last-battery`. |
 | `art/` | — | — | 🔴 **GITIGNORED AND ON ONE DISK.** s67: Bonnie's colour master and the four other supplied references ARE COPIED to `Hunt-backups\art\case-book\characters\` — the copy that failed at s61 succeeded this time. **THE REST OF `art\` IS STILL ONE-DISK.** The s61 enamel source lives ONLY at `art\plate-enamel-source-s61.png`; the copy to `Hunt-backups\art\` returned **Permission denied**. §1v forming; a manual copy is owed. |
 
-**BUILDMARK: `34v` / Magenta `#A8478F` IS WRITTEN INTO THE BUILD AND NOT YET DELIVERED. `34u` IS SPENT. A MARK IS
-SPENT ONLY WHEN A BUILD IS DELIVERED — IF THIS BUILD IS SCRAPPED, `34v` GOES BACK. NEXT AFTER IT IS
-`34w` / Lime `#7FA33C`.**
+**BUILDMARK: `34v` / Magenta `#A8478F` IS SPENT — DELIVERED AT s67. A MARK IS
+SPENT ONLY WHEN A BUILD IS DELIVERED — NEXT IS `34w` / Lime `#7FA33C`.**
 Rotation (§8i): a Cobalt `#3B6BA5` · b Ochre `#C88A2E` · c Rose `#B5566B` · d Amethyst `#7A5A98` ·
 e Verdigris `#4E9A87` · f Magenta `#A8478F` · g Lime `#7FA33C` · h Rust `#B4532A`, then wraps.
 **A MARK IS SPENT ONLY WHEN A BUILD IS DELIVERED.** The plates, the shadow and the filter fix all
@@ -52,6 +51,10 @@ on `27f588c5`, before the ship. **THE BADGE CAST SHADOW IS STILL `.47` AGAINST T
 **WHAT SHIPPED AT s67:** `34u` — the size ceiling (§136), commit `6ec02bd5`. Battery green on
 `97c75302…` before the ship. **THE OWNER'S QUESTION — "could it have been the 48 images?" — IS WHAT
 FOUND THE REAL CAUSE.**
+
+**ALSO SHIPPED AT s67:** `34v` — the client cap following Worker v2.6.15 (§138), commit
+`6cc826d8`. **🔴 THE HANDOFF IS UNPUSHED FROM THIS POINT: §137, §138 and these §0 corrections all
+went in AFTER that commit. Push them first thing.**
 
 **WHAT SHIPPED AT s66:** `34t` — §133, commit `886e0ea4`. Battery green on `3854dfe9…` before
 the ship. **`battery` NOW WRITES THE WHOLE RUN TO `test\.last-battery.log` AND PRINTS IT (§134).**
@@ -87,7 +90,13 @@ never gate 2. **GATE 3 IS THE ONE THAT BITES** — it refuses when the battery l
 different hash, which is exactly its job. **RUN `battery` BEFORE `ship`, NEVER `/force` PAST IT.**
 `33e`, `33f` and `33g` all shipped untested by forcing this gate.
 
-### §0.3 — THE THREE OPEN ITEMS AT s61 CLOSE, IN ORDER
+### §0.3 — 🔴 SUPERSEDED AT s68. **THE LIVE OPEN LIST IS §139.6.**
+Kept only as the s61 record. **A RULE LIVES IN ONE FILE AND A LIST LIVES IN ONE SECTION (§0.2)** —
+do not maintain both. Of the three below: **1 is withdrawn** (§127, gate 2 is not broken, §0),
+**2 stands** (§139.6 item 8), **3 stands**. **The phone preview that sat under “also standing” is
+CLOSED at s68 (§139.1).**
+
+#### (the s61 list, preserved)
 
 1. **`ship` GATE 2** — broken, forces every ship (§127). Two-line fix, owner's file, permission asked twice.
 2. **THE ART IS ON ONE DISK** — `art\` is gitignored and the backup copy is permission-denied.
@@ -262,6 +271,142 @@ does not. **The next build proves it, and the printed transition is the proof to
 A TOOL THAT CANNOT SEE THE CHANGE ARE INDISTINGUISHABLE FROM THE OUTSIDE.** GATE 2 is a green tick
 that is an exit code, inverted. When a gate refuses, prove what it actually read before believing it.
 
+
+# 🟢 §139 — THE PHONE CAN SEE THE WORKING COPY, AND THE CAP IS PROVEN AT 48. s68.
+
+**NO BUILDMARK SPENT. `index.html` WAS NOT TOUCHED THIS SESSION.** `34w` / Lime `#7FA33C` is still
+next. Everything below is measurement, one new file in `Hunt-backups\`, and corrections to this
+document.
+
+## §139.1 🔴 THE PHONE PREVIEW WORKS. §112.3 IS CLOSED.
+
+**Open item 3 — "every visual change still has to be SHIPPED to be seen on the iPhone" — is done.**
+The owner loaded the working copy on his iPhone 15 over wifi and reported it looked fine.
+
+```
+powershell -ExecutionPolicy Bypass -File C:\Users\tony\Documents\Hunt-backups\serve-phone.ps1 -Port 8123
+```
+Then on the phone, same wifi: **`http://192.168.12.179:8123/index.html`** (his LAN address at s68;
+the script prints the current one on startup, so it does not go stale).
+
+**`serve.ps1` IS UNTOUCHED AND STILL WORKS.** Two new files sit beside it:
+- **`serve-phone.ps1` — USE THIS ONE.** No administrator needed.
+- `serve-lan.ps1` — **A DEAD END, KEEP ONLY AS THE RECORD OF WHY.** It is `serve.ps1` with the
+  binding widened, and it demands an Administrator window. Move it to `_to_delete\` when convenient.
+
+**WHY THE DEAD END HAPPENED, SO IT IS NOT REPEATED.** `serve.ps1` and `serve-lan.ps1` use .NET's
+`HttpListener`, which is a front end to the Windows HTTP stack. **Binding http.sys to anything other
+than localhost requires a URL reservation, and making one requires elevation — there is no way to ask
+around it.** `serve-phone.ps1` opens a plain `TcpListener` socket and speaks the little HTTP the job
+needs. An ordinary user may open a socket. Same result, no elevation.
+
+**TWO THINGS THAT WILL BITE THE NEXT SESSION:**
+1. **HTTPS-ONLY ON THE PHONE REFUSES IT OUTRIGHT** — the local server has no certificate and cannot
+   have one for a bare IP. The setting must be off on the phone while previewing. Search `HTTPS` in
+   iOS Settings rather than guessing the menu path, which moves between versions.
+2. **IT IS READABLE BY ANYTHING ON THE WIFI while it runs** — read-only, never writes, refuses any
+   path resolving outside `Hunt\`. Fine at home. Not on cafe or hotel wifi.
+
+## §139.2 THE CAP: 48 TILES BUILD, STORE AND READ BACK. THE CEILING IS 54.
+
+The owner asked whether the 25-tile ceiling had regressed. **It has not.** Measured on live `34v`,
+driving the exact guard out of `onFileChosen` with tiles weighing Piggy's measured median 71,879 B:
+
+| tiles | body | verdict |
+|---|---|---|
+| 25 | 1,797,080 B | — and case 335785 really weighs 1,723,941 B |
+| 48 | 3,450,320 B | **accepted** |
+| 54 | 3,881,600 B | accepted — the ceiling |
+| 55 | — | refused |
+
+The "nearly full" warning fires at **44**. **25 WAS NEVER A TILE LIMIT — IT WAS 2 MB**, and her case
+sits within 74 KB of the old cap, which is the whole explanation.
+
+**AND THE ROUND TRIP WAS PROVEN, NOT INFERRED.** A real 48-tile body, 3,450,399 B, was PUT to the
+deployed Worker → **200**, read back **byte-identical, 48 tiles, every `src` intact**. The boundary
+re-confirmed on v2.6.15: exactly 3,932,160 B → 200 · one byte over → clean **413** · 4 MiB → clean
+**413**. **NO 5xx AT ANY SIZE**, which is what matters — §136 queues and retries 5xx for ever, and
+that was v2.6.14's trap. The probe key was deleted afterwards and its absence confirmed.
+
+**STILL TRUE AND STILL BLOCKING (§138.4): CASE 335785 HAS NO CLUE TEXT AND NO HINT ON ANY OF ITS 25
+TILES.** Re-read off the live Worker at s68 — unchanged, still deeded. **It must not be accepted.**
+And raising the cap does not restore the photographs that were refused; **they were never stored, so
+they must be added again.** They will stick this time, up to 54.
+
+## §139.3 🔴 §A IS WRONG ABOUT DELETE, AND THE WRONG LINE COST A LIVE CASE
+
+**§A records, under "What v2.3 fixed": *"`DELETE` requires it on EVERY key."* THAT IS FALSE OF THE
+LIVE WORKER AND THE LINE IS STRUCK.** v2.6.15's own source says the opposite, and says why:
+
+> *"only the curator may withdraw an archive holding. A builder's own case, its submissions and its
+> correspondence stay freely deletable, as in v2.2."*
+
+**THE GATE IS SCOPED ON PURPOSE.** `cold:` / `coldstat:`, `push:` and `map:` require the token.
+**`hunt:`, `profile:`, `sub:`, `res:`, `reply:` and `msg:` are open, deliberately** — a builder must be
+able to delete their own case and there is no per-user auth to tell a builder from anyone else. It is
+the same door as PUT (§A hole 1), **and §A's "do not quickly fix it" applies here too.**
+
+**🔴 WHAT IT COST.** Believing §A, Claude fired `DELETE /kv/hunt:335785` at a LIVE case expecting a
+403. It returned `200 ok` and **destroyed Piggy's Forsyth Park Hunt.** It was restored byte-identical
+— `171a10d638553973a8d2bd2e2d3825b0cb413f929d99eb0a7234eeabecaa8d90`, 1,723,941 B, 25 tiles, deeded
+flag and both timestamps intact — **only because the body happened to be in scratch from a probe
+minutes earlier.** Nothing was designed to save it.
+
+**THE RULES THAT FOLLOW:**
+- **NEVER AIM A DESTRUCTIVE METHOD AT A REAL KEY.** Probe auth with a key that does not exist. The
+  response code answers the question either way.
+- **A DOC THAT CONTRADICTS THE SOURCE IS WORSE THAN NO DOC** (§0.2). §A carried a v2.3 claim as
+  present tense for nine versions. **READ THE WORKER SOURCE ON DISK; IT IS THERE.**
+
+## §139.4 🔴 THERE IS NO BACKUP BENEATH ANY OF THIS. THE CLERK IS 21 DAYS DARK.
+
+**The newest snapshot is `Hunt-backups\snapshots\archive-2026-08-06.json`. Nothing since 6 August.**
+§111 declared the clerk fixed at s59 — **it has not written a file since, so the fix has never been
+observed to work.**
+
+**AND IT WOULD NOT HAVE SAVED THIS CASE ANYWAY.** `backup.py` snapshots only the `hunt:` records that
+`cold:index` points at — accepted territories. **A USER-BUILT CASE LIKE PIGGY'S IS BACKED UP NOWHERE.**
+Deletion is open by design and irreversible in practice. **That combination is the real exposure, not
+the auth model.** A tombstone — DELETE moves the body to `gone:<key>` and lets the existing sweep
+collect it — was proposed and NOT built; it changes no auth and no client code. **Owner's call.**
+
+## §139.5 THE REVIEW: WHAT WAS CLEAN
+
+Cross-verified at s68 open: `local == origin == 6cc826d8`, `index.html` `dd6be1e5…` byte-identical on
+disk, Pages and raw at the commit SHA, buildmark `34v` in markup **and** in the CSS colour
+`#A8478F`. Worker answers v2.6.15. **The battery ran on his machine on this exact hash — STATIC
+clean, BEHAVIOUR 65/65, SESSION 21/21 — and Claude read all 140 lines off `test\.last-battery.log`.**
+
+**BUILT-IN CASES, ALL 40 AUDITED:** 455 tiles, ids unique, clue/type/emoji counts match tile count,
+**no orphan index entry and no unreachable hunt**, every territory free, every paid case `0.99` with a
+price. All 10 territories carry a hint on **every** tile. **THE 30 HINTLESS HOUSE CASES ARE NOT A
+DEFECT** — `if(!t.hint || State.locked) return;` means no hint button is drawn, so **no coin can be
+spent on nothing.** Checked, because §121 was exactly this shape.
+
+**BOOT, on live `34v`:** zero console output, **proven by planting a control error that came back** —
+an empty console reader proves nothing on its own. All 9 screens render, none zero-width.
+`s-hunt-done` measures 547px inside a 456px column, from two `position:absolute` elements — the
+done-stamp and its `B.B.` fill. The document never scrolls sideways. **Read as intentional
+overhang, and the owner confirmed the phone looks fine. Nothing in the battery looks at pixels, so
+green said nothing about this either way.**
+
+## §139.6 STILL OPEN AFTER s68, IN ORDER
+
+1. **CASE 335785 CANNOT BE ACCEPTED** — 25 photographs, no clues, no hints (§138.4).
+2. **THE 48-PHOTOGRAPH QUESTION IS STILL UNANSWERED.** On `34u` the warning fires near 22 and the
+   wall near 28; on `34v` it is 44 and 55. **A warning at 48 fits `34v` with smaller-than-median
+   photographs and fits `34u` not at all. ASK HER WHAT BUILDMARK IS AT THE FOOT OF HER SCREEN.**
+3. **THE ARCHIVE CLERK IS DARK** (§139.4), and user-built cases are backed up nowhere.
+4. **60 CHICAGO CLUES ARE LIVE, FREE AND UNWALKED** — `606001`-`606005`, 12 tiles each, playable now.
+   **THE OWNER RULED AT s68 THAT `Chicago-Cold-Cases-plan.html` AND `.pdf` STAY IN THE PUBLIC REPO**
+   — he has not been able to upload the picture yet. Not to be re-raised.
+5. **THREE JUNK FILES ARE COMMITTED TO THE PUBLIC REPO** and serve 200: `34n`, `34o` (each one stray
+   `Message:` line from a ship gate bypass) and a 0-byte file named `MAX_VALUE)`. Shell redirection
+   artefacts. `CLAUDE-CODE-s59-findings.md` is public too.
+6. **THE APP STILL CANNOT SAY WHETHER IT IS INSTALLED** — no `display-mode` and no
+   `navigator.standalone` anywhere in `index.html`, re-confirmed. Home-screen install never exercised.
+7. **THE STORE CLOCK HAS NOT STARTED** (§112.2), unchanged.
+8. **`art\` IS STILL ON ONE DISK** apart from the s67 Bonnie references.
 
 # 🔴 §138 — THE CAP WAS THE PROBLEM. WORKER v2.6.15, AND FIFTY PHOTOGRAPHS FIT. `34v`, s67.
 
@@ -1083,7 +1228,11 @@ on the whole `<p id="buildmark" …>34m</p>` tag. §5i, proven again.
 
 ### What v2.3 fixed (history — do not re-litigate)
 1. **`/list` requires `X-Curator-Token`.** Fails closed if the secret is unset.
-2. **`DELETE` requires it on EVERY key** (v2.2 scoped the check to `cold:index` alone).
+2. ~~**`DELETE` requires it on EVERY key** (v2.2 scoped the check to `cold:index` alone).~~
+   **🔴 STRUCK AT s68 — THIS IS FALSE OF THE LIVE WORKER AND COST A LIVE CASE. SEE §139.3.**
+   v2.6.15 gates `cold:`/`coldstat:`, `push:` and `map:` only. `hunt:`, `profile:`, `sub:`,
+   `res:`, `reply:` and `msg:` are freely deletable BY DESIGN — the source says so in as many
+   words. **NEVER AIM A DESTRUCTIVE METHOD AT A REAL KEY; PROBE WITH ONE THAT DOES NOT EXIST.**
 3. **`KEEP_DAYS` 90 → 60.**
 4. **`scheduled()` honours each case's own `retentionDays`/`createdAt`.**
 5. **`scheduled()` keeps a case alive while its hunters are active.**
