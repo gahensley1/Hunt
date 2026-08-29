@@ -283,7 +283,7 @@
     #notify-card .nc-txt{font-size:14px}
   }
   #buildmark{margin:4px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#3B6BA5;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#C88A2E;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -1409,7 +1409,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">34y</p>
+      <p id="buildmark" aria-label="test build marker">34z</p>
     </div>
   </section>
 
@@ -3483,7 +3483,10 @@ function recPhotoHTML(rank,key,isUndercover){
     // Reserved frame for a future "undercover agent" portrait asset — intentionally blank for now.
     return '<div class="rec-photo"><div class="rec-photo-mount"><div class="rec-photo-pic rec-photo-pending"><span class="rec-photo-of">OFFICIAL RECORD</span><span class="rec-photo-pending-txt">PHOTO ON FILE<br>\u2014 PENDING \u2014</span><span class="rec-photo-vig" aria-hidden="true"></span></div></div></div>';
   }
-  var img=safeImgSrc(portraitFor(rank,key)); if(!img) return "";
+  /* 34z: portraits are TRUSTED app assets (RANK_PORTRAITS constants), not hunter uploads, so they
+     must NOT pass through safeImgSrc, which accepts data: URIs only. §143 moved them to file URLs
+     (assets/img/), and safeImgSrc rejected every file URL -> blank portraits. Use the trusted URL direct. */
+  var img=portraitFor(rank,key); if(!img) return "";
   return '<div class="rec-photo"><div class="rec-photo-mount"><div class="rec-photo-pic"><img decoding="async" src="'+img+'" alt="Detective portrait"><span class="rec-photo-of">OFFICIAL RECORD</span><span class="rec-photo-vig" aria-hidden="true"></span></div></div></div>'; }
 async function renderRecord(){
   var body=document.getElementById("rec-body"); if(!body) return;
