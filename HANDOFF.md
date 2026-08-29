@@ -26,8 +26,8 @@ NOT CONTAIN THE HASH — WRITE ALL 64 CHARACTERS, never `abc123…`.**
 
 | file | bytes | sha256 | state |
 |---|---|---|---|
-| `index.html` | 3,136,545 | `73add33d9f61b507f512833341b409fd2070c906b26cbc20724ba2fa28ec13f6` | **⚠ BUILT — `34x` / Rust `#B4532A`. 🟢 ASSET EXTRACTION PHASE 1 (§142): the 26 `<img>`/CSS chrome images pulled OUT of the document into `assets/img/` (committed, Pages-served), cached-first by `sw.js`. Document 4.40 MB → 3.14 MB, and base64→binary trims the 33% tax. **PIXEL-IDENTICAL BY CONSTRUCTION** — image bytes untouched, only delivery changed; round-trip re-encode asserted equal. STATIC green in the sandbox, buildmark `34x`, no drift. FULL BATTERY OWED ON HIS MACHINE before ship; after deploy the 26 asset URLs must be probed for 200. `34w` / Lime IS LIVE at `9d74390f`, commit `064f1a28` (the join on-ramp, §141). The gazetteer (`GAZ5_BLOB`, 506 KB) and the woff2 font are STILL INLINE — Phases 2/3, not done. The join-screen on-ramp to the free Agency cases (§141.4/.5), owner copy "No case number? Inspect the Agency's own cases." STATIC green in the sandbox; FULL BATTERY OWED ON HIS MACHINE before ship. `34v` was LIVE at `dd6be1e5`, commit `6cc826d8`. `SHARED_MAX_BYTES` 2,000,000 → 3,900,000 to match Worker **v2.6.15** (§138). Full battery PASSED ON HIS MACHINE on this exact hash BEFORE the ship — STATIC clean, BEHAVIOUR 65/65, SESSION 21/21, and **Claude read the whole log himself off `test\.last-battery.log` (§134), no pasting.** Verified against the COMMIT SHA: same hash, buildmark `34v`, `SHARED_MAX_BYTES = 3900000` in the committed file.**<br>`34u` shipped at s67, commit `6ec02bd5`, hash `97c75302c254719c662985962a687fcf8e81b73419c19e7239b2a24a1e728ac5`. |
-| `sw.js` | 5,532 | `ddef93f0f3ce5c24da0dfa28d49ef081cc5c94bdef53f63fde822acf62f5bdc0` | **⚠ BUILT with `34x` — CACHE bumped `shco-v2`→`shco-v3` (§142). Network-first for the document; the extracted assets are cached-first by the existing static-asset handler.** |
+| `index.html` | 2,446,761 | `7c2caa72450225c1c71e4d54add68647a0f324fe548ee69c42c4894b26997650` | **⚠ BUILT — `34y` / Cobalt `#3B6BA5`. 🟢 ASSET EXTRACTION PHASE 2 (§143): the 32 JS-CONSTANT images (coins, portraits, badge, seal, paw) pulled OUT to `assets/img/` too. Document now **2.45 MB** (was 4.40 at s68 open). 58 asset files, 1.40 MB. STATIC green, buildmark `34y`, no drift. Canvas composites (portraits/coins/badge) draw these via `await new Promise(onload)` + same-origin, so file URLs are safe by guarantee (§143.2). FULL BATTERY OWED; after deploy probe the (now 58) asset URLs. `34x` was BUILT then — see below. The gazetteer (~973 KB) and font are STILL INLINE — Phase 3 only. 🟢 ASSET EXTRACTION PHASE 1 (§142): the 26 `<img>`/CSS chrome images pulled OUT of the document into `assets/img/` (committed, Pages-served), cached-first by `sw.js`. Document 4.40 MB → 3.14 MB, and base64→binary trims the 33% tax. **PIXEL-IDENTICAL BY CONSTRUCTION** — image bytes untouched, only delivery changed; round-trip re-encode asserted equal. STATIC green in the sandbox, buildmark `34x`, no drift. FULL BATTERY OWED ON HIS MACHINE before ship; after deploy the 26 asset URLs must be probed for 200. `34w` / Lime IS LIVE at `9d74390f`, commit `064f1a28` (the join on-ramp, §141). The gazetteer (`GAZ5_BLOB`, 506 KB) and the woff2 font are STILL INLINE — Phases 2/3, not done. The join-screen on-ramp to the free Agency cases (§141.4/.5), owner copy "No case number? Inspect the Agency's own cases." STATIC green in the sandbox; FULL BATTERY OWED ON HIS MACHINE before ship. `34v` was LIVE at `dd6be1e5`, commit `6cc826d8`. `SHARED_MAX_BYTES` 2,000,000 → 3,900,000 to match Worker **v2.6.15** (§138). Full battery PASSED ON HIS MACHINE on this exact hash BEFORE the ship — STATIC clean, BEHAVIOUR 65/65, SESSION 21/21, and **Claude read the whole log himself off `test\.last-battery.log` (§134), no pasting.** Verified against the COMMIT SHA: same hash, buildmark `34v`, `SHARED_MAX_BYTES = 3900000` in the committed file.**<br>`34u` shipped at s67, commit `6ec02bd5`, hash `97c75302c254719c662985962a687fcf8e81b73419c19e7239b2a24a1e728ac5`. |
+| `sw.js` | 5,532 | `64e15f1557c56f63aa8b593bdbaa5c351925b9a58fa6ada48e6302921bba83f2` | **⚠ BUILT with `34y` — CACHE `shco-v3`→`shco-v4` (§143). Static assets cached-first by the existing handler.** |
 | `HANDOFF.md` | *(this file)* | — | **s68 edition. §139 added; §A's DELETE line struck; §0.3 superseded by §139.6.** UNPUSHED until this ship. |
 | `HANDOFF-SPEC.md` | — | — | how the app works. Untouched at s61. |
 | `HANDOFF-HISTORY.md` | — | — | the build record. Untouched at s61. |
@@ -271,6 +271,43 @@ does not. **The next build proves it, and the printed transition is the proof to
 A TOOL THAT CANNOT SEE THE CHANGE ARE INDISTINGUISHABLE FROM THE OUTSIDE.** GATE 2 is a green tick
 that is an exit code, inverted. When a gate refuses, prove what it actually read before believing it.
 
+
+# 🟢 §143 — ASSET EXTRACTION, PHASE 2. THE JS-CONSTANT IMAGES. `34y`, s68.
+
+Continues §142. The **32 images held as JS `const` data-URIs** (COIN_*, PORTRAIT_* ×14, BADGE_MAC,
+SEAL_IMG(S), PLQ_COLD, PAW_INK) were decoded to `assets/img/<contenthash>` and their inline URIs swapped
+for `./assets/img/…` file URLs. **Zero embedded base64 images remain** in `index.html` (the only two
+`data:image` strings left are CODE — the `safeImgSrc` validator and a comment, which police HUNTER
+photos, not chrome art). Document **3.14 → 2.45 MB** (−690 KB); base64→binary trims the tax again.
+CACHE bumped `shco-v3`→`shco-v4`.
+
+## §143.1 THE RUNNING TALLY
+`index.html` opened s68 at **4.40 MB** and is now **2.45 MB** — nearly halved, look untouched. What is
+left: ~1.7 MB of code + the ~973 KB gazetteer (`GAZ5_BLOB` + `CITY2_BLOB`, still inline) + a 71 KB font.
+
+## §143.2 🔴 WHY THE CANVAS COMPOSITES ARE SAFE BY GUARANTEE, NOT LUCK
+The badge, coins and portraits are drawn to `<canvas>` (and BADGE_MAC into an SVG `<image href>`). Every
+such draw first does `await new Promise(function(ok){ const i=new Image(); i.onload=()=>ok(i); i.src=URL; })`
+and only then `drawImage`. To the browser a same-origin **file-URL** Image is identical to a data-URI
+Image: `onload` fires for both, `drawImage` works for both, and `toDataURL` works for both **because the
+assets are same-origin — no canvas taint**. The awaited-onload pattern IS the correct way to draw a
+file-URL image; the only difference is a few ms of first-load latency the `await` already absorbs. There
+is no failure mechanism. Verified in source across every draw site; the `toDataURL` calls touch only the
+hunter's own cropped photo.
+
+## §143.3 VERIFIED / NOT VERIFIED — HONEST
+VERIFIED in Chrome on the real build: buildmark `34y`, **zero broken images across all 9 screens**, clean
+boot (control-marker proven), all `<img>`/CSS art from files. NOT visually triggered: a *composited badge*
+— the mint flow resisted scripted input and BEHAVIOUR's `test_renders` boots but does not force a
+composite. The canvas path is sound by §143.2; the belt-and-suspenders visual is the owner minting a
+badge on the build (his server is up) or his eye after ship. **Correctness is not in doubt; the specific
+pixel was not photographed.**
+
+## §143.4 PHASE 3 REMAINS (the big, riskier one)
+The gazetteer (~973 KB) is the last large lever and the only one that is NOT a mechanical swap: both blobs
+decode SYNCHRONOUSLY at boot and 12 geo functions read them, so moving them to a file makes boot async and
+needs a ready-guard against a geo action firing before load. None of those functions run at boot, so a
+non-blocking preload + guard is feasible — but it is real work with a race to test, not a src swap.
 
 # 🟢 §142 — ASSET EXTRACTION, PHASE 1. THE LOOK IS UNTOUCHED; 1.26 MB LEFT THE DOCUMENT. `34x`, s68.
 
