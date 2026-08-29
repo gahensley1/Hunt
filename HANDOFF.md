@@ -26,12 +26,12 @@ NOT CONTAIN THE HASH — WRITE ALL 64 CHARACTERS, never `abc123…`.**
 
 | file | bytes | sha256 | state |
 |---|---|---|---|
-| `index.html` | 2,446,761 | `29263f42c4a53020d2c09019697491ef4a598732c938562e7cc82ad230e957fd` | **⚠ BUILT — `34z` / Ochre `#C88A2E`. 🟢 ASSET EXTRACTION PHASE 2 + A REGRESSION FIX (§143, §144). `34y` (Cobalt) was Phase 2 BUT SHIPPED NOTHING — it blanked every detective portrait (§144) and was caught in preview before ship; `34z` is the fixed build. STATIC green, buildmark `34z`, no drift. FULL BATTERY OWED; after deploy probe the 58 asset URLs. 🟢 ASSET EXTRACTION PHASE 2 (§143): the 32 JS-CONSTANT images (coins, portraits, badge, seal, paw) pulled OUT to `assets/img/` too. Document now **2.45 MB** (was 4.40 at s68 open). 58 asset files, 1.40 MB. STATIC green, buildmark `34y`, no drift. Canvas composites (portraits/coins/badge) draw these via `await new Promise(onload)` + same-origin, so file URLs are safe by guarantee (§143.2). FULL BATTERY OWED; after deploy probe the (now 58) asset URLs. `34x` was BUILT then — see below. The gazetteer (~973 KB) and font are STILL INLINE — Phase 3 only. 🟢 ASSET EXTRACTION PHASE 1 (§142): the 26 `<img>`/CSS chrome images pulled OUT of the document into `assets/img/` (committed, Pages-served), cached-first by `sw.js`. Document 4.40 MB → 3.14 MB, and base64→binary trims the 33% tax. **PIXEL-IDENTICAL BY CONSTRUCTION** — image bytes untouched, only delivery changed; round-trip re-encode asserted equal. STATIC green in the sandbox, buildmark `34x`, no drift. FULL BATTERY OWED ON HIS MACHINE before ship; after deploy the 26 asset URLs must be probed for 200. `34w` / Lime IS LIVE at `9d74390f`, commit `064f1a28` (the join on-ramp, §141). The gazetteer (`GAZ5_BLOB`, 506 KB) and the woff2 font are STILL INLINE — Phases 2/3, not done. The join-screen on-ramp to the free Agency cases (§141.4/.5), owner copy "No case number? Inspect the Agency's own cases." STATIC green in the sandbox; FULL BATTERY OWED ON HIS MACHINE before ship. `34v` was LIVE at `dd6be1e5`, commit `6cc826d8`. `SHARED_MAX_BYTES` 2,000,000 → 3,900,000 to match Worker **v2.6.15** (§138). Full battery PASSED ON HIS MACHINE on this exact hash BEFORE the ship — STATIC clean, BEHAVIOUR 65/65, SESSION 21/21, and **Claude read the whole log himself off `test\.last-battery.log` (§134), no pasting.** Verified against the COMMIT SHA: same hash, buildmark `34v`, `SHARED_MAX_BYTES = 3900000` in the committed file.**<br>`34u` shipped at s67, commit `6ec02bd5`, hash `97c75302c254719c662985962a687fcf8e81b73419c19e7239b2a24a1e728ac5`. |
-| `sw.js` | 5,532 | `64e15f1557c56f63aa8b593bdbaa5c351925b9a58fa6ada48e6302921bba83f2` | **⚠ BUILT with `34y` — CACHE `shco-v3`→`shco-v4` (§143). Static assets cached-first by the existing handler.** |
+| `index.html` | 2,446,761 | `3f31fe34da3f0e38d4b44c60156517276a494e43fa495f5a70772bdb5c7f3a7d` | **⚠ BUILT — `35a` / Rose `#B5566B`. 🟢 PUB SIGN SWAPPED (§146): the welcome-tour sign `assets/img/67436406c2.webp` replaced with the owner's weathered brass-and-gold enamel (27 KB→45 KB, same 720×192 dims, filename unchanged so no markup edit). SW CACHE `shco-v4`→`shco-v5` so returning players fetch it. STATIC green, `35a`, no drift. `34z` (Ochre, portrait fix) was LIVE. 🟢 ASSET EXTRACTION PHASE 2 + A REGRESSION FIX (§143, §144). `34y` (Cobalt) was Phase 2 BUT SHIPPED NOTHING — it blanked every detective portrait (§144) and was caught in preview before ship; `34z` is the fixed build. STATIC green, buildmark `34z`, no drift. FULL BATTERY OWED; after deploy probe the 58 asset URLs. 🟢 ASSET EXTRACTION PHASE 2 (§143): the 32 JS-CONSTANT images (coins, portraits, badge, seal, paw) pulled OUT to `assets/img/` too. Document now **2.45 MB** (was 4.40 at s68 open). 58 asset files, 1.40 MB. STATIC green, buildmark `34y`, no drift. Canvas composites (portraits/coins/badge) draw these via `await new Promise(onload)` + same-origin, so file URLs are safe by guarantee (§143.2). FULL BATTERY OWED; after deploy probe the (now 58) asset URLs. `34x` was BUILT then — see below. The gazetteer (~973 KB) and font are STILL INLINE — Phase 3 only. 🟢 ASSET EXTRACTION PHASE 1 (§142): the 26 `<img>`/CSS chrome images pulled OUT of the document into `assets/img/` (committed, Pages-served), cached-first by `sw.js`. Document 4.40 MB → 3.14 MB, and base64→binary trims the 33% tax. **PIXEL-IDENTICAL BY CONSTRUCTION** — image bytes untouched, only delivery changed; round-trip re-encode asserted equal. STATIC green in the sandbox, buildmark `34x`, no drift. FULL BATTERY OWED ON HIS MACHINE before ship; after deploy the 26 asset URLs must be probed for 200. `34w` / Lime IS LIVE at `9d74390f`, commit `064f1a28` (the join on-ramp, §141). The gazetteer (`GAZ5_BLOB`, 506 KB) and the woff2 font are STILL INLINE — Phases 2/3, not done. The join-screen on-ramp to the free Agency cases (§141.4/.5), owner copy "No case number? Inspect the Agency's own cases." STATIC green in the sandbox; FULL BATTERY OWED ON HIS MACHINE before ship. `34v` was LIVE at `dd6be1e5`, commit `6cc826d8`. `SHARED_MAX_BYTES` 2,000,000 → 3,900,000 to match Worker **v2.6.15** (§138). Full battery PASSED ON HIS MACHINE on this exact hash BEFORE the ship — STATIC clean, BEHAVIOUR 65/65, SESSION 21/21, and **Claude read the whole log himself off `test\.last-battery.log` (§134), no pasting.** Verified against the COMMIT SHA: same hash, buildmark `34v`, `SHARED_MAX_BYTES = 3900000` in the committed file.**<br>`34u` shipped at s67, commit `6ec02bd5`, hash `97c75302c254719c662985962a687fcf8e81b73419c19e7239b2a24a1e728ac5`. |
+| `sw.js` | 5,532 | `3d31938ac65fe14e9cee74dc2ca87c1011dc52cce05cb03e9d486b4e444d0342` | **⚠ BUILT with `35a` — CACHE `shco-v4`→`shco-v5` (§146, new pub sign). Static assets cached-first.** |
 | `HANDOFF.md` | *(this file)* | — | **s68 edition. §139 added; §A's DELETE line struck; §0.3 superseded by §139.6.** UNPUSHED until this ship. |
 | `HANDOFF-SPEC.md` | — | — | how the app works. Untouched at s61. |
 | `HANDOFF-HISTORY.md` | — | — | the build record. Untouched at s61. |
-| `worker-v2_6_16.js` | — | — | **THE LIVE WORKER, v2.6.16** (§140) — SOFT DELETE. Deployed and externally verified at s68. On disk, GITIGNORED, NEVER COMMITTED. Adds a tombstone on DELETE; `MAX_VALUE` still 3.75 MiB. **`_6_15` kept as the rollback; `worker-v2_6_14.js` IS A DEAD END — NEVER DEPLOY IT** (4 MiB threw a 500 at the boundary). |
+| `worker-v2_6_17.js` | — | — | **THE LIVE WORKER, v2.6.17** (§145) — ONE MILESTONE PUSH PER UPDATE (fixes triplicate iPhone notifications). Deployed and externally verified at s68 (root reads v2.6.17). On disk, GITIGNORED, NEVER COMMITTED. `_6_16` (soft delete, §140) kept as rollback; `_6_14` IS A DEAD END. |
 | `test/` | — | — | `agents.py` (STATIC), `behaviour.py`, `session_checks.py`, `run.py`, `.last-battery`. |
 | `art/` | — | — | 🔴 **GITIGNORED AND ON ONE DISK.** s67: Bonnie's colour master and the four other supplied references ARE COPIED to `Hunt-backups\art\case-book\characters\` — the copy that failed at s61 succeeded this time. **THE REST OF `art\` IS STILL ONE-DISK.** The s61 enamel source lives ONLY at `art\plate-enamel-source-s61.png`; the copy to `Hunt-backups\art\` returned **Permission denied**. §1v forming; a manual copy is owed. |
 
@@ -271,6 +271,55 @@ does not. **The next build proves it, and the printed transition is the proof to
 A TOOL THAT CANNOT SEE THE CHANGE ARE INDISTINGUISHABLE FROM THE OUTSIDE.** GATE 2 is a green tick
 that is an exit code, inverted. When a gate refuses, prove what it actually read before believing it.
 
+
+# 🟢 §146 — THE WELCOME-TOUR PUB SIGN, REPLACED. `35a`, s68.
+
+Owner supplied a weathered brass-and-gold enamel "BUILD YOUR CASE / or / JOIN YOUR HUNT" sign to replace
+the app's cleaner rendered one — chosen against three criteria HE named: **fit the app** (brass/gold is
+the established palette), **fit the period** (a brass agency board reads Baker-Street, not railway), and
+**keep the "beautiful noise"** (verdigris, chips, worn gloss — the wear that reads as real, which the old
+sign lacked). Of three candidates measured for letter-vs-green contrast (gold-brass 4.3:1, yellow 4.53:1,
+old app 4.49:1) the yellow read best but was a railway note tonally apart from the gold world; the
+brass-gold won on the owner's fit-the-world priority.
+
+**MECHANICS.** Fitted to 720×192 (native 3.72 ≈ frame 3.75, near-zero crop), saved WebP q92 exact, and
+written OVER `assets/img/67436406c2.webp` — **same filename, so no `index.html` reference edit** and the
+one tour-sign `<img>` picks it up. 27 KB → 45 KB (a real photograph vs a flat render; trivial). **SW CACHE
+bumped `shco-v4`→`shco-v5`** — without it, returning players keep the OLD sign cached at that URL.
+
+**🔴 A PREVIEW LESSON.** To reveal the tour-sign for a screenshot Claude forced `opacity:1`, a dark
+overlay `background`, and `transform:none` on it — which made the owner report "scale is off, you darkened
+the background." Neither was the swap: the forced transform showed it at full 720px (the app scales it to
+360×96) and the dark tint was Claude's. **When previewing an element the app normally animates, drive the
+REAL animation (`runHomeTour()`), do not force its styles — forced styles misrepresent the result.** The
+true render: 360×96, no tint, correct.
+
+# 🟢 §145 — TRIPLICATE iPHONE NOTIFICATIONS. WORKER v2.6.17. s68.
+
+**Owner: every progress notification arrived THREE times on his iPhone, identical.** Not caused by the
+s68 client work (asset extraction, SW bumps) — a latent issue in the Worker's milestone notification,
+exposed by iOS.
+
+## §145.1 THE CAUSE
+The builder-progress notifier loops `for (const mark of [30, 60, 90])` and, for each newly-crossed mark,
+`sends.push(...)` a push. When ONE update crosses several marks at once — a small case, a big jump, the
+final find — it queued a push PER mark. They all shared the tag `shco-CODE-mile`, and the design RELIED
+on that shared tag to make each new one replace the last so only one showed. **iOS web push does not
+honour the `tag` for collapsing**, so the builder saw one per mark: up to three, identical (the line is
+built from the same leader progress each iteration). Client subscribe is deduped (getSubscription before
+subscribe); the Worker stores one builder sub and `pushSend` sends once — so the loop was the only source.
+
+## §145.2 THE FIX (v2.6.17)
+Within a single update: record EVERY crossed mark in `P.m` (so none re-fire on later updates) but SEND
+ONLY the highest — `let hiMark=0; …; if(hiMark){ sends.push([line, hiMark===90?1:0, …]); }`. One progress
+event now yields exactly one milestone push, regardless of how iOS treats the tag. Progress spread across
+separate updates still notifies once per update — unchanged. Nothing else in the Worker changed.
+
+## §145.3 VERIFY
+Root reads **v2.6.17** (confirmed, 3 cache-busted probes). The behavioural proof is on the phone: a
+hunter crossing a milestone now yields ONE builder notification, not three. **If multiples persist after
+v2.6.17, the remaining source would be a client double-send of the `sub:` PUT — not seen in the code
+(one `saveHunterSub` per find), but that is where to look next.**
 
 # 🔴 §144 — THE PHASE-2 REGRESSION THE OWNER CAUGHT: BLANK PORTRAITS. FIXED IN `34z`, s68.
 
