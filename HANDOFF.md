@@ -26,7 +26,7 @@ NOT CONTAIN THE HASH — WRITE ALL 64 CHARACTERS, never `abc123…`.**
 
 | file | bytes | sha256 | state |
 |---|---|---|---|
-| `index.html` | 4,399,531 | `dd6be1e5e1ada91420575114fbe868ba8bf63c3b3c774978e6f82856350eb03b` | **✅ LIVE — `34v` / Magenta `#A8478F`, commit `6cc826d8`. `SHARED_MAX_BYTES` 2,000,000 → 3,900,000 to match Worker **v2.6.15** (§138). Full battery PASSED ON HIS MACHINE on this exact hash BEFORE the ship — STATIC clean, BEHAVIOUR 65/65, SESSION 21/21, and **Claude read the whole log himself off `test\.last-battery.log` (§134), no pasting.** Verified against the COMMIT SHA: same hash, buildmark `34v`, `SHARED_MAX_BYTES = 3900000` in the committed file.**<br>`34u` shipped at s67, commit `6ec02bd5`, hash `97c75302c254719c662985962a687fcf8e81b73419c19e7239b2a24a1e728ac5`. |
+| `index.html` | 4,399,704 | `9d74390fa987788191a3dbe88d76134391f327b1eaeb9588c746a64adb9a76bc` | **⚠ BUILT — `34w` / Lime `#7FA33C`. The join-screen on-ramp to the free Agency cases (§141.4/.5), owner copy "No case number? Inspect the Agency's own cases." STATIC green in the sandbox; FULL BATTERY OWED ON HIS MACHINE before ship. `34v` was LIVE at `dd6be1e5`, commit `6cc826d8`. `SHARED_MAX_BYTES` 2,000,000 → 3,900,000 to match Worker **v2.6.15** (§138). Full battery PASSED ON HIS MACHINE on this exact hash BEFORE the ship — STATIC clean, BEHAVIOUR 65/65, SESSION 21/21, and **Claude read the whole log himself off `test\.last-battery.log` (§134), no pasting.** Verified against the COMMIT SHA: same hash, buildmark `34v`, `SHARED_MAX_BYTES = 3900000` in the committed file.**<br>`34u` shipped at s67, commit `6ec02bd5`, hash `97c75302c254719c662985962a687fcf8e81b73419c19e7239b2a24a1e728ac5`. |
 | `sw.js` | 5,532 | `7a1682bd276e3bdba985270e7e36e5dea2f26ad696db53280d65a5c2cc80f45c` | ✅ LIVE. Network-first for the document, so it CANNOT pin a hunter to an old build. |
 | `HANDOFF.md` | *(this file)* | — | **s68 edition. §139 added; §A's DELETE line struck; §0.3 superseded by §139.6.** UNPUSHED until this ship. |
 | `HANDOFF-SPEC.md` | — | — | how the app works. Untouched at s61. |
@@ -35,8 +35,8 @@ NOT CONTAIN THE HASH — WRITE ALL 64 CHARACTERS, never `abc123…`.**
 | `test/` | — | — | `agents.py` (STATIC), `behaviour.py`, `session_checks.py`, `run.py`, `.last-battery`. |
 | `art/` | — | — | 🔴 **GITIGNORED AND ON ONE DISK.** s67: Bonnie's colour master and the four other supplied references ARE COPIED to `Hunt-backups\art\case-book\characters\` — the copy that failed at s61 succeeded this time. **THE REST OF `art\` IS STILL ONE-DISK.** The s61 enamel source lives ONLY at `art\plate-enamel-source-s61.png`; the copy to `Hunt-backups\art\` returned **Permission denied**. §1v forming; a manual copy is owed. |
 
-**BUILDMARK: `34v` / Magenta `#A8478F` IS SPENT — DELIVERED AT s67. A MARK IS
-SPENT ONLY WHEN A BUILD IS DELIVERED — NEXT IS `34w` / Lime `#7FA33C`.**
+**BUILDMARK: `34w` / Lime `#7FA33C` IS WRITTEN INTO THE BUILD, NOT YET DELIVERED — IF THIS BUILD IS
+SCRAPPED IT GOES BACK. `34v` / Magenta WAS DELIVERED AT s67. NEXT AFTER `34w` IS `34x` / Rust `#B4532A`.**
 Rotation (§8i): a Cobalt `#3B6BA5` · b Ochre `#C88A2E` · c Rose `#B5566B` · d Amethyst `#7A5A98` ·
 e Verdigris `#4E9A87` · f Magenta `#A8478F` · g Lime `#7FA33C` · h Rust `#B4532A`, then wraps.
 **A MARK IS SPENT ONLY WHEN A BUILD IS DELIVERED.** The plates, the shadow and the filter fix all
@@ -271,6 +271,54 @@ does not. **The next build proves it, and the printed transition is the proof to
 A TOOL THAT CANNOT SEE THE CHANGE ARE INDISTINGUISHABLE FROM THE OUTSIDE.** GATE 2 is a green tick
 that is an exit code, inverted. When a gate refuses, prove what it actually read before believing it.
 
+
+# 🟢 §141 — THE FOUR-TEST AUDIT ROUND. WHAT'S SOLID, WHAT'S OWED. s68.
+
+**NO BUILDMARK SPENT — measurement only, plus one fix owed on owner copy (§141.5).** Ran four tests
+the owner asked for after the soft-delete shipped. Net: no new defect, two real rough edges (one UX,
+one inherent), and one earlier finding CORRECTED.
+
+## §141.1 SECURITY OF THE SOFT DELETE (§140) — CLEAN
+Probed the deployed v2.6.16 from outside (no token; Claude has none). `gone:` tombstones cannot be
+**enumerated** (`/list?prefix=gone:` → 403, even in the case-scoped shape), **read** (GET → 403),
+**overwritten** (PUT → 403) or **purged** (DELETE → 403) without the curator token. Gate-evasion —
+uppercase `GONE:`, leading space, double `gone:gone:` — all fail safe (404 or 403, never a read). One
+honest note, not a new hole: a deleted body now lingers up to 30 days as a tombstone, mildly extending
+the PRE-EXISTING open-PUT storage tradeoff (§A hole 1), bounded by the sweep.
+
+## §141.2 🔴 JOIN LATENCY — EARLIER FINDING CORRECTED
+**The "join is 7 round-trips deep / needs parallelising" read was WRONG.** `joinCase()` ALREADY fires
+its three opening reads together (the code says so and cites §108); they run concurrently. Measured a
+real shared-case join (reads only, writes blocked — the live case untouched): **~2.9 s to the board**,
+and the cost is **the 1.7 MB case body downloading (~2 s)**, not round-trip depth. That is the §138
+size tradeoff, chosen on purpose. **There is no clean latency fix to make here** — the fixable part was
+already done. The only micro-waste is one ~100 ms duplicate `sub:` read (≈3%), likely intentional.
+**Do not "optimise" the join; it is already optimised. The lever is body size, and that is settled.**
+
+## §141.3 ACCESSIBILITY SWEEP — STRONG, AND A CONTRAST CORRECTION
+Touch targets measured across all 9 screens: clean. Two sub-24px flags, both marginal — the copyright
+line (exempt inline text) and "Take me there now" at 168×23 (1px under the WCAG 2.5.8 floor).
+**CONTRAST, measured RIGHT this time: dark text on the parchment card = 11.72:1** — past AA (4.5),
+AAA (7) and the outdoor target. **The earlier "1.1 / unproven" readings were sampling the wrong
+surface** (the dark leather desk BEHIND the card, not the card). 🔴 LESSON FOR `deerstalker-ux`:
+on a layered design (dark chrome + light content card) a DOM-walk or solid-colour sample finds the
+wrong background. Find the element actually painting the readable surface — here `.tov-card` /
+`.sh-frame`, luminance ~0.63 — and sample THAT, or sample the composited pixel. Contrast is NOT a fault.
+
+## §141.4 FIRST-PLAYER JOURNEY — ONE REAL DROP-POINT
+Home's primary CTA **"The Hunt"** → `openJoin()` → a screen that says *"Enter the case number your
+Builder sent you."* A brand-new player **has no code**, and the join screen offers **no on-ramp to the
+free Agency/territory cases** (those sit behind a different button, `openColdCases()` / the map). So the
+natural first tap of a newcomer dead-ends at a code prompt. Not fatal — there is a back button — but
+the biggest "play" button leads nowhere for the codeless. **This is the one genuinely fixable UX
+finding of the round.**
+
+## §141.5 THE FIX OWED — NEEDS OWNER COPY
+The remedy: on the empty `s-join` screen, add a line under "Load the Case →" linking to
+`openColdCases()`, in the existing `hint-link` style (the same pattern the join ERROR path already uses
+for "Open it in the Agency Cases"). **The mechanism is Claude's; the in-product line is the owner's —
+Victorian, verbatim, his call.** Options were offered at s68; **on his pick this ships as `34w` / Lime
+with a full battery.** Until then, NOTHING is changed on the join screen.
 
 # 🟢 §140 — SOFT DELETE. A DESTROYED CASE IS RECOVERABLE NOW. WORKER v2.6.16, s68.
 
