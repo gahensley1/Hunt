@@ -18,7 +18,7 @@
    This worker stores NO hunter data. Finds, status and credentials live in
    localStorage and on the Worker; losing this cache loses nothing. */
 
-const CACHE = "shco-v2";
+const CACHE = "shco-v3";
 const SHELL = ["./", "./index.html", "./j.html", "./og-card.jpeg", "./award-card.jpeg"];
 
 self.addEventListener("install", function(e){

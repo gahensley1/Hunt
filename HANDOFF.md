@@ -26,8 +26,8 @@ NOT CONTAIN THE HASH — WRITE ALL 64 CHARACTERS, never `abc123…`.**
 
 | file | bytes | sha256 | state |
 |---|---|---|---|
-| `index.html` | 4,399,704 | `9d74390fa987788191a3dbe88d76134391f327b1eaeb9588c746a64adb9a76bc` | **⚠ BUILT — `34w` / Lime `#7FA33C`. The join-screen on-ramp to the free Agency cases (§141.4/.5), owner copy "No case number? Inspect the Agency's own cases." STATIC green in the sandbox; FULL BATTERY OWED ON HIS MACHINE before ship. `34v` was LIVE at `dd6be1e5`, commit `6cc826d8`. `SHARED_MAX_BYTES` 2,000,000 → 3,900,000 to match Worker **v2.6.15** (§138). Full battery PASSED ON HIS MACHINE on this exact hash BEFORE the ship — STATIC clean, BEHAVIOUR 65/65, SESSION 21/21, and **Claude read the whole log himself off `test\.last-battery.log` (§134), no pasting.** Verified against the COMMIT SHA: same hash, buildmark `34v`, `SHARED_MAX_BYTES = 3900000` in the committed file.**<br>`34u` shipped at s67, commit `6ec02bd5`, hash `97c75302c254719c662985962a687fcf8e81b73419c19e7239b2a24a1e728ac5`. |
-| `sw.js` | 5,532 | `7a1682bd276e3bdba985270e7e36e5dea2f26ad696db53280d65a5c2cc80f45c` | ✅ LIVE. Network-first for the document, so it CANNOT pin a hunter to an old build. |
+| `index.html` | 3,136,545 | `73add33d9f61b507f512833341b409fd2070c906b26cbc20724ba2fa28ec13f6` | **⚠ BUILT — `34x` / Rust `#B4532A`. 🟢 ASSET EXTRACTION PHASE 1 (§142): the 26 `<img>`/CSS chrome images pulled OUT of the document into `assets/img/` (committed, Pages-served), cached-first by `sw.js`. Document 4.40 MB → 3.14 MB, and base64→binary trims the 33% tax. **PIXEL-IDENTICAL BY CONSTRUCTION** — image bytes untouched, only delivery changed; round-trip re-encode asserted equal. STATIC green in the sandbox, buildmark `34x`, no drift. FULL BATTERY OWED ON HIS MACHINE before ship; after deploy the 26 asset URLs must be probed for 200. `34w` / Lime IS LIVE at `9d74390f`, commit `064f1a28` (the join on-ramp, §141). The gazetteer (`GAZ5_BLOB`, 506 KB) and the woff2 font are STILL INLINE — Phases 2/3, not done. The join-screen on-ramp to the free Agency cases (§141.4/.5), owner copy "No case number? Inspect the Agency's own cases." STATIC green in the sandbox; FULL BATTERY OWED ON HIS MACHINE before ship. `34v` was LIVE at `dd6be1e5`, commit `6cc826d8`. `SHARED_MAX_BYTES` 2,000,000 → 3,900,000 to match Worker **v2.6.15** (§138). Full battery PASSED ON HIS MACHINE on this exact hash BEFORE the ship — STATIC clean, BEHAVIOUR 65/65, SESSION 21/21, and **Claude read the whole log himself off `test\.last-battery.log` (§134), no pasting.** Verified against the COMMIT SHA: same hash, buildmark `34v`, `SHARED_MAX_BYTES = 3900000` in the committed file.**<br>`34u` shipped at s67, commit `6ec02bd5`, hash `97c75302c254719c662985962a687fcf8e81b73419c19e7239b2a24a1e728ac5`. |
+| `sw.js` | 5,532 | `ddef93f0f3ce5c24da0dfa28d49ef081cc5c94bdef53f63fde822acf62f5bdc0` | **⚠ BUILT with `34x` — CACHE bumped `shco-v2`→`shco-v3` (§142). Network-first for the document; the extracted assets are cached-first by the existing static-asset handler.** |
 | `HANDOFF.md` | *(this file)* | — | **s68 edition. §139 added; §A's DELETE line struck; §0.3 superseded by §139.6.** UNPUSHED until this ship. |
 | `HANDOFF-SPEC.md` | — | — | how the app works. Untouched at s61. |
 | `HANDOFF-HISTORY.md` | — | — | the build record. Untouched at s61. |
@@ -271,6 +271,46 @@ does not. **The next build proves it, and the printed transition is the proof to
 A TOOL THAT CANNOT SEE THE CHANGE ARE INDISTINGUISHABLE FROM THE OUTSIDE.** GATE 2 is a green tick
 that is an exit code, inverted. When a gate refuses, prove what it actually read before believing it.
 
+
+# 🟢 §142 — ASSET EXTRACTION, PHASE 1. THE LOOK IS UNTOUCHED; 1.26 MB LEFT THE DOCUMENT. `34x`, s68.
+
+**Owner brief: "less megabytes without killing the aesthetic — the aesthetic is the most important part."**
+The 4.40 MB `index.html` broke down as ~2.0 MB images, 506 KB gazetteer (`GAZ5_BLOB`), 71 KB font, and
+~1.7 MB actual code. The images are the look and the safe lever.
+
+## §142.1 WHAT WAS DONE — PHASE 1 ONLY (THE LOW-RISK SLICE)
+The **26 images referenced as `<img src>` or CSS `url()`** were decoded from their base64 data-URIs and
+written to `assets/img/<contenthash>.<ext>` (committed, Pages-served), and their references in the
+document swapped to `./assets/img/…`. **Nothing about what renders changed** — the image bytes are
+identical; only the delivery moved from inline to file. Round-trip proof: every decode re-encoded to the
+exact original base64 (asserted in the build script). Result: document **4,399,704 → 3,136,545 B**
+(−1.26 MB), and because base64 carries a ~33% tax, the 26 files total only **947 KB** on disk.
+
+## §142.2 WHY IT DOES NOT HURT OFFLINE OR THE LOOK
+`sw.js` already had a **cache-first path for static same-origin assets** (its fetch handler), so the new
+`assets/img/` files are cached on first load and served offline thereafter — the same "one online load"
+guarantee the inline build already had. CACHE bumped `shco-v2`→`shco-v3` so the old cache (holding the
+4.4 MB inline document) is cleared on activate. The document stays network-first, so no hunter is pinned.
+
+## §142.3 THE ONE RUNTIME DEPENDENCY, CHECKED
+`PLQ_BUILD` reads the Build plaque `<img>`'s `.src` at runtime and reuses it as another plaque's `src`
+(§118). After extraction that `.src` is a file URL — **which works identically as an `<img>` src**, so the
+copy still renders. The other runtime `.src` read (`#done-coin`) is overwritten with an inline coin
+constant anyway. No extracted image is drawn to canvas or used as image DATA. **Phase 1 is safe.**
+
+## §142.4 WHAT WAS DELIBERATELY LEFT FOR LATER
+- **26 JS-constant images** (`COIN_P`, `BADGE_MAC`, `SEAL_IMG`…, ~484 KB) stay inline — they are held in
+  variables and drawn dynamically; converting them is Phase 2 and wants more care.
+- **The gazetteer `GAZ5_BLOB` (506 KB)** stays inline — it is decoded synchronously at boot and the
+  geo-matching depends on it; moving it introduces async. Phase 3, highest risk, biggest single win.
+- **The woff2 font (71 KB)** stays inline.
+Reaching for those only if Phase 1 proves clean in the wild and the owner wants to push further.
+
+## §142.5 VERIFY AFTER DEPLOY
+Beyond the usual (Pages doc hash, buildmark `34x`): **probe all 26 `assets/img/*` URLs for 200**, and
+screenshot the home and join screens to confirm the render is pixel-identical to `34w`. A missing asset
+would not throw a JS error — it would show as a broken image — so it must be checked by eye and by HTTP,
+not assumed from a green battery.
 
 # 🟢 §141 — THE FOUR-TEST AUDIT ROUND. WHAT'S SOLID, WHAT'S OWED. s68.
 
