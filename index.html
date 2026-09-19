@@ -283,7 +283,7 @@
     #notify-card .nc-txt{font-size:14px}
   }
   #buildmark{margin:4px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#B5566B;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#7A5A98;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -1409,7 +1409,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">35i</p>
+      <p id="buildmark" aria-label="test build marker">35j</p>
     </div>
   </section>
 
@@ -1757,6 +1757,19 @@
   </div>
 </div>
 
+<!-- §154 - the Agency's own confirm panel (submit/lock), modelled on ov-buy -->
+<div id="ov-agconfirm" class="overlay center">
+  <div class="modal">
+    <div class="lic-eyebrow" id="agc-eyebrow" style="margin-bottom:6px"></div>
+    <h3 id="agc-title"></h3>
+    <p class="clue-text" id="agc-body" style="font-size:15px"></p>
+    <div class="row2">
+      <button class="btn btn-primary" id="agc-go" onclick="agcGo()"></button>
+      <button class="btn-ghost" onclick="agcNo()">Not yet</button>
+    </div>
+  </div>
+</div>
+
 <div id="ov-loupe">
   <div id="loupe-stage"><img id="loupe-img" alt="" draggable="false"></div>
   <button id="loupe-x" onclick="closeLoupe()" aria-label="Close">✕</button>
@@ -1955,6 +1968,22 @@ const APP_META=Object.freeze({
    Leave empty ("") to run offline / single-device.
    ============================================================ */
 const SYNC = { url: "https://deerstalker.tony-13f.workers.dev" };
+
+/* §153 - is the app running INSTALLED (home screen / standalone) rather than in a browser tab?
+   iOS exposes navigator.standalone; every other engine exposes the display-mode media query.
+   Fully wrapped and false-by-default, so a missing API can never throw or misreport. Inert until
+   wired to UI copy (the push-availability line) - this is the detection primitive only. */
+function isStandalone(){
+  try{
+    if(window.navigator && window.navigator.standalone === true) return true;
+    if(window.matchMedia){
+      if(window.matchMedia('(display-mode: standalone)').matches) return true;
+      if(window.matchMedia('(display-mode: fullscreen)').matches) return true;
+      if(window.matchMedia('(display-mode: minimal-ui)').matches) return true;
+    }
+  }catch(e){}
+  return false;
+}
 
 /* ---------- request cancellation (§13 item 9) ----------
    Two faults, one helper. A fetch with no timeout hangs for as long as the radio
@@ -3097,6 +3126,29 @@ async function buyConfirm(){
   const ok=await grantEntitlement(p.sku,p.arg);
   p.resolve(ok?"granted":"failed");
 }
+
+/* §154 - the Agency's own confirm dialog: in-app, on-brand, replacing the browser's native
+   confirm for the submit/lock moment. Robust like native confirm - only the primary button
+   resolves true; the ghost button and a backdrop tap (routed through agcNo) resolve false.
+   Falls back to window.confirm if the overlay is ever missing, so a caller can never hang. */
+var _agResolve=null;
+function agencyConfirm(o){
+  o=o||{};
+  return new Promise(function(resolve){
+    try{
+      var ov=document.getElementById("ov-agconfirm");
+      if(!ov){ resolve(!!window.confirm(o.plain||o.title||"Confirm?")); return; }
+      _agResolve=resolve;
+      document.getElementById("agc-eyebrow").textContent=o.eyebrow||"SCAVENGER & HUNT CO.";
+      document.getElementById("agc-title").textContent=o.title||"";
+      document.getElementById("agc-body").innerHTML=o.bodyHTML||"";
+      document.getElementById("agc-go").textContent=o.cta||"Confirm";
+      openOverlay("ov-agconfirm");
+    }catch(e){ _agResolve=null; try{ resolve(!!window.confirm(o.plain||"Confirm?")); }catch(_e){ resolve(false); } }
+  });
+}
+function agcGo(){ closeOverlay("ov-agconfirm"); var r=_agResolve; _agResolve=null; if(r) r(true); }
+function agcNo(){ closeOverlay("ov-agconfirm"); var r=_agResolve; _agResolve=null; if(r) r(false); }
 
 function grantPack(code){ try{ const o=ownedPacks(); if(o.indexOf(String(code))<0){ o.push(String(code)); localStorage.setItem("shco:packs", JSON.stringify(o)); } }catch(e){} }
 function isLocked(e){ return !!(e && e.paid && !ownsPack(e.code)); }
@@ -7880,11 +7932,25 @@ async function finishHunt(auto){
   State._retSeen=null;
   const totalT=State.hunt.tiles.length, doneT=State.hunt.tiles.filter(t=>State.founds[t.id]).length;
   if(doneT<1){ toast("Find at least one before submitting."); return; }
-  if(doneT<totalT && !auto){
-    const _cmsg = (State.hunt&&State.hunt.cold)
-      ? "Submit "+doneT+" of "+totalT+" finds?\n\nAn archive case closes when you say so \u2014 finds can\u2019t be added after.\n\n(The commendation is earned by closing the full board.)"
-      : "Submit "+doneT+" of "+totalT+" finds?\n\nThis locks your entry \u2014 you can\u2019t add more later.\n\nThe Standing Rule: most confirmed finds wins; earliest entry breaks ties.";
-    if(!confirm(_cmsg)) return;
+  if(!auto){
+    /* \u00a7154 - the Agency's own confirm panel (partial AND full - the old native confirm
+       fired only on a partial finish), replacing the browser's grey box at the proudest
+       moment. agencyConfirm falls back to window.confirm if the panel is ever unavailable,
+       so a hunter can never be left stuck. */
+    const _full = doneT>=totalT;
+    const _cold = !!(State.hunt&&State.hunt.cold);
+    const _count = _full ? ("All "+totalT+" cracked.") : (doneT+" of "+totalT+" cracked.");
+    const _mid   = _full ? "File the case with the Agency for review." : "File them and the case goes to the Agency for review.";
+    const _seal  = _cold ? "An archive case closes when you say so." : "Once filed, it is sealed.";
+    const _bodyHTML = '<b style="font-size:17px">'+_count+'</b><br>'+_mid+'<br><i style="color:#7a2e2e">'+_seal+'</i>';
+    const _ok = await agencyConfirm({
+      eyebrow:"CASE No. "+String(State.hunt.code||""),
+      title:(_full?"A clean sweep?":"Present your findings?"),
+      bodyHTML:_bodyHTML,
+      cta:(_full?"File the case":"File my findings"),
+      plain:(_full?"File all "+totalT:"Submit "+doneT+" of "+totalT)+" finds? Once filed, the entry is sealed."
+    });
+    if(!_ok) return;
   }
   const mySub=await saveHunterSub("submitted");
   State.locked=true;
@@ -8931,6 +8997,7 @@ document.querySelectorAll(".overlay").forEach(ov=>{
     if(ov.id==="ov-crop" || ov.id==="ov-name") return;            /* resolve/teardown-bearing: never generic-close */
     if(ov.id==="ov-dispatch"){ burnDispatch(); return; }          /* route through burn so queued toasts flush + the card fades */
     if(ov.id==="ov-praise"){ burnPraise(); return; }
+    if(ov.id==="ov-agconfirm"){ agcNo(); return; }                /* §154 - backdrop tap resolves the promise (cancel), never orphans it */
     ov.classList.remove("open");
   });
 });
