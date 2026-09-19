@@ -283,7 +283,7 @@
     #notify-card .nc-txt{font-size:14px}
   }
   #buildmark{margin:4px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#7A5A98;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#4E9A87;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -704,10 +704,20 @@
   .vthumb img{width:100%;height:100%;object-fit:cover}
   .vthumb .obj{font-size:42px}
   .vthumb .tag{position:absolute;top:4px;left:4px;font-family:var(--type);font-size:8px;letter-spacing:1px;background:rgba(30,28,26,.7);color:#fff;padding:1px 5px;border-radius:5px}
-  .vtoggle{display:flex;flex-direction:column;gap:6px}
-  .vt{width:44px;height:32px;border-radius:9px;border:1px solid var(--line);background:#fff;font-size:16px;cursor:pointer;display:grid;place-items:center}
+  .vtoggle{display:flex;flex-direction:column;gap:6px;align-self:stretch}
+  .vt{width:52px;flex:1 1 0;min-height:44px;border-radius:9px;border:1px solid var(--line);background:#fff;font-size:20px;cursor:pointer;display:grid;place-items:center}
   .vt.yes.on{background:var(--green);color:#fff;border-color:var(--green)}
   .vt.no.on{background:var(--oxblood);color:#fff;border-color:var(--oxblood)}
+  /* §155 - judged-tile stamp, reusing the .tile.found SOLVED-stamp treatment (revisable, nothing hidden) */
+  .vthumb.jstamp::after{content:attr(data-stamp);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-11deg);font-family:var(--type);letter-spacing:2px;font-size:11px;font-weight:700;border:2.5px solid;border-radius:4px;padding:3px 9px;background:rgba(244,237,220,.92);box-shadow:0 2px 4px rgba(0,0,0,.32);z-index:3;white-space:nowrap;pointer-events:none}
+  .vthumb.jyes::after{color:var(--green);border-color:var(--green)}
+  .vthumb.jno::after{color:var(--oxblood);border-color:var(--oxblood)}
+  /* §156 - clue character counter + at-limit hint nudge */
+  .clue-wrap{position:relative;display:block}
+  .clue-wrap .field{padding-right:56px}
+  .clue-count{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-family:var(--type);font-size:11px;letter-spacing:.5px;color:var(--tweed);pointer-events:none}
+  .clue-count.full{color:var(--oxblood);font-weight:700}
+  .hint-toggle.at-limit{color:var(--oxblood);font-weight:700}
 
   /* case list */
   .caserow{display:flex;align-items:center;gap:12px;background:#fff8ec;border:1px solid var(--line);border-radius:14px;padding:13px;margin-bottom:10px;cursor:pointer}
@@ -1409,7 +1419,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">35j</p>
+      <p id="buildmark" aria-label="test build marker">35k</p>
     </div>
   </section>
 
@@ -1653,7 +1663,7 @@
       <div class="crop-frame"></div>
     </div>
     <div class="zoomrow">🔍<input id="crop-zoom" type="range" min="1" max="3" step="0.01" value="1">🔎</div>
-    <div id="crop-cluerow" class="crop-cluerow" style="display:none"><p id="crop-hint-guide" class="hint-guide">optional hints/clues can be added later by tapping clues</p><input id="crop-clue" class="field" maxlength="12" placeholder="Visible short clue - 12 characters">
+    <div id="crop-cluerow" class="crop-cluerow" style="display:none"><p id="crop-hint-guide" class="hint-guide">optional hints/clues can be added later by tapping clues</p><span class="clue-wrap"><input id="crop-clue" class="field" maxlength="12" placeholder="Visible short clue - 12 characters" oninput="clueCount(this,'crop')"><span class="clue-count" id="crop-clue-count">0/12</span></span>
       <p class="hint-toggle" id="crop-hint-toggle" onclick="toggleTileHint('crop')">+tap here to add hidden hint &#9662;</p>
       <textarea id="crop-hint" class="field hint-field" maxlength="140" rows="4" placeholder="Add a hidden hint for extreme difficult finds.&#10;Use sparingly."></textarea></div>
     <div class="row2">
@@ -1676,7 +1686,7 @@
   <div class="modal">
     <h3>Edit clue</h3>
     <div class="target-big" id="tile-preview"></div>
-    <input id="tile-clue" class="field" maxlength="12" placeholder="Visible short clue - 12 characters">
+    <span class="clue-wrap"><input id="tile-clue" class="field" maxlength="12" placeholder="Visible short clue - 12 characters" oninput="clueCount(this,'tile')"><span class="clue-count" id="tile-clue-count">0/12</span></span>
     <p class="hint-toggle" id="tile-hint-toggle" onclick="toggleTileHint()">+tap here to add hidden hint &#9662;</p>
     <textarea id="tile-hint" class="field hint-field" maxlength="140" rows="4" placeholder="Add a hidden hint for extreme difficult finds.&#10;Use sparingly."></textarea>
     <div class="row2">
@@ -1983,6 +1993,17 @@ function isStandalone(){
     }
   }catch(e){}
   return false;
+}
+
+/* §156 - live clue character counter; brightens the hidden-hint line at the 12-char limit */
+function clueCount(input, which){
+  try{
+    var n=(input.value||"").length, max=input.maxLength>0?input.maxLength:12;
+    var c=document.getElementById(which+"-clue-count");
+    if(c){ c.textContent=n+"/"+max; c.classList.toggle("full", n>=max); }
+    var tog=document.getElementById(which+"-hint-toggle");
+    if(tog) tog.classList.toggle("at-limit", n>=max);
+  }catch(e){}
 }
 
 /* ---------- request cancellation (§13 item 9) ----------
@@ -8913,7 +8934,8 @@ async function openVerify(code, hid){
   body.innerHTML=`<div class="h-card" style="margin-bottom:12px">
       <label class="eyebrow" style="display:block;margin-bottom:6px">Note to file (optional)</label>
       <textarea id="v-note" class="field" style="min-height:58px;margin:0" placeholder="Send ${escapeHtml(sub.name||"this hunter")} a message like &quot;Jolly good show&quot; or &quot;Balderdash, try again&quot;">${escapeHtml(res.note||"")}</textarea>
-    </div>`;
+    </div>
+    <button class="btn btn-ghost" id="v-confirmall" style="width:100%;margin-bottom:12px" onclick="confirmAllRemaining()">Confirm all remaining</button>`;
   hunt.tiles.forEach((t,i)=>{
     const target = tileHTML(t);
     const hunterSrc=findMap[t.id];
@@ -8929,6 +8951,7 @@ async function openVerify(code, hid){
       <div class="vthumb"><span class="tag">FOUND</span>${proof}</div>
       ${toggles}`;
     body.appendChild(row);
+    if(hunterSrc && (m===1||m===0)){ const _ft=row.querySelectorAll(".vthumb")[1]; if(_ft){ _ft.classList.add("jstamp", m===1?"jyes":"jno"); _ft.setAttribute("data-stamp", m===1?"CONFIRMED":"RETURNED"); } }
   });
   updateVerifyCount(); go("s-verify");
 }
@@ -8938,7 +8961,29 @@ function mark(id,val,el){
   const parent=el.parentElement;
   parent.querySelectorAll(".vt").forEach(b=>b.classList.remove("on"));
   el.classList.add("on");
+  /* §155 - stamp the FOUND tile on-brand (CONFIRMED / RETURNED); revisable - tapping the other verdict restamps */
+  try{ const _ft=parent.parentElement.querySelectorAll(".vthumb")[1];
+    if(_ft){ _ft.classList.add("jstamp"); _ft.classList.toggle("jyes", val===1); _ft.classList.toggle("jno", val===0); _ft.setAttribute("data-stamp", val===1?"CONFIRMED":"RETURNED"); } }catch(e){}
   updateVerifyCount();
+}
+/* §155 - confirm every FOUND-and-unjudged tile at once; never touches a NOT-FOUND tile */
+function confirmAllRemaining(){
+  if(!State.verify) return;
+  const body=document.getElementById("verify-body");
+  const rows=body?body.querySelectorAll(".vrow"):[];
+  let changed=0;
+  State.verify.hunt.tiles.forEach(function(t,i){
+    if(State.verify.findMap[t.id] && State.verify.marks[t.id]===undefined){
+      State.verify.marks[t.id]=1; changed++;
+      const row=rows[i]; if(!row) return;
+      const yes=row.querySelector(".vt.yes");
+      if(yes){ row.querySelectorAll(".vt").forEach(b=>b.classList.remove("on")); yes.classList.add("on"); }
+      const _ft=row.querySelectorAll(".vthumb")[1];
+      if(_ft){ _ft.classList.add("jstamp","jyes"); _ft.setAttribute("data-stamp","CONFIRMED"); }
+    }
+  });
+  if(!changed){ toast("Nothing left to confirm."); return; }
+  updateVerifyCount(); toast(changed+" find"+(changed===1?"":"s")+" confirmed.");
 }
 function updateVerifyCount(){
   const submitted=Object.values(State.verify.findMap||{}).filter(Boolean).length;
