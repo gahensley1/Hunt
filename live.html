@@ -283,7 +283,7 @@
     #notify-card .nc-txt{font-size:14px}
   }
   #buildmark{margin:4px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#3B6BA5;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#B4532A;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -1409,7 +1409,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">35g</p>
+      <p id="buildmark" aria-label="test build marker">35f</p>
     </div>
   </section>
 
@@ -3992,18 +3992,11 @@ async function startBuild(){
     let name=await getMyName();
     if(!name){ showScrollHint(); return; }
     await ensureCred();
+    State.build={code:null,title:"Untitled Case",tiles:[],builder:name,timerMins:0};
     State._builderEdit=null;
-    _draftWire();
-    /* §149 - a fresh board abandoned earlier (app reaped, reload) is restored silently. */
-    let _d=null;
-    try{ const _raw=await loadDraft();
-      if(_raw){ const _p=JSON.parse(_raw); if(_p && Array.isArray(_p.tiles) && _p.tiles.length) _d=_p; } }catch(e){}
-    if(_d){ if(!_d.builder) _d.builder=name; _d.code=null; State.build=_d; }
-    else { State.build={code:null,title:"Untitled Case",tiles:[],builder:name,timerMins:0}; }
-    { const bti=document.getElementById("build-title-input");
-      if(bti) bti.value=(State.build.title && State.build.title!=="Untitled Case")?State.build.title:""; }
+    { const bti=document.getElementById("build-title-input"); if(bti) bti.value=""; }
     renderBuild(); paintWatch(); go("s-build");
-    if(document.getElementById("cred-ov").classList.contains("hidden") && (!State.build.title || State.build.title==="Untitled Case")) nudgeTitle();
+    if(document.getElementById("cred-ov").classList.contains("hidden")) nudgeTitle();
   }catch(e){ toast("Something snagged starting the build: "+(e&&e.message?e.message:e), 5200); }
 }
 /* ---------- the pocket watch (timed hunts) ---------- */
@@ -4018,39 +4011,6 @@ function paintWatch(){
   document.getElementById("watch-set").classList.toggle("hidden",!m);
   document.getElementById("watch-time").textContent=fmtWatch(m||60);
 }
-/* ---------- FRESH-BUILD DRAFT (autosave), §149 ----------
-   A fresh case (no code minted yet) has no copy anywhere but this screen; a
-   backgrounded tab the OS reaps would take the whole board with it. Persisted to
-   IndexedDB, NOT localStorage - a photo-heavy board runs to megabytes, past the
-   localStorage quota, and would throw on exactly the big cases worth saving.
-   FRESH BUILDS ONLY: an amendment, a Desk build or a curator edit already has a
-   filed copy and must never read or write this slot. Best-effort throughout: if
-   IDB is missing everything degrades to the old behaviour - no draft, no harm. */
-var _draftDB=null,_draftTimer=null,_draftWired=false;
-function _draftOpen(){ return new Promise(function(res){
-  if(_draftDB) return res(_draftDB);
-  try{ var rq=indexedDB.open("shco-draft",1);
-    rq.onupgradeneeded=function(){ try{ rq.result.createObjectStore("kv"); }catch(e){} };
-    rq.onsuccess=function(){ _draftDB=rq.result; res(_draftDB); };
-    rq.onerror=function(){ res(null); };
-  }catch(e){ res(null); } }); }
-function _draftIsFresh(){ return !!(State.build && !State.build.code && !State._builderEdit && !State._curatorEdit && !State._curatorBuildFlow); }
-async function saveDraft(){ if(!_draftIsFresh()) return;
-  var db=await _draftOpen(); if(!db) return;
-  try{ var body=JSON.stringify(State.build);
-    var tx=db.transaction("kv","readwrite"); tx.objectStore("kv").put(body,"build"); }catch(e){} }
-function scheduleDraftSave(){ try{ if(_draftTimer) clearTimeout(_draftTimer); }catch(e){} _draftTimer=setTimeout(saveDraft,800); }
-function loadDraft(){ return new Promise(function(res){ _draftOpen().then(function(db){
-  if(!db) return res(null);
-  try{ var rq=db.transaction("kv","readonly").objectStore("kv").get("build");
-    rq.onsuccess=function(){ res(rq.result||null); }; rq.onerror=function(){ res(null); };
-  }catch(e){ res(null); } }); }); }
-async function clearDraft(){ var db=await _draftOpen(); if(!db) return;
-  try{ db.transaction("kv","readwrite").objectStore("kv").delete("build"); }catch(e){} }
-function _draftWire(){ if(_draftWired) return; _draftWired=true;
-  try{ document.addEventListener("visibilitychange",function(){ if(document.visibilityState==="hidden") saveDraft(); }); }catch(e){}
-  try{ window.addEventListener("pagehide",function(){ saveDraft(); }); }catch(e){}
-  try{ setInterval(function(){ var s=document.getElementById("s-build"); if(s && !s.classList.contains("hidden")) saveDraft(); },4000); }catch(e){} }
 let _autoFiling=false;
 async function autoFile(){
   if(_autoFiling||State.locked||!State.hunt) return; _autoFiling=true;
@@ -6755,7 +6715,6 @@ function confirmLeaveBuild(){
     if(!confirm("Leave without saving this case? Your board will be lost.")) return;
   }
   if(State._curatorBuildFlow){ State._curatorBuildFlow=false; State.build=null; renderCurator(); return; }
-  try{ clearDraft(); }catch(e){}  /* §149 - they chose to abandon; the board really is gone now */
   State.build=null;
   go("s-home");
 }
@@ -6770,7 +6729,6 @@ function renderBuild(){
   const n=State.build.tiles.length;
   document.getElementById("tile-count").textContent=n;
   document.getElementById("finish-build").disabled = n<1;
-  try{ scheduleDraftSave(); }catch(e){}  /* §149 */
   /* A builder who lands on an empty grid misses the tour entirely - the arm in go()
      expires before the first photo exists. Re-arm as soon as there is a tile to lift. */
   try{ const sb=document.getElementById("s-build");
@@ -7233,7 +7191,6 @@ async function _finishBuild(){
   // record in my cases
   let mine=[]; try{mine=JSON.parse(await Store.get("mycases")||"[]");}catch(e){}
   if(!mine.includes(code)){ mine.unshift(code); await Store.set("mycases",JSON.stringify(mine)); }
-  try{ clearDraft(); }catch(e){}  /* §149 - the case is recorded in mine[]; the fresh-draft's job is done */
   if(State.build && State.build.desk){ try{ await deskAdd(code); }catch(e){} }
   // Agency Case submission — builder-initiated territorial review queue
   if(_tooBig){

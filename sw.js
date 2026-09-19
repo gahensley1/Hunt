@@ -45,7 +45,8 @@ self.addEventListener("message", function(e){
    new Notification() and a page-context showNotification() only work while the app is on
    screen, and on iOS neither works at all. This handler plus a subscription is the ONLY
    path that reaches an iPhone - and there, only once the app is installed to the home
-   screen (iOS 16.4+; unavailable in the EU under 17.4+).
+   screen (iOS 16.4+). (Apple briefly signalled it would drop EU home-screen web apps in
+   early 2024, then reversed it - EU installs and their push work like everywhere else.)
 
    🔴 SCOPE, owner decision recorded at §64.3: GAME PLAY ONLY. A find is filed - finds are
    returned by the builder - a case is finished. NO re-engagement nudges, NO "come back and
