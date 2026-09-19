@@ -283,7 +283,7 @@
     #notify-card .nc-txt{font-size:14px}
   }
   #buildmark{margin:4px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#A8478F;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#7A5A98;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -1419,7 +1419,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">35l</p>
+      <p id="buildmark" aria-label="test build marker">35m</p>
     </div>
   </section>
 
@@ -1775,7 +1775,7 @@
     <p class="clue-text" id="agc-body" style="font-size:15px"></p>
     <div class="row2">
       <button class="btn btn-primary" id="agc-go" onclick="agcGo()"></button>
-      <button class="btn-ghost" onclick="agcNo()">Not yet</button>
+      <button class="btn-ghost" id="agc-no" onclick="agcNo()">Not yet</button>
     </div>
   </div>
 </div>
@@ -3152,7 +3152,7 @@ async function buyConfirm(){
    confirm for the submit/lock moment. Robust like native confirm - only the primary button
    resolves true; the ghost button and a backdrop tap (routed through agcNo) resolve false.
    Falls back to window.confirm if the overlay is ever missing, so a caller can never hang. */
-var _agResolve=null;
+var _agResolve=null; var _agBackdrop=false;
 function agencyConfirm(o){
   o=o||{};
   return new Promise(function(resolve){
@@ -3164,12 +3164,15 @@ function agencyConfirm(o){
       document.getElementById("agc-title").textContent=o.title||"";
       document.getElementById("agc-body").innerHTML=o.bodyHTML||"";
       document.getElementById("agc-go").textContent=o.cta||"Confirm";
+      { var _gn=document.getElementById("agc-no"); if(_gn) _gn.textContent=o.ghost||"Not yet"; }
+      _agBackdrop=!!o.backdrop;   /* s69 - what a backdrop tap resolves to; false (cancel) unless the caller says otherwise */
       openOverlay("ov-agconfirm");
     }catch(e){ _agResolve=null; try{ resolve(!!window.confirm(o.plain||"Confirm?")); }catch(_e){ resolve(false); } }
   });
 }
 function agcGo(){ closeOverlay("ov-agconfirm"); var r=_agResolve; _agResolve=null; if(r) r(true); }
 function agcNo(){ closeOverlay("ov-agconfirm"); var r=_agResolve; _agResolve=null; if(r) r(false); }
+function agcBackdrop(){ closeOverlay("ov-agconfirm"); var r=_agResolve, v=_agBackdrop; _agResolve=null; _agBackdrop=false; if(r) r(v); }
 
 function grantPack(code){ try{ const o=ownedPacks(); if(o.indexOf(String(code))<0){ o.push(String(code)); localStorage.setItem("shco:packs", JSON.stringify(o)); } }catch(e){} }
 function isLocked(e){ return !!(e && e.paid && !ownsPack(e.code)); }
@@ -4073,6 +4076,9 @@ async function startBuild(){
       try{ const _raw=await loadDraft();
         if(_raw){ const _p=JSON.parse(_raw); if(_p && Array.isArray(_p.tiles) && _p.tiles.length) _d=_p; } }catch(e){}
     }
+    if(_d){ let _keep=true;
+      try{ _keep=await agencyConfirm({title:"Resume or start fresh?",bodyHTML:"",cta:"Resume",ghost:"Start fresh",backdrop:true,plain:"Resume or start fresh? OK = Resume"}); }catch(e){ _keep=true; }
+      if(!_keep){ _d=null; try{ await clearDraft(); }catch(e){} } }
     if(_d){ if(!_d.builder) _d.builder=name; _d.code=null; State.build=_d; }
     else { State.build={code:null,title:"Untitled Case",tiles:[],builder:name,timerMins:0}; }
     { const bti=document.getElementById("build-title-input");
@@ -9046,7 +9052,7 @@ document.querySelectorAll(".overlay").forEach(ov=>{
     if(ov.id==="ov-crop" || ov.id==="ov-name") return;            /* resolve/teardown-bearing: never generic-close */
     if(ov.id==="ov-dispatch"){ burnDispatch(); return; }          /* route through burn so queued toasts flush + the card fades */
     if(ov.id==="ov-praise"){ burnPraise(); return; }
-    if(ov.id==="ov-agconfirm"){ agcNo(); return; }                /* §154 - backdrop tap resolves the promise (cancel), never orphans it */
+    if(ov.id==="ov-agconfirm"){ agcBackdrop(); return; }                /* §154 - backdrop tap resolves the promise (cancel), never orphans it */
     ov.classList.remove("open");
   });
 });
