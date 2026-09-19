@@ -283,7 +283,7 @@
     #notify-card .nc-txt{font-size:14px}
   }
   #buildmark{margin:4px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#3B6BA5;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#C88A2E;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -1409,7 +1409,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">35g</p>
+      <p id="buildmark" aria-label="test build marker">35h</p>
     </div>
   </section>
 
@@ -7977,11 +7977,18 @@ async function buyEverything(){
    never shown the bundle \u2014 only what is still missing. */
 function renderLicTiers(){
   const host=document.getElementById("lic-tiers"); if(!host) return;
-  /* This screen sells the Charter and nothing else. Volumes are offered on the cold-case
-     detail card, where the buyer has a case in front of them; here they are context-free. */
+  /* \u00a7150 - this screen sells the Charter AND, stacked beneath it, the Charter+Volume-I bundle,
+     so the $1 step up reads by comparison. Single volumes are still offered on the cold-case
+     detail card, where the buyer has a case in front of them. */
   const lic=hasLicence();
   let h="";
-  if(!lic) h+='<button class="btn btn-primary lic-btn" onclick="purchaseLicence()"><span class="lic-btn-text">The Inspector\u2019s Charter<small>unlimited builds \u2014 $7.99</small></span></button>';
+  if(!lic){
+    h+='<button class="btn btn-primary lic-btn" onclick="purchaseLicence()"><span class="lic-btn-text">The Inspector\u2019s Charter<small>unlimited builds \u2014 $7.99</small></span></button>';
+    var _bv=bundleVolume();
+    if(_bv && !ownsPack(String((_bv.codes&&_bv.codes[0])||""))){
+      h+='<button class="btn btn-primary lic-btn" onclick="buyEverything()"><span class="lic-btn-text">The Inspector\u2019s Charter &amp; The Almanac, Volume I<small>unlimited builds + 3 ready-made cases \u2014 $8.99</small></span></button>';
+    }
+  }
   host.innerHTML=h;
 }
 
