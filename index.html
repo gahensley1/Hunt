@@ -283,7 +283,7 @@
     #notify-card .nc-txt{font-size:14px}
   }
   #buildmark{margin:4px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#C88A2E;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#B5566B;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -1409,7 +1409,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">35h</p>
+      <p id="buildmark" aria-label="test build marker">35i</p>
     </div>
   </section>
 
@@ -7456,6 +7456,19 @@ function openJoin(){
    Every message below already reads well and two carry working links, so the fix is
    to put the reader in front of them rather than invent a new failure state. */
 function joinFail(err){ try{ go("s-join"); }catch(e){} err.classList.remove("hidden"); }
+/* §152 - atomic seat claim on the Worker. Returns the parsed {seated,...} result, or null
+   when the Worker can't be reached (offline) so the caller falls back to the old local seat. */
+async function claimSeat(code, hid, limit, resume){
+  if(!SYNC.url) return null;
+  try{
+    const _body = resume ? {code:code, hid:hid, resume:true}
+                         : {code:code, hid:hid, limit:(isFinite(limit)?limit:SEAT_MAX)};
+    const r = await fetch(SYNC.url.replace(/\/+$/,"")+"/claim-seat",
+      {method:"POST", headers:{"content-type":"application/json"}, body:JSON.stringify(_body), signal:_sig(NET_MS)});
+    if(!r.ok) return null;
+    return await r.json();
+  }catch(e){ return null; }
+}
 async function joinCase(){
   State._huntFrom=State._coldOrigin?("cold:"+State._coldOrigin):null; State._coldOrigin=null;
   const code=document.getElementById("join-code").value.trim();
@@ -7514,12 +7527,17 @@ async function joinCase(){
     const label = n===1 ? name : (name.slice(0,20).trim()+" "+n);
     const slug=slugName(label);
     const myHid=await Store.get("hid:"+code+":"+slug);
-    if(myHid){ hid=myHid; State.hunterName=label; break; }   // me, resuming (aliased or not)
+    if(myHid){ hid=myHid; State.hunterName=label; try{ claimSeat(code, myHid, 0, true); }catch(e){} break; }   // me, resuming (aliased or not) - §152 ensure the shared seat row
     const taken=subsNow.some(s=>slugName(s.name)===slug);
     if(!taken){
       /* full complement? seated detectives always resume above; only NEW seats are refused */
       const _seats = huntCandidate.cold ? Infinity : await caseSeats(code);
-      if(subsNow.length>=_seats){
+      const _newHid = "h"+uid();
+      /* §152 - the complement is enforced ATOMICALLY on the Worker now, so two hunters
+         cannot both take the last seat. seated===false is authoritative; a null (Worker
+         unreachable / offline) falls through to the old local seat so offline join works. */
+      const _cr = huntCandidate.cold ? null : await claimSeat(code, _newHid, _seats, false);
+      if(_cr && _cr.seated===false){
         /* the turned-away are counted \u2014 it is the builder's proof that the case wants raising */
         try{ await Store.set("turn:"+code+":"+slug, String(Date.now()), true); }catch(e){}
         err.innerHTML="Case No. "+escapeHtml(code)+" has its full complement of "+_seats+" detectives."
@@ -7528,7 +7546,7 @@ async function joinCase(){
             : "<br><span class=\"meta\">Ask your builder to raise the complement \u2014 they can seat "+SEAT_BLOCK+" more from their roster.</span>" );
         joinFail(err); State.hunt=null; return;
       }
-      hid="h"+uid(); await Store.set("hid:"+code+":"+slug, hid); State.hunterName=label;
+      hid=_newHid; await Store.set("hid:"+code+":"+slug, hid); State.hunterName=label;
       if(n>1) toast("Another "+name+" is already on this case \u2014 here you\u2019ll appear as \u201c"+label+"\u201d.", 4600);
       break;
     }
