@@ -283,7 +283,7 @@
     #notify-card .nc-txt{font-size:14px}
   }
   #buildmark{margin:4px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#7FA33C;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#B4532A;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -1409,7 +1409,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">35e</p>
+      <p id="buildmark" aria-label="test build marker">35f</p>
     </div>
   </section>
 
@@ -2980,7 +2980,7 @@ const VOLUMES=[
      LABELS AND sub ARE PLACEHOLDER COPY - owner wording replaces them.
      months is inert today; the season gate that would read it is still owed. */
   { id:"alm1", label:"The Almanac, Volume I", sub:"midwinter - three investigations",
-    price:"1.49", kind:"volume", shelf:"almanac", months:[12,1],
+    price:"1.49", kind:"volume", shelf:"almanac", months:[12,1], bundle:true,
     codes:["241224","122112","010101"] },
   { id:"alm2", label:"The Almanac, Volume II", sub:"spring - three investigations",
     price:"1.49", kind:"volume", shelf:"almanac", months:[2,3,4,5],
@@ -3123,9 +3123,9 @@ async function purchaseLicence(){
   const r=await requirePurchase("licence",{
     title:"The Inspector\u2019s Charter",
     body:"Unlimited builds of your own cases, yours to keep. Payment arrives with the App Store release \u2014 this preview issues the Charter at once.",
-    cta:"The Charter \u00b7 $6.99"});
+    cta:"The Charter \u00b7 $7.99"});
   if(r!=="granted" && r!=="owned") return;
-  purchaseGranted("The Inspector\u2019s Charter","$6.99 \u2014 unlimited builds");
+  purchaseGranted("The Inspector\u2019s Charter","$7.99 \u2014 unlimited builds");
 }
 function purchaseGranted(tier,priceLine){
   closeOverlay("s-licence");
@@ -7917,7 +7917,7 @@ async function buyVolume(id){
 
 /* THE BUNDLE IS PINNED TO ONE VOLUME \u2014 the entry offer, never a growing
    "everything forever" SKU. Later volumes are always sold on their own. */
-const BUNDLE_PRICE="10.99";
+const BUNDLE_PRICE="8.99";
 async function buyEverything(){
   const v=bundleVolume(); if(!v) return;
   const r=await requirePurchase("everything",{
@@ -7938,7 +7938,7 @@ function renderLicTiers(){
      detail card, where the buyer has a case in front of them; here they are context-free. */
   const lic=hasLicence();
   let h="";
-  if(!lic) h+='<button class="btn btn-primary lic-btn" onclick="purchaseLicence()"><span class="lic-btn-text">The Inspector\u2019s Charter<small>unlimited builds \u2014 $6.99</small></span></button>';
+  if(!lic) h+='<button class="btn btn-primary lic-btn" onclick="purchaseLicence()"><span class="lic-btn-text">The Inspector\u2019s Charter<small>unlimited builds \u2014 $7.99</small></span></button>';
   host.innerHTML=h;
 }
 
