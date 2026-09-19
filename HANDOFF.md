@@ -272,6 +272,26 @@ A TOOL THAT CANNOT SEE THE CHANGE ARE INDISTINGUISHABLE FROM THE OUTSIDE.** GATE
 that is an exit code, inverted. When a gate refuses, prove what it actually read before believing it.
 
 
+# 🟢 §151 — D1 ROW-SIZE, TESTED LIVE. A probe, not a build. s68.
+
+**The Code seat's highest-stakes finding: a photo-heavy case is one ~3.6 MB row against Cloudflare's
+documented 2 MB D1 row limit.** Tested directly against the deployed Worker from outside — throwaway
+non-existent keys (`hunt:9009xx`), cleaned up after. PUT + read-back at **1.9, 2.1, 3.6 and 3.9 MB —
+all 200, all returned byte-for-byte.** So D1 is **NOT enforcing** the 2 MB row limit on this database
+today; big cases write, store and retrieve fine right now. This retires the two-phone test as
+unnecessary.
+
+RESIDUAL RISK, not urgent: the 2 MB limit is real in the docs, and Cloudflare turned on a DIFFERENT
+long-documented D1 limit (free-tier daily reads) on 1 Sept 2026 with hard fails. If they ever give the
+row limit the same treatment, big cases break the day it lands. Contingency, NOT built: shard a case to
+one row per tile. Keep on the shelf; no action while enforcement is off. **Re-test after any Cloudflare
+D1 change.**
+
+Method (repeatable): `PUT /kv/hunt:<throwaway>` with an N-byte body → `GET` → `wc -c` → `DELETE`. Never
+a real case code. The write path is unauthenticated by design — a builder files a case the same way.
+
+---
+
 # 🟢 §150 — THE BUNDLE, SURFACED. `35h`, s68.
 
 **Owner asked to put the $8.99 bundle in front of buyers, and raised the right worry: the in-world
