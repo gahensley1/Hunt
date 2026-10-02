@@ -4914,3 +4914,254 @@ session**; the durable copy is the previous commit.
 
 `HANDOFF-SPEC.md` (1,166 lines) and `HANDOFF-HISTORY.md` (2,728 lines) were **not touched** — they
 hold how-it-works and what-happened, neither of which went stale this session.
+
+
+# 🟢 §161 THE WIRE - WRITTEN CLUE CARD (DESIGN APPROVED, NOT YET BUILT)
+
+§161.1 WHAT IT IS. A second clue type beside the photograph tile: the builder types a written
+clue and the hunter receives it as an Agency wire - a telegram-style card. Owner approved the card
+design on 1 Oct 2026 ("That's approved"). NO CODE EXISTS YET. The approved artwork lives at
+`art\wire\wire-card-approved.html`; the crown asset at `art\wire\crown.png`.
+
+§161.2 THE CROWN. Extracted from the owner's own reference photograph of a blank GPO telegram
+form, cropped at 8x and thresholded to alpha so the broken ink edge is the real one, not a redraw.
+688x560 RGBA. Owner ruling 30 Sep 2026: a crown as a decorative device is NOT restricted - he cited
+Keep Calm merchandise and he is right. Claude had conflated it with the Royal Arms and overreached.
+WHAT STAYS OUT is the wordmark POST OFFICE, which is a live company's name.
+
+§161.3 MASTHEAD, LOCKED. One line, "Scavenger & Hunt Co. Wire", Gill Sans, 11px, letterspaced,
+chrome brown. The ampersand is typed. The crown sits ON THE HAIRLINE RULE BELOW the title, centred,
+56% above the rule and 44% below, knocking the rule out with its own parchment padding so the line
+breaks cleanly either side at any width. Three alternatives were rendered and rejected: crown
+leading, crown as the ampersand, crown before the kind.
+
+§161.4 WHY THE FIRST THREE ATTEMPTS FAILED. Owner: "it's not readable". The UX seat measured it:
+a fixed 620px artwork shrunk onto a 390px phone put the clue at ~8 effective px against a 16px
+outdoor floor; faded ink on mottled parchment measured ~2.5-3.5:1 against the 4.5:1 AA floor; and
+62 characters per line of ALL-CAPS MONOSPACE strips word shapes and forces letter-by-letter
+reading. Three compounding faults on the one element that matters.
+
+§161.5 THE FIXES, MEASURED NOT ESTIMATED. Clue at 19px, 27 characters per line, sentence case,
+near-black #15120C on a FLAT PLATE (#EFE6CE) so no grain crosses the letterforms. Card sizes to its
+content - 323px tall at 390px wide, no dead field. Rendered at 390x844 at device_scale_factor 3 and
+the type measured out of the DOM, per the rule that a zero-width rect is not a measurement.
+
+§161.6 WHAT WAS CUT FROM THE FORM. Charges to pay, RECEIVED, Sent/To/At/By, OFFICE STAMP, word
+count, time handed in, the duplicate number, the footer. KEPT: masthead, origin, item n of 12, the
+two rules, the clue, the file tab.
+
+§161.7 TILES DO NOT CARRY THE CLUE. 140 characters never fit a 214px tile; truncating produced
+6px type. The tile is an INDEX CARD: crown, the word WIRE, the file-tab name at 16px, the number,
+and its state. Tapping opens the full wire. One legible surface instead of two illegible ones.
+
+§161.8 CLUE LENGTH. 140 characters visible, same as the photograph tile's hidden hint. The
+reference clue is exactly 140 and the render script counts it rather than eyeballing it:
+"A lion without a mane guards the second gate. He has watched the same thing for a hundred years
+and never blinked. Photograph what he sees."
+
+§161.9 STILL OPEN, NOT DECIDED.
+  - Does "From the Agency" earn its line on the card?
+  - Are UNOPENED / FILED the right words, or should they read in the owner's voice?
+  - Q1: is ordered play a second case type ("a Chase"), or dropped?
+  - Q4: store bigger hunter photos from here on, for the archive copy and the PDF keepsake?
+
+§161.10 THE REFERENCE PHOTOGRAPH. The 1961 Post Office telegram the owner sent from the Shetland
+Museum and Archives carries "Do Not Publish or Reproduce Without Permission". REFERENCE ONLY.
+Nothing from that image goes into the app. The crown came from the owner's second, separate image
+of a blank form.
+
+§161.11 THE TILE RULING - OWNER, 1 OCT 2026. SETTLED; this was the one blocker on code.
+His words: "The Hunter always takes a picture proof the builder has an option to take a picture or
+provide written clue that's it. It's not written and picture."
+
+  - THE HUNTER ALWAYS PHOTOGRAPHS. Every tile, both kinds. The hunter's photo is the proof and it
+    is what goes in the keepsake PDF. Nothing about the hunter's side changes.
+  - THE BUILDER CHOOSES, PER TILE: a photograph OR a written clue. Never both on one tile.
+  - A WIRE TILE THEREFORE HAS NO `src`. There is no builder photo to compare against, and none is
+    wanted. The hunter's photo stands alone, as on the honour system the app already runs on.
+  - A CASE MAY MIX TILE KINDS FREELY. The choice is per tile, not per case.
+
+CONSEQUENCES FOR THE BUILD, NOT YET IMPLEMENTED:
+  - The tile shape gains a kind. A photo tile keeps `src`; a wire tile carries the 140-character
+    written clue and no `src`. Anything that assumes every tile has a `src` must be found and
+    fixed - that includes the board render, the share/size accounting, the archive copy and the
+    PDF keepsake.
+  - SIZE. A wire tile costs ~140 bytes where a photo tile costs an inline data URI. Wire tiles make
+    cases dramatically smaller, which eases `SHARED_MAX_BYTES` (client 3,900,000 / Worker
+    3,932,160) rather than straining it.
+  - The builder needs a choice control at tile creation, and the choice must be changeable before
+    the case is filed.
+
+
+# 🟢 §162 THE WIRE TILE ON THE BOARD - NO LABEL, EVER (OWNER RULING, 1 OCT 2026)
+
+§162.1 THE RULING. A wire tile on the board shows THREE THINGS: the crown, the word WIRE, and
+its number. No name, no description, no keyword, no preview of the clue, no state word. The
+builder authors exactly ONE field on a wire tile: the 140-character clue.
+
+§162.2 HOW WE GOT HERE, SO IT IS NOT RE-LITIGATED.
+  a. Claude invented a "file tab" NAME per tile (The Lion, Nine Steps, Bird Girl) and a state word
+     (UNOPENED / FILED). Owner rejected both: "it seems like a just another clue to me... you're
+     making them write too many things when there was already a written clue." Correct on both
+     counts - it made the builder write twice, and the name leaked the answer.
+  b. The UX seat then argued a number-only tile is not navigable (12 near-identical tiles, up to
+     24 taps to re-find one) and proposed the app DERIVE a preview from the clue's own first few
+     words, so the builder authors nothing extra.
+  c. OWNER KILLED THAT TOO, and his reasoning is the governing one: "if you're giving a fun
+     description about something you want them to find and you put the answer in the clue or the
+     keyword which is the clue is the answer then it spoils everything it's a spoiler."
+  d. HE IS RIGHT, AND THE DERIVED VERSION IS THE WORST CASE: it takes the FIRST words, and writers
+     front-load the subject. "The Bird Girl statue has been..." renders a tile reading "The Bird
+     Girl statue...". The builder did nothing wrong; the app leaked it for them.
+  e. THERE IS NO MODEL IN THE APP to judge whether a word is a spoiler. A feature that silently
+     breaks some cases and not others, undetectably, does not ship.
+  f. THE NUMBER IS THE ONLY LABEL THAT CANNOT SPOIL ANYTHING, because it carries no content.
+     Safe by construction, not by care. THAT IS THE PRINCIPLE - apply it to anything similar.
+
+§162.3 WHAT THIS COSTS, ACCEPTED. Two unopened wires are indistinguishable until opened. If
+half-finished boards prove a real problem in play, the fix is a DONE-STATE, not a label: the
+hunter's own photograph landing on the tile says "done" without saying anything about the answer.
+Wire tiles should inherit whatever the photo tile already does when filed. NOT YET MEASURED
+against the live build - confirm what a filed photo tile does today before building this.
+
+§162.4 ALSO SETTLED TODAY. "From the Agency" stays on the card. The file-tab line is gone from
+the card footer as well as the tile.
+
+§162.5 TRAPS THE PANEL FLAGGED, NOT YET HANDLED.
+  - Numbering runs across the WHOLE case. A board of mixed tile kinds must not show gaps, or a
+    hunter reads "I have lost 3, 5 and 6".
+  - The answer-leak returns THROUGH THE CLUE if a builder writes a proper noun ("the Bird Girl
+    statue"). The house rule against proper nouns needs enforcing on the wire field.
+
+§162.6 BUILD NOTE. The tile snippet overflowed its tile twice before being measured rather than
+eyeballed: the inner ink layer had no width rule, so inside a centred flex column it sized to its
+widest child (the nowrap text, 204px) instead of to the tile (173px). Measured out of the DOM, not
+guessed. The snippet is now cut entirely, but the lesson stands - A ZERO-WIDTH RECT IS NOT A
+MEASUREMENT, AND NEITHER IS A GLANCE AT A SCREENSHOT.
+
+
+# 🟢 §163 PROXIMITY - HOW IT WORKS (OWNER RULING, 1 OCT 2026)
+
+§163.1 THE ONE-LINE STATEMENT, AND THE ONE TO REPEAT. THE APP COLLECTS NO LOCATION DATA.
+The hunter's position is read on their own phone, compared on their own phone, and discarded. It
+is never transmitted, never stored, never seen by the Worker, never seen by the builder, never
+seen by us. There is nothing to collect because nothing leaves the device. Anyone writing about
+this feature - in the app, the store listing, the privacy policy or a conversation - states that
+plainly and does not dress it up as a managed risk.
+
+§163.2 WHAT IS BEING BUILT. A case carries a general location for the ground it is played on -
+an area or a landmark, not a per-tile pinpoint. When the hunter arrives, their phone asks itself
+one question: am I near it. The answer is yes or not-yet. That is the whole mechanic. It is a
+confirmation that you have reached the ground, and it reads as another form of clue.
+
+§163.3 WHO PLAYS. A case is shared person to person - a family, a class, friends who already
+know each other. It is not a public listing and is not browsed by strangers. That is the product,
+and it is the context every decision here is made in.
+
+§163.4 WHAT ANY OTHER PLAYER EVER SEES. Position in the running order, and nothing else.
+"Bill is ahead." "You are first." That is a RANK, not a place. It carries no location, no
+coordinate, no direction and no map. A hunter's progress says one player is further along a list
+than another, exactly as a board game does.
+
+§163.5 THE PHOTOGRAPH IS THE ONLY THING THAT TRAVELS, AND IT ALREADY DID. When a hunter files a
+photo it goes to the person who shared the case, as it does today. That is existing behaviour,
+chosen by the hunter, one picture at a time. It is not a location feed and nothing about
+proximity changes it.
+
+§163.6 WHAT THE CASE CARRIES, AS A MATTER OF DATA SHAPE. For a phone to answer "am I near it",
+the case has to contain the general location of the ground. That is the builder's chosen area -
+a park, a square, a landmark - at area resolution. It is one general location per case, not one
+per tile.
+
+§163.7 AREA, NOT OBJECT - THIS IS PHYSICS, NOT POLICY. Consumer phone GNSS runs ~3-5m in the
+open but 10-30m under dense canopy with multipath off masonry, with 50m+ excursions; iOS blends
+Wi-Fi and cell, which in a dense historic district can snap a fix to a building centroid. A
+Savannah square is that worst case and is only ~75m a side. SO THE CHECK CONFIRMS THE GROUND, NOT
+THE OBJECT. A per-tile check cannot tell one tile from its neighbour and must not be built - not
+because of any policy, but because the hardware cannot do it, and a child standing at the right
+statue being told "not close enough" is the app calling them a liar.
+
+§163.8 THE SHAPE, SETTLED.
+  - ONE general location per case, builder-chosen and builder-confirmable. Never per tile.
+  - ONE check, when the hunter reaches the ground. Worded as atmosphere, in the Victorian voice.
+  - NON-BLOCKING ALWAYS. A refused permission, a failed fix or no signal never stops play. The
+    case is fully playable with location switched off.
+  - NO live readout, NO distance, NO warmer/colder, NO direction, NO map, NO watchPosition. A
+    continuously updating number makes a child watch a screen instead of the park.
+  - Permission is asked once, at the point of use, with the reason stated.
+
+§163.9 HARD TECHNICAL FACTS, VERIFIED IN `index.html` THIS SESSION.
+  - There is NO geolocation code in the app today: geolocation / getCurrentPosition /
+    watchPosition all return 0 occurrences.
+  - THE PHOTO CANNOT CARRY THE COORDINATE. Every photo is re-encoded through a canvas at
+    `toDataURL("image/jpeg",0.72)` (2 call sites) and canvas re-encoding destroys EXIF. Location
+    can only come from the browser Geolocation API as a separate, deliberate call. The original
+    framing - "when you take the picture do you include a GPS coordinate" - is not available as
+    stated, and this is why.
+  - Geolocation requires a secure context. GitHub Pages is HTTPS, so this is satisfied.
+
+§163.10 NOT YET BUILT. Nothing of this exists in code. When it is built, the case shape and the
+Worker both change, and `docs\Privacy-Policy-DRAFT.md` is updated to state §163.1 in plain
+words - that the app collects no location data - before the first line of geolocation code is
+written.
+
+§163.11 THE KEY - OWNER RULING, 1 OCT 2026. "Let's use that as our key for the GPS."
+THE BUILDER STANDS ON THE GROUND AND TAPS ONCE. That single tap is the whole of the app's
+relationship with location.
+
+  - WHAT THE TAP DOES. Reads the builder's position once, rounds it to area resolution, and stores
+    it on the case as the ground. One per case. Never per tile. The builder can see it, confirm
+    it, change it or clear it before the case is filed.
+  - WHY A TAP AND NOT A TYPED ADDRESS. Convenience at build time, and it is the ONLY coordinate
+    the app ever takes deliberately. There is no other capture anywhere in the product.
+  - WHAT THE HUNTER'S PHONE DOES WITH IT. Compares, once, on the device, on arrival. Answers
+    "you have reached the ground" or "not yet". Then forgets. The hunter's position is never
+    written down, never sent, never stored. §163.1 holds: THE APP COLLECTS NO LOCATION DATA.
+  - OPTIONAL END TO END. A builder who does not tap simply has a case with no ground, which plays
+    exactly as cases play today. A hunter who refuses the permission plays the whole case. Nothing
+    about this is required and nothing about it blocks.
+
+§163.12 AUTO-CONFIRMATION OF A TILE IS NOT BUILDABLE, AND THIS IS SETTLED, NOT DEFERRED.
+Three independent reasons, any one of which is sufficient:
+  a. THE PHOTOGRAPH CARRIES NOTHING. Canvas re-encode strips EXIF (§163.9), so no pin can be
+     recovered from a hunter's photo - including every photo already filed. There is no latent
+     location data in the archive to mine, now or later.
+  b. THE FIX CANNOT RESOLVE A TILE. 10-30m error against tiles metres apart (§163.7).
+  c. A WIRE TILE HAS NO BUILDER PHOTO TO COMPARE AGAINST. Image matching is therefore impossible
+     on that tile kind by definition - and on photo tiles it would still fail on angle, light and
+     season, and needs a library and compute a single-file PWA does not have.
+
+§163.13 AND IT IS NOT WANTED. The app is honour-system and the play works. Nobody cheats their
+aunt. Every form of auto-confirmation buys a way for the app to tell a child they are wrong when
+they are standing in the right place. The ground check gives the arrival beat without ever being
+in a position to call anybody a liar. DO NOT REOPEN THIS WITHOUT THE OWNER.
+
+§163.14 THE WORDS, OWNER RULING 1 OCT 2026: "I think pin it to the map."
+THE PIN IS THE DETECTIVE LANGUAGE AND WE LEAN INTO IT - Victorian detectives stuck real pins in
+real wall maps. "Set the ground" was rejected by the owner as too vague: "it doesn't make sense...
+it needs to be more blatant." The pin reads plainly to anyone and is period-true at once.
+
+  BUILDER BUTTON        Pin it to the map
+  UNDER IT              Marks where you are standing now.
+  SETTINGS ROW          The pin  -  "Forsyth Park" / "No pin"
+  HUNTER ASK            Confirm you have reached the pin
+  HUNTER ARRIVED        You have reached the pin
+  HUNTER NOT YET        The pin lies elsewhere
+
+"THE PIN" IS THE NOUN EVERYWHERE AFTER. Short enough for a settings row, plain enough for a child,
+and it keeps the map image running through the whole feature. The word "ground" is RETIRED from
+this feature - §163.1 to §163.13 were written before this ruling and use it throughout; read
+"the ground" there as "the pin". DO NOT reintroduce "ground" in any UI copy.
+
+§163.15 WHAT THE OVERLAYS LOOK LIKE. The four moments use the EXISTING `agencyConfirm` overlay
+(`ov-agconfirm`), the one behind "Resume or start fresh?" - dimmed backdrop, parchment card, crown
+on the rule, CTA plus ghost button. NO NEW SCREENS. The builder stays on the builder; the hunter
+stays on the board. Harnesses, both gitignored:
+  `_preview-ground.html`   the seven states as cards (superseded)
+  `_preview-ground2.html`  the four overlays over mock builder and board screens
+Both still say "the ground" and need the §163.14 copy applied before they are shown again.
+The hunter sees exactly ONE of arrived / not-yet / no-signal; nobody encounters four screens.
+
+§163.16 STILL OPEN ON THE COPY. The not-yet card currently carries declined, failed AND
+no-signal as well, which means a hunter who declined the permission is told "the pin lies
+elsewhere" - not true for them. Decide whether that case gets its own second line.
