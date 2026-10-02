@@ -5191,8 +5191,11 @@ app, express it in `cqw` on the card (the s119 masthead method), not by measurin
     that. Owner chose it knowing this.
   - 🔴 THE MASK IS A LAYER-FORMING PROPERTY (s102 class). He viewed it on the iPhone and chose
     it; re-check on the phone in the real build before shipping, not just in the preview.
-§164.5 NO HINT ON A WIRE TILE. Owner: the wire is already the written sentence; a hint would be a
-second one. Photo tiles keep their hints. A wire tile therefore never spends a hint coin.
+§164.5 A WIRE TILE MAY CARRY AN OPTIONAL HINT. REVERSED SAME DAY (owner, 2 Oct: "Ok do it").
+First ruled no hint ("we've already written one"); reversed because OPTIONAL forces nobody to write
+twice, a stuck child otherwise has nowhere to spend an earned coin, and the hint never shows on the
+tile so it cannot spoil. Same folded "+tap here to add hidden hint" line as photo tiles, same 140 cap,
+same coin. A blank hint draws no button (existing `if(!t.hint)` guard).
 §164.6 s162.5 TRAP 1 (NUMBERING GAPS) IS CLOSED BY CONSTRUCTION. `tileEl()` numbers every tile
 `i+1` across the whole case whatever its type, and photo and object tiles already mix on boards.
 A wire tile drawn through `tileEl()` cannot leave a gap. Do not number per kind.
@@ -5210,4 +5213,15 @@ A wire tile drawn through `tileEl()` cannot leave a gap. Do not number per kind.
     in the owner's words, and NO detector (same reason as s162.2e). Owner has not ruled.
   - s163.16 (declined hunter): Claude's recommendation is DECLINED = no card at all; FAILED / NO
     SIGNAL = their own card, not "The pin lies elsewhere". Owner has not ruled; copy is his.
-
+§164.9 BUILD STATE, s71. NOT IN index.html. Built as a transform, `_to_delete\s71\build_wire.py`
+(IN OUT [--preview]), every edit an exact anchor asserted once. Output `_preview-wire.html` (gitignored)
+carries a harness bar (Hunter board / Builder board) and blocks every non-GET to the Worker. STATIC green
+on the candidate. New assets `assets/img/1762256541.webp` (crown, 240w) and `assets/img/3a50f7c0b7.png`
+(wear mask) are ON DISK, UNTRACKED - a docs-only `ship` would push them; harmless, unused until the build.
+Measured in Chrome: card 388px, masthead 285 of 360 (79%), clue 5 lines; builder new/edit/empty/abandon all
+correct; photo-tile editor unchanged. Claude's placeholder copy, NOT OWNER-APPROVED: source sheet
+"Write a Clue" / "Sent as an Agency wire - up to 140 characters"; field "Write the clue - up to 140 characters".
+🔴 FOUND WHILE MEASURING: a `container-type:inline-size` box inside a parent with `justify-items:center`
+collapses to ZERO width in current Chrome - block layout now honours justify-items. Give the box `width:100%`.
+🔴 device_commit_files WROTE A STALE COPY ONCE (correct file staged, older bytes landed). HASH THE FILE ON
+DISK AFTER EVERY COMMIT; re-commit with force if it differs.
