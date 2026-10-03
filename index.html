@@ -160,6 +160,14 @@
     resize:none;margin:12px 0 10px}
   .hint-field.open{display:block}
     #ov-crop .modal,#ov-tile .modal{max-height:96vh;overflow-y:auto}
+    /* s71 - a way out of the clue editor: the .plan-x roundel, top right, 44px hit area */
+    #ov-tile .modal{position:relative}
+    #ov-tile .modal h3{padding-right:44px}
+    .tile-x{position:absolute;right:12px;top:12px;z-index:2;width:34px;height:34px;padding:0;
+      border-radius:50%;border:1px solid rgba(60,48,36,.45);background:rgba(247,242,230,.92);
+      color:var(--ink);font-size:17px;line-height:1;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+    .tile-x::after{content:"";position:absolute;inset:-5px}
     /* short phones: shrink the crop square so the green button stays on screen */
     @media (max-height:620px){ #ov-crop .crop-stage{max-width:200px;max-height:200px} }
   /* the hunter's side: the coin bought a quiet word */
@@ -283,7 +291,7 @@
     #notify-card .nc-txt{font-size:14px}
   }
   #buildmark{margin:4px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#3B6BA5;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#C88A2E;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -1458,7 +1466,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">35r</p>
+      <p id="buildmark" aria-label="test build marker">35s</p>
     </div>
   </section>
 
@@ -1724,6 +1732,7 @@
 
 <div id="ov-tile" class="overlay center">
   <div class="modal">
+    <button class="tile-x" onclick="closeOverlay('ov-tile')" aria-label="Close">&#10005;</button>
     <h3>Edit clue</h3>
     <div class="target-big" id="tile-preview"></div>
     <div class="wire-wrap" id="tile-wire-wrap"><textarea id="tile-wire" class="field wire-field" maxlength="140" rows="5" placeholder="Describe it without naming it." oninput="clueCount(this,'wire')"></textarea><span class="clue-count" id="wire-clue-count">0/140</span></div>
