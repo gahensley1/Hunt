@@ -291,7 +291,7 @@
     #notify-card .nc-txt{font-size:14px}
   }
   #buildmark{margin:4px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#7A5A98;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#4E9A87;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -1469,7 +1469,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">35u</p>
+      <p id="buildmark" aria-label="test build marker">35v</p>
     </div>
   </section>
 
@@ -2165,12 +2165,16 @@ const Store = {
       const a=this.qRead().filter(function(x){ return x && x.key; });
       const keep=[];
       for(const it of a){
-        let ok=false;
+        let ok=false, dead=false;
+        /* s71 \u00a7171 - a newer write of this key already landed: this copy is stale, retire it */
+        if(this._lastOk && this._lastOk[it.key] && this._lastOk[it.key]>=(it.at||0)){ continue; }
         try{
           const r=await fetch(this.base()+"/kv/"+encodeURIComponent(it.key),{method:"PUT",body:it.val,headers:Object.assign({},_curHdr()),signal:_sig(NET_MS)});
           ok=!!r.ok;
+          /* a 4xx refusal (other than 408/429) is permanent - retrying it for ever only burns data */
+          if(!ok && r.status>=400 && r.status<500 && r.status!==408 && r.status!==429) dead=true;
         }catch(e){ ok=false; }
-        if(ok) done++; else keep.push(it);
+        if(ok) done++; else if(!dead) keep.push(it);
       }
       /* MERGE, NEVER OVERWRITE. The queue was snapshotted before the awaits above;
          anything qPush-ed DURING them is in storage but not in that snapshot, and
@@ -2198,7 +2202,7 @@ const Store = {
      One retry first: the loss was a transient failure on a phone, not a refusal -
      the Worker accepts these writes unauthenticated, probed at s65. */
   async set(key,val,shared=false,sig){
-    let sharedFailed=false;
+    let sharedFailed=false; const _t0=Date.now();
     if(shared && this.base()){
       let sent=false, refused=false;
       for(let _a=0; _a<2 && !sent && !refused; _a++){
@@ -2215,7 +2219,9 @@ const Store = {
           }
         }catch(e){ sent=false; }
       }
-      if(sent){ if(this.qPending()) this.flush(); return true; }
+      if(sent){ /* s71 \u00a7171 - this write LANDED: an older queued copy of the same key must never replay over it */
+        try{ this._lastOk=this._lastOk||{}; this._lastOk[key]=_t0; const _q=this.qRead(); const _f=_q.filter(function(x){ return !(x && x.key===key && (x.at||0)<=_t0); }); if(_f.length!==_q.length) this.qWrite(_f); }catch(_e){}
+        if(this.qPending()) this.flush(); return true; }
       if(!refused) this.qPush(key,val);
       sharedFailed=true;
     }
@@ -2649,6 +2655,14 @@ function toggleRotLock(){
 (function(){ try{ if(localStorage.getItem("shco:mtreset")!=="18"){
   localStorage.removeItem("shco:movetour"); localStorage.setItem("shco:mtreset","18"); } }catch(e){} })();
 function closeOverlay(id){document.getElementById(id).classList.remove("open");}
+/* s71 \u00a7171 - THE APP KEEPS ITS OWN ERROR LOG. Field failures were invisible. The last 20
+   uncaught errors and rejected promises are kept on the device (shco:errs) with the build;
+   nothing leaves the phone. */
+(function(){ function _log(m){ try{ const k="shco:errs"; const a=JSON.parse(localStorage.getItem(k)||"[]");
+  a.push({t:Date.now(), b:(document.getElementById("buildmark")||{}).textContent||"", m:String(m||"").slice(0,300)});
+  localStorage.setItem(k, JSON.stringify(a.slice(-20))); }catch(e){} }
+  try{ window.addEventListener("error", function(e){ _log((e&&e.message)||"error"); });
+       window.addEventListener("unhandledrejection", function(e){ const r=e&&e.reason; _log("rejection: "+((r&&r.message)||r)); }); }catch(e){} })();
 /* ================= THE DISPATCH =================
    Bonnie's card, raised once per case on arrival at the board. The drawing is the
    card; the message is live text laid into it, so a reworded line needs no new art.
@@ -3914,6 +3928,7 @@ function askName(head, sub, prefill, allowGuest, btnLabel){
     const inp=document.getElementById("name-input"); inp.value=prefill||"";
     _nameSuggestFlip=!_nameSuggestFlip;
     inp.placeholder = "e.g. Bonnie of Baker Street";
+    if(State._nameResolve){ const _old=State._nameResolve; State._nameResolve=null; try{ _old(null); }catch(_e){} }  /* s71 \u00a7171 (\u00a7147.3) */
     State._nameResolve=res;
     openOverlay("ov-name");
     setTimeout(()=>{inp.focus(); inp.select&&inp.select();},130);
@@ -3974,7 +3989,10 @@ async function saveHunterSub(status){
   // Never downgrade: a rejoin ("playing") must not erase submitted/reviewed/returned
   let finishedAt=null, startedAt=null;
   try{
-    const prevRaw=await Store.get("sub:"+hunt.code+":"+State.hid,true);
+    let prevRaw=null; try{ prevRaw=await Store.get("sub:"+hunt.code+":"+State.hid,true); }catch(_e){ prevRaw=null; }
+    /* s71 \u00a7171 - no answer from the Yard is not "no record": the device keeps its own copy.
+       Without this the start time reset on every save made without signal. */
+    if(!prevRaw){ try{ prevRaw=await Store.get("sub:"+hunt.code+":"+State.hid,false); }catch(_e){ prevRaw=null; } }
     if(prevRaw){ const p=JSON.parse(prevRaw);
       // a filed entry is immutable to casual re-saves: nothing about it may change
       if(status==="playing" && (p.status==="submitted"||p.status==="reviewed")) return p;
@@ -4034,6 +4052,14 @@ async function listSubNames(code){
   const out=[];
   for(const raw of raws){ if(!raw) continue; try{ out.push(JSON.parse(raw)); }catch(e){} }
   return out;
+}
+/* s71 \u00a7171 - STANDINGS WITHOUT THE PHOTOGRAPHS. Two requests (slim list + every res:) instead
+   of one full GET per hunter. Same order as listSubs() via rankSlim(). Falls back to listSubs()
+   when the slim list is unavailable. NOT for the verify screen or the roster - they need photos. */
+async function listSubsFast(code){
+  let s=null; try{ s=await listSubsSlim(code); }catch(e){ s=null; }
+  if(!s || !s.length) return await listSubs(code);
+  try{ return await rankSlim(code, s); }catch(e){ return await listSubs(code); }
 }
 async function listSubs(code){
   const keys=await Store.list("sub:"+code+":", true);
@@ -6669,9 +6695,12 @@ async function subAccept(code){ code=String(code||""); if(!code) return;
   toast("Case No. "+code+" filed to the Territories \u2014 it\u2019s on the chart.", 3600);
   await renderCurator(); }
 async function subDismiss(code){ code=String(code||""); if(!code) return;
+  /* s71 \u00a7171 (\u00a7130.5) - read the case FIRST; the submission is struck after, so a failed read
+     can no longer leave a case deeded with no submission pointing at it. */
+  let _hr=null; try{ _hr=await Store.get("hunt:"+code,true); }catch(e){ _hr=null; }
   try{ await Store.del("submission:"+code, true); }catch(e){}
   /* A dismissed case was never taken into the record - return it to its author. */
-  try{ const _hr=await Store.get("hunt:"+code,true);
+  try{
     if(_hr){ const _hh=JSON.parse(_hr);
       if(_hh.deeded && !_hh.cold){ delete _hh.deeded; delete _hh.deededAt;
         await Store.set("hunt:"+code, JSON.stringify(_hh), true); } } }catch(e){}
@@ -6786,6 +6815,8 @@ async function publishCold(code){
       }
     }catch(_e){ toast("The plan did not reach the office \u2014 the rest was filed."); }
     const entry={code, title:hh.title||"Untitled Case", place:hh.place, blurb:hh.blurb, diff:curDiff(code), ...geo, cat:hh.cat||"", paid:!!hh.paid, price:hh.price||"", vol:hh.vol||"", hasMap:_hasMapP};
+    /* s71 \u00a7171 (\u00a790.7) - a field this function does not set survives a re-publish. Position is never carried: it follows the zip. */
+    try{ for(const _k in _prevP){ if(!(_k in entry) && _k!=="lat" && _k!=="lon") entry[_k]=_prevP[_k]; } }catch(_e){}
     if(entry.lat==null){ const a=gazAuto(entry); if(a){ entry.lat=+(+a[0]).toFixed(4); entry.lon=+(+a[1]).toFixed(4); } }
     if(i>=0) idx[i]=entry; else idx.push(entry);
     await Store.set("cold:index", JSON.stringify(idx), true);
@@ -7078,7 +7109,7 @@ function tileEl(t,i,mode){
     wrap.onclick=()=>{ if(Date.now()-_tdClick<350) return; openTileEdit(i); };
   }else{ // hunter
     d.innerHTML=num+media;
-    if(State.founds[t.id]){ d.classList.add("found"); d.innerHTML+=`<img decoding="async" class="thumb" alt="Find photograph" src="${State.founds[t.id]}">`; }
+    if(State.founds[t.id]){ d.classList.add("found"); d.innerHTML+=`<img decoding="async" class="thumb" alt="Find photograph" src="${safeImgSrc(State.founds[t.id])}">`; }
     wrap.onclick=()=>openClue(t);
   }
   wrap.appendChild(d);
@@ -7380,7 +7411,7 @@ async function builderEditCase(code){
     const raw=await Store.get("hunt:"+code,true);
     if(!raw){ toast("That case is not reachable \u2014 check connection."); return; }
     const hh=JSON.parse(raw);
-    let n=0; try{ n=(await listSubs(code)).length; }catch(e){}
+    let n=0; try{ n=(await listSubsFast(code)).length; }catch(e){}
     State.build=hh; State.build.code=code;
     State._builderEdit=code; State._builderEditN=n; State._tdWarned=false;
     const bti=document.getElementById("build-title-input"); if(bti) bti.value=hh.title||"";
@@ -7455,7 +7486,8 @@ async function _finishBuild(){
   // record in my cases
   let mine=[]; try{mine=JSON.parse(await Store.get("mycases")||"[]");}catch(e){}
   if(!mine.includes(code)){ mine.unshift(code); await Store.set("mycases",JSON.stringify(mine)); }
-  if(!State._curatorBuildFlow && !State._builderEdit && !State._curatorEdit){ try{ clearDraft(); }catch(e){} }  /* §149 fix - only a personal fresh build owns the draft slot; a Desk/edit finish must not wipe it */
+  let _safe=_landed; if(!_safe){ try{ _safe=Store.qRead().some(function(x){ return x && x.key==="hunt:"+code; }); }catch(_e){ _safe=false; } }  /* s71 \u00a7171 - the draft is the only copy until the case has landed or is queued */
+  if(_safe && !State._curatorBuildFlow && !State._builderEdit && !State._curatorEdit){ try{ clearDraft(); }catch(e){} }  /* §149 fix - only a personal fresh build owns the draft slot; a Desk/edit finish must not wipe it */
   if(State.build && State.build.desk){ try{ await deskAdd(code); }catch(e){} }
   // Agency Case submission — builder-initiated territorial review queue
   if(_tooBig){
@@ -7568,7 +7600,7 @@ async function commendCard(code){
       cx.drawImage(pi, -pw/2, -ph/2, pw, ph); cx.restore();
     }catch(e){}
     let place=0;
-    try{ const subs=await listSubs(code); place=(rankMap(subs)||{})[State.hid]||0; }catch(e){}
+    try{ const subs=await listSubsFast(code); place=(rankMap(subs)||{})[State.hid]||0; }catch(e){}
     const nm=(await getMyName())||"Detective";
     cx.textAlign="center"; cx.textBaseline="alphabetic";
     /* every line is width-guarded: shrink until it clears the 716px panel interior */
@@ -8154,7 +8186,7 @@ async function finishHunt(auto){
             : "Entry filed: "+mySub.found+" of "+mySub.total+" \u2014 close the full board to earn the commendation.");
       rankEl.classList.remove("hidden");
     }else if(mySub&&mySub.finishedAt){
-      const subs=await listSubs(State.hunt.code);
+      const subs=await listSubsFast(State.hunt.code);
       const r=rankMap(subs)[State.hid];
       if(r){
         rankEl.innerHTML = mySub.found>=mySub.total
@@ -8460,7 +8492,7 @@ async function openCaseFiles(){
     const hunt=JSON.parse(raw);
     if(hunt.cold||hunt.desk){ continue; }
     if(caseExpired(hunt)){ await purgeCase(code,{silent:true}); continue; }
-    const subs=await listSubs(code);
+    const subs=await listSubsFast(code);
     const submitted=subs.filter(s=>s.status!=="playing").length;
     const finished=subs.filter(s=>s.finishedAt).length;
     const pill = !subs.length ? {t:"NO PLAYERS YET",c:"wait"}
@@ -9091,7 +9123,7 @@ async function openVerify(code, hid){
   hunt.tiles.forEach((t,i)=>{
     const target = (t.type==="wire") ? '<div class="wv-clue">'+escapeHtml(t.clue||"")+'</div>' : tileHTML(t);
     const hunterSrc=findMap[t.id];
-    const proof = hunterSrc ? `<img decoding="async" alt="Submitted photograph" src="${hunterSrc}">` : `<div class="obj" style="opacity:.4">—</div>`;
+    const proof = safeImgSrc(hunterSrc) ? `<img decoding="async" alt="Submitted photograph" src="${safeImgSrc(hunterSrc)}">` : `<div class="obj" style="opacity:.4">—</div>`;
     const m=State.verify.marks[t.id];
     const toggles = hunterSrc ? `<div class="vtoggle">
         <button class="vt yes${m===1?" on":""}" onclick="mark('${t.id}',1,this)">✓</button>

@@ -22,3 +22,5 @@ _diagram-*.png
 # s66: one run's evidence, not a repo file - Claude reads it from the folder.
 test/.last-battery.log
 test/.shipped.html
+# s71 (§171): any root file starting with _ is scratch - never public.
+/_*
