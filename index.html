@@ -291,7 +291,7 @@
     #notify-card .nc-txt{font-size:14px}
   }
   #buildmark{margin:4px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#C88A2E;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#B5566B;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -511,7 +511,10 @@
   /* s161-s164 THE WIRE. A written clue sent as an Agency wire. The board tile carries
      the crown, the word WIRE and its number - nothing else, ever (s162: any label can
      spoil the answer). House faces, no grain, worn ink (s164). */
-  .tile.wire-tile{background:#E3D6B6;border:1px solid rgba(30,28,26,.14)}
+  .tile.wire-tile{background:#E3D6B6;border:1.5px solid rgba(94,70,48,.6)}
+  /* s71 owner pick A - inked double rule, so the clue tile stands off the board paper. :not(.found) leaves the SOLVED scrim alone */
+  .tile.wire-tile:not(.found)::before{content:"";position:absolute;inset:5px;border:1px solid rgba(94,70,48,.5);border-radius:8px;pointer-events:none}
+  .tile.wire-tile:not(.found) .num{top:9px;left:11px}
   .cell .cap.ttl{white-space:normal;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;text-overflow:clip;-webkit-hyphens:auto;hyphens:auto;overflow-wrap:anywhere}
   @media (max-width:359px){ .cell .cap.ttl{font-size:10px;letter-spacing:.2px} }
   .tile.wire-tile .num{color:rgba(30,28,26,.82);text-shadow:none}
@@ -1466,7 +1469,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">35s</p>
+      <p id="buildmark" aria-label="test build marker">35t</p>
     </div>
   </section>
 
