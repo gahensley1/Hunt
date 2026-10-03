@@ -299,7 +299,7 @@
     #notify-card .nc-txt{font-size:14px}
   }
   #buildmark{margin:4px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#C88A2E;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#B5566B;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -1387,6 +1387,16 @@
   .btn-plaque:active img{transform:translateY(1px) scale(.985);filter:drop-shadow(0 0 2px rgba(10,7,4,1)) drop-shadow(0 1px 2px rgba(10,7,4,1)) brightness(1.05)}
 .hidden{display:none!important}
   /* setter's licence */
+  html:has(#ov-agconfirm.open) #tour-glass,html:has(#s-licence.open) #tour-glass{visibility:hidden}   /* s71 keep clear */
+  #ov-agconfirm.agc-charter #agc-eyebrow,#ov-agconfirm.agc-charter #agc-title{display:none}
+  #ov-agconfirm.agc-charter #agc-body{font-style:normal}
+  #ov-agconfirm.agc-charter .lic-cert{margin:0 0 4px}
+  #ov-agconfirm.agc-charter .lic-copy{font-family:var(--sans);font-style:normal}
+  #ov-agconfirm.agc-charter .lic-free{margin-top:10px}
+  #ov-agconfirm.agc-charter .row2{display:flex;flex-direction:column;align-items:stretch;gap:10px}
+  #ov-agconfirm.agc-charter #agc-go,#ov-agconfirm.agc-charter #agc-no{width:100%;box-sizing:border-box;margin:0;min-height:48px;font-size:15px}
+  #ov-agconfirm.agc-charter #agc-no{border:1.5px solid var(--green);border-radius:12px;color:var(--green);text-decoration:none;background:transparent;
+    font-family:var(--sans);font-weight:600;letter-spacing:normal}   /* s71 owner: both buttons in the same face */
   .lic-cert{position:relative;background:rgba(255,252,244,.55);border:2px solid var(--brass);outline:1px solid rgba(184,134,59,.45);outline-offset:4px;border-radius:6px;padding:22px 18px 18px;text-align:center;margin:4px 2px 18px}
   .lic-eyebrow{font-family:var(--serif);font-size:14px;letter-spacing:2px;color:var(--title);font-weight:900}
   .lic-title{font-family:var(--serif);font-weight:900;font-size:27px;color:var(--title);margin:6px 0 0;letter-spacing:.3px}
@@ -1481,7 +1491,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">35z</p>
+      <p id="buildmark" aria-label="test build marker">36a</p>
     </div>
   </section>
 
@@ -3319,14 +3329,14 @@ function agencyConfirm(o){
       document.getElementById("agc-body").innerHTML=o.bodyHTML||"";
       document.getElementById("agc-go").textContent=o.cta||"Confirm";
       { var _gn=document.getElementById("agc-no"); if(_gn) _gn.textContent=o.ghost||"Not yet"; }
-      _agBackdrop=!!o.backdrop;   /* s69 - what a backdrop tap resolves to; false (cancel) unless the caller says otherwise */
+      _agBackdrop=(o.backdrop==="none")?"none":!!o.backdrop;   /* s69 - what a backdrop tap resolves to; "none" (s71) = a backdrop tap does nothing */
       openOverlay("ov-agconfirm");
     }catch(e){ _agResolve=null; try{ resolve(!!window.confirm(o.plain||"Confirm?")); }catch(_e){ resolve(false); } }
   });
 }
 function agcGo(){ closeOverlay("ov-agconfirm"); var r=_agResolve; _agResolve=null; if(r) r(true); }
 function agcNo(){ closeOverlay("ov-agconfirm"); var r=_agResolve; _agResolve=null; if(r) r(false); }
-function agcBackdrop(){ closeOverlay("ov-agconfirm"); var r=_agResolve, v=_agBackdrop; _agResolve=null; _agBackdrop=false; if(r) r(v); }
+function agcBackdrop(){ if(_agBackdrop==="none") return; closeOverlay("ov-agconfirm"); var r=_agResolve, v=_agBackdrop; _agResolve=null; _agBackdrop=false; if(r) r(v); }
 
 function grantPack(code){ try{ const o=ownedPacks(); if(o.indexOf(String(code))<0){ o.push(String(code)); localStorage.setItem("shco:packs", JSON.stringify(o)); } }catch(e){} }
 function isLocked(e){ return !!(e && e.paid && !ownsPack(e.code)); }
@@ -3345,6 +3355,7 @@ function licenceGranted(){
   pushProfile();
   const after=State.afterLic; State.afterLic=null;
   if(after==="build") startBuild();
+  else if(after==="finish"){ setFinishLabel(); finishBuild(); return; }   /* s71: back to filing */
   else if(after && after.indexOf("cold:")===0) openColdDetail(after.slice(5));
   else go("s-home");
   toast("Happy Building.", 3200);
@@ -3379,6 +3390,7 @@ function continueAfterReceipt(){
   closeOverlay("s-receipt");
   const after=State.afterLic; State.afterLic=null;
   if(after==="build") startBuild();
+  else if(after==="finish"){ setFinishLabel(); finishBuild(); }   /* s71: back to filing */
   else if(after && after.indexOf("cold:")===0) openColdDetail(after.slice(5));
   else go("s-home");
 }
@@ -4227,10 +4239,27 @@ function objBg(i){return TINTS[i%TINTS.length];}
 /* ============================================================
    BUILD FLOW
    ============================================================ */
+async function _charterAsk(){
+  const ov=document.getElementById("ov-agconfirm");
+  let orn="";
+  try{ const o=document.querySelector("#s-licence .rule-orn"); if(o) orn=o.outerHTML.replace(/brz2/g,"brzP"); }catch(e){}
+  const body='<div class="lic-cert"><div class="lic-eyebrow">THE INSPECTOR\u2019S CHARTER</div><div class="lic-title">Try it before you buy</div>'+orn+
+    '<p class="lic-copy">Lay out your case free. To file it and send it to players, you\u2019ll need the Charter.</p>'+
+    '<div class="lic-free">$7.99 ONCE \u00b7 UNLIMITED CASES</div></div>';
+  if(ov) ov.classList.add("agc-charter");
+  try{
+    return await agencyConfirm({eyebrow:" ",title:" ",bodyHTML:body,cta:"Build it first",ghost:"Get the Charter now",backdrop:"none",
+      plain:"Try it before you buy. Lay out your case free; filing it takes the Charter ($7.99 once, unlimited cases). Build it first?"});
+  }finally{ if(ov) setTimeout(function(){ ov.classList.remove("agc-charter"); },300); }
+}
 async function startBuild(){
   try{
     markTourDone();
-    if(!hasLicence() && !State._curatorBuildFlow){ openLicence("build"); return; }
+    if(!hasLicence() && !State._curatorBuildFlow){
+      /* s71 owner ruling (§172.8/.10): try it before you buy. Build free; the Charter is
+         asked for when the case is filed. "Get the Charter now" opens the original screen. */
+      if(!(await _charterAsk())){ openLicence("build"); return; }
+    }
     let name=await getMyName();
     if(!name){ showScrollHint(); return; }
     await ensureCred();
@@ -6671,6 +6700,7 @@ async function hunterRate(code,n){
 function setFinishLabel(){ try{ const b=document.getElementById("finish-build"); if(!b) return;
   if(State._subReview) b.innerHTML="Accept &amp; Publish \u2192";
   else if(State.build&&State.build.code) b.innerHTML="Save Amendments \u2192";
+  else if(!hasLicence() && !State._curatorBuildFlow) b.innerHTML="Finish &amp; Get Case Number \u00b7 $7.99";   /* s71 (§172.8) */
   else b.innerHTML="Finish &amp; Get Case Number \u2192";
 }catch(e){} }
 function coldSubmitVis(){ try{ const w=document.getElementById("cold-submit-wrap"); if(!w) return;
@@ -7549,6 +7579,11 @@ async function _finishBuild(){
         cta:"File it", ghost:"Add a hint", backdrop:false, plain:"No hidden hints yet. File anyway?"});
       if(!_go){ try{ openTileEdit(0); setTimeout(function(){ try{ toggleTileHint(); }catch(e){} },120); }catch(e){} return; }
     }
+  }
+  if(!hasLicence() && !State._curatorBuildFlow && !State._curatorEdit && !State._subReview){
+    /* s71 (§172.8): pay to file. The original Charter screen; closing it returns to the
+       board with every clue in place. After purchase the filing carries straight on. */
+    openLicence("finish"); return;
   }
   const editing=!!(State.build && State.build.code);
   const code = editing ? String(State.build.code) : await genCode();
