@@ -283,7 +283,7 @@
     #notify-card .nc-txt{font-size:14px}
   }
   #buildmark{margin:4px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#B4532A;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#3B6BA5;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -536,7 +536,8 @@
   .wire-field{font-family:var(--type);font-size:16px;line-height:1.5;resize:none;margin:0}
   .wire-wrap{display:none;position:relative}
   .wire-wrap.open{display:block}
-  .wire-wrap .clue-count{position:absolute;right:10px;bottom:8px;top:auto}
+  .wire-wrap .field{display:block;padding-bottom:34px}
+  .wire-wrap .clue-count{position:absolute;right:18px;bottom:14px;top:auto;transform:none;font-size:13px}
   .opt .em img{width:30px;height:auto;opacity:.8;display:block}
   .tile.obj-tile{border:1px solid rgba(30,28,26,.12)}
   .cell .cap{
@@ -1457,7 +1458,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">35q</p>
+      <p id="buildmark" aria-label="test build marker">35r</p>
     </div>
   </section>
 
@@ -1688,7 +1689,7 @@
     <h3>Add a clue</h3>
     <div class="opt" onclick="pickSource('camera')"><span class="em">📷</span><div><b>Take a Photo</b><span>Snap it now, then crop to a square</span></div></div>
     <div class="opt" onclick="pickSource('library')"><span class="em">🖼️</span><div><b>Choose from Library</b><span>Upload an existing photo &amp; crop</span></div></div>
-    <div class="opt" onclick="pickSource('wire')"><span class="em"><img src="./assets/img/2efa39d6a2.webp" alt=""></span><div><b>Write a Clue</b><span>Words instead of a photo  (140 characters)</span></div></div>
+    <div class="opt" onclick="pickSource('wire')"><span class="em"><img src="./assets/img/2efa39d6a2.webp" alt=""></span><div><b>Write a Clue</b><span>Words instead of a photo</span></div></div>
     <div class="opt" onclick="pickSource('object')"><span class="em">🎲</span><div><b>Pick an Object</b><span>Choose from the object set — no crop</span></div></div>
     <button class="btn btn-ghost" onclick="closeOverlay('ov-source')">Cancel</button>
   </div>
