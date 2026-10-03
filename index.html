@@ -299,7 +299,7 @@
     #notify-card .nc-txt{font-size:14px}
   }
   #buildmark{margin:4px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#A8478F;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#B4532A;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -1480,7 +1480,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">35w</p>
+      <p id="buildmark" aria-label="test build marker">35x</p>
     </div>
   </section>
 
@@ -2309,6 +2309,7 @@ function go(id){
      their go() call instead of before it. */
   try{ ["toast","toast2"].forEach(function(id){ const t=document.getElementById(id);
     if(t){ clearTimeout(t._t); t.classList.remove("show"); } }); }catch(e){}
+  try{ const _td=document.getElementById("tour-down"); if(_td) _td.classList.remove("show"); }catch(e){}  /* s71: the tour's coin stays on home */
   document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
   const el=document.getElementById(id); el.classList.add("active");
   document.getElementById("app").scrollTop=0; window.scrollTo(0,0);
@@ -2492,8 +2493,9 @@ function toast(msg,ms,cls){
   const t=document.getElementById("toast"); t.textContent=msg; t.className="toast show"+(cls?" "+cls:"");
   if(cls&&cls.indexOf("atadd")>=0){ _toastAtAdd(t); }
   else if(cls&&cls.indexOf("atrow2")>=0){ _toastAtRow2(t); }
-  else { t.style.left=""; t.style.top=""; t.style.width=""; }
+  else { t.style.left=""; t.style.top=""; t.style.width=""; t.style.bottom=""; }
   clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove("show"),ms||1900);
+  try{ _kcSoon(); }catch(e){}
 }
 /* Second toast channel. The tour's oxblood beat has to appear while the black tip
    is STILL up (half a second of overlap) so the two read in succession, and a
@@ -2503,9 +2505,76 @@ function toast2(msg,ms,cls){
   const t=document.getElementById("toast2"); if(!t) return;
   t.textContent=msg; t.className="toast show"+(cls?" "+cls:"");
   if(cls&&cls.indexOf("atunder")>=0){ _toastUnder(t); }
-  else { t.style.left=""; t.style.top=""; t.style.width=""; }
+  else { t.style.left=""; t.style.top=""; t.style.width=""; t.style.bottom=""; }
   clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove("show"),ms||1900);
+  try{ _kcSoon(); }catch(e){}
 }
+/* s71 - KEEP CLEAR. Owner: hints and toasts must never sit in the way of a button.
+   After any toast / tip / the notification card shows (and whenever a screen or panel
+   opens under one), measure it against every control a thumb can reach on the top
+   layer - and against an open panel itself - and, if it overlaps, slide it up or down
+   to the nearest clear band. Same look, same left/right; only the height changes.
+   Nothing moves if nothing overlaps. */
+var _KC_IDS=["toast","toast2","notify-card"];
+function _kcShown(el){ return !!el && (el.id==="notify-card" ? el.classList.contains("show") : el.classList.contains("show")); }
+function _kcObstacles(skip){
+  var out=[], H=window.innerHeight, W=window.innerWidth;
+  var nc=document.getElementById("notify-card"), ncPE=nc?nc.style.pointerEvents:"";
+  if(nc && skip!==nc) nc.style.pointerEvents="none";
+  try{
+    var q=document.querySelectorAll('button, a[href], [onclick], input, textarea, select, label, .tile, .overlay.open .modal, .overlay.open .sheet, .overlay.show .modal');
+    for(var i=0;q.length>i;i++){
+      var e=q[i]; if(skip && (skip===e || skip.contains(e))) continue;
+      if(_KC_IDS.indexOf(e.id)>=0) continue;
+      var r=e.getBoundingClientRect(); if(4>r.width||4>r.height||0>=r.bottom||r.top>=H||0>=r.right||r.left>=W) continue;
+      var cs=getComputedStyle(e); if(cs.visibility==="hidden"||0.05>+cs.opacity) continue;
+      var isPanel=/\b(modal|sheet)\b/.test(e.className||"");
+      if(!isPanel){
+        /* only what a finger can actually reach: the centre must hit this element (or its child) */
+        var cx=Math.min(W-1,Math.max(0,r.left+r.width/2)), cy=Math.min(H-1,Math.max(0,r.top+r.height/2));
+        var hit=document.elementFromPoint(cx,cy);
+        if(!hit || !(hit===e || e.contains(hit) || hit.contains(e))) continue;
+      }
+      out.push(r);
+    }
+  }finally{ if(nc && skip!==nc) nc.style.pointerEvents=ncPE; }
+  return out;
+}
+function _kcPlace(el){
+  try{
+    if(!_kcShown(el)) return;
+    var anchored=/\b(atadd|atrow2|atunder)\b/.test(el.className);
+    if(!anchored){ el.style.top=""; el.style.bottom=""; }
+    var r=el.getBoundingClientRect(); if(!r.width||!r.height) return;
+    var obs=_kcObstacles(el), M=6;
+    function hits(top){ var b=top+r.height, n=0;
+      for(var i=0;obs.length>i;i++){ var o=obs[i];
+        if(o.right+M>r.left && r.right>o.left-M && o.bottom+M>top && b>o.top-M){
+          n+=(Math.min(b,o.bottom)-Math.max(top,o.top)+M)*(Math.min(r.right,o.right)-Math.max(r.left,o.left)+M); } }
+      return n; }
+    if(!hits(r.top)) return;
+    var H=window.innerHeight, sat=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--safe-t"))||0;
+    var lo=8+sat, hi=H-r.height-8, best=null, bestD=1e9, minA=1e18, minY=r.top;
+    for(var y=lo;hi>=y;y+=4){ var a=hits(y);
+      if(!a){ var d=Math.abs(y-r.top); if(bestD>d){bestD=d;best=y;} }
+      else if(minA>a){minA=a;minY=y;} }
+    var y2=(best!==null)?best:minY;
+    /* a transform on .toast.show lifts it 4px; the top we set is the box's real top */
+    var lift=r.top-el.offsetTop; if(!isFinite(lift)) lift=0;
+    el.style.bottom="auto"; el.style.top=Math.round(y2-lift)+"px";
+  }catch(e){}
+}
+var _kcRaf=0;
+function _kcSchedule(){ if(_kcRaf) return; _kcRaf=requestAnimationFrame(function(){ _kcRaf=0; _KC_IDS.forEach(function(id){ _kcPlace(document.getElementById(id)); }); }); }
+function _kcSoon(){ _kcSchedule(); setTimeout(_kcSchedule,320); setTimeout(_kcSchedule,900); }
+try{
+  new MutationObserver(function(ms){
+    for(var i=0;ms.length>i;i++){ var t=ms[i].target;
+      if(_KC_IDS.indexOf(t.id)>=0 || /\b(overlay|screen)\b/.test(t.className||"")){ _kcSoon(); return; } }
+  }).observe(document.body,{subtree:true,attributes:true,attributeFilter:["class"]});
+  window.addEventListener("resize",_kcSchedule);
+  window.addEventListener("scroll",_kcSchedule,{capture:true,passive:true});
+}catch(e){}
 function hideToast2(){
   try{ const t=document.getElementById("toast2"); if(t){ clearTimeout(t._t); t.classList.remove("show"); } }catch(e){}
 }
@@ -9312,10 +9381,13 @@ async function runHomeTour(){
     await _twait(900); g.classList.remove("on");
     if(dead) return;
     const dn=document.getElementById("tour-down");
-    if(dn){ dn.classList.add("show"); await _twait(3000); dn.classList.remove("show"); }
+    if(dn && !_tdBlocks(dn)){ dn.classList.add("show"); await _twait(3000); dn.classList.remove("show"); }  /* s71 keep clear: skipped where it would sit on a home button (short phones) */
   }catch(e){}
   finally{ _tourBusy=false; _tourLastEnd=Date.now(); try{ unlockBodyScroll(); }catch(e){} }
 }
+function _tdBlocks(dn){ try{ const was=dn.style.visibility; dn.style.visibility="hidden"; dn.classList.add("show");
+    const r=dn.querySelector(".td-coin-wrap").getBoundingClientRect(); dn.classList.remove("show"); dn.style.visibility=was;
+    return [].some.call(document.querySelectorAll("#s-home .hg-btn"),function(b){ const q=b.getBoundingClientRect(); return q.width&&q.right>r.left&&r.right>q.left&&(Math.min(r.bottom,q.bottom)-Math.max(r.top,q.top))>16; });  /* a few px of the coin's soft top edge is fine (iPhone 15: 1 px) */ }catch(e){ return false; } }
 function markTourDone(){ try{ localStorage.setItem("shco:tour","1"); }catch(e){} }
 let _tt=[],_ttT=null;
 let _tourPlays=0,_tourBusy=false,_tourLastEnd=0,_lastTouch=Date.now();
