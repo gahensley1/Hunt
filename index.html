@@ -299,7 +299,7 @@
     #notify-card .nc-txt{font-size:14px}
   }
   #buildmark{margin:4px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#B4532A;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#3B6BA5;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -1480,7 +1480,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">35x</p>
+      <p id="buildmark" aria-label="test build marker">35y</p>
     </div>
   </section>
 
@@ -9381,7 +9381,7 @@ async function runHomeTour(){
     await _twait(900); g.classList.remove("on");
     if(dead) return;
     const dn=document.getElementById("tour-down");
-    if(dn && !_tdBlocks(dn)){ dn.classList.add("show"); await _twait(3000); dn.classList.remove("show"); }  /* s71 keep clear: skipped where it would sit on a home button (short phones) */
+    if(dn && document.getElementById("s-home").classList.contains("active") && !_tdBlocks(dn)){ dn.classList.add("show"); await _twait(3000); dn.classList.remove("show"); }  /* s71 keep clear: skipped where it would sit on a home button (short phones) */
   }catch(e){}
   finally{ _tourBusy=false; _tourLastEnd=Date.now(); try{ unlockBodyScroll(); }catch(e){} }
 }
