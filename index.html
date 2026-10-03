@@ -223,6 +223,14 @@
      GONE so the ceremonial roundel can straddle the frame; the art carries its own
      inner radius (4px = the 6px outer less the 2px border) so the corners stay clean
      without it. */
+  .cd-ring{position:absolute;right:12px;bottom:12px;z-index:6;opacity:.9;pointer-events:none}  /* s71 owner: a little countdown clock so they know the card will go */
+  .cd-ring .cd-arc{stroke-dasharray:62.8;stroke-dashoffset:0}
+  .cd-ring .cd-hand{transform-origin:13px 13px;transform-box:view-box}
+  .cd-ring.run .cd-arc{animation:cdArc 4s linear forwards}
+  .cd-ring.run .cd-hand{animation:cdHand 4s linear forwards}
+  @keyframes cdArc{to{stroke-dashoffset:62.8}}
+  @keyframes cdHand{to{transform:rotate(360deg)}}
+  @media (prefers-reduced-motion:reduce){ .cd-ring.run .cd-arc,.cd-ring.run .cd-hand{animation:none} }
   .tg{position:relative;background:var(--paper);border-radius:6px;padding:0;
     border:2px solid var(--brass);outline:1.5px solid rgba(184,134,59,.90);outline-offset:4px;
     box-shadow:0 6px 18px rgba(0,0,0,.32);color:var(--ink)}
@@ -291,7 +299,7 @@
     #notify-card .nc-txt{font-size:14px}
   }
   #buildmark{margin:4px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#4E9A87;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#A8478F;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -476,6 +484,9 @@
   @keyframes ccPulse{0%,100%{box-shadow:0 0 0 0 rgba(216,175,99,0)}50%{box-shadow:0 0 0 7px rgba(216,175,99,.55)}}
   .cc-pulse{border-radius:6px;animation:ccPulse .5s ease-in-out 4}
   .cc-pulse-cipher{border-radius:6px;animation:ccPulse .5s ease-in-out 8;animation-delay:1.5s}
+  /* s71 owner: a real button, the exact size of "Filed" below it; the pulse follows its edge */
+  .cc-btn{display:block;width:100%;box-sizing:border-box;margin-top:8px;background:transparent;color:var(--green);border:1px solid var(--green);font-family:var(--type);font-weight:700;letter-spacing:1px;font-size:15px;padding:13px 14px;text-align:center;cursor:pointer}
+  .cc-btn.cc-pulse-cipher{border-radius:10px}
   .btn-primary{background:linear-gradient(180deg,var(--green),var(--green-dk));color:var(--paper);box-shadow:var(--shadow);border-color:rgba(0,0,0,.2)}
   .btn-brass{background:linear-gradient(180deg,var(--brass-lt),var(--brass));color:#2b2013;box-shadow:var(--shadow);border-color:rgba(0,0,0,.15)}
   .btn-return{background:linear-gradient(180deg,#A03D2A,var(--oxblood));color:var(--paper);box-shadow:var(--shadow);border-color:rgba(0,0,0,.22)}
@@ -517,7 +528,7 @@
   .tile.wire-tile:not(.found) .num{top:9px;left:11px}
   .cell .cap.ttl{white-space:normal;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;text-overflow:clip;-webkit-hyphens:auto;hyphens:auto;overflow-wrap:anywhere}
   @media (max-width:359px){ .cell .cap.ttl{font-size:10px;letter-spacing:.2px} }
-  .tile.wire-tile .num{color:rgba(30,28,26,.82);text-shadow:none}
+  .tile.wire-tile .num{color:#1E1C1A;text-shadow:none}
   .wire-face{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7%;width:100%;height:100%}
   .tile .wire-face img,.target-big .wire-face img{width:40%;height:auto;object-fit:contain;opacity:.8}
   .wire-face span{font-family:var(--serif);font-weight:700;letter-spacing:.22em;margin-right:-.22em;color:#5A4A2E;font-size:clamp(10px,3.4vw,15px);line-height:1}
@@ -565,7 +576,7 @@
     flex-direction:column;font-family:var(--type);font-size:11px;letter-spacing:.5px;gap:2px
   }
   .tile.add .plus{font-size:26px;line-height:1;margin-top:-2px}
-  .tile .num{position:absolute;top:3px;left:5px;font-family:var(--type);font-size:9px;color:rgba(255,255,255,.85);text-shadow:0 1px 2px rgba(0,0,0,.6);z-index:1}
+  .tile .num{position:absolute;top:3px;left:6px;font-family:var(--type);font-size:20px;line-height:1;color:#1E1C1A;text-shadow:0 0 2px #F6F0E3,0 0 4px #F6F0E3,0 0 6px rgba(246,240,227,.9);z-index:1}  /* s71 owner: bigger and darker - readable on photos via a parchment halo */
   .obj-tile .num{color:rgba(30,28,26,.5);text-shadow:none}
 
   /* hunter tile states */
@@ -997,7 +1008,7 @@
   .cold-hd .cold-brand .amp{font-style:italic;font-weight:700;font-size:1.15em;vertical-align:-.08em;margin:0 .02em}
   .cold-hd .cold-brand small{display:block;font-family:var(--type);font-size:17.5px;letter-spacing:1.5px;color:var(--title);margin-top:3px;font-weight:400}
   .cold-tag{font-family:var(--serif);font-style:italic;font-size:13.5px;color:var(--ink-soft);margin:-3px 4px 0;line-height:1.45}
-  .cold-back{position:absolute;left:6px;top:calc(var(--safe-t) + 6px);background:none;border:none;font-family:var(--type);font-size:12px;line-height:1;letter-spacing:.5px;color:var(--ink);padding:4px 8px;cursor:pointer}
+  .cold-back{position:absolute;left:0;top:var(--safe-t);background:none;border:none;font-family:var(--type);font-size:12px;line-height:1;letter-spacing:.5px;color:var(--ink);padding:10px 14px 22px;cursor:pointer}  /* s71 owner pick A: same tiny look, text where it was, a 44px tap area */
   #colddetail-card{position:relative;padding-top:10px}
   #colddetail-card .cd-scroll{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding-top:12px}
   #colddetail-card .cd-scroll > .btn,#colddetail-card .cd-scroll > .btn-ghost{margin:5px 0 0}
@@ -1469,7 +1480,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">35v</p>
+      <p id="buildmark" aria-label="test build marker">35w</p>
     </div>
   </section>
 
@@ -1700,7 +1711,7 @@
     <h3>Add a clue</h3>
     <div class="opt" onclick="pickSource('camera')"><span class="em">📷</span><div><b>Take a Photo</b><span>Snap it now, then crop to a square</span></div></div>
     <div class="opt" onclick="pickSource('library')"><span class="em">🖼️</span><div><b>Choose from Library</b><span>Upload an existing photo &amp; crop</span></div></div>
-    <div class="opt" onclick="pickSource('wire')"><span class="em"><img src="./assets/img/2efa39d6a2.webp" alt=""></span><div><b>Write a Clue</b><span>Words instead of a photo</span></div></div>
+    <div class="opt" onclick="pickSource('wire')"><span class="em"><img src="./assets/img/2efa39d6a2.webp" alt=""></span><div><b>Pen a clue</b><span>Words instead of a photo</span></div></div>
     <div class="opt" onclick="pickSource('object')"><span class="em">🎲</span><div><b>Pick an Object</b><span>Choose from the object set — no crop</span></div></div>
     <button class="btn btn-ghost" onclick="closeOverlay('ov-source')">Cancel</button>
   </div>
@@ -1774,6 +1785,7 @@
       <button class="tg-x" onclick="closeDispatch()" aria-label="Close the dispatch">✕</button>
       <img class="tg-art" alt="" aria-hidden="true" decoding="async" src="./assets/img/b9402b0b8e.webp">
       <div class="tg-say" id="tg-say"></div>
+      <svg class="cd-ring" width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><circle cx="13" cy="13" r="10" fill="none" stroke="rgba(73,51,28,.18)" stroke-width="2.4"/><circle class="cd-arc" cx="13" cy="13" r="10" fill="none" stroke="#8a6a3a" stroke-width="2.4" stroke-linecap="round" transform="rotate(-90 13 13)"/><line class="cd-hand" x1="13" y1="13" x2="13" y2="7.5" stroke="#49331C" stroke-width="1.4" stroke-linecap="round"/><circle cx="13" cy="13" r="1.4" fill="#49331C"/></svg>
     </div>
   </div>
 </div>
@@ -1785,6 +1797,7 @@
       <div style="position:relative">
         <img class="pr-art" alt="" aria-hidden="true" decoding="async" src="./assets/img/a3fdea3d01.webp">
         <div class="pr-say" id="pr-say"></div>
+        <svg class="cd-ring" width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><circle cx="13" cy="13" r="10" fill="none" stroke="rgba(73,51,28,.18)" stroke-width="2.4"/><circle class="cd-arc" cx="13" cy="13" r="10" fill="none" stroke="#8a6a3a" stroke-width="2.4" stroke-linecap="round" transform="rotate(-90 13 13)"/><line class="cd-hand" x1="13" y1="13" x2="13" y2="7.5" stroke="#49331C" stroke-width="1.4" stroke-linecap="round"/><circle cx="13" cy="13" r="1.4" fill="#49331C"/></svg>
       </div>
       <div class="pr-foot">Monitor your case from Case Review.</div>
     </div>
@@ -1886,7 +1899,7 @@
     <div class="rank-ladder" id="rank-ladder"></div>
     <div class="cred-seal-row" id="cred-sealrow"></div>
     <p class="cred-note">This name and badge no. is your only username &amp; password. Credentials can be viewed anytime by tapping the badge on the home page.</p>
-    <p class="cc-pulse-cipher" onclick="copyCred()" style="cursor:pointer;color:var(--ink);font-family:var(--type);font-size:15px;letter-spacing:.5px;text-align:center;margin:8px 0">Take a Carbon Copy</p>
+    <button type="button" class="cc-btn cc-pulse-cipher" onclick="copyCred()">Take a Carbon Copy</button>
     <button class="banner-green" onclick="credFiled()">Filed — I have it safe</button>
   </div>
 </div>
@@ -2700,9 +2713,11 @@ function openDispatch(code){
 }
 /* FOUR seconds, or any tap (was three; the owner raised both cards 5 Aug 2026). The timer PAUSES while the page is hidden \u2014 a dispatch
    must never dismiss itself in a pocket. */
+function _cdRun(id){ try{ var r=document.querySelector("#"+id+" .cd-ring"); if(!r) return; r.classList.remove("run"); void r.getBoundingClientRect(); r.classList.add("run"); }catch(e){} }  /* s71 - restarts with the 4 s timer, including after a pocket pause */
 function _tgArm(){
   _tgClear();
   _tgTimer=setTimeout(burnDispatch, 4000);
+  _cdRun("tg-card");
 }
 function _tgClear(){ if(_tgTimer){ clearTimeout(_tgTimer); _tgTimer=null; } }
 document.addEventListener("visibilitychange", function(){
@@ -2771,7 +2786,7 @@ function openPraise(code){
 }
 /* FOUR seconds, or any tap (was three; the owner raised both cards 5 Aug 2026). The timer PAUSES while the page is hidden - a card
    must never dismiss itself in a pocket. */
-function _prArm(){ _prClear(); _prTimer=setTimeout(burnPraise, 4000); }
+function _prArm(){ _prClear(); _prTimer=setTimeout(burnPraise, 4000); _cdRun("pr-card"); }
 function _prClear(){ if(_prTimer){ clearTimeout(_prTimer); _prTimer=null; } }
 document.addEventListener("visibilitychange", function(){
   var ov=document.getElementById("ov-praise");
@@ -7209,7 +7224,9 @@ function chooseObject(emoji){
   renderBuild();
 }
 function uid(){return Math.random().toString(36).slice(2,9);}
-function quickRemove(i){ State.build.tiles.splice(i,1); renderBuild(); }
+async function _askDelete(i){ /* s71 owner: "ask. Are you sure you want to delete it" - a second approval, no undo */
+  try{ return await agencyConfirm({eyebrow:"CLUE No. "+(i+1), title:"Are you sure you want to delete it?", bodyHTML:"", cta:"Delete", ghost:"Keep it", backdrop:true, plain:"Are you sure you want to delete it?"}); }catch(e){ return false; } }
+async function quickRemove(i){ if(!(await _askDelete(i))) return; State.build.tiles.splice(i,1); renderBuild(); }
 
 /* --- tile edit (add clue / remove) --- */
 /* The wire uses the same editor as every tile. -1 is a NEW wire: nothing joins the board
@@ -7272,8 +7289,8 @@ function saveTileEdit(){
   if(hv) t.hint=hv; else delete t.hint;
   closeOverlay("ov-tile"); renderBuild();
 }
-function removeTile(){
-  if(State.editTileId>=0) State.build.tiles.splice(State.editTileId,1);
+async function removeTile(){
+  if(State.editTileId>=0){ if(!(await _askDelete(State.editTileId))) return; State.build.tiles.splice(State.editTileId,1); }
   closeOverlay("ov-tile"); renderBuild();
 }
 
