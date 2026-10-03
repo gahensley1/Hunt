@@ -291,7 +291,7 @@
     #notify-card .nc-txt{font-size:14px}
   }
   #buildmark{margin:4px 0 0;text-align:center;font-family:var(--type);font-size:11px;
-    letter-spacing:1.5px;line-height:1;color:#B5566B;opacity:.85;user-select:none}
+    letter-spacing:1.5px;line-height:1;color:#7A5A98;opacity:.85;user-select:none}
   .gridwrap{position:relative;--pan:122px}
   #move-nudge{left:0;top:0}
   /* the tile the tour is demonstrating on */
@@ -1469,7 +1469,7 @@
         <span class="seal-lbl">send the agency a message</span>
       </button>
       <p onpointerdown="copDown()" onpointerup="copUp()" onpointercancel="copUp()" onpointerleave="copUp()" onclick="copTap()" style="text-align:center;font-family:var(--type);font-size:10.5px;letter-spacing:1px;color:var(--title);opacity:.9;margin:3px 0 0">© 2026 DO NO HARM COMPANY<br>SAVANNAH, GEORGIA</p>
-      <p id="buildmark" aria-label="test build marker">35t</p>
+      <p id="buildmark" aria-label="test build marker">35u</p>
     </div>
   </section>
 
@@ -4243,8 +4243,28 @@ const BUILTIN_INDEX=[{"code": "241224", "title": "The Twelve Finds of Christmas"
 (function(){ const _g=Store.get.bind(Store);
   Store.get=async function(key,shared){
     let v=null; try{ v=await _g(key,shared); }catch(e){ v=null; }
-    if(v!==null&&v!==undefined) return v;
     const c=String(key||"").indexOf("hunt:")===0? String(key).slice(5):"";
+    if(v!==null&&v!==undefined){
+      /* s71 §168 - a server copy of an Agency case whose clues are CUT SHORT copies of the
+         built-in (every clue a prefix of the built-in clue, at least one shorter, or hints
+         lost) is damage, not an edit: 310401-310404/310406 were saved through the 12-char
+         field on 9 Aug 2026. Serve the built-in. A genuine re-wording is not a prefix and
+         still wins. */
+      if(c&&BUILTIN_HUNTS[c]){ try{
+        const _sv=JSON.parse(v), _bt=BUILTIN_HUNTS[c].tiles||[], _st=(_sv&&_sv.tiles)||[];
+        if(_st.length===_bt.length&&_st.length){
+          let pre=true, cut=false;
+          for(let i=0;_st.length>i;i++){
+            const a=String(_st[i].clue||""), b=String(_bt[i].clue||"");
+            if(b.indexOf(a)!==0){ pre=false; break; }
+            if(b.length>a.length) cut=true;
+            if(_bt[i].hint&&!_st[i].hint) cut=true;
+          }
+          if(pre&&cut) return JSON.stringify(BUILTIN_HUNTS[c]);
+        }
+      }catch(e){} }
+      return v;
+    }
     if(c&&BUILTIN_HUNTS[c]) return JSON.stringify(BUILTIN_HUNTS[c]);
     return v;
   };
